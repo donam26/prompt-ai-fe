@@ -1,0 +1,459 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import { useAuth } from "@/contexts/AuthContext";
+import { api } from "@/lib/api";
+import { Prompt, Category, Topic, Industry } from "@/lib/types";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Badge } from "@/components/ui/badge";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Loader2, Search, Copy, Heart } from "lucide-react";
+import { toast } from "sonner";
+import Link from "next/link";
+
+export default function PromptLibraryPage() {
+  const { user } = useAuth();
+  const [prompts, setPrompts] = useState<Prompt[]>([]);
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [topics, setTopics] = useState<Topic[]>([]);
+  const [industries, setIndustries] = useState<Industry[]>([]);
+  const [favoritePrompts, setFavoritePrompts] = useState<number[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState<string>("");
+  const [selectedTopic, setSelectedTopic] = useState<string>("");
+  const [selectedIndustry, setSelectedIndustry] = useState<string>("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [activeTab, setActiveTab] = useState("all");
+
+  const loadPrompts = async () => {
+    setIsLoading(true);
+    try {
+      const response = await api.getPromptsByCategoryId(
+        currentPage,
+        12,
+        selectedCategory || undefined,
+        selectedTopic || undefined,
+        selectedIndustry || undefined,
+        searchTerm || undefined,
+        1, // is_type
+        2 // sub_type
+      );
+
+      setPrompts(response.data.data);
+      setTotalPages(Math.ceil(response.data.total / 12));
+    } catch (error) {
+      // Error loading prompts
+      toast.error("Có lỗi xảy ra khi tải prompts");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const loadCategories = async () => {
+    try {
+      const response = await api.getCategories();
+      setCategories(response.data.data || response.data);
+    } catch (error) {
+      // Error loading categories
+    }
+  };
+
+  const loadTopics = async () => {
+    try {
+      const response = await api.getTopics();
+      setTopics(response.data.data || response.data);
+    } catch (error) {
+      // Error loading topics
+    }
+  };
+
+  const loadIndustries = async () => {
+    try {
+      const response = await api.getIndustries();
+      setIndustries(response.data.data || response.data);
+    } catch (error) {
+      // Error loading industries
+    }
+  };
+
+  const loadFavoritePrompts = async () => {
+    if (!user) return;
+
+    try {
+      const response = await api.getFavoritePrompts(user.id);
+      const favoriteIds = response.data.map(
+        (fav: { prompt_id: number }) => fav.prompt_id
+      );
+      setFavoritePrompts(favoriteIds);
+    } catch (error) {
+      // Error loading favorite prompts
+    }
+  };
+
+  const handleSearch = () => {
+    setCurrentPage(1);
+    loadPrompts();
+  };
+
+  const handleFilterChange = () => {
+    setCurrentPage(1);
+    loadPrompts();
+  };
+
+  const handleFavorite = async (promptId: number) => {
+    if (!user) {
+      toast.error("Vui lòng đăng nhập để thêm vào yêu thích");
+      return;
+    }
+
+    try {
+      if (favoritePrompts.includes(promptId)) {
+        // Remove from favorites
+        await api.removeFavoritePrompt(promptId);
+        setFavoritePrompts(prev => prev.filter(id => id !== promptId));
+        toast.success("Đã xóa khỏi yêu thích");
+      } else {
+        // Add to favorites
+        await api.addFavoritePrompt(promptId, user.id);
+        setFavoritePrompts(prev => [...prev, promptId]);
+        toast.success("Đã thêm vào yêu thích");
+      }
+    } catch (error) {
+      // Error toggling favorite
+      toast.error("Có lỗi xảy ra");
+    }
+  };
+
+  const handleCopyPrompt = (content: string) => {
+    navigator.clipboard.writeText(content);
+    toast.success("Đã sao chép prompt");
+  };
+
+  useEffect(() => {
+    loadCategories();
+    loadTopics();
+    loadIndustries();
+    loadFavoritePrompts();
+  }, [user, loadCategories, loadTopics, loadIndustries, loadFavoritePrompts]);
+
+  useEffect(() => {
+    loadPrompts();
+  }, [
+    currentPage,
+    selectedCategory,
+    selectedTopic,
+    selectedIndustry,
+    searchTerm,
+    loadPrompts,
+  ]);
+
+  return (
+    <div className="bg-gray-50 min-h-screen">
+      {/* Header */}
+      <div className="bg-white border-b">
+        <div className="mx-auto px-4 py-6 container">
+          <div className="flex md:flex-row flex-col md:justify-between md:items-center gap-4">
+            <div>
+              <h1 className="font-bold text-gray-900 text-3xl">
+                Thư viện Prompt
+              </h1>
+              <p className="mt-1 text-gray-600">
+                Khám phá hàng nghìn prompt AI chuyên nghiệp
+              </p>
+            </div>
+            {user && (
+              <Link href="/user-information">
+                <Button variant="outline">Thông tin cá nhân</Button>
+              </Link>
+            )}
+          </div>
+        </div>
+      </div>
+
+      <div className="mx-auto px-4 py-8 container">
+        {/* Search and Filters */}
+        <div className="bg-white shadow-sm mb-8 p-6 border rounded-lg">
+          <div className="flex lg:flex-row flex-col gap-4">
+            <div className="flex-1">
+              <div className="relative">
+                <Search className="top-3 left-3 absolute w-4 h-4 text-gray-400" />
+                <Input
+                  placeholder="Tìm kiếm prompt..."
+                  value={searchTerm}
+                  onChange={e => setSearchTerm(e.target.value)}
+                  className="pl-10"
+                  onKeyPress={e => e.key === "Enter" && handleSearch()}
+                />
+              </div>
+            </div>
+
+            <div className="flex sm:flex-row flex-col gap-4">
+              <Select
+                value={selectedCategory}
+                onValueChange={value => {
+                  setSelectedCategory(value);
+                  handleFilterChange();
+                }}
+              >
+                <SelectTrigger className="w-full sm:w-[200px]">
+                  <SelectValue placeholder="Chọn danh mục" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="">Tất cả danh mục</SelectItem>
+                  {categories.map(category => (
+                    <SelectItem key={category.id} value={String(category.id)}>
+                      {category.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+
+              <Select
+                value={selectedTopic}
+                onValueChange={value => {
+                  setSelectedTopic(value);
+                  handleFilterChange();
+                }}
+              >
+                <SelectTrigger className="w-full sm:w-[200px]">
+                  <SelectValue placeholder="Chọn chủ đề" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="">Tất cả chủ đề</SelectItem>
+                  {topics.map(topic => (
+                    <SelectItem key={topic.id} value={String(topic.id)}>
+                      {topic.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+
+              <Select
+                value={selectedIndustry}
+                onValueChange={value => {
+                  setSelectedIndustry(value);
+                  handleFilterChange();
+                }}
+              >
+                <SelectTrigger className="w-full sm:w-[200px]">
+                  <SelectValue placeholder="Chọn ngành nghề" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="">Tất cả ngành nghề</SelectItem>
+                  {industries.map(industry => (
+                    <SelectItem key={industry.id} value={String(industry.id)}>
+                      {industry.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+
+              <Button onClick={handleSearch} className="w-full sm:w-auto">
+                <Search className="mr-2 w-4 h-4" />
+                Tìm kiếm
+              </Button>
+            </div>
+          </div>
+        </div>
+
+        {/* Tabs */}
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="mb-8">
+          <TabsList className="grid grid-cols-4 w-full">
+            <TabsTrigger value="all">Tất cả</TabsTrigger>
+            <TabsTrigger value="chatgpt">ChatGPT</TabsTrigger>
+            <TabsTrigger value="midjourney">Midjourney</TabsTrigger>
+            <TabsTrigger value="favorites">Yêu thích</TabsTrigger>
+          </TabsList>
+
+          <TabsContent value="all" className="mt-6">
+            <PromptGrid
+              prompts={prompts}
+              isLoading={isLoading}
+              favoritePrompts={favoritePrompts}
+              onFavorite={handleFavorite}
+              onCopy={handleCopyPrompt}
+            />
+          </TabsContent>
+
+          <TabsContent value="chatgpt" className="mt-6">
+            <PromptGrid
+              prompts={prompts.filter(p => p.is_type === 1)}
+              isLoading={isLoading}
+              favoritePrompts={favoritePrompts}
+              onFavorite={handleFavorite}
+              onCopy={handleCopyPrompt}
+            />
+          </TabsContent>
+
+          <TabsContent value="midjourney" className="mt-6">
+            <PromptGrid
+              prompts={prompts.filter(p => p.is_type === 2)}
+              isLoading={isLoading}
+              favoritePrompts={favoritePrompts}
+              onFavorite={handleFavorite}
+              onCopy={handleCopyPrompt}
+            />
+          </TabsContent>
+
+          <TabsContent value="favorites" className="mt-6">
+            <PromptGrid
+              prompts={prompts.filter(p =>
+                favoritePrompts.includes(Number(p.id))
+              )}
+              isLoading={isLoading}
+              favoritePrompts={favoritePrompts}
+              onFavorite={handleFavorite}
+              onCopy={handleCopyPrompt}
+            />
+          </TabsContent>
+        </Tabs>
+
+        {/* Pagination */}
+        {totalPages > 1 && (
+          <div className="flex justify-center mt-8">
+            <div className="flex gap-2">
+              <Button
+                variant="outline"
+                onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+                disabled={currentPage === 1}
+              >
+                Trước
+              </Button>
+
+              {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
+                <Button
+                  key={page}
+                  variant={currentPage === page ? "default" : "outline"}
+                  onClick={() => setCurrentPage(page)}
+                >
+                  {page}
+                </Button>
+              ))}
+
+              <Button
+                variant="outline"
+                onClick={() =>
+                  setCurrentPage(prev => Math.min(prev + 1, totalPages))
+                }
+                disabled={currentPage === totalPages}
+              >
+                Sau
+              </Button>
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+interface PromptGridProps {
+  prompts: Prompt[];
+  isLoading: boolean;
+  favoritePrompts: number[];
+  onFavorite: (promptId: number) => void;
+  onCopy: (content: string) => void;
+}
+
+function PromptGrid({
+  prompts,
+  isLoading,
+  favoritePrompts,
+  onFavorite,
+  onCopy,
+}: PromptGridProps) {
+  if (isLoading) {
+    return (
+      <div className="flex justify-center items-center py-12">
+        <Loader2 className="w-8 h-8 animate-spin" />
+      </div>
+    );
+  }
+
+  if (prompts.length === 0) {
+    return (
+      <div className="py-12 text-center">
+        <p className="text-gray-500">Không tìm thấy prompt nào</p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="gap-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+      {prompts.map(prompt => (
+        <Card
+          key={prompt.id}
+          className="group hover:shadow-lg transition-all duration-300"
+        >
+          <CardHeader>
+            <div className="flex justify-between items-center">
+              <Badge variant="secondary">
+                {prompt.is_type === 1 ? "ChatGPT" : "Midjourney"}
+              </Badge>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => onFavorite(Number(prompt.id))}
+                className={
+                  favoritePrompts.includes(Number(prompt.id))
+                    ? "text-red-500"
+                    : "text-gray-400"
+                }
+              >
+                <Heart
+                  className={`h-4 w-4 ${
+                    favoritePrompts.includes(Number(prompt.id))
+                      ? "fill-current"
+                      : ""
+                  }`}
+                />
+              </Button>
+            </div>
+            <CardTitle className="text-lg line-clamp-2">
+              {prompt.title}
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <CardDescription className="mb-4 line-clamp-3">
+              {prompt.description || prompt.content}
+            </CardDescription>
+
+            <div className="flex gap-2">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => onCopy(prompt.content)}
+                className="flex-1"
+              >
+                <Copy className="mr-2 w-4 h-4" />
+                Sao chép
+              </Button>
+              <Link href={`/thu-vien-prompt/detail-prompts/${prompt.id}`}>
+                <Button size="sm" className="flex-1">
+                  Xem chi tiết
+                </Button>
+              </Link>
+            </div>
+          </CardContent>
+        </Card>
+      ))}
+    </div>
+  );
+}
