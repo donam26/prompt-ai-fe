@@ -36,14 +36,12 @@ export default function AdminLayout({
   }
 
   return (
-    <div className="bg-gray-50 min-h-screen">
+    <div className="bg-gray-50 admin-layout">
       <AdminSidebar />
-      <div className="lg:pl-64">
+      <div className="admin-main">
         <AdminHeader />
-        <main className="py-6">
-          <div className="mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
-            {children}
-          </div>
+        <main className="admin-content">
+          <div className="container-responsive">{children}</div>
         </main>
       </div>
     </div>

@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { api } from "@/lib/api";
+import { userService } from "@/services";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -56,11 +56,11 @@ export default function RegisterPage() {
     }
 
     try {
-      const response = await api.registerUser(
-        formData.fullName,
-        formData.email,
-        formData.password
-      );
+      const response = await userService.registerUser({
+        fullName: formData.fullName,
+        email: formData.email,
+        password: formData.password,
+      });
 
       if (response.data.success) {
         toast.success(
@@ -68,8 +68,8 @@ export default function RegisterPage() {
         );
         router.push("/login");
       }
-    } catch (error: unknown) {
-      setError(error.response?.data?.message || "Có lỗi xảy ra khi đăng ký");
+    } catch (error: any) {
+      setError(error?.response?.data?.message || "Có lỗi xảy ra khi đăng ký");
       toast.error("Đăng ký thất bại");
     } finally {
       setIsLoading(false);

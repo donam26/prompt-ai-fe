@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/contexts/AuthContext";
-import { api } from "@/lib/api";
+import { userService } from "@/services";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -18,6 +18,7 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Loader2, Mail, Lock, ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { toast } from "sonner";
+import { AUTH_MESSAGES, AUTH_LABELS, AUTH_FIELD_NAMES } from "@/constants";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -34,15 +35,17 @@ export default function LoginPage() {
     setError("");
 
     try {
-      const response = await api.loginUser(email);
+      const response = await userService.loginUser(email);
       if (response.data.success) {
-        toast.success("Mã OTP đã được gửi đến email của bạn");
+        toast.success(AUTH_MESSAGES.LOGIN.OTP_SENT);
         // Redirect to OTP verification page
         router.push(`/verify-otp?email=${encodeURIComponent(email)}`);
       }
-    } catch (error: unknown) {
-      setError(error.response?.data?.message || "Có lỗi xảy ra khi đăng nhập");
-      toast.error("Đăng nhập thất bại");
+    } catch (error: any) {
+      setError(
+        error?.response?.data?.message || AUTH_MESSAGES.LOGIN.GENERIC_ERROR
+      );
+      toast.error(AUTH_MESSAGES.LOGIN.FAILED);
     } finally {
       setIsLoading(false);
     }
@@ -59,18 +62,23 @@ export default function LoginPage() {
         .then(data => data.ip)
         .catch(() => "127.0.0.1");
 
-      const response = await api.passwordLogin(email, password, userIP);
+      const response = await userService.passwordLogin({
+        email,
+        password,
+        userIP,
+      });
       if (response.data.success) {
         const { user, token } = response.data.data;
         login(user, token);
-        toast.success("Đăng nhập thành công");
+        toast.success(AUTH_MESSAGES.LOGIN.SUCCESS);
         router.push("/thu-vien-prompt");
       }
-    } catch (error: unknown) {
+    } catch (error: any) {
       setError(
-        error.response?.data?.message || "Email hoặc mật khẩu không đúng"
+        error?.response?.data?.message ||
+          AUTH_MESSAGES.LOGIN.INVALID_CREDENTIALS
       );
-      toast.error("Đăng nhập thất bại");
+      toast.error(AUTH_MESSAGES.LOGIN.FAILED);
     } finally {
       setIsLoading(false);
     }
@@ -85,23 +93,21 @@ export default function LoginPage() {
             className="inline-flex items-center mb-4 text-purple-600 hover:text-purple-700"
           >
             <ArrowLeft className="mr-2 w-4 h-4" />
-            Về trang chủ
+            {AUTH_LABELS.LOGIN.BACK_HOME}
           </Link>
           <h1 className="font-bold text-gray-900 text-3xl">
-            Chào mừng trở lại
+            {AUTH_LABELS.LOGIN.TITLE}
           </h1>
-          <p className="mt-2 text-gray-600">
-            Đăng nhập để truy cập thư viện prompt
-          </p>
+          <p className="mt-2 text-gray-600">{AUTH_LABELS.LOGIN.SUBTITLE}</p>
         </div>
 
         <Card>
           <CardHeader>
-            <CardTitle>Đăng nhập</CardTitle>
+            <CardTitle>{AUTH_LABELS.LOGIN.FORM_TITLE}</CardTitle>
             <CardDescription>
               {isPasswordLogin
-                ? "Nhập email và mật khẩu của bạn"
-                : "Nhập email để nhận mã OTP"}
+                ? AUTH_LABELS.LOGIN.PASSWORD_DESCRIPTION
+                : AUTH_LABELS.LOGIN.EMAIL_DESCRIPTION}
             </CardDescription>
           </CardHeader>
           <CardContent>

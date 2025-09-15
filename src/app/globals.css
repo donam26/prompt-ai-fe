@@ -2,6 +2,41 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer utilities {
+  /* Ensure proper responsive behavior */
+  .container-responsive {
+    @apply mx-auto px-2 sm:px-4 lg:px-6 xl:px-8 w-full max-w-7xl;
+  }
+
+  /* Prevent layout breaking on small screens */
+  .grid-responsive {
+    @apply gap-4 sm:gap-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6;
+  }
+
+  /* Ensure text doesn't overflow */
+  .text-responsive {
+    @apply text-sm sm:text-base;
+  }
+
+  /* Card responsive spacing */
+  .card-responsive {
+    @apply p-4 sm:p-6;
+  }
+
+  /* Admin layout fixes */
+  .admin-layout {
+    @apply flex min-h-screen;
+  }
+
+  .admin-sidebar {
+    @apply bg-white shadow-lg w-64 h-screen;
+  }
+
+  .admin-content {
+    @apply flex-1 py-4 sm:py-6;
+  }
+}
+
 @layer base {
   :root {
     --background: 0 0% 100%;
@@ -51,7 +86,7 @@
 
 @layer base {
   * {
-    @apply border-border;
+    @apply border-gray-200;
   }
   body {
     @apply bg-background text-foreground;
@@ -172,19 +207,6 @@
   box-shadow: 0 0 40px rgba(139, 92, 246, 0.4);
 }
 
-/* Responsive text */
-@media (max-width: 640px) {
-  .text-responsive {
-    font-size: 0.875rem;
-  }
-}
-
-@media (min-width: 641px) {
-  .text-responsive {
-    font-size: 1rem;
-  }
-}
-
 /* Custom utilities */
 .container {
   @apply mx-auto px-4 sm:px-6 lg:px-8;
@@ -193,10 +215,6 @@
 /* Admin specific styles */
 .admin-sidebar {
   @apply left-0 z-50 fixed inset-y-0 bg-white shadow-lg w-64;
-}
-
-.admin-main {
-  @apply lg:pl-64;
 }
 
 /* Table styles */

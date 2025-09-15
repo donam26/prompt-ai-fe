@@ -153,7 +153,7 @@ export function AdminSidebar() {
       {/* Sidebar */}
       <div
         className={cn(
-          "left-0 z-50 lg:static fixed inset-y-0 lg:inset-0 bg-white shadow-lg w-64 transition-transform lg:translate-x-0 duration-300 ease-in-out transform",
+          "left-0 z-50 lg:static fixed inset-y-0 lg:inset-0 bg-white shadow-lg w-64 lg:h-screen transition-transform lg:translate-x-0 duration-300 ease-in-out transform",
           sidebarOpen ? "translate-x-0" : "-translate-x-full"
         )}
       >

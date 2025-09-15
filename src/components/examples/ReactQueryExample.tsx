@@ -1,6 +1,6 @@
 "use client";
 
-import { usePrompts, useCategories, useCreatePrompt } from "@/hooks/useApi";
+import { usePrompts, useCategories, useCreatePrompt } from "@/hooks";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -33,8 +33,9 @@ export const ReactQueryExample = () => {
     createPromptMutation.mutate({
       title: "Example Prompt",
       content: "This is an example prompt created with React Query",
-      categoryId: 1,
-      tags: ["example", "react-query"],
+      category_id: 1,
+      is_type: 1,
+      sub_type: 1,
     });
   };
 
@@ -89,40 +90,52 @@ export const ReactQueryExample = () => {
           <div className="space-y-4">
             <div>
               <h3 className="mb-2 font-semibold">
-                Categories ({categories?.length || 0})
+                Categories (
+                {(categories?.data?.data || categories?.data || [])?.length ||
+                  0}
+                )
               </h3>
               <div className="flex flex-wrap gap-2">
-                {categories?.map(category => (
-                  <Badge key={category.id} variant="secondary">
-                    {category.name}
-                  </Badge>
-                ))}
+                {(categories?.data?.data || categories?.data || [])?.map(
+                  (category: any) => (
+                    <Badge key={category.id} variant="secondary">
+                      {category.name}
+                    </Badge>
+                  )
+                )}
               </div>
             </div>
 
             <div>
               <h3 className="mb-2 font-semibold">
-                Recent Prompts ({prompts?.length || 0})
+                Recent Prompts (
+                {(prompts?.data?.data || prompts?.data || [])?.length || 0})
               </h3>
               <div className="space-y-2">
-                {prompts?.map(prompt => (
-                  <div
-                    key={prompt.id}
-                    className="hover:bg-gray-50 p-3 border rounded-lg transition-colors"
-                  >
-                    <h4 className="font-medium">{prompt.title}</h4>
-                    <p className="text-gray-600 text-sm line-clamp-2">
-                      {prompt.content}
-                    </p>
-                    <div className="flex gap-2 mt-2">
-                      {prompt.tags?.map(tag => (
-                        <Badge key={tag} variant="outline" className="text-xs">
-                          {tag}
-                        </Badge>
-                      ))}
+                {(prompts?.data?.data || prompts?.data || [])?.map(
+                  (prompt: any) => (
+                    <div
+                      key={prompt.id}
+                      className="hover:bg-gray-50 p-3 border rounded-lg transition-colors"
+                    >
+                      <h4 className="font-medium">{prompt.title}</h4>
+                      <p className="text-gray-600 text-sm line-clamp-2">
+                        {prompt.content}
+                      </p>
+                      <div className="flex gap-2 mt-2">
+                        {prompt.tags?.map((tag: any) => (
+                          <Badge
+                            key={tag}
+                            variant="outline"
+                            className="text-xs"
+                          >
+                            {tag}
+                          </Badge>
+                        ))}
+                      </div>
                     </div>
-                  </div>
-                ))}
+                  )
+                )}
               </div>
             </div>
           </div>

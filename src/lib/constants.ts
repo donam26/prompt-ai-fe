@@ -182,7 +182,7 @@ export const hasPermission = (user: User | null, screen: string) => {
         userPermissions = JSON.parse(userPermissions);
       } catch {
         // If not JSON, try to split by comma
-        userPermissions = userPermissions
+        userPermissions = (userPermissions as string)
           .split(",")
           .map((p: string) => p.trim())
           .filter((p: string) => p);
@@ -225,7 +225,7 @@ export const getAccessibleScreens = (user: User | null) => {
         userPermissions = JSON.parse(userPermissions);
       } catch {
         // If not JSON, try to split by comma
-        userPermissions = userPermissions
+        userPermissions = (userPermissions as string)
           .split(",")
           .map((p: string) => p.trim())
           .filter((p: string) => p);

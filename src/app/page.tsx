@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/contexts/AuthContext";
-import { api } from "@/lib/api";
+import { promptService, blogService } from "@/services";
 import { Prompt, Blog } from "@/lib/types";
 import { Button } from "@/components/ui/button";
 import {
@@ -17,133 +17,13 @@ import { Badge } from "@/components/ui/badge";
 import { ArrowRight, Star, Download, Sparkles } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-
-// Dữ liệu marketplace cards
-const marketplaceCards = [
-  {
-    id: 1,
-    title: "Truy cập thư viện Prompt",
-    description: "Truy cập vào thư viện Prompt của chúng tôi",
-    imgSrc: "/images/huong-dan-hinh-1.png",
-    bgColor: "orange",
-  },
-  {
-    id: 2,
-    title: "Lựa chọn Prompt",
-    description:
-      "Hãy chọn Prompt phù hợp với ngành nghề hoặc nhu cầu hiện tại của bạn",
-    imgSrc: "/images/huong-dan-hinh-2.png",
-    bgColor: "orange",
-  },
-  {
-    id: 3,
-    title: "Cá nhân hóa Prompt",
-    description:
-      "Hãy điền thêm các thông tin để AI có thể hiểu rõ yêu cầu của bạn hơn",
-    imgSrc: "/images/huong-dan-hinh-3.png",
-    bgColor: "blue",
-  },
-  {
-    id: 4,
-    title: "Tận hưởng kết quả",
-    description:
-      "Tận hưởng kết quả tuyệt vời mà AI mang lại. Bạn có thể tùy chỉnh nếu chưa vừa ý",
-    imgSrc: "/images/huong-dan-hinh-4.png",
-    bgColor: "teal",
-  },
-];
-
-// Dữ liệu testimonials
-const testimonials = [
-  {
-    rating: 5,
-    text: "Thư viện quá rộng lớn, chứa đầy những Prompts hữu ích, tôi đã đưa cho nhân viên dưới tôi những Prompts tương ứng với bộ phận của họ, hiệu suất tăng vọt trong thời gian rất ngắn!",
-    author: {
-      name: "Jason Trịnh",
-      title: "CEO",
-      avatar: "/images/avt1.png",
-    },
-  },
-  {
-    rating: 5,
-    text: "Midjourney Prompts giúp tôi rất nhiều trong việc design web và tạo các element đẹp mắt! Đồng thời những prompt về Sales và Marketing hỗ trợ tôi bán hàng dễ hơn bao giờ hết!",
-    author: {
-      name: "Phương Hoàng",
-      title: "Web Designer",
-      avatar: "/images/avt3.png",
-    },
-  },
-  {
-    rating: 5,
-    text: "Trước đây tôi phải mất hàng giờ để soạn email chào hàng, giờ chỉ cần chọn prompt phù hợp là có ngay nội dung chuyên nghiệp, tối ưu tỉ lệ chuyển đổi!",
-    author: {
-      name: "Minh Tú",
-      title: "Sales Executive",
-      avatar: "/images/avt3.png",
-    },
-  },
-];
-
-// Dữ liệu cho các thẻ tags và các prompt card tương ứng
-const solutionsData = {
-  Solopreneur: {
-    subtitle:
-      "Không còn loay hoay một mình – prompt AI thiết kế riêng giúp bạn tự viết content, email, pitch deck… đóng vai trò như một team hỗ trợ 24/7.",
-    prompts: [
-      {
-        title: "Tối ưu chiến lược định giá sản phẩm",
-        subtitle:
-          "Tối đa hóa lợi nhuận bằng cách xây dựng chiến lược định giá theo từng tầng, dựa trên phân tích thị trường và giá trị sản phẩm mà sản phẩm mang lại.",
-        cardLabel: "ChatGPT",
-      },
-      {
-        title: "Tìm kiếm ý tưởng kinh doanh tiềm năng",
-        subtitle:
-          "Khám phá các cơ hội kinh doanh online tiềm năng được thiết kế dành riêng cho solopreneurs đang tìm cách gia tăng nguồn thu nhập.",
-        cardLabel: "ChatGPT",
-      },
-    ],
-    imgSrc: "/images/solution/solopreneur.jpg",
-  },
-  "Content Creator": {
-    subtitle:
-      "Viết đúng, viết nhanh, viết đúng insight ngành – nhờ prompt AI cá nhân hóa theo từng yêu cầu, từng lĩnh vực và từng khách hàng của bạn.",
-    prompts: [
-      {
-        title: "Viết kịch bản video TikTok",
-        subtitle:
-          "Soạn thảo kịch bản video hấp dẫn, tập trung vào insight của khách hàng, lợi ích sản phẩm, và lời kêu gọi hành động (CTA) rõ ràng.",
-        cardLabel: "ChatGPT",
-      },
-      {
-        title: "Tạo nội dung quảng cáo hiệu quả trên Facebook",
-        subtitle:
-          "Viết nội dung quảng cáo Facebook có tỷ lệ chuyển đổi cao, tận dụng tâm lý sợ bỏ lỡ (FOMO) để tối đa hóa khả năng mua hàng và gia tăng tương tác.",
-        cardLabel: "ChatGPT",
-      },
-    ],
-    imgSrc: "/images/solution/content-creator.jpg",
-  },
-  Sales: {
-    subtitle:
-      "Gợi mở hội thoại, xử lý từ chối và chốt deal dễ dàng hơn nhờ hệ thống prompt được xây dựng theo hành trình khách hàng.",
-    prompts: [
-      {
-        title: "Tạo mẫu email tiếp cận cold lead",
-        subtitle:
-          "Tương tác hiệu quả với cold lead, giúp bạn xây dựng các mẫu email tiếp cận được cá nhân hóa, giải quyết những điểm đau chính và thúc đẩy phản hồi từ khách hàng.",
-        cardLabel: "ChatGPT",
-      },
-      {
-        title: "Tự động hóa quy trình bán hàng bằng công cụ CRM",
-        subtitle:
-          "Tối ưu hóa quy trình bán hàng của bạn, hướng dẫn triển khai, tùy chỉnh và tối ưu hóa các công cụ CRM.",
-        cardLabel: "ChatGPT",
-      },
-    ],
-    imgSrc: "/images/solution/sales.jpg",
-  },
-};
+import {
+  MARKETPLACE_CARDS,
+  TESTIMONIALS,
+  SOLUTIONS_DATA,
+  PARTNERS,
+  CHROME_EXTENSION_URL,
+} from "@/constants";
 
 function timeSince(dateString: string) {
   const now = new Date();
@@ -179,12 +59,19 @@ export default function HomePage() {
   const [newestPrompts, setNewestPrompts] = useState<Prompt[]>([]);
   const [blogs, setBlogs] = useState<Blog[]>([]);
   const [activeTag, setActiveTag] =
-    useState<keyof typeof solutionsData>("Solopreneur");
+    useState<keyof typeof SOLUTIONS_DATA>("Solopreneur");
   const [animateCards, setAnimateCards] = useState(false);
 
   const getListNewestPrompts = async () => {
     try {
-      const response = await api.getPromptsByCategoryId(1, 8, 8, "", "", 1);
+      const response = await promptService.getPromptsByCategoryId({
+        page: 1,
+        pageSize: 8,
+        categoryId: 8,
+        searchText: "",
+        industryId: "",
+        isType: 1,
+      });
       setNewestPrompts(response.data.data);
     } catch (error) {
       // Error fetching newest prompts
@@ -193,14 +80,18 @@ export default function HomePage() {
 
   const fetchBlogs = async () => {
     try {
-      const response = await api.getBlogPage(1, 3, "");
-      setBlogs(response.data.blogs);
+      const response = await blogService.getBlogPage({
+        page: 1,
+        pageSize: 3,
+        search: "",
+      });
+      setBlogs(response.data.data || []);
     } catch (error) {
       // Error fetching blogs
     }
   };
 
-  const handleTagChange = (tag: keyof typeof solutionsData) => {
+  const handleTagChange = (tag: keyof typeof SOLUTIONS_DATA) => {
     if (tag === activeTag) return;
 
     // Kích hoạt animation
@@ -252,12 +143,7 @@ export default function HomePage() {
               <Button
                 size="lg"
                 className="bg-gradient-to-r from-purple-600 hover:from-purple-700 to-blue-600 hover:to-blue-700 px-8 py-4 rounded-full text-white text-lg"
-                onClick={() =>
-                  window.open(
-                    "https://chromewebstore.google.com/detail/prom-nâng-cấp-prompt/gpcjhobhbnoifjkhgongdbggeljjpfif",
-                    "_blank"
-                  )
-                }
+                onClick={() => window.open(CHROME_EXTENSION_URL, "_blank")}
               >
                 <Download className="mr-2 w-5 h-5" />
                 Tải ngay
@@ -281,16 +167,7 @@ export default function HomePage() {
         <div className="mx-auto container">
           <div className="flex flex-wrap justify-center items-center gap-8 opacity-60">
             <div className="text-gray-500 text-sm">Tích hợp với:</div>
-            {[
-              "ChatGPT",
-              "Midjourney",
-              "Grok",
-              "AIHay",
-              "DeepSeek",
-              "Gemini",
-              "Claude",
-              "DALL-E",
-            ].map(partner => (
+            {PARTNERS.map(partner => (
               <div key={partner} className="font-medium text-gray-600 text-sm">
                 {partner}
               </div>
@@ -322,7 +199,7 @@ export default function HomePage() {
           </div>
 
           <div className="gap-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4">
-            {marketplaceCards.map((card, index) => (
+            {MARKETPLACE_CARDS.map((card, index) => (
               <Card
                 key={card.id}
                 className="group relative hover:shadow-xl overflow-hidden transition-all duration-300"
@@ -351,12 +228,12 @@ export default function HomePage() {
           </div>
 
           <div className="flex flex-wrap justify-center gap-4 mb-12">
-            {Object.keys(solutionsData).map(tag => (
+            {Object.keys(SOLUTIONS_DATA).map(tag => (
               <Button
                 key={tag}
                 variant={activeTag === tag ? "default" : "outline"}
                 onClick={() =>
-                  handleTagChange(tag as keyof typeof solutionsData)
+                  handleTagChange(tag as keyof typeof SOLUTIONS_DATA)
                 }
                 className={`${
                   activeTag === tag
@@ -371,26 +248,26 @@ export default function HomePage() {
 
           <div className="mb-8 text-center">
             <p className="mx-auto max-w-4xl text-gray-600 text-lg">
-              {solutionsData[activeTag].subtitle}
+              {SOLUTIONS_DATA[activeTag].subtitle}
             </p>
           </div>
 
           <div className="items-center gap-8 grid grid-cols-1 lg:grid-cols-3">
             <Card className={`p-6 ${animateCards ? "animate-pulse" : ""}`}>
               <Badge className="bg-blue-100 mb-4 text-blue-800">
-                {solutionsData[activeTag].prompts[0].cardLabel}
+                {SOLUTIONS_DATA[activeTag].prompts[0].cardLabel}
               </Badge>
               <h3 className="mb-3 font-bold text-xl">
-                {solutionsData[activeTag].prompts[0].title}
+                {SOLUTIONS_DATA[activeTag].prompts[0].title}
               </h3>
               <p className="text-gray-600">
-                {solutionsData[activeTag].prompts[0].subtitle}
+                {SOLUTIONS_DATA[activeTag].prompts[0].subtitle}
               </p>
             </Card>
 
             <div className="hidden lg:block">
               <Image
-                src={solutionsData[activeTag].imgSrc}
+                src={SOLUTIONS_DATA[activeTag].imgSrc}
                 alt="Solutions"
                 width={400}
                 height={300}
@@ -400,13 +277,13 @@ export default function HomePage() {
 
             <Card className={`p-6 ${animateCards ? "animate-pulse" : ""}`}>
               <Badge className="bg-green-100 mb-4 text-green-800">
-                {solutionsData[activeTag].prompts[1].cardLabel}
+                {SOLUTIONS_DATA[activeTag].prompts[1].cardLabel}
               </Badge>
               <h3 className="mb-3 font-bold text-xl">
-                {solutionsData[activeTag].prompts[1].title}
+                {SOLUTIONS_DATA[activeTag].prompts[1].title}
               </h3>
               <p className="text-gray-600">
-                {solutionsData[activeTag].prompts[1].subtitle}
+                {SOLUTIONS_DATA[activeTag].prompts[1].subtitle}
               </p>
             </Card>
           </div>
@@ -515,7 +392,7 @@ export default function HomePage() {
           </div>
 
           <div className="gap-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
-            {testimonials.map((testimonial, index) => (
+            {TESTIMONIALS.map((testimonial, index) => (
               <Card key={index} className="p-6">
                 <div className="flex items-center mb-4">
                   {[...Array(5)].map((_, i) => (

@@ -2,7 +2,12 @@
 
 import { useEffect, useState } from "react";
 import { useAuth } from "@/contexts/AuthContext";
-import { api } from "@/lib/api";
+import {
+  promptService,
+  categoryService,
+  topicService,
+  industryService,
+} from "@/services";
 import { Prompt, Category, Topic, Industry } from "@/lib/types";
 import { Button } from "@/components/ui/button";
 import {
@@ -45,19 +50,19 @@ export default function PromptLibraryPage() {
   const loadPrompts = async () => {
     setIsLoading(true);
     try {
-      const response = await api.getPromptsByCategoryId(
-        currentPage,
-        12,
-        selectedCategory || undefined,
-        selectedTopic || undefined,
-        selectedIndustry || undefined,
-        searchTerm || undefined,
-        1, // is_type
-        2 // sub_type
-      );
+      const response = await promptService.getPromptsByCategoryId({
+        page: currentPage,
+        pageSize: 12,
+        categoryId: selectedCategory || "",
+        topicId: selectedTopic || undefined,
+        industryId: selectedIndustry || undefined,
+        searchText: searchTerm || undefined,
+        isType: 1,
+        subType: 2,
+      });
 
       setPrompts(response.data.data);
-      setTotalPages(Math.ceil(response.data.total / 12));
+      setTotalPages(Math.ceil((response.data.total || 0) / 12));
     } catch (error) {
       // Error loading prompts
       toast.error("Có lỗi xảy ra khi tải prompts");
@@ -68,7 +73,7 @@ export default function PromptLibraryPage() {
 
   const loadCategories = async () => {
     try {
-      const response = await api.getCategories();
+      const response = await categoryService.getCategories();
       setCategories(response.data.data || response.data);
     } catch (error) {
       // Error loading categories
@@ -77,7 +82,7 @@ export default function PromptLibraryPage() {
 
   const loadTopics = async () => {
     try {
-      const response = await api.getTopics();
+      const response = await topicService.getTopics();
       setTopics(response.data.data || response.data);
     } catch (error) {
       // Error loading topics
@@ -86,7 +91,7 @@ export default function PromptLibraryPage() {
 
   const loadIndustries = async () => {
     try {
-      const response = await api.getIndustries();
+      const response = await industryService.getIndustries();
       setIndustries(response.data.data || response.data);
     } catch (error) {
       // Error loading industries
@@ -97,8 +102,8 @@ export default function PromptLibraryPage() {
     if (!user) return;
 
     try {
-      const response = await api.getFavoritePrompts(user.id);
-      const favoriteIds = response.data.map(
+      const response = await promptService.getFavoritePrompts(user.id);
+      const favoriteIds = (response.data.data || response.data || []).map(
         (fav: { prompt_id: number }) => fav.prompt_id
       );
       setFavoritePrompts(favoriteIds);
@@ -126,12 +131,12 @@ export default function PromptLibraryPage() {
     try {
       if (favoritePrompts.includes(promptId)) {
         // Remove from favorites
-        await api.removeFavoritePrompt(promptId);
+        await promptService.removeFavoritePrompt(promptId);
         setFavoritePrompts(prev => prev.filter(id => id !== promptId));
         toast.success("Đã xóa khỏi yêu thích");
       } else {
         // Add to favorites
-        await api.addFavoritePrompt(promptId, user.id);
+        await promptService.addFavoritePrompt({ promptId, userId: user.id });
         setFavoritePrompts(prev => [...prev, promptId]);
         toast.success("Đã thêm vào yêu thích");
       }
