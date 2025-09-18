@@ -1,4 +1,4 @@
-import { apiClient, buildUrlWithParams } from "../base/apiClient";
+import { apiClient } from "../base/apiClient";
 import { ENDPOINTS, QUERY_PARAMS } from "@/constants";
 import { PaginationParams, ServiceMethod } from "../base/types";
 

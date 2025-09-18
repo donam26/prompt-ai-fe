@@ -68,8 +68,13 @@ export default function RegisterPage() {
         );
         router.push("/login");
       }
-    } catch (error: any) {
-      setError(error?.response?.data?.message || "Có lỗi xảy ra khi đăng ký");
+    } catch (error: unknown) {
+      const errorMessage =
+        error instanceof Error && "response" in error
+          ? (error as { response?: { data?: { message?: string } } })?.response
+              ?.data?.message
+          : "Có lỗi xảy ra khi đăng ký";
+      setError(errorMessage || "Có lỗi xảy ra khi đăng ký");
       toast.error("Đăng ký thất bại");
     } finally {
       setIsLoading(false);

@@ -4,6 +4,7 @@ import "./globals.css";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { QueryProvider } from "@/providers/QueryProvider";
 import { Toaster } from "@/components/ui/sonner";
+import { Header, Footer } from "@/components/layout";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -47,7 +48,13 @@ export default function RootLayout({
       <body className={inter.className}>
         <QueryProvider>
           <AuthProvider>
-            {children}
+            <div className="flex flex-col min-h-screen">
+              <Header />
+              <main className="flex flex-col flex-1 bg-white pt-0">
+                {children}
+              </main>
+              <Footer />
+            </div>
             <Toaster />
           </AuthProvider>
         </QueryProvider>

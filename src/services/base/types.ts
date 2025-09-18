@@ -1,7 +1,7 @@
 import { AxiosResponse } from "axios";
 
 // Base API response type
-export interface ApiResponse<T = any> {
+export interface ApiResponse<T = unknown> {
   data: T;
   message?: string;
   success?: boolean;
@@ -31,10 +31,8 @@ export interface FilterParams {
   subType?: string | number;
 }
 
-// Base service interface
-export interface BaseService {
-  // Common CRUD operations can be added here if needed
-}
+// Base service type
+export type BaseService = Record<string, never>;
 
 // Error response type
 export interface ApiError {
@@ -56,7 +54,7 @@ export interface RequestConfig {
 }
 
 // Generic service method type
-export type ServiceMethod<TParams = any, TResponse = any> = (
+export type ServiceMethod<TParams = unknown, TResponse = unknown> = (
   params?: TParams,
   config?: RequestConfig
 ) => Promise<AxiosResponse<ApiResponse<TResponse>>>;

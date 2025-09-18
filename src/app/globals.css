@@ -1,3 +1,6 @@
+/* Import layout-specific styles */
+@import "../styles/layout.css";
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -25,15 +28,50 @@
 
   /* Admin layout fixes */
   .admin-layout {
-    @apply flex min-h-screen;
+    @apply flex bg-gray-50 min-h-screen;
   }
 
   .admin-sidebar {
-    @apply bg-white shadow-lg w-64 h-screen;
+    @apply top-0 left-0 z-50 fixed bg-white shadow-lg h-screen overflow-y-auto;
   }
 
-  .admin-content {
-    @apply flex-1 py-4 sm:py-6;
+  .admin-main-content {
+    @apply flex-1 min-h-screen transition-all duration-300 ease-in-out;
+  }
+
+  .admin-content-wrapper {
+    @apply p-6;
+  }
+
+  .admin-page-layout {
+    @apply space-y-6;
+  }
+
+  .admin-page-header {
+    @apply bg-white shadow-sm p-6 border border-gray-200 rounded-lg;
+  }
+
+  .admin-page-content {
+    @apply space-y-6;
+  }
+
+  .admin-content-card {
+    @apply bg-white shadow-sm border border-gray-200 rounded-lg;
+  }
+
+  /* Mobile responsive */
+  @media (max-width: 1024px) {
+    .admin-sidebar {
+      @apply transition-transform -translate-x-full duration-300 ease-in-out;
+    }
+
+    .admin-sidebar.open {
+      @apply translate-x-0;
+    }
+
+    .admin-main-content {
+      @apply ml-0;
+    }
   }
 }
 

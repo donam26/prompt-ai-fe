@@ -9,14 +9,13 @@ import {
   TrendingUp,
   DollarSign,
   Activity,
-  ArrowUpRight,
-  ArrowDownRight,
+  // Removed unused imports
 } from "lucide-react";
 
 export interface StatCard {
   title: string;
   value: string | number;
-  icon: any;
+  icon: React.ReactNode;
   change: string;
   changeType: "positive" | "negative";
   description: string;
@@ -24,7 +23,7 @@ export interface StatCard {
 
 export interface QuickAction {
   title: string;
-  icon: any;
+  icon: React.ReactNode;
   href?: string;
   onClick?: () => void;
 }
@@ -123,7 +122,7 @@ export const RECENT_ACTIVITIES: ActivityItem[] = [
   },
 ];
 
-export const createStatCards = (stats: any): StatCard[] => [
+export const createStatCards = (stats: Record<string, unknown>): StatCard[] => [
   {
     title: ADMIN_LABELS.STATS.TOTAL_USERS,
     value: stats?.totalUsers || 0,

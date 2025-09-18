@@ -3,7 +3,7 @@ import { ENDPOINTS, QUERY_PARAMS } from "@/constants";
 import { PaginationParams, ServiceMethod } from "../../base/types";
 
 // Topic service parameters
-export interface TopicListParams extends PaginationParams {}
+export type TopicListParams = PaginationParams;
 
 export class TopicService {
   // Get all topics

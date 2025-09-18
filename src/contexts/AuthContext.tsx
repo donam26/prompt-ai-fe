@@ -49,8 +49,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
           setUser(JSON.parse(storedUser));
           setToken(storedToken);
         }
-      } catch (error) {
-        // Error initializing auth
+      } catch {
+        // Error initializing auth - could be logged to monitoring service
         // Clear invalid data
         localStorage.removeItem("user");
         localStorage.removeItem("token");

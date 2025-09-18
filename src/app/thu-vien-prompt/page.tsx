@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import {
   promptService,
@@ -47,7 +47,7 @@ export default function PromptLibraryPage() {
   const [totalPages, setTotalPages] = useState(1);
   const [activeTab, setActiveTab] = useState("all");
 
-  const loadPrompts = async () => {
+  const loadPrompts = useCallback(async () => {
     setIsLoading(true);
     try {
       const response = await promptService.getPromptsByCategoryId({
@@ -63,42 +63,48 @@ export default function PromptLibraryPage() {
 
       setPrompts(response.data.data);
       setTotalPages(Math.ceil((response.data.total || 0) / 12));
-    } catch (error) {
-      // Error loading prompts
+    } catch {
+      // Error loading prompts - could be logged to monitoring service
       toast.error("Có lỗi xảy ra khi tải prompts");
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [
+    currentPage,
+    selectedCategory,
+    selectedTopic,
+    selectedIndustry,
+    searchTerm,
+  ]);
 
-  const loadCategories = async () => {
+  const loadCategories = useCallback(async () => {
     try {
       const response = await categoryService.getCategories();
       setCategories(response.data.data || response.data);
-    } catch (error) {
-      // Error loading categories
+    } catch {
+      // Error loading categories - could be logged to monitoring service
     }
-  };
+  }, []);
 
-  const loadTopics = async () => {
+  const loadTopics = useCallback(async () => {
     try {
       const response = await topicService.getTopics();
       setTopics(response.data.data || response.data);
-    } catch (error) {
-      // Error loading topics
+    } catch {
+      // Error loading topics - could be logged to monitoring service
     }
-  };
+  }, []);
 
-  const loadIndustries = async () => {
+  const loadIndustries = useCallback(async () => {
     try {
       const response = await industryService.getIndustries();
       setIndustries(response.data.data || response.data);
-    } catch (error) {
-      // Error loading industries
+    } catch {
+      // Error loading industries - could be logged to monitoring service
     }
-  };
+  }, []);
 
-  const loadFavoritePrompts = async () => {
+  const loadFavoritePrompts = useCallback(async () => {
     if (!user) return;
 
     try {
@@ -107,10 +113,10 @@ export default function PromptLibraryPage() {
         (fav: { prompt_id: number }) => fav.prompt_id
       );
       setFavoritePrompts(favoriteIds);
-    } catch (error) {
-      // Error loading favorite prompts
+    } catch {
+      // Error loading favorite prompts - could be logged to monitoring service
     }
-  };
+  }, [user]);
 
   const handleSearch = () => {
     setCurrentPage(1);
@@ -140,8 +146,8 @@ export default function PromptLibraryPage() {
         setFavoritePrompts(prev => [...prev, promptId]);
         toast.success("Đã thêm vào yêu thích");
       }
-    } catch (error) {
-      // Error toggling favorite
+    } catch {
+      // Error toggling favorite - could be logged to monitoring service
       toast.error("Có lỗi xảy ra");
     }
   };

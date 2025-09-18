@@ -73,8 +73,8 @@ export default function HomePage() {
         isType: 1,
       });
       setNewestPrompts(response.data.data);
-    } catch (error) {
-      // Error fetching newest prompts
+    } catch {
+      // Error fetching newest prompts - could be logged to monitoring service
     }
   };
 
@@ -86,8 +86,8 @@ export default function HomePage() {
         search: "",
       });
       setBlogs(response.data.data || []);
-    } catch (error) {
-      // Error fetching blogs
+    } catch {
+      // Error fetching blogs - could be logged to monitoring service
     }
   };
 
@@ -120,18 +120,18 @@ export default function HomePage() {
   }, []);
 
   return (
-    <div className="bg-gradient-to-br from-purple-50 via-blue-50 to-indigo-100 min-h-screen">
+    <div className="min-h-screen hero-container">
       {/* Hero Section */}
       <section className="relative px-4 py-20">
-        <div className="absolute inset-0 bg-gradient-to-r from-purple-600/10 to-blue-600/10" />
+        {/* <div className="absolute inset-0 bg-gradient-to-r from-[#e1f6ff]/20 to-[#e6b8ff]/20" /> */}
         <div className="z-10 relative mx-auto container">
           <div className="mx-auto max-w-4xl text-center">
             <h1 className="mb-6 font-bold text-gray-900 text-4xl md:text-6xl">
-              <span className="bg-clip-text bg-gradient-to-r from-purple-600 to-blue-600 text-transparent">
+              <span className="bg-clip-text bg-gradient-to-r from-[#5700c6] to-[#e6b8ff] text-transparent">
                 Thư Viện & Nâng Cấp
               </span>
               <br />
-              <span className="bg-clip-text bg-gradient-to-r from-purple-600 to-blue-600 text-transparent">
+              <span className="bg-clip-text bg-gradient-to-r from-[#5700c6] to-[#e6b8ff] text-transparent">
                 Prompt chỉ với 1 nút bấm!
               </span>
             </h1>
@@ -142,7 +142,7 @@ export default function HomePage() {
             <div className="flex sm:flex-row flex-col justify-center items-center gap-4">
               <Button
                 size="lg"
-                className="bg-gradient-to-r from-purple-600 hover:from-purple-700 to-blue-600 hover:to-blue-700 px-8 py-4 rounded-full text-white text-lg"
+                className="bg-gradient-to-r from-[#5700c6] hover:from-[#4a00a8] to-[#e6b8ff] hover:to-[#d4a5ff] px-8 py-4 rounded-full text-white text-lg"
                 onClick={() => window.open(CHROME_EXTENSION_URL, "_blank")}
               >
                 <Download className="mr-2 w-5 h-5" />
@@ -380,7 +380,7 @@ export default function HomePage() {
       </section>
 
       {/* Testimonials Section */}
-      <section className="bg-gradient-to-r from-purple-100 to-blue-100 px-4 py-20">
+      <section className="bg-gradient-to-r from-[#e1f6ff] to-[#e6b8ff] px-4 py-20">
         <div className="mx-auto container">
           <div className="mb-12 text-center">
             <div className="mb-2 font-semibold text-purple-600">
@@ -429,7 +429,7 @@ export default function HomePage() {
       {/* CTA Section */}
       <section className="px-4 py-20">
         <div className="mx-auto container">
-          <Card className="bg-gradient-to-r from-purple-600 to-blue-600 p-12 text-white text-center">
+          <Card className="bg-gradient-to-r from-[#5700c6] to-[#e6b8ff] p-12 text-white text-center">
             <h2 className="mb-4 font-bold text-3xl md:text-4xl">
               x10 Hiệu Suất Nhờ Sử Dụng Prompt AI Ngay Hôm Nay
             </h2>

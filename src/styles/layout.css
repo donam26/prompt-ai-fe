@@ -1,0 +1,109 @@
+/**
+ * Layout-specific styles that complement Tailwind CSS
+ * These styles handle complex CSS that cannot be easily converted to Tailwind
+ */
+
+/* Global styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+/* Header styles are now handled by Tailwind CSS */
+
+/* Text decoration skip for better readability */
+a {
+  text-decoration-skip-ink: auto;
+}
+
+/* Forced colors support for accessibility */
+@media (forced-colors: active) {
+  .button,
+  .nav-link,
+  .header,
+  .footer {
+    forced-color-adjust: none;
+  }
+}
+
+/* Custom width utilities that don't exist in Tailwind */
+.min-w-30 {
+  min-width: 7.5rem; /* 120px */
+}
+
+.w-41 {
+  width: 10.25rem; /* 164px */
+}
+
+.h-14 {
+  height: 3.5rem; /* 56px */
+}
+
+.h-18 {
+  height: 4.5rem; /* 72px */
+}
+
+.leading-5\.5 {
+  line-height: 1.375rem; /* 22px */
+}
+
+/* Mobile-specific styles */
+@media (max-width: 768px) {
+  .mobile-auth-buttons {
+    display: flex !important;
+    flex-direction: column;
+  }
+
+  .user-nav-left {
+    position: fixed;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100vh;
+    background: white;
+    flex-direction: column;
+    padding: 80px 20px 20px;
+    transition: 0.3s ease-in-out;
+    z-index: 40;
+  }
+
+  .user-nav-left.mobile-open {
+    left: 0;
+  }
+
+  .user-dropdown-header {
+    width: 100%;
+  }
+
+  .user-dropdown-btn-header {
+    width: 100%;
+    padding: 15px 0;
+    border-bottom: 1px solid #eee;
+    justify-content: space-between;
+  }
+
+  .user-dropdown-menu {
+    position: static;
+    width: 100%;
+    border: none;
+    box-shadow: none;
+    background: #f8f8f8;
+  }
+
+  .user-dropdown-item {
+    padding: 15px;
+    border-bottom: 1px solid #eee;
+  }
+}
+
+.hero-container {
+  background: linear-gradient(90deg, #e1f6ff 0%, #e6b8ff 100%);
+  width: 100%;
+}

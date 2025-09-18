@@ -1,18 +1,24 @@
 "use client";
 
-import { useAuth } from "@/contexts/AuthContext";
-import { useAdminPermissions } from "@/hooks/useAdminPermissions";
-import { useRouter } from "next/navigation";
 import { useEffect } from "react";
-import { AdminSidebar } from "@/components/admin/AdminSidebar";
-import { AdminHeader } from "@/components/admin/AdminHeader";
+import { useRouter } from "next/navigation";
 import { Loader2 } from "lucide-react";
 
+import { useAuth } from "@/contexts/AuthContext";
+import { useAdminPermissions } from "@/hooks/useAdminPermissions";
+import { AdminLayout as NewAdminLayout } from "@/components/admin";
+import type { AdminLayoutProps } from "@/types/admin";
+
+/**
+ * Admin layout component that provides authentication and authorization checks
+ * for admin pages. Redirects non-admin users to the home page.
+ *
+ * @param props - The component props
+ * @returns The admin layout JSX or null if user is not authorized
+ */
 export default function AdminLayout({
   children,
-}: {
-  children: React.ReactNode;
-}) {
+}: AdminLayoutProps): React.JSX.Element | null {
   const { isLoading } = useAuth();
   const { isAdmin } = useAdminPermissions();
   const router = useRouter();
@@ -35,15 +41,5 @@ export default function AdminLayout({
     return null;
   }
 
-  return (
-    <div className="bg-gray-50 admin-layout">
-      <AdminSidebar />
-      <div className="admin-main">
-        <AdminHeader />
-        <main className="admin-content">
-          <div className="container-responsive">{children}</div>
-        </main>
-      </div>
-    </div>
-  );
+  return <NewAdminLayout>{children}</NewAdminLayout>;
 }

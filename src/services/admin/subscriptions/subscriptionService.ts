@@ -3,7 +3,7 @@ import { ENDPOINTS, QUERY_PARAMS } from "@/constants";
 import { PaginationParams, ServiceMethod } from "../../base/types";
 
 // Subscription service parameters
-export interface SubscriptionListParams extends PaginationParams {}
+export type SubscriptionListParams = PaginationParams;
 
 export class SubscriptionService {
   // Get subscriptions with pagination

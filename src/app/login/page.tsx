@@ -18,7 +18,7 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Loader2, Mail, Lock, ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { toast } from "sonner";
-import { AUTH_MESSAGES, AUTH_LABELS, AUTH_FIELD_NAMES } from "@/constants";
+import { AUTH_MESSAGES, AUTH_LABELS } from "@/constants";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -41,10 +41,13 @@ export default function LoginPage() {
         // Redirect to OTP verification page
         router.push(`/verify-otp?email=${encodeURIComponent(email)}`);
       }
-    } catch (error: any) {
-      setError(
-        error?.response?.data?.message || AUTH_MESSAGES.LOGIN.GENERIC_ERROR
-      );
+    } catch (error: unknown) {
+      const errorMessage =
+        error instanceof Error && "response" in error
+          ? (error as { response?: { data?: { message?: string } } })?.response
+              ?.data?.message
+          : AUTH_MESSAGES.LOGIN.GENERIC_ERROR;
+      setError(errorMessage || AUTH_MESSAGES.LOGIN.GENERIC_ERROR);
       toast.error(AUTH_MESSAGES.LOGIN.FAILED);
     } finally {
       setIsLoading(false);
@@ -73,11 +76,13 @@ export default function LoginPage() {
         toast.success(AUTH_MESSAGES.LOGIN.SUCCESS);
         router.push("/thu-vien-prompt");
       }
-    } catch (error: any) {
-      setError(
-        error?.response?.data?.message ||
-          AUTH_MESSAGES.LOGIN.INVALID_CREDENTIALS
-      );
+    } catch (error: unknown) {
+      const errorMessage =
+        error instanceof Error && "response" in error
+          ? (error as { response?: { data?: { message?: string } } })?.response
+              ?.data?.message
+          : AUTH_MESSAGES.LOGIN.INVALID_CREDENTIALS;
+      setError(errorMessage || AUTH_MESSAGES.LOGIN.INVALID_CREDENTIALS);
       toast.error(AUTH_MESSAGES.LOGIN.FAILED);
     } finally {
       setIsLoading(false);
