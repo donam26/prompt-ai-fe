@@ -15,7 +15,7 @@ import {
 export interface StatCard {
   title: string;
   value: string | number;
-  icon: React.ReactNode;
+  icon: React.ComponentType<{ className?: string }>;
   change: string;
   changeType: "positive" | "negative";
   description: string;
@@ -23,7 +23,7 @@ export interface StatCard {
 
 export interface QuickAction {
   title: string;
-  icon: React.ReactNode;
+  icon: React.ComponentType<{ className?: string }>;
   href?: string;
   onClick?: () => void;
 }
@@ -125,7 +125,7 @@ export const RECENT_ACTIVITIES: ActivityItem[] = [
 export const createStatCards = (stats: Record<string, unknown>): StatCard[] => [
   {
     title: ADMIN_LABELS.STATS.TOTAL_USERS,
-    value: stats?.totalUsers || 0,
+    value: typeof stats?.totalUsers === "number" ? stats.totalUsers : 0,
     icon: Users,
     change: "+12%",
     changeType: "positive",
@@ -133,7 +133,7 @@ export const createStatCards = (stats: Record<string, unknown>): StatCard[] => [
   },
   {
     title: ADMIN_LABELS.STATS.TOTAL_PROMPTS,
-    value: stats?.totalPrompts || 0,
+    value: typeof stats?.totalPrompts === "number" ? stats.totalPrompts : 0,
     icon: FileText,
     change: "+8%",
     changeType: "positive",
@@ -141,7 +141,8 @@ export const createStatCards = (stats: Record<string, unknown>): StatCard[] => [
   },
   {
     title: ADMIN_LABELS.STATS.CATEGORIES,
-    value: stats?.totalCategories || 0,
+    value:
+      typeof stats?.totalCategories === "number" ? stats.totalCategories : 0,
     icon: Tag,
     change: "+2",
     changeType: "positive",
@@ -149,7 +150,7 @@ export const createStatCards = (stats: Record<string, unknown>): StatCard[] => [
   },
   {
     title: ADMIN_LABELS.STATS.BLOG_POSTS,
-    value: stats?.totalBlogs || 0,
+    value: typeof stats?.totalBlogs === "number" ? stats.totalBlogs : 0,
     icon: BookOpen,
     change: "+5",
     changeType: "positive",
@@ -157,7 +158,7 @@ export const createStatCards = (stats: Record<string, unknown>): StatCard[] => [
   },
   {
     title: ADMIN_LABELS.STATS.TRANSACTIONS,
-    value: stats?.totalPayments || 0,
+    value: typeof stats?.totalPayments === "number" ? stats.totalPayments : 0,
     icon: CreditCard,
     change: "+15%",
     changeType: "positive",
@@ -165,7 +166,7 @@ export const createStatCards = (stats: Record<string, unknown>): StatCard[] => [
   },
   {
     title: ADMIN_LABELS.STATS.MONTHLY_REVENUE,
-    value: `$${stats?.monthlyRevenue || 0}`,
+    value: `$${typeof stats?.monthlyRevenue === "number" ? stats.monthlyRevenue : 0}`,
     icon: DollarSign,
     change: "+23%",
     changeType: "positive",

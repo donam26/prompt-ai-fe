@@ -10,12 +10,6 @@ export interface ApiResponse<T = unknown> {
   pageSize?: number;
 }
 
-// Pagination parameters
-export interface PaginationParams {
-  page?: number;
-  pageSize?: number;
-}
-
 // Search parameters
 export interface SearchParams {
   search?: string;

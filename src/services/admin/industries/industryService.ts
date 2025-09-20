@@ -1,10 +1,7 @@
 import { apiClient } from "../../base/apiClient";
 import { ENDPOINTS, QUERY_PARAMS } from "@/constants";
-import {
-  PaginationParams,
-  SearchParams,
-  ServiceMethod,
-} from "../../base/types";
+import { SearchParams, ServiceMethod } from "../../base/types";
+import type { PaginationParams } from "@/types/services/common";
 
 // Industry service parameters
 export interface IndustryListParams extends PaginationParams, SearchParams {}

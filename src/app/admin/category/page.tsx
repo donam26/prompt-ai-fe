@@ -92,8 +92,16 @@ export default function CategoryManagementPage(): React.JSX.Element {
   const { data: sectionsData, isLoading: sectionsLoading } = useAdminSections();
 
   // Extract data from API responses
-  const categories = categoriesData?.data?.data || categoriesData?.data || [];
-  const sections = sectionsData?.data?.data || sectionsData?.data || [];
+  const categories = Array.isArray(categoriesData?.data?.data)
+    ? categoriesData.data.data
+    : Array.isArray(categoriesData?.data)
+      ? categoriesData.data
+      : [];
+  const sections = Array.isArray(sectionsData?.data?.data)
+    ? sectionsData.data.data
+    : Array.isArray(sectionsData?.data)
+      ? sectionsData.data
+      : [];
   const totalPages = Math.ceil((categoriesData?.data?.total || 0) / 10);
   const isLoading = categoriesLoading || sectionsLoading;
 

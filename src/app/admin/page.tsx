@@ -36,16 +36,12 @@ interface AdminStatCard {
   readonly value: string | number;
   readonly change?: string;
   readonly changeType?: "positive" | "negative" | "neutral";
-  readonly icon?: React.ReactNode;
+  readonly icon?: React.ComponentType<{ className?: string }>;
 }
 
 export default function AdminDashboard(): React.JSX.Element {
   const [stats, setStats] = useState<DashboardStats | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
-    loadStats();
-  }, [loadStats]);
 
   /**
    * Loads dashboard statistics from various services
@@ -83,6 +79,10 @@ export default function AdminDashboard(): React.JSX.Element {
     }
   }, []);
 
+  useEffect(() => {
+    loadStats();
+  }, [loadStats]);
+
   /**
    * Calculates the count of categories from API response
    *
@@ -110,7 +110,7 @@ export default function AdminDashboard(): React.JSX.Element {
     );
   }
 
-  const statCards = createStatCards(stats);
+  const statCards = createStatCards((stats || {}) as Record<string, unknown>);
 
   return (
     <AdminPageLayout
@@ -141,7 +141,11 @@ const StatsGrid = ({ statCards }: StatsGridProps): React.JSX.Element => (
             <CardTitle className="font-medium text-gray-600 text-xs sm:text-sm">
               {stat.title}
             </CardTitle>
-            <stat.icon className="flex-shrink-0 w-4 h-4 text-gray-400" />
+            {stat.icon && (
+              <div className="flex-shrink-0 w-4 h-4 text-gray-400">
+                <stat.icon className="w-4 h-4" />
+              </div>
+            )}
           </CardHeader>
           <CardContent className="pt-0">
             <div className="font-bold text-gray-900 text-xl sm:text-2xl">
@@ -162,7 +166,6 @@ const StatsGrid = ({ statCards }: StatsGridProps): React.JSX.Element => (
               >
                 {stat.change}
               </span>
-              <span className="ml-1 truncate">{stat.description}</span>
             </div>
           </CardContent>
         </Card>
@@ -201,7 +204,11 @@ const QuickActionsCard = (): React.JSX.Element => (
             variant="outline"
             className="flex flex-col justify-center items-center p-2 h-16 sm:h-20"
           >
-            <action.icon className="mb-1 sm:mb-2 w-5 sm:w-6 h-5 sm:h-6" />
+            {action.icon && (
+              <div className="mb-1 sm:mb-2 w-5 sm:w-6 h-5 sm:h-6">
+                <action.icon className="w-5 sm:w-6 h-5 sm:h-6" />
+              </div>
+            )}
             <span className="text-xs sm:text-sm text-center leading-tight">
               {action.title}
             </span>

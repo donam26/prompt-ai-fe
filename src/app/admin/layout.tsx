@@ -4,7 +4,7 @@ import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Loader2 } from "lucide-react";
 
-import { useAuth } from "@/contexts/AuthContext";
+import { useAuth } from "@/hooks/useAuth";
 import { useAdminPermissions } from "@/hooks/useAdminPermissions";
 import { AdminLayout as NewAdminLayout } from "@/components/admin";
 import type { AdminLayoutProps } from "@/types/admin";

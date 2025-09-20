@@ -1,6 +1,7 @@
 import { apiClient } from "../base/apiClient";
 import { ENDPOINTS, QUERY_PARAMS } from "@/constants";
-import { PaginationParams, SearchParams, ServiceMethod } from "../base/types";
+import { SearchParams, ServiceMethod } from "../base/types";
+import type { PaginationParams } from "@/types/services/common";
 import { CreateCategoryRequest } from "@/lib/types";
 
 // Category service parameters

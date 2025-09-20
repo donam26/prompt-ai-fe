@@ -1,12 +1,8 @@
 import { apiClient, buildUrlWithParams } from "../base/apiClient";
 import { ENDPOINTS, QUERY_PARAMS } from "@/constants";
-import {
-  PaginationParams,
-  SearchParams,
-  FilterParams,
-  ServiceMethod,
-} from "../base/types";
+import { SearchParams, FilterParams, ServiceMethod } from "../base/types";
 import { CreatePromptRequest } from "@/lib/types";
+import type { PaginationParams } from "@/types/services/common";
 
 // Prompt service parameters
 export interface PromptListParams

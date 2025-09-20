@@ -19,6 +19,13 @@ const eslintConfig = [
     rules: {
       // Prettier integration
       "prettier/prettier": "error",
+      "no-console": [
+        "error",
+        "log",
+        {
+          allow: ["log", "warn", "error"],
+        },
+      ],
 
       // General code quality rules
       "no-console": "warn",
@@ -33,6 +40,7 @@ const eslintConfig = [
       "react/react-in-jsx-scope": "off",
       "react/prop-types": "off",
       "react-hooks/exhaustive-deps": "warn",
+      "@typescript-eslint/no-explicit-any": "off",
     },
   },
   {

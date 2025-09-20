@@ -2,7 +2,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { promptService, categoryService } from "@/services";
 import { toast } from "sonner";
 import { CreatePromptRequest } from "@/lib/types";
-import { ApiError, queryKeys } from "../shared/types";
+import { ApiErrorResult, queryKeys } from "@/types";
 
 // Custom hook for fetching prompts
 export const usePrompts = (params?: {
@@ -49,7 +49,7 @@ export const useCreatePrompt = () => {
       queryClient.invalidateQueries({ queryKey: queryKeys.admin.prompts });
       toast.success("Prompt created successfully!");
     },
-    onError: (error: ApiError) => {
+    onError: (error: ApiErrorResult) => {
       toast.error(error?.response?.data?.message || "Failed to create prompt");
     },
   });
@@ -71,7 +71,7 @@ export const useUpdatePrompt = () => {
       queryClient.invalidateQueries({ queryKey: queryKeys.admin.prompts });
       toast.success("Prompt updated successfully!");
     },
-    onError: (error: ApiError) => {
+    onError: (error: ApiErrorResult) => {
       toast.error(error?.response?.data?.message || "Failed to update prompt");
     },
   });
@@ -87,7 +87,7 @@ export const useDeletePrompt = () => {
       queryClient.invalidateQueries({ queryKey: queryKeys.admin.prompts });
       toast.success("Prompt deleted successfully!");
     },
-    onError: (error: ApiError) => {
+    onError: (error: ApiErrorResult) => {
       toast.error(error?.response?.data?.message || "Failed to delete prompt");
     },
   });
@@ -102,7 +102,7 @@ export const useToggleFavorite = () => {
       queryClient.invalidateQueries({ queryKey: queryKeys.favorites });
       queryClient.invalidateQueries({ queryKey: queryKeys.prompts });
     },
-    onError: (error: ApiError) => {
+    onError: (error: ApiErrorResult) => {
       toast.error(
         error?.response?.data?.message || "Failed to toggle favorite"
       );

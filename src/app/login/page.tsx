@@ -1,9 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
-import { useAuth } from "@/contexts/AuthContext";
-import { userService } from "@/services";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -14,79 +11,18 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Loader2, Mail, Lock, ArrowLeft } from "lucide-react";
+import { Loader2, Mail, ArrowLeft } from "lucide-react";
 import Link from "next/link";
-import { toast } from "sonner";
-import { AUTH_MESSAGES, AUTH_LABELS } from "@/constants";
+import { AUTH_LABELS, ROUTES_URL } from "@/constants";
+import { useLoginQuery } from "@/hooks/auth/useLoginQuery";
 
 export default function LoginPage() {
-  const router = useRouter();
-  const { login } = useAuth();
+  const { isLoading: isLoginLoading, mutate: loginUser } = useLoginQuery();
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState("");
-  const [isPasswordLogin, setIsPasswordLogin] = useState(false);
 
-  const handleEmailLogin = async (e: React.FormEvent) => {
+  const handleEmailLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    setIsLoading(true);
-    setError("");
-
-    try {
-      const response = await userService.loginUser(email);
-      if (response.data.success) {
-        toast.success(AUTH_MESSAGES.LOGIN.OTP_SENT);
-        // Redirect to OTP verification page
-        router.push(`/verify-otp?email=${encodeURIComponent(email)}`);
-      }
-    } catch (error: unknown) {
-      const errorMessage =
-        error instanceof Error && "response" in error
-          ? (error as { response?: { data?: { message?: string } } })?.response
-              ?.data?.message
-          : AUTH_MESSAGES.LOGIN.GENERIC_ERROR;
-      setError(errorMessage || AUTH_MESSAGES.LOGIN.GENERIC_ERROR);
-      toast.error(AUTH_MESSAGES.LOGIN.FAILED);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const handlePasswordLogin = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsLoading(true);
-    setError("");
-
-    try {
-      const userIP = await fetch("https://api.ipify.org?format=json")
-        .then(res => res.json())
-        .then(data => data.ip)
-        .catch(() => "127.0.0.1");
-
-      const response = await userService.passwordLogin({
-        email,
-        password,
-        userIP,
-      });
-      if (response.data.success) {
-        const { user, token } = response.data.data;
-        login(user, token);
-        toast.success(AUTH_MESSAGES.LOGIN.SUCCESS);
-        router.push("/thu-vien-prompt");
-      }
-    } catch (error: unknown) {
-      const errorMessage =
-        error instanceof Error && "response" in error
-          ? (error as { response?: { data?: { message?: string } } })?.response
-              ?.data?.message
-          : AUTH_MESSAGES.LOGIN.INVALID_CREDENTIALS;
-      setError(errorMessage || AUTH_MESSAGES.LOGIN.INVALID_CREDENTIALS);
-      toast.error(AUTH_MESSAGES.LOGIN.FAILED);
-    } finally {
-      setIsLoading(false);
-    }
+    loginUser(email);
   };
 
   return (
@@ -94,7 +30,7 @@ export default function LoginPage() {
       <div className="w-full max-w-md">
         <div className="mb-8 text-center">
           <Link
-            href="/"
+            href={ROUTES_URL.HOME}
             className="inline-flex items-center mb-4 text-purple-600 hover:text-purple-700"
           >
             <ArrowLeft className="mr-2 w-4 h-4" />
@@ -110,24 +46,11 @@ export default function LoginPage() {
           <CardHeader>
             <CardTitle>{AUTH_LABELS.LOGIN.FORM_TITLE}</CardTitle>
             <CardDescription>
-              {isPasswordLogin
-                ? AUTH_LABELS.LOGIN.PASSWORD_DESCRIPTION
-                : AUTH_LABELS.LOGIN.EMAIL_DESCRIPTION}
+              {AUTH_LABELS.LOGIN.EMAIL_DESCRIPTION}
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <form
-              onSubmit={
-                isPasswordLogin ? handlePasswordLogin : handleEmailLogin
-              }
-              className="space-y-4"
-            >
-              {error && (
-                <Alert variant="destructive">
-                  <AlertDescription>{error}</AlertDescription>
-                </Alert>
-              )}
-
+            <form onSubmit={handleEmailLogin} className="space-y-4">
               <div className="space-y-2">
                 <Label htmlFor="email">Email</Label>
                 <div className="relative">
@@ -144,71 +67,26 @@ export default function LoginPage() {
                 </div>
               </div>
 
-              {isPasswordLogin && (
-                <div className="space-y-2">
-                  <Label htmlFor="password">Mật khẩu</Label>
-                  <div className="relative">
-                    <Lock className="top-3 left-3 absolute w-4 h-4 text-gray-400" />
-                    <Input
-                      id="password"
-                      type="password"
-                      placeholder="Nhập mật khẩu của bạn"
-                      value={password}
-                      onChange={e => setPassword(e.target.value)}
-                      className="pl-10"
-                      required
-                    />
-                  </div>
-                </div>
-              )}
-
-              <Button type="submit" className="w-full" disabled={isLoading}>
-                {isLoading && <Loader2 className="mr-2 w-4 h-4 animate-spin" />}
-                {isPasswordLogin ? "Đăng nhập" : "Gửi mã OTP"}
+              <Button
+                type="submit"
+                className="w-full"
+                disabled={isLoginLoading}
+              >
+                {isLoginLoading && (
+                  <Loader2 className="mr-2 w-4 h-4 animate-spin" />
+                )}
+                Gửi mã OTP
               </Button>
             </form>
 
-            <div className="space-y-4 mt-6">
-              <div className="relative">
-                <div className="absolute inset-0 flex items-center">
-                  <div className="border-gray-300 border-t w-full" />
-                </div>
-                <div className="relative flex justify-center text-sm">
-                  <span className="bg-white px-2 text-gray-500">Hoặc</span>
-                </div>
-              </div>
-
-              <Button
-                type="button"
-                variant="outline"
-                className="w-full"
-                onClick={() => setIsPasswordLogin(!isPasswordLogin)}
+            <div className="mt-6 text-center">
+              <span className="text-gray-600 text-sm">Chưa có tài khoản? </span>
+              <Link
+                href={ROUTES_URL.REGISTER}
+                className="font-medium text-purple-600 hover:text-purple-700 text-sm"
               >
-                {isPasswordLogin
-                  ? "Đăng nhập bằng OTP"
-                  : "Đăng nhập bằng mật khẩu"}
-              </Button>
-
-              <div className="text-center">
-                <Link
-                  href="/forgot-password"
-                  className="text-purple-600 hover:text-purple-700 text-sm"
-                >
-                  Quên mật khẩu?
-                </Link>
-              </div>
-
-              <div className="text-center">
-                <span className="text-gray-600 text-sm">
-                  Chưa có tài khoản?{" "}
-                </span>
-                <Link
-                  href="/register"
-                  className="font-medium text-purple-600 hover:text-purple-700 text-sm"
-                >
-                  Đăng ký ngay
-                </Link>
-              </div>
+                Đăng ký ngay
+              </Link>
             </div>
           </CardContent>
         </Card>

@@ -2,7 +2,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { categoryService, sectionService } from "@/services";
 import { toast } from "sonner";
 import { CreateCategoryRequest } from "@/lib/types";
-import { ApiError, queryKeys } from "../shared/types";
+import { ApiErrorResult, queryKeys } from "@/types";
 
 // Admin query hooks
 export const useAdminCategories = (params?: {
@@ -41,7 +41,7 @@ export const useCreateCategory = () => {
       queryClient.invalidateQueries({ queryKey: queryKeys.admin.categories });
       toast.success("Category created successfully!");
     },
-    onError: (error: ApiError) => {
+    onError: (error: ApiErrorResult) => {
       toast.error(
         error?.response?.data?.message || "Failed to create category"
       );
@@ -65,7 +65,7 @@ export const useUpdateCategory = () => {
       queryClient.invalidateQueries({ queryKey: queryKeys.admin.categories });
       toast.success("Category updated successfully!");
     },
-    onError: (error: ApiError) => {
+    onError: (error: ApiErrorResult) => {
       toast.error(
         error?.response?.data?.message || "Failed to update category"
       );
@@ -83,7 +83,7 @@ export const useDeleteCategory = () => {
       queryClient.invalidateQueries({ queryKey: queryKeys.admin.categories });
       toast.success("Category deleted successfully!");
     },
-    onError: (error: ApiError) => {
+    onError: (error: ApiErrorResult) => {
       toast.error(
         error?.response?.data?.message || "Failed to delete category"
       );

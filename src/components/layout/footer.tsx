@@ -24,7 +24,7 @@ export function Footer({ className }: FooterProps): React.JSX.Element | null {
   const pathname = usePathname();
 
   // Only show footer on home page
-  if (!LAYOUT_CONFIG.showFooterOnPages.includes(pathname as string)) {
+  if (!LAYOUT_CONFIG.showFooterOnPages.includes(pathname as "/" | "/home")) {
     return null;
   }
 

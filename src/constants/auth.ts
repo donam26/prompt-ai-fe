@@ -61,3 +61,9 @@ export const AUTH_FIELD_NAMES = {
   FULL_NAME: "fullName",
   CONFIRM_PASSWORD: "confirmPassword",
 } as const;
+
+// NextAuth constants
+export const ACCESS_TOKEN_COOKIE_NAME = "next-auth.access-token";
+export const REFRESH_TOKEN_COOKIE_NAME = "next-auth.refresh-token";
+export const DEFAULT_EXPIRE_TOKEN_SECONDS = 24 * 60 * 60; // 24 hours
+export const REFRESH_TOKEN_EXPIRE_SECONDS = 7 * 24 * 60 * 60; // 7 days

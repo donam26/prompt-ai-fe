@@ -3,7 +3,7 @@
  * Centralized constants for subscription types used across the application
  */
 
-import { User } from "./types";
+import type { User } from "@/lib/types";
 
 export const ESubscriptionType = {
   FREE: 1,

@@ -1,9 +1,9 @@
-import { useAuth } from "@/contexts/AuthContext";
+import { useAuth } from "@/hooks/useAuth";
 import {
   hasPermission,
   getAccessibleScreens,
   ADMIN_SCREENS,
-} from "@/lib/constants";
+} from "@/constants";
 
 export const useAdminPermissions = () => {
   const { user } = useAuth();

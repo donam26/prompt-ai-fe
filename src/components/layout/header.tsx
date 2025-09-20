@@ -6,7 +6,7 @@ import { usePathname, useRouter } from "next/navigation";
 import Image from "next/image";
 import { Heart, Menu } from "lucide-react";
 
-import { useAuth } from "@/contexts/AuthContext";
+import { useAuth } from "@/hooks/useAuth";
 import { UserDropdown } from "@/components/user/user-dropdown";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
@@ -159,7 +159,10 @@ export function Header({ className }: HeaderProps): React.JSX.Element {
               <Heart className="fill-current text-purple-600 group-hover:text-red-500 text-xl transition duration-200" />
             </Link>
 
-            <UserDropdown user={user} onLogout={handleLogout} />
+            <UserDropdown
+              user={{ ...user, id: Number(user.id) }}
+              onLogout={handleLogout}
+            />
           </>
         ) : (
           <>

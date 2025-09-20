@@ -217,12 +217,15 @@ export interface LoginRequest {
 }
 
 export interface LoginResponse {
-  success: boolean;
-  data: {
-    user: User;
-    token: string;
-  };
+  success?: boolean;
   message?: string;
+  requireVerification?: boolean;
+  email?: string;
+  data?: {
+    user?: User;
+    token?: string;
+    message?: string;
+  };
 }
 
 export interface RegisterRequest {

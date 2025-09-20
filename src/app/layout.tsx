@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import { AuthProvider } from "@/contexts/AuthContext";
+import { NextAuthProvider } from "@/providers/NextAuthProvider";
 import { QueryProvider } from "@/providers/QueryProvider";
-import { Toaster } from "@/components/ui/sonner";
+import { Toast } from "@/components/ui/toast";
 import { Header, Footer } from "@/components/layout";
+import { SessionHandlerWrapper } from "@/components/session/SessionHandlerWrapper";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -46,8 +47,9 @@ export default function RootLayout({
         <meta name="google-adsense-account" content="ca-pub-2351800777200822" />
       </head>
       <body className={inter.className}>
-        <QueryProvider>
-          <AuthProvider>
+        <NextAuthProvider>
+          <QueryProvider>
+            <SessionHandlerWrapper />
             <div className="flex flex-col min-h-screen">
               <Header />
               <main className="flex flex-col flex-1 bg-white pt-0">
@@ -55,9 +57,9 @@ export default function RootLayout({
               </main>
               <Footer />
             </div>
-            <Toaster />
-          </AuthProvider>
-        </QueryProvider>
+            <Toast />
+          </QueryProvider>
+        </NextAuthProvider>
       </body>
     </html>
   );

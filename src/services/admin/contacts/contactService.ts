@@ -1,6 +1,7 @@
 import { apiClient, buildUrlWithParams } from "../../base/apiClient";
 import { ENDPOINTS, QUERY_PARAMS } from "@/constants";
-import { PaginationParams, ServiceMethod } from "../../base/types";
+import { ServiceMethod } from "../../base/types";
+import type { PaginationParams } from "@/types/services/common";
 
 // Contact service parameters
 export interface ContactListParams extends PaginationParams {

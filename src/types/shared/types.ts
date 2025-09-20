@@ -1,5 +1,5 @@
 // Error type for API responses
-export interface ApiError {
+export interface ApiErrorResult {
   response?: {
     data?: {
       message?: string;

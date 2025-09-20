@@ -5,6 +5,16 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Toast loading animation */
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
 @layer utilities {
   /* Ensure proper responsive behavior */
   .container-responsive {
@@ -371,4 +381,69 @@
     animation: none !important;
     transition: none !important;
   }
+}
+
+/* Hide react-hot-toast close button */
+.toast-container [data-testid="toast"] button {
+  display: none !important;
+}
+
+.toast-container [data-testid="toast"] > div:last-child {
+  display: none !important;
+}
+
+/* Hide the close button icon */
+.go3958317564 {
+  display: none !important;
+}
+
+/* Ensure toast visibility */
+[data-sonner-toaster] {
+  z-index: 99999 !important;
+  position: fixed !important;
+}
+
+[data-sonner-toast] {
+  z-index: 99999 !important;
+  position: relative !important;
+}
+
+/* React Hot Toast specific */
+[data-hot-toast] {
+  z-index: 99999 !important;
+}
+
+[data-hot-toast-container] {
+  z-index: 99999 !important;
+  position: fixed !important;
+}
+
+/* Hard coded toast styles */
+.toast-hard-coded {
+  z-index: 99999 !important;
+  position: relative !important;
+  background: transparent !important;
+  border: none !important;
+  padding: 0 !important;
+  box-shadow: none !important;
+}
+
+/* Force toast visibility */
+[data-hot-toast] > div {
+  z-index: 99999 !important;
+  position: relative !important;
+  background: transparent !important;
+  border: none !important;
+  padding: 0 !important;
+  box-shadow: none !important;
+}
+
+/* Override any conflicting styles */
+[data-hot-toast-container] > div {
+  z-index: 99999 !important;
+  position: fixed !important;
+  top: 20px !important;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  pointer-events: none !important;
 }

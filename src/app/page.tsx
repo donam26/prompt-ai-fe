@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { useAuth } from "@/contexts/AuthContext";
+import { useAuth } from "@/hooks/useAuth";
 import { promptService, blogService } from "@/services";
 import { Prompt, Blog } from "@/lib/types";
 import { Button } from "@/components/ui/button";
@@ -72,7 +72,7 @@ export default function HomePage() {
         industryId: "",
         isType: 1,
       });
-      setNewestPrompts(response.data.data);
+      setNewestPrompts(response.data.data as unknown as Prompt[]);
     } catch {
       // Error fetching newest prompts - could be logged to monitoring service
     }
@@ -85,7 +85,7 @@ export default function HomePage() {
         pageSize: 3,
         search: "",
       });
-      setBlogs(response.data.data || []);
+      setBlogs(Array.isArray(response.data.data) ? response.data.data : []);
     } catch {
       // Error fetching blogs - could be logged to monitoring service
     }

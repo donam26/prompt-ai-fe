@@ -1,6 +1,7 @@
 import { apiClient } from "../../base/apiClient";
 import { ENDPOINTS, QUERY_PARAMS } from "@/constants";
-import { PaginationParams, ServiceMethod } from "../../base/types";
+import { ServiceMethod } from "../../base/types";
+import type { PaginationParams } from "@/types/services/common";
 
 // Topic service parameters
 export type TopicListParams = PaginationParams;

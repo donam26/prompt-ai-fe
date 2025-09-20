@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState, useCallback } from "react";
-import { useAuth } from "@/contexts/AuthContext";
+import { useAuth } from "@/hooks/useAuth";
 import {
   promptService,
   categoryService,
@@ -18,13 +18,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { BaseSelect } from "@/components/ui/base-select";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Loader2, Search, Copy, Heart } from "lucide-react";
@@ -61,7 +55,7 @@ export default function PromptLibraryPage() {
         subType: 2,
       });
 
-      setPrompts(response.data.data);
+      setPrompts((response.data.data as Prompt[]) || []);
       setTotalPages(Math.ceil((response.data.total || 0) / 12));
     } catch {
       // Error loading prompts - could be logged to monitoring service
@@ -80,7 +74,11 @@ export default function PromptLibraryPage() {
   const loadCategories = useCallback(async () => {
     try {
       const response = await categoryService.getCategories();
-      setCategories(response.data.data || response.data);
+      setCategories(
+        (response.data.data as unknown as Category[]) ||
+          (response.data as unknown as Category[]) ||
+          []
+      );
     } catch {
       // Error loading categories - could be logged to monitoring service
     }
@@ -89,7 +87,11 @@ export default function PromptLibraryPage() {
   const loadTopics = useCallback(async () => {
     try {
       const response = await topicService.getTopics();
-      setTopics(response.data.data || response.data);
+      setTopics(
+        (response.data.data as unknown as Topic[]) ||
+          (response.data as unknown as Topic[]) ||
+          []
+      );
     } catch {
       // Error loading topics - could be logged to monitoring service
     }
@@ -98,7 +100,11 @@ export default function PromptLibraryPage() {
   const loadIndustries = useCallback(async () => {
     try {
       const response = await industryService.getIndustries();
-      setIndustries(response.data.data || response.data);
+      setIndustries(
+        (response.data.data as unknown as Industry[]) ||
+          (response.data as unknown as Industry[]) ||
+          []
+      );
     } catch {
       // Error loading industries - could be logged to monitoring service
     }
@@ -109,9 +115,11 @@ export default function PromptLibraryPage() {
 
     try {
       const response = await promptService.getFavoritePrompts(user.id);
-      const favoriteIds = (response.data.data || response.data || []).map(
-        (fav: { prompt_id: number }) => fav.prompt_id
-      );
+      const favoriteIds = (
+        (response.data.data as unknown as any[]) ||
+        (response.data as unknown as any[]) ||
+        []
+      ).map((fav: { prompt_id: number }) => fav.prompt_id);
       setFavoritePrompts(favoriteIds);
     } catch {
       // Error loading favorite prompts - could be logged to monitoring service
@@ -216,65 +224,56 @@ export default function PromptLibraryPage() {
             </div>
 
             <div className="flex sm:flex-row flex-col gap-4">
-              <Select
+              <BaseSelect
+                items={[
+                  { id: "", name: "Tất cả danh mục" },
+                  ...categories.map(category => ({
+                    id: String(category.id),
+                    name: category.name,
+                  })),
+                ]}
                 value={selectedCategory}
                 onValueChange={value => {
                   setSelectedCategory(value);
                   handleFilterChange();
                 }}
-              >
-                <SelectTrigger className="w-full sm:w-[200px]">
-                  <SelectValue placeholder="Chọn danh mục" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="">Tất cả danh mục</SelectItem>
-                  {categories.map(category => (
-                    <SelectItem key={category.id} value={String(category.id)}>
-                      {category.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+                placeholder="Chọn danh mục"
+                triggerClassName="w-full sm:w-[200px]"
+              />
 
-              <Select
+              <BaseSelect
+                items={[
+                  { id: "", name: "Tất cả chủ đề" },
+                  ...topics.map(topic => ({
+                    id: String(topic.id),
+                    name: topic.name,
+                  })),
+                ]}
                 value={selectedTopic}
                 onValueChange={value => {
                   setSelectedTopic(value);
                   handleFilterChange();
                 }}
-              >
-                <SelectTrigger className="w-full sm:w-[200px]">
-                  <SelectValue placeholder="Chọn chủ đề" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="">Tất cả chủ đề</SelectItem>
-                  {topics.map(topic => (
-                    <SelectItem key={topic.id} value={String(topic.id)}>
-                      {topic.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+                placeholder="Chọn chủ đề"
+                triggerClassName="w-full sm:w-[200px]"
+              />
 
-              <Select
+              <BaseSelect
+                items={[
+                  { id: "", name: "Tất cả ngành nghề" },
+                  ...industries.map(industry => ({
+                    id: String(industry.id),
+                    name: industry.name,
+                  })),
+                ]}
                 value={selectedIndustry}
                 onValueChange={value => {
                   setSelectedIndustry(value);
                   handleFilterChange();
                 }}
-              >
-                <SelectTrigger className="w-full sm:w-[200px]">
-                  <SelectValue placeholder="Chọn ngành nghề" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="">Tất cả ngành nghề</SelectItem>
-                  {industries.map(industry => (
-                    <SelectItem key={industry.id} value={String(industry.id)}>
-                      {industry.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+                placeholder="Chọn ngành nghề"
+                triggerClassName="w-full sm:w-[200px]"
+              />
 
               <Button onClick={handleSearch} className="w-full sm:w-auto">
                 <Search className="mr-2 w-4 h-4" />
