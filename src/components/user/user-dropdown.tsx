@@ -16,11 +16,7 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 // Removed unused import
-import {
-  LAYOUT_ROUTES,
-  LAYOUT_LABELS,
-  LAYOUT_CLASSES,
-} from "@/constants/layout";
+import { LAYOUT_ROUTES, LAYOUT_LABELS, LAYOUT_PAGE } from "@/constants/layout";
 
 /**
  * Props for the UserDropdown component
@@ -59,7 +55,7 @@ export function UserDropdown({
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" className={LAYOUT_CLASSES.header.avatar}>
+        <Button variant="ghost" className={LAYOUT_PAGE.header.avatar}>
           <Avatar>
             <AvatarImage
               src={user?.avatar || "/images/avatars/default_avatar.png"}

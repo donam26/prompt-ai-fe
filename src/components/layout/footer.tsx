@@ -5,7 +5,7 @@ import { FooterBrand } from "./footer/footer-brand";
 import { FooterLinks } from "./footer/footer-links";
 import { FooterCopyright } from "./footer/footer-copyright";
 import { cn } from "@/lib/utils";
-import { LAYOUT_CLASSES, LAYOUT_CONFIG } from "@/constants/layout";
+import { LAYOUT_PAGE, LAYOUT_CONFIG } from "@/constants/layout";
 
 /**
  * Props for the Footer component
@@ -29,16 +29,16 @@ export function Footer({ className }: FooterProps): React.JSX.Element | null {
   }
 
   return (
-    <footer className={cn(LAYOUT_CLASSES.footer.container, className)}>
-      <div className={LAYOUT_CLASSES.footer.mainContainer}>
-        <div className={LAYOUT_CLASSES.footer.gridContainer}>
+    <footer className={cn(LAYOUT_PAGE.footer.container, className)}>
+      <div className={LAYOUT_PAGE.footer.mainContainer}>
+        <div className={LAYOUT_PAGE.footer.gridContainer}>
           {/* Left Section - Brand */}
-          <div className={LAYOUT_CLASSES.footer.leftSection}>
+          <div className={LAYOUT_PAGE.footer.leftSection}>
             <FooterBrand />
           </div>
 
           {/* Right Section - Links */}
-          <div className={LAYOUT_CLASSES.footer.rightSection}>
+          <div className={LAYOUT_PAGE.footer.rightSection}>
             <FooterLinks />
           </div>
         </div>
