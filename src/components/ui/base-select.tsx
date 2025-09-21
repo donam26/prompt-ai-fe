@@ -16,34 +16,22 @@ export function BaseSelect({
   triggerClassName = "w-full max-w-xs",
   isDisabled,
 }: Props) {
-  const handleValueChange = (newValue: string) => {
-    // Convert "all" back to empty string for the parent component
-    onValueChange(newValue === "all" ? "" : newValue);
-  };
-
-  // Convert empty string to "all" for the Select component
-  const selectValue = value === "" ? "all" : value;
-
   return (
     <div className={className}>
-      <Select
-        value={selectValue}
-        onValueChange={handleValueChange}
-        disabled={isDisabled}
-      >
+      <Select value={value} onValueChange={onValueChange} disabled={isDisabled}>
         <SelectTrigger className={triggerClassName}>
           <SelectValue placeholder={placeholder} />
         </SelectTrigger>
         <SelectContent className="min-w-0 max-w-full w-[var(--radix-select-trigger-width)]">
-          {items.map(item => (
+          {items?.map(item => (
             <SelectItem
               key={item.id}
-              value={item.id === "" ? "all" : item.id}
+              value={item.id}
               className="w-full truncate line-clamp-1"
             >
               {item.name}
             </SelectItem>
-          ))}
+          )) || []}
         </SelectContent>
       </Select>
     </div>

@@ -2,6 +2,7 @@
 export * from "./prompts/promptService";
 export * from "./categories/categoryService";
 export * from "./sections/sectionService";
+export * from "./industries/industryService";
 export * from "./users/userService";
 export * from "./admin";
 export * from "./base/apiClient";

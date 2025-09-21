@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { userService } from "@/services";
-import { queryKeys } from "@/types";
+import { queryKeys } from "@/types/shared/types";
 import { useAuth } from "@/hooks/useAuth";
 
 // Custom hook for fetching user data

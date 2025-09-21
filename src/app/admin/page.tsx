@@ -50,23 +50,19 @@ export default function AdminDashboard(): React.JSX.Element {
     try {
       const [usersRes, promptsRes, categoriesRes, blogsRes, paymentsRes] =
         await Promise.all([
-          userService.getUserPage({ page: 1, pageSize: 1 }),
-          promptService.getPrompts(""),
+          userService.getUsersPage({ page: 1, pageSize: 1 }),
+          promptService.getPromptsPage({ page: 1, pageSize: 1 }),
           categoryService.getCategories(),
           blogService.getBlogPage({ page: 1, pageSize: 1 }),
           paymentService.getListPayment({ page: 1, pageSize: 1 }),
         ]);
 
       const newStats: DashboardStats = {
-        totalUsers:
-          (usersRes.data as PaginatedResponse<unknown>).data.total || 0,
-        totalPrompts:
-          (promptsRes.data as PaginatedResponse<unknown>).data.total || 0,
+        totalUsers: usersRes.total || 0,
+        totalPrompts: promptsRes.total || 0,
         totalCategories: calculateCategoriesCount(categoriesRes.data),
-        totalBlogs:
-          (blogsRes.data as PaginatedResponse<unknown>).data.total || 0,
-        totalPayments:
-          (paymentsRes.data as PaginatedResponse<unknown>).data.total || 0,
+        totalBlogs: blogsRes.data.total || 0,
+        totalPayments: paymentsRes.data.total || 0,
         monthlyRevenue: 0, // TODO: Calculate from payments
         activeSubscriptions: 0, // TODO: Calculate from subscriptions
       };
@@ -205,8 +201,8 @@ const QuickActionsCard = (): React.JSX.Element => (
             className="flex flex-col justify-center items-center p-2 h-16 sm:h-20"
           >
             {action.icon && (
-              <div className="mb-1 sm:mb-2 w-5 sm:w-6 h-5 sm:h-6">
-                <action.icon className="w-5 sm:w-6 h-5 sm:h-6" />
+              <div className="mb-1 sm:mb-2 w-5 sm:w-6 h-5 sm:h-6 text-lg">
+                {action.icon}
               </div>
             )}
             <span className="text-xs sm:text-sm text-center leading-tight">
@@ -233,7 +229,11 @@ const ActivityCard = (): React.JSX.Element => (
       {ACTIVITY_STATS.map((stat, index) => (
         <div key={index} className="flex justify-between items-center">
           <div className="flex flex-1 items-center min-w-0">
-            <stat.icon className={`mr-2 w-4 h-4 flex-shrink-0 ${stat.color}`} />
+            <span
+              className={`mr-2 w-4 h-4 flex-shrink-0 text-lg ${stat.color}`}
+            >
+              {stat.icon}
+            </span>
             <span className="text-gray-600 text-xs sm:text-sm truncate">
               {stat.label}
             </span>

@@ -4,7 +4,7 @@
  * Type definitions for admin category management components and functionality.
  */
 
-import type { Category, Section } from "@/lib/types";
+import type { Category, Section, Industry } from "@/lib/types";
 
 /**
  * Form data structure for category creation/editing
@@ -65,6 +65,8 @@ export interface CategoryTableProps {
   readonly loading: boolean;
   readonly currentPage: number;
   readonly totalPages: number;
+  readonly totalItems?: number;
+  readonly pageSize?: number;
   readonly onPageChange: (page: number) => void;
 }
 
@@ -105,18 +107,20 @@ export interface FilterState {
   readonly searchTerm: string;
   readonly sectionId: string; // "all" means no filter
   readonly status: string; // "all" means no filter
+  readonly industryIds: readonly string[]; // array of industry IDs
 }
 
 /**
  * Props for the CategoryFilter component
  */
 export interface CategoryFilterProps {
+  readonly filters: FilterState;
   readonly sections: Section[];
+  readonly industries: Industry[];
   readonly onFilterChange: (filters: FilterState) => void;
   readonly onClearFilters: () => void;
-  readonly initialFilters?: Partial<FilterState>;
+  readonly onPageReset?: () => void;
   readonly className?: string;
-  readonly showActiveFilters?: boolean;
 }
 
 /**
@@ -134,7 +138,11 @@ export interface ActiveFilterItem {
 export interface FilterCardProps {
   readonly filters: FilterState;
   readonly sections: Section[];
-  readonly onFilterChange: (key: keyof FilterState, value: string) => void;
+  readonly industries: Industry[];
+  readonly onSearchChange: (value: string) => void;
+  readonly onSectionChange: (value: string) => void;
+  readonly onStatusChange: (value: string) => void;
+  readonly onIndustryChange: (values: string[]) => void;
   readonly onClearFilters: () => void;
   readonly hasActiveFilters: boolean;
 }
@@ -171,4 +179,34 @@ export interface ActiveFiltersListProps {
   readonly activeFilters: ActiveFilterItem[];
   readonly onRemoveFilter: (key: keyof FilterState) => void;
   readonly onClearAll: () => void;
+  readonly totalActive: number;
+}
+
+/**
+ * Props for the IndustryFilter component
+ */
+export interface IndustryFilterProps {
+  readonly value: readonly string[];
+  readonly industries: Industry[];
+  readonly onChange: (values: string[]) => void;
+}
+
+/**
+ * Props for the FilterBadge component
+ */
+export interface FilterBadgeProps {
+  readonly label: string;
+  readonly onRemove: () => void;
+}
+
+/**
+ * Props for the ActiveFilters component
+ */
+export interface ActiveFiltersProps {
+  readonly filters: FilterState;
+  readonly sections: Section[];
+  readonly industries: Industry[];
+  readonly onFilterChange: (filters: FilterState) => void;
+  readonly onClearAll: () => void;
+  readonly onPageReset?: () => void;
 }

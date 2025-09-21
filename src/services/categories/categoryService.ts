@@ -7,6 +7,9 @@ import { CreateCategoryRequest } from "@/lib/types";
 // Category service parameters
 export interface CategoryListParams extends PaginationParams, SearchParams {
   queryParams?: string;
+  sectionId?: string | number;
+  status?: string;
+  industryIds?: string[] | number[];
 }
 
 export interface CategoryBySectionParams extends SearchParams {
@@ -24,11 +27,46 @@ export class CategoryService {
 
   // Get categories with pagination
   getCategoriesPage: ServiceMethod<CategoryListParams> = params => {
-    const { page = 1, pageSize = 10, queryParams = "" } = params || {};
+    const {
+      page = 1,
+      pageSize = 10,
+      queryParams = "",
+      sectionId,
+      status,
+      industryIds,
+    } = params || {};
 
-    const url = queryParams
-      ? `${ENDPOINTS.CATEGORIES.BASE}?${queryParams}`
-      : `${ENDPOINTS.CATEGORIES.BASE}?${QUERY_PARAMS.PAGE}=${page}&${QUERY_PARAMS.PAGE_SIZE}=${pageSize}`;
+    const queryParamsObj = new URLSearchParams();
+
+    // Add pagination
+    queryParamsObj.append(QUERY_PARAMS.PAGE, String(page));
+    queryParamsObj.append(QUERY_PARAMS.PAGE_SIZE, String(pageSize));
+
+    // Add search query
+    if (queryParams) {
+      queryParamsObj.append(QUERY_PARAMS.SEARCH_TXT, queryParams);
+    }
+
+    // Add section filter
+    if (sectionId && sectionId !== "all") {
+      queryParamsObj.append("section_id", String(sectionId));
+    }
+
+    // Add status filter
+    if (status && status !== "all") {
+      queryParamsObj.append("status", status);
+    }
+
+    // Add industry filter
+    if (industryIds && industryIds.length > 0) {
+      const industryParam = Array.isArray(industryIds)
+        ? industryIds.join(",")
+        : String(industryIds);
+      queryParamsObj.append(QUERY_PARAMS.INDUSTRY_ID, industryParam);
+    }
+
+    const queryString = queryParamsObj.toString();
+    const url = `${ENDPOINTS.CATEGORIES.BASE}?${queryString}`;
 
     return apiClient.get(url);
   };

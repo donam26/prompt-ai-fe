@@ -36,7 +36,10 @@ export interface DataTableProps<T> {
   pagination?: {
     currentPage: number;
     totalPages: number;
+    totalItems?: number;
+    pageSize?: number;
     onPageChange: (page: number) => void;
+    onPageSizeChange?: (pageSize: number) => void;
     showPrevNext?: boolean;
     maxVisiblePages?: number;
   };
@@ -68,7 +71,8 @@ export function DataTable<T = Record<string, unknown>>({
   };
 
   const getRowClassName = (record: T, index: number): string => {
-    const baseClass = "hover:bg-muted/50 cursor-pointer";
+    const baseClass =
+      "group hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors";
     const customClass =
       typeof rowClassName === "function"
         ? rowClassName(record, index)
@@ -86,16 +90,17 @@ export function DataTable<T = Record<string, unknown>>({
   }
 
   return (
-    <div className={cn("space-y-4", className)}>
-      <div className="relative w-full overflow-auto">
+    <div className={cn("space-y-6", className)}>
+      <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl overflow-hidden">
         <Table>
           <TableHeader>
-            <TableRow>
+            <TableRow className="bg-gray-50 dark:bg-gray-900">
               {columns.map(column => (
                 <TableHead
                   key={column.key}
                   style={{ width: column.width }}
                   className={cn(
+                    "px-3 sm:px-6 py-4 font-semibold text-gray-700 dark:text-gray-200 text-sm sm:text-base",
                     column.align === "center" && "text-center",
                     column.align === "right" && "text-right",
                     column.className
@@ -111,7 +116,7 @@ export function DataTable<T = Record<string, unknown>>({
               <TableRow>
                 <TableCell
                   colSpan={columns.length}
-                  className="py-8 text-muted-foreground text-center"
+                  className="h-24 text-gray-500 dark:text-gray-400 text-lg text-center"
                 >
                   {emptyText}
                 </TableCell>
@@ -122,7 +127,9 @@ export function DataTable<T = Record<string, unknown>>({
                   key={getRowKey(record, index)}
                   onClick={() => onRowClick?.(record, index)}
                   className={
-                    onRowClick ? getRowClassName(record, index) : undefined
+                    onRowClick
+                      ? getRowClassName(record, index)
+                      : "group hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
                   }
                 >
                   {columns.map(column => {
@@ -134,6 +141,7 @@ export function DataTable<T = Record<string, unknown>>({
                       <TableCell
                         key={column.key}
                         className={cn(
+                          "px-3 sm:px-6 py-4 text-gray-800 dark:text-gray-200 text-sm sm:text-base",
                           column.align === "center" && "text-center",
                           column.align === "right" && "text-right",
                           column.className
@@ -153,13 +161,19 @@ export function DataTable<T = Record<string, unknown>>({
       </div>
 
       {pagination && (
-        <Pagination
-          currentPage={pagination.currentPage}
-          totalPages={pagination.totalPages}
-          onPageChange={pagination.onPageChange}
-          showPrevNext={pagination.showPrevNext}
-          maxVisiblePages={pagination.maxVisiblePages}
-        />
+        <div className="bg-white dark:bg-gray-800 px-4 py-4 border-gray-200 dark:border-gray-700 border-t rounded-b-xl">
+          <Pagination
+            currentPage={pagination.currentPage}
+            totalPages={pagination.totalPages}
+            totalItems={pagination.totalItems}
+            pageSize={pagination.pageSize}
+            onPageChange={pagination.onPageChange}
+            onPageSizeChange={pagination.onPageSizeChange}
+            showPrevNext={pagination.showPrevNext}
+            maxVisiblePages={pagination.maxVisiblePages}
+            loading={loading}
+          />
+        </div>
       )}
     </div>
   );

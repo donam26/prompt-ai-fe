@@ -133,6 +133,13 @@ export const ENDPOINTS = {
   INDUSTRIES: {
     BASE: "/industries",
   },
+
+  // Admin endpoints
+  ADMIN: {
+    INDUSTRIES: "/admin/industries",
+    CATEGORIES: "/admin/categories",
+    SECTIONS: "/admin/sections",
+  },
 } as const;
 
 // Query parameter keys
@@ -143,8 +150,8 @@ export const QUERY_PARAMS = {
   SEARCH_TEXT: "search_text",
   SEARCH_TXT: "searchTxt",
   CATEGORY_ID: "category_id",
-  TOPIC_ID: "topic_id",
-  INDUSTRY_ID: "industry_id",
+  TOPIC_ID: "topicId",
+  INDUSTRY_ID: "industryId",
   SECTION_ID: "section_id",
   USER_ID: "user_id",
   PROMPT_ID: "prompt_id",

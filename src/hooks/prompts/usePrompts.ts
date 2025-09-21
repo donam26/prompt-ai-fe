@@ -2,7 +2,8 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { promptService, categoryService } from "@/services";
 import { toast } from "sonner";
 import { CreatePromptRequest } from "@/lib/types";
-import { ApiErrorResult, queryKeys } from "@/types";
+import { ApiErrorResult } from "@/types";
+import { queryKeys } from "@/types/shared/types";
 
 // Custom hook for fetching prompts
 export const usePrompts = (params?: {
@@ -17,7 +18,12 @@ export const usePrompts = (params?: {
       : params?.searchTerm
         ? queryKeys.promptsBySearch(params.searchTerm)
         : queryKeys.prompts,
-    queryFn: () => promptService.getPrompts(JSON.stringify(params)),
+    queryFn: () =>
+      promptService.getPromptsPage({
+        ...params,
+        page: params?.page || 1,
+        pageSize: params?.limit || 10,
+      }),
     enabled: true,
   });
 };

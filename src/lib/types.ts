@@ -61,10 +61,14 @@ export interface Category {
   image?: string;
   image_card?: string;
   section_id: string | number;
+  type?: string;
   is_coming_soon?: boolean;
+  is_comming_soon?: boolean; // Support both spellings
   created_at: string;
   updated_at: string;
   section?: Section;
+  Section?: Section; // Support both field names
+  industries?: Industry[];
 }
 
 export interface Section {

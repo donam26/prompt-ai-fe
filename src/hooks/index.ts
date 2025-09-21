@@ -13,7 +13,10 @@ export * from "./auth/useGetMeQuery";
 export * from "./api/useApiMutation";
 
 // Admin hooks
-export * from "./admin/useAdminCategories";
+export * from "./admin/useCategory";
+export * from "./admin/useIndustry";
+export * from "./admin/useUser";
+export * from "./admin/usePrompt";
 export * from "./useAdminPermissions";
 
 // Other hooks

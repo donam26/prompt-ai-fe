@@ -23,8 +23,7 @@ export function MainContent({
   return (
     <div
       className={cn(
-        "transition-all duration-300 ease-in-out admin-main-content",
-        collapsed ? "ml-16" : "ml-64"
+        "transition-all duration-300 ease-in-out admin-main-content"
       )}
     >
       <div className="admin-content-wrapper">{children}</div>

@@ -1,196 +1,134 @@
-import { apiClient, buildUrlWithParams } from "../base/apiClient";
-import { ENDPOINTS, QUERY_PARAMS } from "@/constants";
-import { SearchParams, FilterParams, ServiceMethod } from "../base/types";
-import { CreatePromptRequest } from "@/lib/types";
-import type { PaginationParams } from "@/types/services/common";
+/**
+ * Prompt service for API operations
+ */
 
-// Prompt service parameters
-export interface PromptListParams
-  extends PaginationParams,
-    SearchParams,
-    FilterParams {
-  categoryId?: string | number;
-  topicId?: string | number;
-  industryId?: string | number | string[];
-  subType?: string | number;
-}
+import { apiClient } from "@/services/base/apiClient";
+import type { Prompt } from "@/lib/types";
 
-export interface PromptByCategoryParams extends PaginationParams {
-  categoryId: string | number;
-  topicId?: string | number;
-  industryId?: string | number | string[];
-  searchText?: string;
-  isType?: string | number;
-  subType?: string | number;
-}
-
-export interface RelatedPromptsParams {
-  currentId: string | number;
-  categoryId: string | number;
-  topicId: string | number;
-}
-
-export interface FavoritePromptParams {
-  promptId: string | number;
-  userId: string | number;
-}
-
-export interface FavoritePromptBySectionParams {
-  userId: string | number;
-  sectionId: string | number;
-}
-
+/**
+ * Prompt service class
+ */
 export class PromptService {
-  // Get prompts with query string
-  getPrompts: ServiceMethod<string> = query => {
-    return apiClient.get(`${ENDPOINTS.PROMPTS.BASE}?${query}`);
-  };
-
-  // Upload image
-  uploadImage: ServiceMethod<FormData> = data => {
-    return apiClient.post(ENDPOINTS.PROMPTS.UPLOAD, data);
-  };
-
-  // Get prompt by ID
-  getPromptById: ServiceMethod<string | number> = id => {
-    return apiClient.get(`${ENDPOINTS.PROMPTS.BASE}/${id}`);
-  };
-
-  // Create prompt
-  createPrompt: ServiceMethod<CreatePromptRequest> = data => {
-    return apiClient.post(ENDPOINTS.PROMPTS.BASE, data);
-  };
-
-  // Update prompt
-  updatePrompt: ServiceMethod<{
-    id: string | number;
-    data: Partial<CreatePromptRequest>;
-  }> = ({ id, data } = { id: "", data: {} }) => {
-    return apiClient.put(`${ENDPOINTS.PROMPTS.BASE}/${id}`, data);
-  };
-
-  // Delete prompt
-  deletePrompt: ServiceMethod<string | number> = id => {
-    return apiClient.delete(`${ENDPOINTS.PROMPTS.BASE}/${id}`);
-  };
-
-  // Get prompts by category with advanced filtering
-  getPromptsByCategoryId: ServiceMethod<PromptByCategoryParams> = params => {
+  /**
+   * Get prompts with pagination and filters
+   *
+   * @param params - Pagination and filter parameters
+   * @returns Promise with prompts data
+   */
+  async getPromptsPage(params: {
+    page: number;
+    pageSize: number;
+    search?: string;
+    categoryId?: string;
+    status?: string;
+    isPremium?: string;
+    tags?: string[];
+  }): Promise<{
+    data: Prompt[];
+    total: number;
+    totalPages: number;
+  }> {
     const queryParams = new URLSearchParams();
+    queryParams.append("page", params.page.toString());
+    queryParams.append("pageSize", params.pageSize.toString());
 
-    queryParams.append(QUERY_PARAMS.PAGE, String(params?.page || 1));
-    queryParams.append(QUERY_PARAMS.PAGE_SIZE, String(params?.pageSize || 12));
-    queryParams.append(QUERY_PARAMS.CATEGORY_ID, String(params?.categoryId));
-
-    if (params?.topicId !== undefined) {
-      queryParams.append(QUERY_PARAMS.TOPIC_ID, String(params.topicId));
+    if (params.search) queryParams.append("search_text", params.search);
+    if (params.categoryId && params.categoryId !== "all")
+      queryParams.append("category_id", params.categoryId);
+    if (params.status && params.status !== "all")
+      queryParams.append("status", params.status);
+    if (params.isPremium && params.isPremium !== "all")
+      queryParams.append("is_type", params.isPremium);
+    if (params.tags && params.tags.length > 0) {
+      params.tags.forEach(tag => queryParams.append("tags", tag));
     }
 
-    if (params?.industryId !== undefined) {
-      const industryParam = Array.isArray(params.industryId)
-        ? params.industryId.join(",")
-        : String(params.industryId);
-      queryParams.append(QUERY_PARAMS.INDUSTRY_ID, industryParam);
-    }
+    const response = await apiClient.get(`/prompts?${queryParams.toString()}`);
+    return response.data;
+  }
 
-    if (params?.searchText !== undefined) {
-      queryParams.append(QUERY_PARAMS.SEARCH_TEXT, params.searchText);
-    }
+  /**
+   * Get prompt by ID
+   *
+   * @param id - Prompt ID
+   * @returns Promise with prompt data
+   */
+  async getPromptById(id: string | number): Promise<Prompt> {
+    const response = await apiClient.get(`/admin/prompts/${id}`);
+    return response.data;
+  }
 
-    if (params?.isType !== undefined) {
-      queryParams.append(QUERY_PARAMS.IS_TYPE, String(params.isType));
-    }
+  /**
+   * Create new prompt
+   *
+   * @param promptData - Prompt data
+   * @returns Promise with created prompt
+   */
+  async createPrompt(promptData: {
+    title: string;
+    content: string;
+    categoryId: string;
+    tags: string[];
+    isPublic: boolean;
+    isPremium: boolean;
+    description?: string;
+    image?: string;
+  }): Promise<Prompt> {
+    const response = await apiClient.post("/admin/prompts", promptData);
+    return response.data;
+  }
 
-    if (params?.subType !== undefined) {
-      queryParams.append(QUERY_PARAMS.SUB_TYPE, String(params.subType));
+  /**
+   * Update prompt
+   *
+   * @param id - Prompt ID
+   * @param promptData - Updated prompt data
+   * @returns Promise with updated prompt
+   */
+  async updatePrompt(
+    id: string | number,
+    promptData: {
+      title?: string;
+      content?: string;
+      categoryId?: string;
+      tags?: string[];
+      isPublic?: boolean;
+      isPremium?: boolean;
+      description?: string;
+      image?: string;
     }
+  ): Promise<Prompt> {
+    const response = await apiClient.put(`/admin/prompts/${id}`, promptData);
+    return response.data;
+  }
 
-    return apiClient.get(
-      `${ENDPOINTS.PROMPTS.BY_CATEGORY}?${queryParams.toString()}`
+  /**
+   * Delete prompt
+   *
+   * @param id - Prompt ID
+   * @returns Promise with deletion result
+   */
+  async deletePrompt(id: string | number): Promise<void> {
+    await apiClient.delete(`/admin/prompts/${id}`);
+  }
+
+  /**
+   * Toggle prompt public status
+   *
+   * @param id - Prompt ID
+   * @param isPublic - Public status
+   * @returns Promise with updated prompt
+   */
+  async togglePromptPublic(
+    id: string | number,
+    isPublic: boolean
+  ): Promise<Prompt> {
+    const response = await apiClient.patch(
+      `/admin/prompts/${id}/toggle-public`,
+      { isPublic }
     );
-  };
-
-  // Get prompts content by category
-  getPromptsContentByCategoryId: ServiceMethod<string | number> =
-    categoryId => {
-      return apiClient.get(
-        `${ENDPOINTS.PROMPTS.TOPICS_BY_CATEGORY}?${QUERY_PARAMS.CATEGORY_ID}=${categoryId}`
-      );
-    };
-
-  // Get newest prompts by category
-  getNewestPromptsByCategoryId: ServiceMethod<string | number> = categoryId => {
-    return apiClient.get(
-      `${ENDPOINTS.PROMPTS.NEWEST}?${QUERY_PARAMS.CATEGORY_ID}=${categoryId}`
-    );
-  };
-
-  // Get related prompts
-  getRelatedPrompts: ServiceMethod<RelatedPromptsParams> = params => {
-    const queryParams = new URLSearchParams();
-    queryParams.append("current_id", String(params?.currentId));
-    queryParams.append(QUERY_PARAMS.CATEGORY_ID, String(params?.categoryId));
-    queryParams.append(QUERY_PARAMS.TOPIC_ID, String(params?.topicId));
-
-    return apiClient.get(
-      `${ENDPOINTS.PROMPTS.RELATED}?${queryParams.toString()}`
-    );
-  };
-
-  // Favorite prompts
-  getFavoritePrompts: ServiceMethod<string | number> = userId => {
-    return apiClient.get(`${ENDPOINTS.PROMPTS.FAVORITE}/${userId}`);
-  };
-
-  addFavoritePrompt: ServiceMethod<FavoritePromptParams> = params => {
-    return apiClient.post(ENDPOINTS.PROMPTS.FAVORITE, {
-      prompt_id: params?.promptId,
-      user_id: params?.userId,
-    });
-  };
-
-  removeFavoritePrompt: ServiceMethod<string | number> = id => {
-    return apiClient.delete(`${ENDPOINTS.PROMPTS.FAVORITE}/${id}`);
-  };
-
-  getFavoritePromptsByUserId: ServiceMethod<FavoritePromptBySectionParams> =
-    params => {
-      const queryParams = new URLSearchParams();
-      queryParams.append(QUERY_PARAMS.USER_ID, String(params?.userId));
-      queryParams.append(QUERY_PARAMS.SECTION_ID, String(params?.sectionId));
-
-      return apiClient.get(
-        `${ENDPOINTS.PROMPTS.FAVORITE_BY_SECTION}?${queryParams.toString()}`
-      );
-    };
-
-  // Toggle favorite (this might need to be implemented based on your API)
-  toggleFavorite: ServiceMethod<string | number> = promptId => {
-    // This method might need to be adjusted based on your actual API implementation
-    return apiClient.post(`${ENDPOINTS.PROMPTS.FAVORITE}/toggle`, {
-      prompt_id: promptId,
-    });
-  };
-
-  // Import/Export
-  uploadExcel: ServiceMethod<FormData> = data => {
-    return apiClient.post(ENDPOINTS.PROMPTS.IMPORT_EXCEL, data);
-  };
-
-  exportPromptsExcel: ServiceMethod<Record<string, unknown>> = (
-    filters,
-    config
-  ) => {
-    const queryString =
-      buildUrlWithParams(ENDPOINTS.PROMPTS.EXPORT_EXCEL, filters).split(
-        "?"
-      )[1] || "";
-    return apiClient.get(`${ENDPOINTS.PROMPTS.EXPORT_EXCEL}?${queryString}`, {
-      responseType: "blob",
-      ...config,
-    });
-  };
+    return response.data;
+  }
 }
 
-// Export singleton instance
 export const promptService = new PromptService();

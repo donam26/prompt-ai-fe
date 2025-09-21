@@ -1,47 +1,69 @@
 "use client";
 
+import { ChevronDown, ChevronUp, PanelLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Menu, X } from "lucide-react";
-// Removed unused import
 
-/**
- * Props for the SidebarHeader component
- */
 interface SidebarHeaderProps {
-  readonly collapsed: boolean;
-  readonly onToggle: () => void;
+  readonly isCollapsed: boolean;
+  readonly onToggleCollapseAction: () => void;
+  readonly isMobile?: boolean;
+  readonly isMobileExpanded?: boolean;
 }
 
 /**
- * Sidebar header component with logo and toggle button
+ * Admin sidebar header component with logo and toggle button - Berklee style
  *
  * @param props - The component props
  * @returns The sidebar header JSX
  */
 export function SidebarHeader({
-  collapsed,
-  onToggle,
+  isCollapsed,
+  onToggleCollapseAction,
+  isMobile,
+  isMobileExpanded,
 }: SidebarHeaderProps): React.JSX.Element {
+  const displayName = "Prompt AI";
+
+  if (isMobile) {
+    return (
+      <div className="flex justify-between items-center p-4">
+        <h1 className="font-bold text-gray-900 md:text-xl truncate">
+          {displayName}
+        </h1>
+
+        <Button
+          variant="outline"
+          onClick={onToggleCollapseAction}
+          className="flex items-center gap-2 hover:bg-gray-100 p-2 border-gray-300 rounded-md text-gray-900 transition-colors cursor-pointer"
+          aria-label={isMobileExpanded ? "Close menu" : "Open menu"}
+        >
+          {isMobileExpanded ? (
+            <ChevronUp size={20} />
+          ) : (
+            <ChevronDown size={20} />
+          )}
+        </Button>
+      </div>
+    );
+  }
+
   return (
-    <div className="flex justify-between items-center p-4 border-gray-200 border-b">
-      {!collapsed && (
-        <div className="flex items-center space-x-2">
-          <div className="flex justify-center items-center bg-gradient-to-r from-purple-600 to-blue-600 rounded-lg w-8 h-8">
-            <span className="font-bold text-white text-sm">P</span>
-          </div>
-          <span className="font-semibold text-gray-900 text-lg">
-            Admin Panel
-          </span>
-        </div>
+    <div
+      className={`p-6 flex items-center ${isCollapsed ? "justify-center" : "justify-between"} transition-all duration-200`}
+    >
+      {!isCollapsed && (
+        <h1 className="font-bold text-gray-900 text-2xl truncate">
+          {displayName}
+        </h1>
       )}
 
       <Button
-        variant="ghost"
-        size="sm"
-        onClick={onToggle}
-        className="hover:bg-gray-100 p-2 rounded-md"
+        variant="outline"
+        onClick={onToggleCollapseAction}
+        className="hover:bg-gray-100 p-2 border-gray-300 rounded-md text-gray-900 transition-colors cursor-pointer"
+        aria-label={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
       >
-        {collapsed ? <Menu className="w-5 h-5" /> : <X className="w-5 h-5" />}
+        <PanelLeft size={20} />
       </Button>
     </div>
   );

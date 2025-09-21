@@ -15,7 +15,7 @@ export class BlogService {
   getBlogPage: ServiceMethod<BlogListParams> = params => {
     const { page = 1, pageSize = 10, search } = params || {};
     return apiClient.get(
-      `${ENDPOINTS.BLOGS.LIST}?${QUERY_PARAMS.PAGE}=${page}&${QUERY_PARAMS.PAGE_SIZE}=${pageSize}&${QUERY_PARAMS.SEARCH}=${search}`
+      `${ENDPOINTS.BLOGS.LIST}?${QUERY_PARAMS.PAGE}=${page}&${QUERY_PARAMS.PAGE_SIZE}=${pageSize}&search=${search || ""}`
     );
   };
 

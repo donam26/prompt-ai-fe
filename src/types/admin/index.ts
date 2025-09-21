@@ -36,7 +36,61 @@ export type {
   SectionFilterProps,
   StatusFilterProps,
   ActiveFiltersListProps,
+  IndustryFilterProps,
+  FilterBadgeProps,
+  ActiveFiltersProps,
 } from "./category";
+
+// User types
+export type {
+  UserFormData,
+  UserHeaderProps,
+  UserFormDialogProps,
+  UserFormFieldsProps,
+  UserFormActionsProps,
+  UserTableProps,
+  UserColumnHandlers,
+  UserImageProps,
+  UserStatusProps,
+  UserActionsProps,
+  UserFilterState,
+  UserFilterProps,
+  UserActiveFilterItem,
+  UserFilterCardProps,
+  UserSearchFilterProps,
+  UserRoleFilterProps,
+  UserStatusFilterProps,
+  UserDateRangeFilterProps,
+  UserActiveFiltersListProps,
+  UserFilterBadgeProps,
+  UserActiveFiltersProps,
+} from "./user";
+
+// Prompt types
+export type {
+  PromptFormData,
+  PromptHeaderProps,
+  PromptFormDialogProps,
+  PromptFormFieldsProps,
+  PromptFormActionsProps,
+  PromptTableProps,
+  PromptColumnHandlers,
+  PromptImageProps,
+  PromptStatusProps,
+  PromptActionsProps,
+  PromptFilterState,
+  PromptFilterProps,
+  PromptActiveFilterItem,
+  PromptFilterCardProps,
+  PromptSearchFilterProps,
+  PromptCategoryFilterProps,
+  PromptStatusFilterProps,
+  PromptPremiumFilterProps,
+  PromptTagsFilterProps,
+  PromptActiveFiltersListProps,
+  PromptFilterBadgeProps,
+  PromptActiveFiltersProps,
+} from "./prompt";
 
 // Re-export common types from lib
 export type { Category, Section, AdminStats } from "@/lib/types";
