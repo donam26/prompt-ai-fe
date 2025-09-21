@@ -60,12 +60,12 @@ export function UserDropdown({
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" className={LAYOUT_CLASSES.header.avatar}>
-          <Avatar className="w-full h-full">
+          <Avatar>
             <AvatarImage
               src={user?.avatar || "/images/avatars/default_avatar.png"}
               alt={user?.full_name || "User"}
             />
-            <AvatarFallback className="text-xs">
+            <AvatarFallback className="text-xs sm:text-sm">
               {user?.full_name?.charAt(0)?.toUpperCase() || "U"}
             </AvatarFallback>
           </Avatar>

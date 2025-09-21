@@ -5,7 +5,6 @@ import { NextAuthProvider } from "@/providers/NextAuthProvider";
 import { QueryProvider } from "@/providers/QueryProvider";
 import { Toast } from "@/components/ui/toast";
 import { Header, Footer } from "@/components/layout";
-import { SessionHandlerWrapper } from "@/components/session/SessionHandlerWrapper";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -49,7 +48,6 @@ export default function RootLayout({
       <body className={inter.className}>
         <NextAuthProvider>
           <QueryProvider>
-            <SessionHandlerWrapper />
             <div className="flex flex-col min-h-screen">
               <Header />
               <main className="flex flex-col flex-1 bg-white pt-0">

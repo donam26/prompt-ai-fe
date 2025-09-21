@@ -4,7 +4,8 @@ import { showToast } from "@/components/ui/toast";
 import { transformUserData } from "@/utils/userDataTransform";
 import { useAuth } from "@/hooks/useAuth";
 import { ROUTES_URL } from "@/constants";
-import type { UserVerifyResponse, UserAuthParams } from "@/types";
+import type { UserVerifyResponse, UserAuthParams, ApiUser } from "@/types";
+import { useRouter } from "next/navigation";
 
 interface UseVerifyOTPQueryResult {
   isLoading: boolean;
@@ -14,6 +15,7 @@ interface UseVerifyOTPQueryResult {
 
 export const useVerifyOTPQuery = (): UseVerifyOTPQueryResult => {
   const { login } = useAuth();
+  const router = useRouter();
 
   const verifyOTPMutation = useMutation({
     mutationFn: async ({ email, otp, userIP }: UserAuthParams) => {
@@ -22,8 +24,13 @@ export const useVerifyOTPQuery = (): UseVerifyOTPQueryResult => {
         otp,
         userIP,
       });
-
-      return response.data as any;
+      return response as unknown as {
+        message: string;
+        data: {
+          user: ApiUser;
+          token: string;
+        };
+      };
     },
     onSuccess: async (data: UserVerifyResponse) => {
       if (data && data.data && data.data.user && data.data.token) {
@@ -41,7 +48,7 @@ export const useVerifyOTPQuery = (): UseVerifyOTPQueryResult => {
         });
 
         // Redirect to main page
-        window.location.href = ROUTES_URL.THU_VIEN_PROMPT;
+        router.push(ROUTES_URL.HOME);
       }
     },
     onError: (error: unknown) => {

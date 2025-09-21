@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import Image from "next/image";
@@ -14,7 +14,6 @@ import { cn } from "@/lib/utils";
 import {
   LAYOUT_NAVIGATION,
   LAYOUT_IMAGES,
-  LAYOUT_CLASSES,
   LAYOUT_ROUTES,
   LAYOUT_LABELS,
   LAYOUT_CONFIG,
@@ -28,7 +27,7 @@ interface HeaderProps {
 }
 
 /**
- * Main header component for the application
+ * Main header component for the application with improved responsive design
  *
  * @param props - The component props
  * @returns The header JSX
@@ -38,8 +37,13 @@ export function Header({ className }: HeaderProps): React.JSX.Element {
   const router = useRouter();
   const { user, logout } = useAuth();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  // Removed unused state variables
+  const [isHydrated, setIsHydrated] = useState(false);
   const isHomePage = pathname === LAYOUT_ROUTES.home;
+
+  // Prevent hydration mismatch by waiting for client-side hydration
+  useEffect(() => {
+    setIsHydrated(true);
+  }, []);
 
   const handleLogout = (): void => {
     logout();
@@ -47,140 +51,200 @@ export function Header({ className }: HeaderProps): React.JSX.Element {
   };
 
   return (
-    <nav
+    <header
       className={cn(
-        "z-50 relative items-center gap-4 grid grid-cols-12 p-4 sm:px-6 xl:px-12 w-full font-medium",
+        "top-0 z-50 sticky w-full font-medium transition-colors duration-200",
         isHomePage
           ? "bg-gradient-to-r from-[#E1F6FF] to-[#e6b8ff]"
-          : "bg-white",
+          : "bg-white shadow-sm",
         className
       )}
     >
-      {/* Left Side - Logo (3 columns) */}
-      <div className="flex items-center col-span-3">
-        <Link
-          href={LAYOUT_ROUTES.home}
-          className="flex items-center gap-2.5 text-inherit no-underline"
-        >
-          <Image
-            src={LAYOUT_IMAGES.logo}
-            alt={LAYOUT_IMAGES.logoAlt}
-            width={LAYOUT_IMAGES.logoWidth}
-            height={LAYOUT_IMAGES.logoHeight}
-            className="w-auto h-12"
-            priority={LAYOUT_CONFIG.logoPriority}
-          />
-        </Link>
-      </div>
-
-      {/* Center - Navigation Menu (6 columns) */}
-      <div className="hidden lg:flex justify-center items-center gap-4 lg:gap-8 col-span-6 text-base lg:text-xl">
-        {LAYOUT_NAVIGATION.items.map(item => (
+      <nav className="mx-auto px-4 sm:px-6 lg:px-8 xl:px-12 container">
+        {/* Mobile Layout (xs to md) */}
+        <div className="lg:hidden flex justify-between items-center h-16 md:h-20">
+          {/* Logo */}
           <Link
-            key={item.href}
-            href={item.href}
-            className={cn(
-              "font-medium hover:font-bold text-gray-800 hover:text-purple-600 text-base no-underline transition-colors duration-200",
-              pathname === item.href ? "font-bold text-purple-600" : ""
-            )}
+            href={LAYOUT_ROUTES.home}
+            className="flex flex-shrink-0 items-center gap-2 text-inherit no-underline"
           >
-            {item.label}
-          </Link>
-        ))}
-      </div>
-
-      {/* Mobile Navigation Menu */}
-      <div className="lg:hidden flex justify-end col-span-3">
-        <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
-          <SheetTrigger asChild>
-            <Button
-              variant="ghost"
-              size="sm"
-              className="z-50 bg-none p-2 border-none text-black hover:text-purple-600 text-2xl cursor-pointer"
-            >
-              <Menu className="w-5 h-5" />
-            </Button>
-          </SheetTrigger>
-          <SheetContent
-            side="left"
-            className={LAYOUT_CLASSES.header.mobileSheet}
-          >
-            <div className="space-y-6">
-              <div className="space-y-4">
-                {LAYOUT_NAVIGATION.items.map(item => (
-                  <Link
-                    key={item.href}
-                    href={item.href}
-                    className={cn(
-                      LAYOUT_CLASSES.header.mobileNavItem,
-                      pathname === item.href
-                        ? LAYOUT_CLASSES.header.mobileNavItemActive
-                        : LAYOUT_CLASSES.header.mobileNavItemInactive
-                    )}
-                    onClick={() => setIsMobileMenuOpen(false)}
-                  >
-                    {item.label}
-                  </Link>
-                ))}
-              </div>
-
-              {/* Mobile Auth Buttons */}
-              {!user && (
-                <div className={LAYOUT_CLASSES.header.mobileAuthButtons}>
-                  <Link
-                    href={LAYOUT_ROUTES.login}
-                    className={LAYOUT_CLASSES.header.mobileLoginBtn}
-                    onClick={() => setIsMobileMenuOpen(false)}
-                  >
-                    {LAYOUT_LABELS.auth.login}
-                  </Link>
-                  <Link
-                    href={LAYOUT_ROUTES.register}
-                    className={LAYOUT_CLASSES.header.mobileSignupBtn}
-                    onClick={() => setIsMobileMenuOpen(false)}
-                  >
-                    {LAYOUT_LABELS.auth.register}
-                  </Link>
-                </div>
-              )}
-            </div>
-          </SheetContent>
-        </Sheet>
-      </div>
-
-      {/* Right Side Actions (3 columns) - Hidden on mobile */}
-      <div className="hidden lg:flex justify-end items-center gap-5 col-span-3">
-        {user ? (
-          <>
-            <Link
-              href={LAYOUT_ROUTES.userInfoFavorites}
-              className="group flex items-center gap-2 hover:bg-gray-100 px-4 py-2 rounded transition-all duration-200 cursor-pointer"
-            >
-              <Heart className="fill-current text-purple-600 group-hover:text-red-500 text-xl transition duration-200" />
-            </Link>
-
-            <UserDropdown
-              user={{ ...user, id: Number(user.id) }}
-              onLogout={handleLogout}
+            <Image
+              src={LAYOUT_IMAGES.logo}
+              alt={LAYOUT_IMAGES.logoAlt}
+              width={LAYOUT_IMAGES.logoWidth}
+              height={LAYOUT_IMAGES.logoHeight}
+              className="w-auto h-8 sm:h-10"
+              priority={LAYOUT_CONFIG.logoPriority}
             />
-          </>
-        ) : (
-          <>
+          </Link>
+
+          {/* Mobile Actions */}
+          <div className="flex items-center gap-2">
+            {/* Mobile User Actions */}
+            {isHydrated && user && (
+              <>
+                <Link
+                  href={LAYOUT_ROUTES.userInfoFavorites}
+                  className="p-2 text-primary-600 hover:text-red-500 transition-colors duration-200"
+                  aria-label="Favorites"
+                >
+                  <Heart className="fill-current w-5 h-5" />
+                </Link>
+                <UserDropdown
+                  user={{ ...user, id: Number(user.id) }}
+                  onLogout={handleLogout}
+                />
+              </>
+            )}
+
+            {/* Mobile Menu Button */}
+            <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
+              <SheetTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="hover:bg-transparent p-2 text-gray-700 hover:text-primary-600"
+                  aria-label="Open menu"
+                >
+                  <Menu className="w-6 h-6" />
+                </Button>
+              </SheetTrigger>
+              <SheetContent side="right" className="p-0 w-80 sm:w-96">
+                <div className="flex flex-col h-full">
+                  {/* Mobile Menu Header */}
+                  <div className="flex justify-between items-center p-6 border-b">
+                    <Image
+                      src={LAYOUT_IMAGES.logo}
+                      alt={LAYOUT_IMAGES.logoAlt}
+                      width={80}
+                      height={26}
+                      className="w-auto h-6"
+                    />
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => setIsMobileMenuOpen(false)}
+                      className="p-2"
+                    >
+                      ×
+                    </Button>
+                  </div>
+
+                  {/* Mobile Navigation */}
+                  <div className="flex-1 p-6">
+                    <nav className="space-y-2">
+                      {LAYOUT_NAVIGATION.items.map(item => (
+                        <Link
+                          key={item.href}
+                          href={item.href}
+                          className={cn(
+                            "flex justify-center items-center px-4 py-3 rounded-lg w-full h-10 font-medium text-base transition-colors duration-200",
+                            pathname === item.href
+                              ? "text-primary-600 bg-primary-50"
+                              : "text-gray-700 hover:text-primary-600 hover:bg-gray-50"
+                          )}
+                          onClick={() => setIsMobileMenuOpen(false)}
+                        >
+                          {item.label}
+                        </Link>
+                      ))}
+                    </nav>
+
+                    {/* Mobile Auth Buttons */}
+                    {isHydrated && !user && (
+                      <div className="space-y-3 mt-8 pt-6 border-t">
+                        <Link
+                          href={LAYOUT_ROUTES.login}
+                          className="block rounded-lg btn-primary-outline w-full font-medium text-center"
+                          onClick={() => setIsMobileMenuOpen(false)}
+                        >
+                          {LAYOUT_LABELS.auth.login}
+                        </Link>
+                        <Link
+                          href={LAYOUT_ROUTES.register}
+                          className="block rounded-lg w-full font-medium text-center btn-primary"
+                          onClick={() => setIsMobileMenuOpen(false)}
+                        >
+                          {LAYOUT_LABELS.auth.register}
+                        </Link>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </SheetContent>
+            </Sheet>
+          </div>
+        </div>
+
+        {/* Desktop/Tablet Layout (lg and up) */}
+        <div className="hidden lg:flex justify-between items-center h-20">
+          {/* Logo */}
+          <div className="flex items-center">
             <Link
-              href={LAYOUT_ROUTES.login}
-              className="font-medium hover:font-bold text-purple-600 text-lg no-underline transition-colors duration-200"
+              href={LAYOUT_ROUTES.home}
+              className="flex items-center gap-3 text-inherit no-underline"
             >
-              {LAYOUT_LABELS.auth.login}
+              <Image
+                src={LAYOUT_IMAGES.logo}
+                alt={LAYOUT_IMAGES.logoAlt}
+                width={LAYOUT_IMAGES.logoWidth}
+                height={LAYOUT_IMAGES.logoHeight}
+                className="w-auto h-10 xl:h-12"
+                priority={LAYOUT_CONFIG.logoPriority}
+              />
             </Link>
-            <Link
-              href={LAYOUT_ROUTES.register}
-              className="bg-purple-600 hover:bg-purple-700 px-6 py-2 rounded-full font-medium text-white text-lg no-underline transition-colors duration-200 cursor-pointer"
-            >
-              {LAYOUT_LABELS.auth.register}
-            </Link>
-          </>
-        )}
-      </div>
-    </nav>
+          </div>
+
+          {/* Center Navigation */}
+          <nav className="flex items-center gap-2 space-x-1 xl:space-x-2">
+            {LAYOUT_NAVIGATION.items.map(item => (
+              <Link
+                key={item.href}
+                href={item.href}
+                className={cn(
+                  "flex justify-center items-center px-3 xl:px-4 py-2 xl:py-2 rounded-lg h-10 font-medium text-sm xl:text-base whitespace-nowrap transition-all duration-200",
+                  pathname === item.href
+                    ? "text-primary-600 bg-primary-50"
+                    : "text-gray-700 hover:text-primary-600 hover:bg-gray-50"
+                )}
+              >
+                {item.label}
+              </Link>
+            ))}
+          </nav>
+
+          {/* Right Actions */}
+          <div className="flex items-center gap-3 xl:gap-4">
+            {isHydrated && user ? (
+              <>
+                <Link
+                  href={LAYOUT_ROUTES.userInfoFavorites}
+                  className="group flex justify-center items-center hover:bg-gray-100 rounded-lg w-10 xl:w-11 h-10 xl:h-11 text-primary-600 hover:text-red-500 transition-all duration-200"
+                  aria-label="Favorites"
+                >
+                  <Heart className="fill-current w-5 xl:w-6 h-5 xl:h-6 group-hover:scale-110 transition-transform duration-200" />
+                </Link>
+                <UserDropdown
+                  user={{ ...user, id: Number(user.id) }}
+                  onLogout={handleLogout}
+                />
+              </>
+            ) : isHydrated ? (
+              <>
+                <Link
+                  href={LAYOUT_ROUTES.login}
+                  className="px-5 xl:px-6 rounded-lg font-medium text-sm xl:text-base btn-primary"
+                >
+                  {LAYOUT_LABELS.auth.login}
+                </Link>
+              </>
+            ) : (
+              // Loading skeleton for hydration
+              <div className="bg-gray-200 rounded-lg w-20 h-10 animate-pulse" />
+            )}
+          </div>
+        </div>
+      </nav>
+    </header>
   );
 }

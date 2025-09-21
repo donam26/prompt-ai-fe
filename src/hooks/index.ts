@@ -8,8 +8,6 @@ export * from "./auth/useLoginQuery";
 export * from "./auth/useResendOTPQuery";
 export * from "./auth/useVerifyOTPQuery";
 export * from "./auth/useGetMeQuery";
-export * from "./auth/useCookieBasedAuthGuard";
-export * from "./auth/useStorageSync";
 
 // API hooks
 export * from "./api/useApiMutation";

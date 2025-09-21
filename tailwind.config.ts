@@ -17,6 +17,17 @@ const config: Config = {
         primary: {
           DEFAULT: "hsl(var(--primary))",
           foreground: "hsl(var(--primary-foreground))",
+          50: "hsl(262 100% 97%)",
+          100: "hsl(262 100% 94%)",
+          200: "hsl(262 100% 88%)",
+          300: "hsl(262 100% 82%)",
+          400: "hsl(262 100% 70%)",
+          500: "hsl(262 100% 60%)",
+          600: "hsl(262 83% 58%)", // Main primary color
+          700: "hsl(262 83% 48%)", // Hover state
+          800: "hsl(262 83% 38%)",
+          900: "hsl(262 83% 28%)",
+          950: "hsl(262 83% 18%)",
         },
         secondary: {
           DEFAULT: "hsl(var(--secondary))",

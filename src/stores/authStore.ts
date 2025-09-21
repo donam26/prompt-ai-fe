@@ -25,7 +25,7 @@ export const useAuthStore = create<AuthState>()(
       setLoading: isLoading => set({ isLoading }),
 
       login: (userData, authToken) => {
-        set({ user: userData, token: authToken });
+        set({ user: userData, token: authToken, isLoading: false });
 
         // Set cookies for NextAuth compatibility
         if (typeof window !== "undefined") {
@@ -35,7 +35,7 @@ export const useAuthStore = create<AuthState>()(
       },
 
       logout: () => {
-        set({ user: null, token: null });
+        set({ user: null, token: null, isLoading: false });
 
         // Clear cookies
         if (typeof window !== "undefined") {
@@ -51,6 +51,12 @@ export const useAuthStore = create<AuthState>()(
         user: state.user,
         token: state.token,
       }),
+      onRehydrateStorage: () => state => {
+        // Set loading to false after rehydration
+        if (state) {
+          state.setLoading(false);
+        }
+      },
     }
   )
 );
