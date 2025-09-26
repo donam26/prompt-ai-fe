@@ -1,34 +1,9 @@
 /**
- * Admin industry types
- *
- * Type definitions for admin industry management components and functionality.
- */
-
-import type { Industry } from "@/lib/types";
-
-/**
- * Form data structure for industry creation/editing
- */
-export interface IndustryFormData {
-  readonly name: string;
-  readonly description: string;
-  readonly status: "active" | "inactive";
-  readonly order: number;
-}
-
-/**
- * Props for the IndustryHeader component
- */
-export interface IndustryHeaderProps {
-  readonly onAddIndustry: () => void;
-}
-
-/**
- * Filter state interface for industry filtering
+ * Industry filter state interface
  */
 export interface IndustryFilterState {
   readonly searchTerm: string;
-  readonly status: string; // "all" means no filter
+  readonly status: string;
 }
 
 /**
@@ -43,9 +18,34 @@ export interface IndustryFilterProps {
 }
 
 /**
- * Context type for column handlers
+ * Industry form data interface
+ */
+export interface IndustryFormData {
+  readonly name: string;
+  readonly description: string;
+  readonly status: string;
+  readonly created_at?: string;
+  readonly updated_at?: string;
+}
+
+/**
+ * Props for the IndustryForm component
+ */
+export interface IndustryFormProps {
+  readonly formData: IndustryFormData;
+  readonly errors: Partial<Record<keyof IndustryFormData, string>>;
+  readonly isLoading?: boolean;
+  readonly onFieldChange: (
+    field: keyof IndustryFormData,
+    value: string
+  ) => void;
+  readonly onSubmit: (e: React.FormEvent) => void;
+}
+
+/**
+ * Column handlers for the industry table
  */
 export interface IndustryColumnHandlers {
-  readonly onEdit?: (industry: Industry) => void;
-  readonly onDelete?: (id: string | number) => void;
+  onEdit: (industry: any) => void;
+  onDelete: (industry: any) => void;
 }

@@ -6,6 +6,7 @@ import {
   type BlogListParams,
 } from "@/services/admin/blogs/blogService";
 import type { Blog } from "@/lib/types";
+import { ApiListResponse } from "@/types/api";
 
 /**
  * Parameters for the admin blogs query
@@ -19,7 +20,8 @@ export interface UseAdminBlogsQueryParams extends BlogListParams {
  * Response structure for admin blogs query
  */
 export interface UseAdminBlogsQueryResponse {
-  readonly data: Blog[];
+  readonly data: ApiListResponse<Blog> | null;
+  readonly blogs: Blog[];
   readonly total: number;
   readonly page: number;
   readonly pageSize: number;
@@ -41,27 +43,23 @@ export function useAdminBlogsQuery(params: UseAdminBlogsQueryParams) {
     dateTo = "",
   } = params;
 
-  return useQuery({
+  return useQuery<ApiListResponse<Blog>, Error, UseAdminBlogsQueryResponse>({
     queryKey: ["admin-blogs", page, pageSize, search, dateFrom, dateTo],
-    queryFn: async (): Promise<UseAdminBlogsQueryResponse> => {
-      const response = await blogService.getBlogPage({
+    queryFn: async (): Promise<ApiListResponse<Blog>> => {
+      return await blogService.getBlogPage({
         page,
         pageSize,
         search,
       });
-
-      // Transform response to match expected structure
-      const blogs = response.data?.blogs || [];
-      const totalItems = response.data?.totalItems || 0;
-      const totalPages = response.data?.totalPages || 0;
-      const currentPage = response.data?.currentPage || page;
-
+    },
+    select: (data): UseAdminBlogsQueryResponse => {
       return {
-        data: Array.isArray(blogs) ? blogs : [],
-        total: totalItems,
-        page: currentPage,
-        pageSize,
-        totalPages,
+        data,
+        blogs: data?.data || [],
+        total: data?.pagination?.total || 0,
+        page: data?.pagination?.page || page,
+        pageSize: data?.pagination?.pageSize || pageSize,
+        totalPages: data?.pagination?.totalPages || 0,
       };
     },
     staleTime: 5 * 60 * 1000, // 5 minutes

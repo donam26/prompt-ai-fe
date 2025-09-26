@@ -5,6 +5,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { promptService } from "@/services/prompts/promptService";
 import { queryKeys } from "@/types/shared/types";
+import { ApiListResponse } from "@/types/api";
 
 export interface UseAdminPromptsQueryParams {
   page?: number;
@@ -17,12 +18,13 @@ export interface UseAdminPromptsQueryParams {
 }
 
 export interface UseAdminPromptsQueryResult {
-  data: any;
+  data: ApiListResponse<any> | null;
   isLoading: boolean;
   error: any;
   refetch: () => void;
   totalPages: number;
   totalItems: number;
+  prompts: any[];
 }
 
 /**
@@ -34,7 +36,7 @@ export interface UseAdminPromptsQueryResult {
 export const useAdminPromptsQuery = (
   params?: UseAdminPromptsQueryParams
 ): UseAdminPromptsQueryResult => {
-  const { data, isLoading, error, refetch } = useQuery({
+  const { data, isLoading, error, refetch } = useQuery<ApiListResponse<any>>({
     queryKey: [...queryKeys.admin.prompts, params],
     queryFn: () =>
       promptService.getPromptsPage({
@@ -49,16 +51,17 @@ export const useAdminPromptsQuery = (
     enabled: true,
   });
 
-  const totalItems = data?.total || 0;
-  const currentPageSize = params?.pageSize || 10;
-  const totalPages = Math.ceil(totalItems / currentPageSize);
+  const totalItems = data?.pagination?.total || 0;
+  const totalPages = data?.pagination?.totalPages || 0;
+  const prompts = data?.data || [];
 
   return {
-    data,
+    data: data || null,
     isLoading,
     error,
     refetch,
     totalPages,
     totalItems,
+    prompts,
   };
 };

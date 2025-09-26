@@ -7,6 +7,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { useAdminPermissions } from "@/hooks/useAdminPermissions";
 import { AdminLayout as NewAdminLayout, Loading } from "@/components/admin";
 import { LOADING_TYPE } from "@/constants/loading";
+import { ROUTES_URL } from "@/constants/routes-url";
 import type { AdminLayoutProps } from "@/types/admin";
 
 /**
@@ -25,7 +26,7 @@ export default function AdminLayout({
 
   useEffect(() => {
     if (!isLoading && !isAdmin) {
-      router.push("/");
+      router.push(ROUTES_URL.HOME);
     }
   }, [isLoading, isAdmin, router]);
 

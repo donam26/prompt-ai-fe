@@ -1,9 +1,5 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
-import { useRouter } from "next/navigation";
-
-import { debounce } from "@/lib/utils";
 import { AdminContentCard } from "@/components/admin/common/admin-content-card";
 import {
   SectionFilter,
@@ -11,96 +7,25 @@ import {
   createSectionColumns,
   DataTable,
 } from "./modules";
-// import { INITIAL_FILTER_STATE } from "@/constants";
-import { useAdminSectionsQuery, useDeleteSectionMutation } from "@/hooks";
-import type { Section, SectionFilterState } from "@/types/admin";
-
-/**
- * Use constants from module
- */
-const INITIAL_FILTERS: SectionFilterState = {
-  searchTerm: "",
-  status: "all",
-};
+import { useSectionManagement } from "@/hooks/admin/useSection";
 
 export default function SectionManagementPage(): React.JSX.Element {
-  const router = useRouter();
-
-  // 🎯 State Management
-  const [filters, setFilters] = useState<SectionFilterState>(INITIAL_FILTERS);
-  const [debouncedFilters, setDebouncedFilters] =
-    useState<SectionFilterState>(INITIAL_FILTERS);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [pageSize, setPageSize] = useState(10);
-
-  // Debounced filter update
-  const debouncedFilterUpdate = debounce((newFilters: SectionFilterState) => {
-    setDebouncedFilters(newFilters);
-  }, 300);
-
-  // Update debounced filters when filters change
-  useEffect(() => {
-    debouncedFilterUpdate(filters);
-  }, [filters, debouncedFilterUpdate]);
-
-  // 🔄 Data Hooks
   const {
-    data: sectionsData,
-    isLoading: sectionsLoading,
+    filters,
+    currentPage,
+    pageSize,
+    sections,
     totalPages,
     totalItems,
-  } = useAdminSectionsQuery({
-    page: currentPage,
-    pageSize: pageSize,
-    search: debouncedFilters.searchTerm,
-    status: debouncedFilters.status,
-  });
-
-  const deleteSectionMutation = useDeleteSectionMutation();
-
-  // Extract data from API responses
-  const sections = Array.isArray(sectionsData?.data?.data)
-    ? sectionsData.data.data
-    : Array.isArray(sectionsData?.data)
-      ? sectionsData.data
-      : [];
-
-  const isLoading = sectionsLoading;
-
-  // 🔗 Navigation handlers
-  const handleAddSection = () => {
-    router.push("/admin/sections/create");
-  };
-
-  const handleEditSection = (section: Section) => {
-    router.push(`/admin/sections/${section.id}`);
-  };
-
-  const handleDeleteSection = async (id: string | number): Promise<void> => {
-    try {
-      deleteSectionMutation.mutate(id);
-    } catch {
-      // Error deleting section - could be logged to monitoring service
-    }
-  };
-
-  const handleFilterChange = useCallback(
-    (newFilters: SectionFilterState): void => {
-      setFilters(newFilters);
-      setCurrentPage(1);
-    },
-    []
-  );
-
-  // const handlePageSizeChange = useCallback((newPageSize: number): void => {
-  //   setPageSize(newPageSize);
-  //   setCurrentPage(1);
-  // }, []);
-
-  const handleClearFilters = useCallback((): void => {
-    setFilters(INITIAL_FILTERS);
-    setCurrentPage(1);
-  }, []);
+    isLoading,
+    handleAddSection,
+    handleEditSection,
+    handleDeleteSection,
+    handleFilterChange,
+    handlePageChange,
+    handlePageSizeChange,
+    handleClearFilters,
+  } = useSectionManagement();
 
   // Create columns with handlers
   const columns = createSectionColumns({
@@ -117,7 +42,7 @@ export default function SectionManagementPage(): React.JSX.Element {
           filters={filters}
           onFilterChange={handleFilterChange}
           onClearFilters={handleClearFilters}
-          onPageReset={() => setCurrentPage(1)}
+          onPageReset={() => handlePageChange(1)}
         />
 
         <DataTable
@@ -128,11 +53,8 @@ export default function SectionManagementPage(): React.JSX.Element {
             totalPages: totalPages,
             totalItems: totalItems,
             pageSize: pageSize,
-            onPageChange: (page: number) => setCurrentPage(page),
-            onPageSizeChange: (newPageSize: number) => {
-              setPageSize(newPageSize);
-              setCurrentPage(1);
-            },
+            onPageChange: handlePageChange,
+            onPageSizeChange: handlePageSizeChange,
             showPrevNext: true,
             maxVisiblePages: 5,
           }}

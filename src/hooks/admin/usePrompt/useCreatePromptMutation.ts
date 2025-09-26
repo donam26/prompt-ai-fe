@@ -7,6 +7,7 @@ import { promptService } from "@/services/prompts/promptService";
 
 import { queryKeys } from "@/types/shared/types";
 import { toast } from "sonner";
+import { ApiSingleResponse } from "@/types/api";
 
 export interface CreatePromptData {
   title: string;
@@ -27,7 +28,7 @@ export interface CreatePromptData {
 export const useCreatePromptMutation = () => {
   const queryClient = useQueryClient();
 
-  return useMutation({
+  return useMutation<ApiSingleResponse<any>, Error, CreatePromptData>({
     mutationFn: (promptData: CreatePromptData) =>
       promptService.createPrompt(promptData),
     onSuccess: () => {

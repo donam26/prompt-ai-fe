@@ -13,7 +13,6 @@ import {
 import { CATEGORY_CONSTANTS } from "@/constants/category";
 import {
   useAdminCategoriesQuery,
-  useAdminSectionsQuery,
   useAdminIndustries,
   useDeleteCategoryMutation,
 } from "@/hooks";
@@ -47,8 +46,6 @@ export default function CategoryManagementPage(): React.JSX.Element {
     industryIds: [...industryIds],
   });
 
-  const { data: sectionsData = [], isLoading: sectionsLoading } =
-    useAdminSectionsQuery();
   const {
     industriesWithPagination: industriesData,
     isLoading: industriesLoading,
@@ -57,16 +54,16 @@ export default function CategoryManagementPage(): React.JSX.Element {
 
   // Extract data from API responses
 
-  const sections = Array.isArray(sectionsData?.data?.data)
-    ? sectionsData.data.data
-    : Array.isArray(sectionsData?.data)
-      ? sectionsData.data
-      : [];
+  // const sections = Array.isArray(sectionsData?.data?.data)
+  //   ? sectionsData.data.data
+  //   : Array.isArray(sectionsData?.data)
+  //     ? sectionsData.data
+  //     : [];
   const industries = Array.isArray(industriesData?.data)
     ? industriesData.data
     : [];
 
-  const isLoading = categoriesLoading || sectionsLoading || industriesLoading;
+  const isLoading = categoriesLoading || industriesLoading;
 
   // 🔗 Navigation handlers
   const handleAddCategory = () => {
@@ -74,7 +71,7 @@ export default function CategoryManagementPage(): React.JSX.Element {
   };
 
   const handleEditCategory = (category: Category) => {
-    router.push(CATEGORY_CONSTANTS.ROUTES.CATEGORY_EDIT(category.id));
+    router.push(CATEGORY_CONSTANTS.ROUTES.CATEGORY_DETAIL(category.id));
   };
 
   const handleDeleteCategory = async (id: string | number): Promise<void> => {
@@ -113,7 +110,7 @@ export default function CategoryManagementPage(): React.JSX.Element {
 
         <CategoryFilter
           filters={filters}
-          sections={sections}
+          sections={[]}
           industries={industries}
           onFilterChange={handleFilterChange}
           onClearFilters={handleClearFilters}

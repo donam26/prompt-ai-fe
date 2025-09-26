@@ -1,4 +1,4 @@
-import type { IndustryFilterState } from "@/types/admin";
+import type { IndustryFilterState } from "@/types/admin/industry";
 
 /**
  * Industries constants following Berklee pattern

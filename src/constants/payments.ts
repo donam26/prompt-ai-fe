@@ -1,4 +1,4 @@
-import type { PaymentFilterState } from "@/types/admin";
+import type { PaymentFilterState } from "@/types/admin/payment";
 
 /**
  * Payments constants following Berklee pattern
@@ -7,8 +7,8 @@ export const PAYMENTS_CONSTANTS = {
   // Initial filter state
   INITIAL_FILTERS: {
     searchTerm: "",
-    status: "",
-    paymentMethod: "",
+    status: "all",
+    method: "all",
     dateRange: {
       from: "",
       to: "",
@@ -24,7 +24,7 @@ export const PAYMENTS_CONSTANTS = {
   // Routes
   ROUTES: {
     PAYMENTS: "/admin/payments",
-    PAYMENT_VIEW: (id: string | number) => `/admin/payments/${id}`,
+    PAYMENT_VIEW: (id: string | number) => `/admin/payments/${id}/view`,
   },
 
   // Status values

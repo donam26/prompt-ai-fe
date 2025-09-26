@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { BaseSelect } from "@/components/ui/base-select";
-import type { SectionFilterProps } from "@/types/admin";
+import type { SectionFilterProps, SectionFilterState } from "@/types/admin";
 
 /**
  * Section filter component with search and status filters
@@ -99,9 +99,9 @@ const StatusFilter = ({
   onChange: (value: string) => void;
 }): React.JSX.Element => {
   const statusOptions = [
-    { value: "all", label: "Tất cả trạng thái" },
-    { value: "active", label: "Hoạt động" },
-    { value: "inactive", label: "Không hoạt động" },
+    { id: "all", name: "Tất cả trạng thái" },
+    { id: "active", name: "Hoạt động" },
+    { id: "inactive", name: "Không hoạt động" },
   ];
 
   return (

@@ -3,6 +3,8 @@
 // Store hooks
 export * from "./stores";
 
+// Admin hooks
+export * from "./admin";
 // Auth hooks
 export * from "./auth/useLoginQuery";
 export * from "./auth/useResendOTPQuery";
@@ -18,6 +20,7 @@ export * from "./admin/useIndustry";
 export * from "./admin/useUser";
 export * from "./admin/usePrompt";
 export * from "./admin/useBlog";
+export * from "./admin/usePayment";
 export * from "./useAdminPermissions";
 
 // Other hooks

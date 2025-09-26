@@ -1,34 +1,77 @@
-import { apiClient } from "../../base/apiClient";
+import { BaseService } from "../../base/baseService";
 import { ENDPOINTS } from "@/constants";
-import { ServiceMethod } from "../../base/types";
+import type { BlogCategory } from "@/lib/types";
+import type {
+  ApiResponse,
+  PaginatedResponse,
+  SingleResponse,
+} from "../../base";
 
-export class BlogCategoryService {
-  // Get all blog categories
-  getBlogCategory: ServiceMethod = () => {
-    return apiClient.get(ENDPOINTS.BLOG_CATEGORIES.BASE);
-  };
+/**
+ * BlogCategoryService extending BaseService
+ */
+export class BlogCategoryService extends BaseService {
+  constructor() {
+    super(ENDPOINTS.BLOG_CATEGORIES.BASE);
+  }
 
-  // Get blog categories page
-  getBlogCategoryPage: ServiceMethod = () => {
-    return apiClient.get(ENDPOINTS.BLOG_CATEGORIES.LIST);
-  };
+  /**
+   * Get all blog categories
+   */
+  async getBlogCategories(): Promise<ApiResponse<BlogCategory[]>> {
+    return this.get<BlogCategory[]>("");
+  }
 
-  // Create blog category
-  createBlogCategory: ServiceMethod<unknown> = data => {
-    return apiClient.post(ENDPOINTS.BLOG_CATEGORIES.BASE, data);
-  };
+  /**
+   * Get blog categories with pagination
+   */
+  async getBlogCategoriesPage(params?: {
+    page?: number;
+    pageSize?: number;
+    search?: string;
+  }): Promise<ApiResponse<PaginatedResponse<BlogCategory>>> {
+    return this.get<PaginatedResponse<BlogCategory>>("", params);
+  }
 
-  // Update blog category
-  updateBlogCategory: ServiceMethod<{ id: string | number; data: unknown }> =
-    params => {
-      const { id, data } = params || {};
-      return apiClient.put(`${ENDPOINTS.BLOG_CATEGORIES.BASE}/${id}`, data);
-    };
+  /**
+   * Get blog category by ID
+   */
+  async getBlogCategory(
+    id: string | number
+  ): Promise<ApiResponse<SingleResponse<BlogCategory>>> {
+    return this.getById<SingleResponse<BlogCategory>>(id);
+  }
 
-  // Delete blog category
-  deleteBlogCategory: ServiceMethod<string | number> = id => {
-    return apiClient.delete(`${ENDPOINTS.BLOG_CATEGORIES.BASE}/${id}`);
-  };
+  /**
+   * Create new blog category
+   */
+  async createBlogCategory(
+    data: Partial<BlogCategory>
+  ): Promise<ApiResponse<SingleResponse<BlogCategory>>> {
+    return this.create<SingleResponse<BlogCategory>, Partial<BlogCategory>>(
+      data
+    );
+  }
+
+  /**
+   * Update blog category
+   */
+  async updateBlogCategory(
+    id: string | number,
+    data: Partial<BlogCategory>
+  ): Promise<ApiResponse<SingleResponse<BlogCategory>>> {
+    return this.update<SingleResponse<BlogCategory>, Partial<BlogCategory>>(
+      id,
+      data
+    );
+  }
+
+  /**
+   * Delete blog category
+   */
+  async deleteBlogCategory(id: string | number): Promise<ApiResponse<void>> {
+    return this.delete<void>(id);
+  }
 }
 
 // Export singleton instance

@@ -6,6 +6,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { userService } from "@/services/users/userService";
 import { queryKeys } from "@/types/shared/types";
 import { toast } from "sonner";
+import { ApiSingleResponse } from "@/types/api";
 
 export interface UpdateUserData {
   name?: string;
@@ -24,7 +25,14 @@ export interface UpdateUserData {
 export const useUpdateUserMutation = () => {
   const queryClient = useQueryClient();
 
-  return useMutation({
+  return useMutation<
+    ApiSingleResponse<any>,
+    Error,
+    {
+      id: string | number;
+      userData: UpdateUserData;
+    }
+  >({
     mutationFn: ({
       id,
       userData,

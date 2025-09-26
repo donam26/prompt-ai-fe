@@ -6,6 +6,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { userService } from "@/services/users/userService";
 import { queryKeys } from "@/types/shared/types";
 import { toast } from "sonner";
+import { ApiSingleResponse } from "@/types/api";
 
 export interface CreateUserData {
   name: string;
@@ -24,7 +25,7 @@ export interface CreateUserData {
 export const useCreateUserMutation = () => {
   const queryClient = useQueryClient();
 
-  return useMutation({
+  return useMutation<ApiSingleResponse<any>, Error, CreateUserData>({
     mutationFn: (userData: CreateUserData) => userService.createUser(userData),
     onSuccess: () => {
       queryClient.invalidateQueries({

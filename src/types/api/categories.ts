@@ -101,7 +101,6 @@ export interface UseAdminCategoriesQueryParams {
  * Hook result for categories query
  */
 export interface UseAdminCategoriesQueryResult {
-  readonly data: CategoriesApiResponse | null;
   readonly isLoading: boolean;
   readonly error: unknown;
   readonly refetch: () => void;

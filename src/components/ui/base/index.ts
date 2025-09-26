@@ -10,3 +10,7 @@ export {
 } from "./base-select-field";
 export { BaseImageField, type BaseImageFieldProps } from "./base-image-field";
 export { BaseTagsField, type BaseTagsFieldProps } from "./base-tags-field";
+export {
+  BaseSwitchField,
+  type BaseSwitchFieldProps,
+} from "./base-switch-field";

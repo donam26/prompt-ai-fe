@@ -3,6 +3,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { blogService } from "@/services/admin/blogs/blogService";
 import type { CreateBlogRequest } from "@/lib/types";
+import { ApiSingleResponse } from "@/types/api";
 
 /**
  * Parameters for updating a blog
@@ -20,9 +21,9 @@ export interface UpdateBlogParams {
 export function useUpdateBlogMutation() {
   const queryClient = useQueryClient();
 
-  return useMutation({
+  return useMutation<ApiSingleResponse<Blog>, Error, UpdateBlogParams>({
     mutationFn: async ({ id, data }: UpdateBlogParams) => {
-      return blogService.updateBlog({ id, data });
+      return await blogService.updateBlog({ id, data });
     },
     onSuccess: () => {
       // Invalidate and refetch blogs list

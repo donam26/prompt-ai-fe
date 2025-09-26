@@ -39,7 +39,8 @@ export function ActionsCell<T>({
   };
 
   const handleDelete = () => {
-    onDelete?.(item);
+    const itemId = (item as any).id;
+    onDelete?.(itemId);
   };
 
   const handleManageBadge = () => {

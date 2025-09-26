@@ -156,9 +156,9 @@ export interface SearchFilterProps {
 }
 
 /**
- * Props for the SectionFilter component
+ * Props for the SectionSelect component (used in category filter)
  */
-export interface SectionFilterProps {
+export interface SectionSelectProps {
   readonly value: string;
   readonly sections: Section[];
   readonly onChange: (value: string) => void;

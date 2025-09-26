@@ -6,6 +6,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { userService } from "@/services/users/userService";
 import { queryKeys } from "@/types/shared/types";
 import { toast } from "sonner";
+import { ApiSuccessResponse } from "@/types/api";
 
 /**
  * Hook for deleting a user
@@ -15,7 +16,7 @@ import { toast } from "sonner";
 export const useDeleteUserMutation = () => {
   const queryClient = useQueryClient();
 
-  return useMutation({
+  return useMutation<ApiSuccessResponse, Error, string | number>({
     mutationFn: (id: string | number) => userService.deleteUser(id),
     onSuccess: () => {
       queryClient.invalidateQueries({

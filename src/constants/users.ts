@@ -1,4 +1,4 @@
-import type { UserFilterState } from "@/types/admin";
+import type { UserFilterState } from "@/types/admin/user";
 
 /**
  * Users constants following Berklee pattern
@@ -26,6 +26,7 @@ export const USERS_CONSTANTS = {
     USERS: "/admin/users",
     USER_CREATE: "/admin/users/create",
     USER_EDIT: (id: string | number) => `/admin/users/${id}`,
+    USER_VIEW: (id: string | number) => `/admin/users/${id}/view`,
   },
 
   // Status values

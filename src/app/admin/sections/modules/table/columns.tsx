@@ -4,7 +4,7 @@ import { Folder } from "lucide-react";
 import { Column } from "@/components/data-table/data-table";
 import { StatusCell, BadgeCell, ActionsCell } from "@/components/table-cell";
 import type { Section } from "@/lib/types";
-import type { SectionColumnHandlers } from "@/types/admin";
+import type { SectionColumnHandlers } from "@/types/admin/section";
 
 /**
  * Base section columns configuration with responsive widths
@@ -75,8 +75,8 @@ export const sectionColumns: Column<Section>[] = [
     className: "hidden lg:table-cell",
     render: (_, section) => (
       <span className="text-gray-600 text-sm">
-        {section.createdAt
-          ? new Date(section.createdAt).toLocaleDateString("vi-VN")
+        {section.created_at
+          ? new Date(section.created_at).toLocaleDateString("vi-VN")
           : "N/A"}
       </span>
     ),
@@ -93,7 +93,7 @@ export const sectionColumns: Column<Section>[] = [
         <ActionsCell
           item={section}
           onEdit={handlers.onEdit}
-          onDelete={item => handlers.onDelete?.(item.id)}
+          onDelete={item => handlers.onDelete?.(item)}
         />
       );
     },

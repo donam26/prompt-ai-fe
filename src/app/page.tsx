@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/hooks/useAuth";
 import { promptService, blogService } from "@/services";
+import { ROUTES_URL } from "@/constants/routes-url";
 import { Prompt, Blog } from "@/lib/types";
 import { Button } from "@/components/ui/button";
 import {
@@ -108,9 +109,9 @@ export default function HomePage() {
 
   const handleClick = () => {
     if (user) {
-      router.push("/thu-vien-prompt");
+      router.push(ROUTES_URL.THU_VIEN_PROMPT);
     } else {
-      router.push("/login");
+      router.push(ROUTES_URL.LOGIN);
     }
   };
 
@@ -152,7 +153,7 @@ export default function HomePage() {
                 variant="outline"
                 size="lg"
                 className="hover:bg-purple-50 px-8 py-4 border-purple-600 rounded-full text-purple-600 text-lg"
-                onClick={() => router.push("/thu-vien-prompt")}
+                onClick={() => router.push(ROUTES_URL.THU_VIEN_PROMPT)}
               >
                 <Sparkles className="mr-2 w-5 h-5" />
                 Thư viện prompt

@@ -1,28 +1,15 @@
 /**
- * Admin payment types
- *
- * Type definitions for admin payment management components and functionality.
- */
-
-import type { Payment } from "@/lib/types";
-
-/**
- * Filter state interface for payment filtering
+ * Payment filter state interface
  */
 export interface PaymentFilterState {
   readonly searchTerm: string;
-  readonly status: string; // "all" means no filter
-  readonly method: string; // "all" means no filter
+  readonly status: string;
+  readonly method: string;
   readonly dateRange: {
     readonly from: string;
     readonly to: string;
   };
 }
-
-/**
- * Props for the PaymentHeader component
- */
-export type PaymentHeaderProps = Record<string, never>;
 
 /**
  * Props for the PaymentFilter component
@@ -36,9 +23,35 @@ export interface PaymentFilterProps {
 }
 
 /**
- * Context type for column handlers
+ * Payment form data interface
+ */
+export interface PaymentFormData {
+  readonly amount: number;
+  readonly method: string;
+  readonly status: string;
+  readonly description: string;
+  readonly created_at?: string;
+  readonly updated_at?: string;
+}
+
+/**
+ * Props for the PaymentForm component
+ */
+export interface PaymentFormProps {
+  readonly formData: PaymentFormData;
+  readonly errors: Partial<Record<keyof PaymentFormData, string>>;
+  readonly isLoading?: boolean;
+  readonly onFieldChange: (
+    field: keyof PaymentFormData,
+    value: string | number
+  ) => void;
+  readonly onSubmit: (e: React.FormEvent) => void;
+}
+
+/**
+ * Column handlers for the payment table
  */
 export interface PaymentColumnHandlers {
-  readonly onView?: (payment: Payment) => void;
-  readonly onDelete?: (id: string | number) => void;
+  onEdit: (payment: any) => void;
+  onDelete: (payment: any) => void;
 }

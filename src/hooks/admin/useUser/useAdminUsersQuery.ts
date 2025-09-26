@@ -1,65 +1,85 @@
-/**
- * Admin users query hook
- */
+"use client";
 
 import { useQuery } from "@tanstack/react-query";
-import { userService } from "@/services/users/userService";
+import { userService } from "@/services/admin/users/userService";
+import type { User } from "@/lib/types";
+import { ApiListResponse } from "@/types/api";
 
-import { queryKeys } from "@/types/shared/types";
-
+/**
+ * Parameters for the admin users query
+ */
 export interface UseAdminUsersQueryParams {
-  page?: number;
-  pageSize?: number;
-  search?: string;
-  role?: string;
-  status?: string;
-  dateFrom?: string;
-  dateTo?: string;
-}
-
-export interface UseAdminUsersQueryResult {
-  data: any;
-  isLoading: boolean;
-  error: any;
-  refetch: () => void;
-  totalPages: number;
-  totalItems: number;
+  readonly page?: number;
+  readonly pageSize?: number;
+  readonly search?: string;
+  readonly role?: string;
+  readonly status?: string;
+  readonly dateFrom?: string;
+  readonly dateTo?: string;
 }
 
 /**
- * Hook for fetching admin users with pagination and filters
+ * Response structure for admin users query
+ */
+export interface UseAdminUsersQueryResponse {
+  readonly data: ApiListResponse<User> | null;
+  readonly users: User[];
+  readonly total: number;
+  readonly page: number;
+  readonly pageSize: number;
+  readonly totalPages: number;
+}
+
+/**
+ * Hook for fetching admin users with pagination and filtering
  *
  * @param params - Query parameters
- * @returns Users query result
+ * @returns Query result with users data
  */
-export const useAdminUsersQuery = (
-  params?: UseAdminUsersQueryParams
-): UseAdminUsersQueryResult => {
-  const { data, isLoading, error, refetch } = useQuery({
-    queryKey: [...queryKeys.admin.users, params],
-    queryFn: () =>
-      userService.getUsersPage({
-        page: params?.page || 1,
-        pageSize: params?.pageSize || 10,
-        search: params?.search || "",
-        role: params?.role || "all",
-        status: params?.status || "all",
-        dateFrom: params?.dateFrom || "",
-        dateTo: params?.dateTo || "",
-      }),
-    enabled: true,
+export const useAdminUsersQuery = (params: UseAdminUsersQueryParams) => {
+  const {
+    page = 1,
+    pageSize = 10,
+    search = "",
+    role = "",
+    status = "",
+    dateFrom = "",
+    dateTo = "",
+  } = params;
+
+  return useQuery<ApiListResponse<User>, Error, UseAdminUsersQueryResponse>({
+    queryKey: [
+      "admin-users",
+      page,
+      pageSize,
+      search,
+      role,
+      status,
+      dateFrom,
+      dateTo,
+    ],
+    queryFn: async (): Promise<ApiListResponse<User>> => {
+      return await userService.getUsers({
+        page,
+        pageSize,
+        search,
+        role,
+        status,
+        dateFrom,
+        dateTo,
+      });
+    },
+    select: (data): UseAdminUsersQueryResponse => {
+      return {
+        data,
+        users: data?.data || [],
+        total: data?.pagination?.total || 0,
+        page: data?.pagination?.page || page,
+        pageSize: data?.pagination?.pageSize || pageSize,
+        totalPages: data?.pagination?.totalPages || 0,
+      };
+    },
+    staleTime: 5 * 60 * 1000, // 5 minutes
+    gcTime: 10 * 60 * 1000, // 10 minutes
   });
-
-  const totalItems = data?.total || 0;
-  const currentPageSize = params?.pageSize || 10;
-  const totalPages = Math.ceil(totalItems / currentPageSize);
-
-  return {
-    data,
-    isLoading,
-    error,
-    refetch,
-    totalPages,
-    totalItems,
-  };
 };

@@ -20,7 +20,8 @@ export const CATEGORY_CONSTANTS = {
 
   // Routes
   ROUTES: {
-    CATEGORIES: "/admin/category",
+    CATEGORY_LIST: "/admin/category",
+    CATEGORY_DETAIL: (id: string | number) => `/admin/category/${id}`,
     CATEGORY_CREATE: "/admin/category/create",
     CATEGORY_EDIT: (id: string | number) => `/admin/category/${id}`,
   },

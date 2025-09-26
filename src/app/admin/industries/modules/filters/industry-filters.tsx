@@ -1,13 +1,14 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useCallback } from "react";
 import { Search, X } from "lucide-react";
 
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { BaseSelect } from "@/components/ui/base-select";
-import type { IndustryFilterProps } from "@/types/admin";
+import { debounce } from "@/lib/utils";
+import type { IndustryFilterProps, IndustryFilterState } from "@/types/admin";
 
 /**
  * Industry filter component with search and status filters
@@ -22,12 +23,25 @@ export const IndustryFilter = ({
   onPageReset,
   className,
 }: IndustryFilterProps): React.JSX.Element => {
+  // Debounced filter update
+  const debouncedFilterUpdate = useCallback(
+    debounce((newFilters: IndustryFilterState) => {
+      onFilterChange(newFilters);
+      onPageReset?.();
+    }, 300),
+    [onFilterChange, onPageReset]
+  );
+
+  // Update debounced filters when filters change
+  useEffect(() => {
+    debouncedFilterUpdate(filters);
+  }, [filters, debouncedFilterUpdate]);
+
   const handleSearchChange = (value: string): void => {
     onFilterChange({
       ...filters,
       searchTerm: value,
     });
-    onPageReset?.();
   };
 
   const handleStatusChange = (value: string): void => {
@@ -35,7 +49,6 @@ export const IndustryFilter = ({
       ...filters,
       status: value,
     });
-    onPageReset?.();
   };
 
   const hasActiveFilters = filters.searchTerm || filters.status !== "all";

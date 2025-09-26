@@ -1,14 +1,14 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { categoryService } from "@/services";
 import { toast } from "sonner";
-import { CreateCategoryRequest } from "@/lib/types";
+import { Category } from "@/lib/types";
 import { ApiErrorResult } from "@/types";
 import { queryKeys } from "@/types/shared/types";
 
 interface UseCreateCategoryMutationResult {
   isLoading: boolean;
   error: any;
-  mutate: (data: CreateCategoryRequest) => void;
+  mutate: (data: Partial<Category>) => void;
 }
 
 export const useCreateCategoryMutation =
@@ -29,7 +29,7 @@ export const useCreateCategoryMutation =
       },
     });
 
-    const mutate = (data: CreateCategoryRequest): void => {
+    const mutate = (data: Partial<Category>): void => {
       createCategoryMutation.mutate(data);
     };
 

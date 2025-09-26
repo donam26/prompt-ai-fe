@@ -1,4 +1,4 @@
-import type { SectionFilterState } from "@/types/admin";
+import type { SectionFilterState } from "@/types/admin/section";
 
 /**
  * Sections constants following Berklee pattern

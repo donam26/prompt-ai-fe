@@ -75,6 +75,8 @@ export interface Section {
   id: string | number;
   name: string;
   description?: string;
+  status?: string;
+  order?: number;
   created_at: string;
   updated_at: string;
 }
@@ -203,13 +205,6 @@ export interface DeviceLog {
   ip_address: string;
   user_agent: string;
   created_at: string;
-}
-
-export interface ApiResponse<T = unknown> {
-  success: boolean;
-  data: T;
-  message?: string;
-  error?: string;
 }
 
 export interface PaginatedResponse<T = unknown> {

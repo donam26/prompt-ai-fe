@@ -26,8 +26,8 @@ export default function PromptManagementPage(): React.JSX.Element {
   const [filters, setFilters] = useState<PromptFilterState>(
     PROMPTS_CONSTANTS.INITIAL_FILTERS
   );
-  const [currentPage] = useState(1);
-  const [pageSize] = useState<number>(
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState<number>(
     PROMPTS_CONSTANTS.PAGINATION.DEFAULT_PAGE_SIZE
   );
 
@@ -67,15 +67,15 @@ export default function PromptManagementPage(): React.JSX.Element {
   // }, [deleteError]);
 
   const handleAddPrompt = () => {
-    router.push("/admin/prompts/create");
+    router.push(PROMPTS_CONSTANTS.ROUTES.PROMPT_CREATE);
   };
 
   const handleEditPrompt = (prompt: Prompt) => {
-    router.push(`/admin/prompts/${prompt.id}`);
+    router.push(PROMPTS_CONSTANTS.ROUTES.PROMPT_EDIT(prompt.id));
   };
 
   const handleViewPrompt = (prompt: Prompt) => {
-    router.push(`/admin/prompts/${prompt.id}/view`);
+    router.push(PROMPTS_CONSTANTS.ROUTES.PROMPT_VIEW(prompt.id));
   };
 
   const handleDeletePrompt = async (id: string | number): Promise<void> => {
@@ -93,21 +93,22 @@ export default function PromptManagementPage(): React.JSX.Element {
   const handleFilterChange = useCallback(
     (newFilters: PromptFilterState): void => {
       setFilters(newFilters);
-      setPagination(prev => ({ ...prev, currentPage: 1 }));
+      setCurrentPage(1);
     },
     []
   );
 
   const handlePaginationChange = useCallback(
     (newPagination: { currentPage?: number; pageSize?: number }) => {
-      setPagination(prev => ({ ...prev, ...newPagination }));
+      if (newPagination.currentPage) setCurrentPage(newPagination.currentPage);
+      if (newPagination.pageSize) setPageSize(newPagination.pageSize);
     },
     []
   );
 
   const handleClearFilters = useCallback((): void => {
-    setFilters(INITIAL_FILTERS);
-    setPagination(prev => ({ ...prev, currentPage: 1 }));
+    setFilters(PROMPTS_CONSTANTS.INITIAL_FILTERS);
+    setCurrentPage(1);
   }, []);
 
   const columns = createPromptColumns({
@@ -127,19 +128,17 @@ export default function PromptManagementPage(): React.JSX.Element {
           categories={categoriesData}
           onFilterChange={handleFilterChange}
           onClearFilters={handleClearFilters}
-          onPageReset={() =>
-            setPagination(prev => ({ ...prev, currentPage: 1 }))
-          }
+          onPageReset={() => setCurrentPage(1)}
         />
 
         <DataTable
           columns={columns}
           data={prompts}
           pagination={{
-            currentPage: pagination.currentPage,
+            currentPage: currentPage,
             totalPages: totalPages,
             totalItems: totalItems,
-            pageSize: pagination.pageSize,
+            pageSize: pageSize,
             onPageChange: (page: number) =>
               handlePaginationChange({ currentPage: page }),
             onPageSizeChange: (newPageSize: number) => {

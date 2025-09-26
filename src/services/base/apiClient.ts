@@ -1,8 +1,7 @@
 import axios from "axios";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001/api";
+const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api";
 
-// Tạo instance của axios với cấu hình mặc định
 export const apiClient = axios.create({
   baseURL: API_URL,
   headers: {
@@ -10,7 +9,6 @@ export const apiClient = axios.create({
   },
 });
 
-// Interceptor để thêm token và xử lý Content-Type phù hợp cho mỗi request
 apiClient.interceptors.request.use(
   config => {
     const token =
@@ -19,7 +17,6 @@ apiClient.interceptors.request.use(
       config.headers["Authorization"] = `Bearer ${token}`;
     }
 
-    // Kiểm tra nếu data là FormData thì set Content-Type là multipart/form-data
     if (config.data instanceof FormData) {
       config.headers["Content-Type"] = "multipart/form-data";
     } else {
@@ -33,7 +30,6 @@ apiClient.interceptors.request.use(
   }
 );
 
-// Helper function để clean params
 export function cleanParams(params: Record<string, unknown>) {
   const result: Record<string, unknown> = {};
   for (const key in params) {
@@ -50,13 +46,11 @@ export function cleanParams(params: Record<string, unknown>) {
   return result;
 }
 
-// Helper function để build query string
 export function buildQueryString(params: Record<string, unknown>): string {
   const cleaned = cleanParams(params);
   return new URLSearchParams(cleaned as Record<string, string>).toString();
 }
 
-// Helper function để build URL with query params
 export function buildUrlWithParams(
   baseUrl: string,
   params: Record<string, unknown> = {}

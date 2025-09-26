@@ -13,19 +13,12 @@ import {
 } from "./modules";
 import { useAdminPaymentsQuery, useDeletePaymentMutation } from "@/hooks";
 import type { Payment, PaymentFilterState } from "@/types/admin";
+import { PAYMENTS_CONSTANTS } from "@/constants/payments";
 
 /**
  * Use constants from module
  */
-const INITIAL_FILTERS: PaymentFilterState = {
-  searchTerm: "",
-  status: "all",
-  method: "all",
-  dateRange: {
-    from: "",
-    to: "",
-  },
-};
+const INITIAL_FILTERS = PAYMENTS_CONSTANTS.INITIAL_FILTERS;
 
 export default function PaymentManagementPage(): React.JSX.Element {
   const router = useRouter();
@@ -48,35 +41,28 @@ export default function PaymentManagementPage(): React.JSX.Element {
   }, [filters, debouncedFilterUpdate]);
 
   // 🔄 Data Hooks
-  const {
-    data: paymentsData,
-    isLoading: paymentsLoading,
-    totalPages,
-    totalItems,
-  } = useAdminPaymentsQuery({
-    page: currentPage,
-    pageSize: pageSize,
-    search: debouncedFilters.searchTerm,
-    status: debouncedFilters.status,
-    method: debouncedFilters.method,
-    dateFrom: debouncedFilters.dateRange.from,
-    dateTo: debouncedFilters.dateRange.to,
-  });
+  const { data: paymentsData, isLoading: paymentsLoading } =
+    useAdminPaymentsQuery({
+      page: currentPage,
+      pageSize: pageSize,
+      search: debouncedFilters.searchTerm,
+      status: debouncedFilters.status,
+      method: debouncedFilters.method,
+      dateFrom: debouncedFilters.dateRange.from,
+      dateTo: debouncedFilters.dateRange.to,
+    });
 
   const deletePaymentMutation = useDeletePaymentMutation();
 
   // Extract data from API responses
-  const payments = Array.isArray(paymentsData?.data?.data)
-    ? paymentsData.data.data
-    : Array.isArray(paymentsData?.data)
-      ? paymentsData.data
-      : [];
+  const payments = paymentsData?.data || [];
+  const totalPages = paymentsData?.totalPages || 0;
+  const totalItems = paymentsData?.total || 0;
 
   const isLoading = paymentsLoading;
 
-  // 🔗 Navigation handlers
   const handleViewPayment = (payment: Payment) => {
-    router.push(`/admin/payments/${payment.id}/view`);
+    router.push(PAYMENTS_CONSTANTS.ROUTES.PAYMENT_VIEW(payment.id));
   };
 
   const handleDeletePayment = async (id: string | number): Promise<void> => {

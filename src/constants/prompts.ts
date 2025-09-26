@@ -1,4 +1,4 @@
-import type { PromptFilterState } from "@/types/admin";
+import type { PromptFilterState } from "@/types/admin/prompt";
 
 /**
  * Prompts constants following Berklee pattern
@@ -8,7 +8,9 @@ export const PROMPTS_CONSTANTS = {
   INITIAL_FILTERS: {
     searchTerm: "",
     categoryId: "",
-    status: "",
+    status: "all",
+    isPremium: "all",
+    tags: [],
     dateRange: {
       from: "",
       to: "",
@@ -26,6 +28,7 @@ export const PROMPTS_CONSTANTS = {
     PROMPTS: "/admin/prompts",
     PROMPT_CREATE: "/admin/prompts/create",
     PROMPT_EDIT: (id: string | number) => `/admin/prompts/${id}`,
+    PROMPT_VIEW: (id: string | number) => `/admin/prompts/${id}/view`,
   },
 
   // Status values

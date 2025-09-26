@@ -1,6 +1,5 @@
 "use client";
 
-import { useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
 
 import { AdminContentCard } from "@/components/admin/common/admin-content-card";
@@ -10,18 +9,23 @@ import {
   createUserColumns,
   DataTable,
 } from "./modules";
-// import { USERS_CONSTANTS } from "@/constants/users";
+import { USERS_CONSTANTS } from "@/constants/users";
 import { useAdminUsersQuery, useDeleteUserMutation } from "@/hooks";
 import type { UserFilterState } from "@/types/admin";
 import type { User } from "@/lib/types";
+import { debounce } from "@/lib/utils";
+import { useState, useEffect, useCallback } from "react";
 
 export default function UserManagementPage(): React.JSX.Element {
   const router = useRouter();
 
   // 🎯 State Management
-  const [filters, setFilters] = useState<UserFilterState>(INITIAL_FILTERS);
-  const [debouncedFilters, setDebouncedFilters] =
-    useState<UserFilterState>(INITIAL_FILTERS);
+  const [filters, setFilters] = useState<UserFilterState>(
+    USERS_CONSTANTS.INITIAL_FILTERS
+  );
+  const [debouncedFilters, setDebouncedFilters] = useState<UserFilterState>(
+    USERS_CONSTANTS.INITIAL_FILTERS
+  );
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
 
@@ -64,15 +68,15 @@ export default function UserManagementPage(): React.JSX.Element {
 
   // 🔗 Navigation handlers
   const handleAddUser = () => {
-    router.push("/admin/users/create");
+    router.push(USERS_CONSTANTS.ROUTES.USER_CREATE);
   };
 
   const handleEditUser = (user: User) => {
-    router.push(`/admin/users/${user.id}`);
+    router.push(USERS_CONSTANTS.ROUTES.USER_EDIT(user.id));
   };
 
   const handleViewUser = (user: User) => {
-    router.push(`/admin/users/${user.id}/view`);
+    router.push(USERS_CONSTANTS.ROUTES.USER_VIEW(user.id));
   };
 
   const handleDeleteUser = async (id: string | number): Promise<void> => {
@@ -97,7 +101,7 @@ export default function UserManagementPage(): React.JSX.Element {
   // }, []);
 
   const handleClearFilters = useCallback((): void => {
-    setFilters(INITIAL_FILTERS);
+    setFilters(USERS_CONSTANTS.INITIAL_FILTERS);
     setCurrentPage(1);
   }, []);
 

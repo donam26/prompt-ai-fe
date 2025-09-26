@@ -1,9 +1,9 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { categoryService } from "@/services";
 import { toast } from "sonner";
-import { CreateCategoryRequest } from "@/lib/types";
 import { ApiErrorResult } from "@/types";
 import { queryKeys } from "@/types/shared/types";
+import { Category, CreateCategoryRequest } from "@/lib/types";
 
 interface UseUpdateCategoryMutationParams {
   id: number | string;
@@ -22,7 +22,7 @@ export const useUpdateCategoryMutation =
 
     const updateCategoryMutation = useMutation({
       mutationFn: ({ id, data }: UseUpdateCategoryMutationParams) =>
-        categoryService.updateCategory({ id, data }),
+        categoryService.updateCategory(id, data as Partial<Category>),
       onSuccess: () => {
         queryClient.invalidateQueries({ queryKey: queryKeys.categories });
         queryClient.invalidateQueries({ queryKey: queryKeys.admin.categories });

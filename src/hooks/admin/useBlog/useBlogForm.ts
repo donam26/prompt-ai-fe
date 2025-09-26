@@ -8,6 +8,7 @@ import { blogService } from "@/services/admin/blogs/blogService";
 import { useAdminBlogQuery } from "./useAdminBlogQuery";
 // import type { Blog } from "@/lib/types";
 import type { BlogFormData } from "@/types/admin/blog";
+import { BLOG_CONSTANTS } from "@/constants/blog";
 
 /**
  * Form state interface for blog editing
@@ -60,7 +61,7 @@ export function useBlogForm(blogId?: string | number) {
     mutationFn: (data: BlogFormData) => blogService.createBlog(data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["admin-blogs"] });
-      router.push("/admin/blogs");
+      router.push(BLOG_CONSTANTS.ROUTES.BLOGS);
     },
   });
 
