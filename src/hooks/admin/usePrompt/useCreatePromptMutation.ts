@@ -36,9 +36,8 @@ export const useCreatePromptMutation = () => {
       });
       toast.success("Tạo prompt thành công");
     },
-    onError: (_error: any) => {
+    onError: () => {
       toast.error("Có lỗi xảy ra khi tạo prompt");
-      // console.error("Create prompt error:", _error);
     },
   });
 };

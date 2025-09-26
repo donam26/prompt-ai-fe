@@ -11,6 +11,7 @@ interface AdminPageLayoutProps {
   readonly actions?: React.ReactNode;
   readonly children: React.ReactNode;
   readonly className?: string;
+  readonly showActionBottom?: boolean;
 }
 
 /**
@@ -25,6 +26,7 @@ export function AdminPageLayout({
   actions,
   children,
   className,
+  showActionBottom = false,
 }: AdminPageLayoutProps): React.JSX.Element {
   return (
     <div className={cn("admin-page-layout", className)}>
@@ -45,6 +47,10 @@ export function AdminPageLayout({
 
       {/* Page Content */}
       <div className="admin-page-content">{children}</div>
+
+      {showActionBottom && (
+        <div className="admin-page-action-bottom">{actions}</div>
+      )}
     </div>
   );
 }

@@ -1,12 +1,12 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useCallback } from "react";
 import { Search, X } from "lucide-react";
 
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import { BaseSelect } from "@/components/ui/base-select";
+import { debounce } from "@/lib/utils";
 import type { BlogFilterProps, BlogFilterState } from "@/types/admin";
 
 /**
@@ -22,44 +22,42 @@ export const BlogFilter = ({
   onPageReset,
   className,
 }: BlogFilterProps): React.JSX.Element => {
+  // Debounced filter update
+  const debouncedFilterUpdate = useCallback(
+    (newFilters: BlogFilterState) => {
+      const debouncedUpdate = debounce(() => {
+        onFilterChange(newFilters);
+      }, 300);
+      debouncedUpdate();
+    },
+    [onFilterChange]
+  );
+
+  // Update debounced filters when filters change
+  useEffect(() => {
+    debouncedFilterUpdate(filters);
+  }, [filters, debouncedFilterUpdate]);
+
   const handleSearchChange = (value: string): void => {
-    onFilterChange({
+    const newFilters = {
       ...filters,
       searchTerm: value,
-    });
-    onPageReset?.();
-  };
-
-  const handleStatusChange = (value: string): void => {
-    onFilterChange({
-      ...filters,
-      status: value,
-    });
-    onPageReset?.();
-  };
-
-  const handleCategoryChange = (value: string): void => {
-    onFilterChange({
-      ...filters,
-      category: value,
-    });
+    };
+    onFilterChange(newFilters);
     onPageReset?.();
   };
 
   const handleDateRangeChange = (range: { from: string; to: string }): void => {
-    onFilterChange({
+    const newFilters = {
       ...filters,
       dateRange: range,
-    });
+    };
+    onFilterChange(newFilters);
     onPageReset?.();
   };
 
   const hasActiveFilters =
-    filters.searchTerm ||
-    filters.status !== "all" ||
-    filters.category !== "all" ||
-    filters.dateRange.from ||
-    filters.dateRange.to;
+    filters.searchTerm || filters.dateRange.from || filters.dateRange.to;
 
   return (
     <div className={`space-y-4 ${className || ""}`}>
@@ -87,29 +85,10 @@ export const BlogFilter = ({
               <Search className="top-1/2 left-3 absolute w-4 h-4 text-gray-400 -translate-y-1/2 transform" />
               <Input
                 type="text"
-                placeholder="Tìm kiếm theo tiêu đề, nội dung..."
+                placeholder="Tìm kiếm theo tên blog..."
                 value={filters.searchTerm}
                 onChange={e => handleSearchChange(e.target.value)}
                 className="pl-10"
-              />
-            </div>
-          </div>
-
-          {/* Status and Category Filters */}
-          <div className="gap-4 grid xl:grid-cols-2">
-            <div className="space-y-2">
-              <Label className="font-medium text-sm">Trạng thái</Label>
-              <StatusFilter
-                value={filters.status}
-                onChange={handleStatusChange}
-              />
-            </div>
-
-            <div className="space-y-2">
-              <Label className="font-medium text-sm">Danh mục</Label>
-              <CategoryFilter
-                value={filters.category}
-                onChange={handleCategoryChange}
               />
             </div>
           </div>
@@ -125,63 +104,6 @@ export const BlogFilter = ({
         </div>
       </div>
     </div>
-  );
-};
-
-/**
- * Status filter component
- */
-const StatusFilter = ({
-  value,
-  onChange,
-}: {
-  value: string;
-  onChange: (value: string) => void;
-}): React.JSX.Element => {
-  const statusOptions = [
-    { value: "all", label: "Tất cả trạng thái" },
-    { value: "published", label: "Đã xuất bản" },
-    { value: "draft", label: "Bản nháp" },
-    { value: "archived", label: "Đã lưu trữ" },
-  ];
-
-  return (
-    <BaseSelect
-      items={statusOptions}
-      value={value}
-      onValueChange={onChange}
-      placeholder="Chọn trạng thái..."
-      className="w-full"
-    />
-  );
-};
-
-/**
- * Category filter component
- */
-const CategoryFilter = ({
-  value,
-  onChange,
-}: {
-  value: string;
-  onChange: (value: string) => void;
-}): React.JSX.Element => {
-  const categoryOptions = [
-    { value: "all", label: "Tất cả danh mục" },
-    { value: "technology", label: "Công nghệ" },
-    { value: "business", label: "Kinh doanh" },
-    { value: "lifestyle", label: "Lối sống" },
-    { value: "education", label: "Giáo dục" },
-  ];
-
-  return (
-    <BaseSelect
-      items={categoryOptions}
-      value={value}
-      onValueChange={onChange}
-      placeholder="Chọn danh mục..."
-      className="w-full"
-    />
   );
 };
 

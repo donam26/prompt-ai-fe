@@ -41,9 +41,8 @@ export const useUpdatePromptMutation = () => {
       });
       toast.success("Cập nhật prompt thành công");
     },
-    onError: (_error: any) => {
+    onError: () => {
       toast.error("Có lỗi xảy ra khi cập nhật prompt");
-      // console.error("Update prompt error:", _error);
     },
   });
 };

@@ -9,23 +9,14 @@ import { BaseSelect } from "@/components/ui/base-select";
 import { MultiSelect } from "@/components/ui/multi-select";
 import { Card, CardContent } from "@/components/ui/card";
 import type {
-  Section,
   CategoryFilterProps,
   FilterCardProps,
-  SearchFilterProps,
   SectionFilterProps,
   StatusFilterProps,
   IndustryFilterProps,
 } from "@/types/admin";
-import type { Industry } from "@/lib/types";
-import {
-  FILTER_CONSTANTS,
-  INITIAL_FILTER_STATE,
-  INPUT_CONSTANTS,
-  LABEL_CONSTANTS,
-  ACTIVE_FILTERS_CONSTANTS,
-  DEBOUNCE_DELAY,
-} from "@/constants";
+import type { Industry, Section } from "@/lib/types";
+import { FILTER_CONSTANTS, DEBOUNCE_DELAY } from "@/constants";
 import { debounce } from "@/lib/utils";
 import {
   hasActiveFilters,
@@ -33,17 +24,10 @@ import {
   updateSearchFilter,
   updateSingleFilter,
   updateArrayFilter,
-  removeItemFromFilter,
+  // removeItemFromFilter,
 } from "@/utils/filter-helpers";
 import { ActiveFilters } from "@/components/common";
 
-/**
- * Category filter component that provides search and filtering functionality
- * Follows Berklee pattern with debounced search and integrated ActiveFilters
- *
- * @param props - The component props
- * @returns The category filter JSX
- */
 export const CategoryFilter = ({
   filters,
   sections,
@@ -122,18 +106,18 @@ export const CategoryFilter = ({
   /**
    * Handles removing individual industry from filter
    */
-  const handleIndustryRemove = useCallback(
-    (industryId: string) => {
-      const newFilters = removeItemFromFilter(
-        filters,
-        "industryIds",
-        industryId
-      );
-      onFilterChange(newFilters);
-      onPageReset?.();
-    },
-    [filters, onFilterChange, onPageReset]
-  );
+  // const handleIndustryRemove = useCallback(
+  //   (industryId: string) => {
+  //     const newFilters = removeItemFromFilter(
+  //       filters,
+  //       "industryIds",
+  //       industryId
+  //     );
+  //     onFilterChange(newFilters);
+  //     onPageReset?.();
+  //   },
+  //   [filters, onFilterChange, onPageReset]
+  // );
 
   /**
    * Clears all filters and resets to initial state
@@ -199,8 +183,8 @@ const FilterCard = ({
   onSectionChange,
   onStatusChange,
   onIndustryChange,
-  onClearFilters,
-  hasActiveFilters,
+  // onClearFilters,
+  // hasActiveFilters,
 }: FilterCardProps): React.JSX.Element => (
   <>
     {/* Search Input */}

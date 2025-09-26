@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { BaseSelect } from "@/components/ui/base-select";
-import type { SectionFilterProps, SectionFilterState } from "@/types/admin";
+import type { SectionFilterProps } from "@/types/admin";
 
 /**
  * Section filter component with search and status filters

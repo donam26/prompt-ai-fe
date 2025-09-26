@@ -10,12 +10,6 @@ interface SidebarHeaderProps {
   readonly isMobileExpanded?: boolean;
 }
 
-/**
- * Admin sidebar header component with logo and toggle button - Berklee style
- *
- * @param props - The component props
- * @returns The sidebar header JSX
- */
 export function SidebarHeader({
   isCollapsed,
   onToggleCollapseAction,
@@ -27,14 +21,14 @@ export function SidebarHeader({
   if (isMobile) {
     return (
       <div className="flex justify-between items-center p-4">
-        <h1 className="font-bold text-gray-900 md:text-xl truncate">
+        <h1 className="font-bold text-gray-900 dark:text-white md:text-xl truncate">
           {displayName}
         </h1>
 
         <Button
           variant="outline"
           onClick={onToggleCollapseAction}
-          className="flex items-center gap-2 hover:bg-gray-100 p-2 border-gray-300 rounded-md text-gray-900 transition-colors cursor-pointer"
+          className="flex items-center gap-2 hover:bg-gray-100 dark:hover:bg-gray-700 p-2 border-gray-300 dark:border-gray-600 rounded-md text-gray-900 dark:text-white transition-colors cursor-pointer"
           aria-label={isMobileExpanded ? "Close menu" : "Open menu"}
         >
           {isMobileExpanded ? (

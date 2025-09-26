@@ -1,9 +1,8 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
 
-import { debounce } from "@/lib/utils";
 import { AdminContentCard } from "@/components/admin/common/admin-content-card";
 import {
   PromptFilter,
@@ -11,52 +10,29 @@ import {
   createPromptColumns,
   DataTable,
 } from "./modules";
-import { INITIAL_FILTER_STATE } from "@/constants";
+import { PROMPTS_CONSTANTS } from "@/constants/prompts";
 import {
   useAdminPromptsQuery,
   useAdminCategoriesQuery,
   useDeletePromptMutation,
 } from "@/hooks";
-import type { Prompt, PromptFilterState } from "@/types/admin";
+import type { PromptFilterState } from "@/types/admin";
+import { Prompt } from "@/lib/types";
 
-/**
- * Use constants from module
- */
-const INITIAL_FILTERS: PromptFilterState = {
-  searchTerm: "",
-  categoryId: "all",
-  status: "all",
-  isPremium: "all",
-  tags: [],
-};
-
-/**
- * Prompt management page component following Berklee pattern
- * Main Management Page with state management, data hooks, and UI components
- *
- * @returns The prompt management page JSX
- */
 export default function PromptManagementPage(): React.JSX.Element {
   const router = useRouter();
 
   // 🎯 State Management
-  const [filters, setFilters] = useState<PromptFilterState>(INITIAL_FILTERS);
-  const [debouncedFilters, setDebouncedFilters] =
-    useState<PromptFilterState>(INITIAL_FILTERS);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [pageSize, setPageSize] = useState(10);
-
-  // Debounced filter update
-  const debouncedFilterUpdate = debounce((newFilters: PromptFilterState) => {
-    setDebouncedFilters(newFilters);
-  }, 300);
-
-  // Update debounced filters when filters change
-  useEffect(() => {
-    debouncedFilterUpdate(filters);
-  }, [filters, debouncedFilterUpdate]);
+  const [filters, setFilters] = useState<PromptFilterState>(
+    PROMPTS_CONSTANTS.INITIAL_FILTERS
+  );
+  const [currentPage] = useState(1);
+  const [pageSize] = useState<number>(
+    PROMPTS_CONSTANTS.PAGINATION.DEFAULT_PAGE_SIZE
+  );
 
   // 🔄 Data Hooks
+  const { searchTerm, categoryId, status, isPremium, tags } = filters;
   const {
     data: promptsData,
     isLoading: promptsLoading,
@@ -65,32 +41,31 @@ export default function PromptManagementPage(): React.JSX.Element {
   } = useAdminPromptsQuery({
     page: currentPage,
     pageSize: pageSize,
-    search: debouncedFilters.searchTerm,
-    categoryId: debouncedFilters.categoryId,
-    status: debouncedFilters.status,
-    isPremium: debouncedFilters.isPremium,
-    tags: [...debouncedFilters.tags],
+    search: searchTerm,
+    categoryId: categoryId,
+    status: status,
+    isPremium: isPremium,
+    tags: [...tags],
   });
 
-  const { data: categoriesData, isLoading: categoriesLoading } =
+  const { categories: categoriesData, isLoading: categoriesLoading } =
     useAdminCategoriesQuery();
-  const deletePromptMutation = useDeletePromptMutation();
+  const { mutate: deletePrompt } = useDeletePromptMutation();
 
-  // Extract data from API responses
   const prompts = Array.isArray(promptsData?.data?.data)
     ? promptsData.data.data
     : Array.isArray(promptsData?.data)
       ? promptsData.data
       : [];
-  const categories = Array.isArray(categoriesData?.data?.data)
-    ? categoriesData.data.data
-    : Array.isArray(categoriesData?.data)
-      ? categoriesData.data
-      : [];
 
   const isLoading = promptsLoading || categoriesLoading;
 
-  // 🔗 Navigation handlers
+  // useEffect(() => {
+  //   if (deleteError) {
+  //     // Handle delete error - could show toast notification
+  //   }
+  // }, [deleteError]);
+
   const handleAddPrompt = () => {
     router.push("/admin/prompts/create");
   };
@@ -105,7 +80,7 @@ export default function PromptManagementPage(): React.JSX.Element {
 
   const handleDeletePrompt = async (id: string | number): Promise<void> => {
     try {
-      deletePromptMutation.mutate(id);
+      deletePrompt(id);
     } catch {
       // Error deleting prompt - could be logged to monitoring service
     }
@@ -113,28 +88,28 @@ export default function PromptManagementPage(): React.JSX.Element {
 
   const handleTogglePublic = () => {
     // TODO: Implement toggle public functionality
-    // console.log("Toggle public for prompt");
   };
 
   const handleFilterChange = useCallback(
     (newFilters: PromptFilterState): void => {
       setFilters(newFilters);
-      setCurrentPage(1);
+      setPagination(prev => ({ ...prev, currentPage: 1 }));
     },
     []
   );
 
-  const handlePageSizeChange = useCallback((newPageSize: number): void => {
-    setPageSize(newPageSize);
-    setCurrentPage(1);
-  }, []);
+  const handlePaginationChange = useCallback(
+    (newPagination: { currentPage?: number; pageSize?: number }) => {
+      setPagination(prev => ({ ...prev, ...newPagination }));
+    },
+    []
+  );
 
   const handleClearFilters = useCallback((): void => {
     setFilters(INITIAL_FILTERS);
-    setCurrentPage(1);
+    setPagination(prev => ({ ...prev, currentPage: 1 }));
   }, []);
 
-  // Create columns with handlers
   const columns = createPromptColumns({
     onEdit: handleEditPrompt,
     onDelete: handleDeletePrompt,
@@ -149,24 +124,26 @@ export default function PromptManagementPage(): React.JSX.Element {
 
         <PromptFilter
           filters={filters}
-          categories={categories}
+          categories={categoriesData}
           onFilterChange={handleFilterChange}
           onClearFilters={handleClearFilters}
-          onPageReset={() => setCurrentPage(1)}
+          onPageReset={() =>
+            setPagination(prev => ({ ...prev, currentPage: 1 }))
+          }
         />
 
         <DataTable
           columns={columns}
           data={prompts}
           pagination={{
-            currentPage: currentPage,
+            currentPage: pagination.currentPage,
             totalPages: totalPages,
             totalItems: totalItems,
-            pageSize: pageSize,
-            onPageChange: (page: number) => setCurrentPage(page),
+            pageSize: pagination.pageSize,
+            onPageChange: (page: number) =>
+              handlePaginationChange({ currentPage: page }),
             onPageSizeChange: (newPageSize: number) => {
-              setPageSize(newPageSize);
-              setCurrentPage(1);
+              handlePaginationChange({ pageSize: newPageSize, currentPage: 1 });
             },
             showPrevNext: true,
             maxVisiblePages: 5,

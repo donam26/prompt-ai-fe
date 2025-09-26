@@ -12,12 +12,6 @@ interface SidebarNavigationProps {
   readonly onItemClick?: (itemId: string, hasChildren: boolean) => void;
 }
 
-/**
- * Admin sidebar navigation component - Berklee style
- *
- * @param props - The component props
- * @returns The sidebar navigation JSX
- */
 export function SidebarNavigation({
   collapsed,
   onItemClick,

@@ -1,6 +1,4 @@
 "use client";
-
-import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { ChevronDown, ChevronRight } from "lucide-react";
@@ -29,7 +27,7 @@ interface SidebarItemProps {
 export function SidebarItem({
   item,
   isActive,
-  level = 0,
+  // level = 0,
   isCollapsed,
   onItemClick,
   isExpanded = false,

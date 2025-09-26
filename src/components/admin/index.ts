@@ -13,6 +13,10 @@ export { SidebarChildrenContainer } from "@/components/admin/sidebar/sidebar-chi
 export { AdminPageLayout } from "@/components/admin/common/admin-page-layout";
 export { AdminContentCard } from "@/components/admin/common/admin-content-card";
 
+// Loading components
+export { default as Loading } from "@/components/admin/loading";
+export * from "@/components/admin/loading";
+
 // Types
 export type { SidebarItemType } from "@/components/admin/types/sidebar";
 

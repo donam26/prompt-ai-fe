@@ -11,7 +11,7 @@ import {
   createSectionColumns,
   DataTable,
 } from "./modules";
-import { INITIAL_FILTER_STATE } from "@/constants";
+// import { INITIAL_FILTER_STATE } from "@/constants";
 import { useAdminSectionsQuery, useDeleteSectionMutation } from "@/hooks";
 import type { Section, SectionFilterState } from "@/types/admin";
 
@@ -23,12 +23,6 @@ const INITIAL_FILTERS: SectionFilterState = {
   status: "all",
 };
 
-/**
- * Section management page component following Berklee pattern
- * Main Management Page with state management, data hooks, and UI components
- *
- * @returns The section management page JSX
- */
 export default function SectionManagementPage(): React.JSX.Element {
   const router = useRouter();
 
@@ -98,10 +92,10 @@ export default function SectionManagementPage(): React.JSX.Element {
     []
   );
 
-  const handlePageSizeChange = useCallback((newPageSize: number): void => {
-    setPageSize(newPageSize);
-    setCurrentPage(1);
-  }, []);
+  // const handlePageSizeChange = useCallback((newPageSize: number): void => {
+  //   setPageSize(newPageSize);
+  //   setCurrentPage(1);
+  // }, []);
 
   const handleClearFilters = useCallback((): void => {
     setFilters(INITIAL_FILTERS);

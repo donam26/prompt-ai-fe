@@ -11,7 +11,6 @@ import {
   createPaymentColumns,
   DataTable,
 } from "./modules";
-import { INITIAL_FILTER_STATE } from "@/constants";
 import { useAdminPaymentsQuery, useDeletePaymentMutation } from "@/hooks";
 import type { Payment, PaymentFilterState } from "@/types/admin";
 
@@ -28,12 +27,6 @@ const INITIAL_FILTERS: PaymentFilterState = {
   },
 };
 
-/**
- * Payment management page component following Berklee pattern
- * Main Management Page with state management, data hooks, and UI components
- *
- * @returns The payment management page JSX
- */
 export default function PaymentManagementPage(): React.JSX.Element {
   const router = useRouter();
 
@@ -102,10 +95,10 @@ export default function PaymentManagementPage(): React.JSX.Element {
     []
   );
 
-  const handlePageSizeChange = useCallback((newPageSize: number): void => {
-    setPageSize(newPageSize);
-    setCurrentPage(1);
-  }, []);
+  // const handlePageSizeChange = useCallback((newPageSize: number): void => {
+  //   setPageSize(newPageSize);
+  //   setCurrentPage(1);
+  // }, []);
 
   const handleClearFilters = useCallback((): void => {
     setFilters(INITIAL_FILTERS);

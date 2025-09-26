@@ -10,6 +10,7 @@ import type { Blog } from "@/lib/types";
  * Form data structure for blog creation/editing
  */
 export interface BlogFormData {
+  readonly id?: string | number;
   readonly title: string;
   readonly content: string;
   readonly excerpt: string;
@@ -32,8 +33,6 @@ export interface BlogHeaderProps {
  */
 export interface BlogFilterState {
   readonly searchTerm: string;
-  readonly status: string; // "all" means no filter
-  readonly category: string; // "all" means no filter
   readonly dateRange: {
     readonly from: string;
     readonly to: string;

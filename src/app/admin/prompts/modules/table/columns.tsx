@@ -1,5 +1,5 @@
 import React from "react";
-import { FileText, Eye, EyeOff } from "lucide-react";
+import { Eye, EyeOff } from "lucide-react";
 
 import { Column } from "@/components/data-table/data-table";
 import {

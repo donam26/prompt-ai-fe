@@ -41,7 +41,7 @@ export const sidebarConfig: SidebarItemType[] = [
   // Content Management
   {
     name: "Quản lý Nội dung",
-    href: "/admin/content",
+    href: "/admin/prompts",
     icon: FileText,
     permission: "content",
     children: [
@@ -49,7 +49,7 @@ export const sidebarConfig: SidebarItemType[] = [
         name: "Quản lý Prompts",
         href: "/admin/prompts",
         icon: FileText,
-        permission: "prompt",
+        permission: "prompts",
       },
       {
         name: "Quản lý Blog",

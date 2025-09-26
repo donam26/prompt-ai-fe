@@ -11,24 +11,13 @@ import {
   createIndustryColumns,
   DataTable,
 } from "./modules";
-import { INITIAL_FILTER_STATE } from "@/constants";
-import { useAdminIndustriesQuery, useDeleteIndustryMutation } from "@/hooks";
-import type { Industry, IndustryFilterState } from "@/types/admin";
+import type { IndustryFilterState } from "@/types/admin";
 
-/**
- * Use constants from module
- */
 const INITIAL_FILTERS: IndustryFilterState = {
   searchTerm: "",
   status: "all",
 };
 
-/**
- * Industry management page component following Berklee pattern
- * Main Management Page with state management, data hooks, and UI components
- *
- * @returns The industry management page JSX
- */
 export default function IndustryManagementPage(): React.JSX.Element {
   const router = useRouter();
 
@@ -98,10 +87,10 @@ export default function IndustryManagementPage(): React.JSX.Element {
     []
   );
 
-  const handlePageSizeChange = useCallback((newPageSize: number): void => {
-    setPageSize(newPageSize);
-    setCurrentPage(1);
-  }, []);
+  // const handlePageSizeChange = useCallback((newPageSize: number): void => {
+  //   setPageSize(newPageSize);
+  //   setCurrentPage(1);
+  // }, []);
 
   const handleClearFilters = useCallback((): void => {
     setFilters(INITIAL_FILTERS);

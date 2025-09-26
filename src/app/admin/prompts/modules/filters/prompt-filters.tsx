@@ -14,6 +14,7 @@ import type {
   PromptFilterState,
   PromptActiveFilterItem,
 } from "@/types/admin";
+import { Category } from "@/lib/types";
 
 /**
  * Prompt filter component with search, category, status, premium, and tags filters
@@ -127,26 +128,26 @@ export const PromptFilter = ({
     return activeFilters;
   };
 
-  const removeItemFromFilter = (key: keyof PromptFilterState): void => {
-    switch (key) {
-      case "searchTerm":
-        onFilterChange({ ...filters, searchTerm: "" });
-        break;
-      case "categoryId":
-        onFilterChange({ ...filters, categoryId: "all" });
-        break;
-      case "status":
-        onFilterChange({ ...filters, status: "all" });
-        break;
-      case "isPremium":
-        onFilterChange({ ...filters, isPremium: "all" });
-        break;
-      case "tags":
-        onFilterChange({ ...filters, tags: [] });
-        break;
-    }
-    onPageReset?.();
-  };
+  // const removeItemFromFilter = (key: keyof PromptFilterState): void => {
+  //   switch (key) {
+  //     case "searchTerm":
+  //       onFilterChange({ ...filters, searchTerm: "" });
+  //       break;
+  //     case "categoryId":
+  //       onFilterChange({ ...filters, categoryId: "all" });
+  //       break;
+  //     case "status":
+  //       onFilterChange({ ...filters, status: "all" });
+  //       break;
+  //     case "isPremium":
+  //       onFilterChange({ ...filters, isPremium: "all" });
+  //       break;
+  //     case "tags":
+  //       onFilterChange({ ...filters, tags: [] });
+  //       break;
+  //   }
+  //   onPageReset?.();
+  // };
 
   const activeFilters = getActiveFilters();
   const hasActiveFilters = activeFilters.length > 0;
@@ -282,14 +283,14 @@ const CategoryFilter = ({
   onChange,
 }: {
   value: string;
-  categories: any[];
+  categories: Category[];
   onChange: (value: string) => void;
 }): React.JSX.Element => {
   const categoryOptions = [
-    { value: "all", label: "Tất cả danh mục" },
+    { id: "all", name: "Tất cả danh mục" },
     ...categories.map(category => ({
-      value: category.id.toString(),
-      label: category.name,
+      id: category.id.toString(),
+      name: category.name,
     })),
   ];
 
@@ -318,10 +319,10 @@ const StatusFilter = ({
   onChange: (value: string) => void;
 }): React.JSX.Element => {
   const statusOptions = [
-    { value: "all", label: "Tất cả trạng thái" },
-    { value: "active", label: "Hoạt động" },
-    { value: "inactive", label: "Không hoạt động" },
-    { value: "draft", label: "Bản nháp" },
+    { id: "all", name: "Tất cả trạng thái" },
+    { id: "active", name: "Hoạt động" },
+    { id: "inactive", name: "Không hoạt động" },
+    { id: "draft", name: "Bản nháp" },
   ];
 
   return (
@@ -349,9 +350,9 @@ const PremiumFilter = ({
   onChange: (value: string) => void;
 }): React.JSX.Element => {
   const premiumOptions = [
-    { value: "all", label: "Tất cả loại" },
-    { value: "premium", label: "Premium" },
-    { value: "free", label: "Miễn phí" },
+    { id: "all", name: "Tất cả loại" },
+    { id: "premium", name: "Premium" },
+    { id: "free", name: "Miễn phí" },
   ];
 
   return (
@@ -390,8 +391,8 @@ const TagsFilter = ({
 
   return (
     <MultiSelect
-      items={tagOptions}
-      defaultValue={[...value]}
+      options={tagOptions}
+      value={[...value]}
       onValueChange={onChange}
       placeholder="Chọn tags..."
       maxCount={3}

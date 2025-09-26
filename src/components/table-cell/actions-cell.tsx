@@ -31,7 +31,7 @@ export function ActionsCell<T>({
   onDelete,
   onManageBadge,
   getItemName = (item: any) => item.name || "Item",
-  getItemId = (item: any) => item.id,
+  // getItemId = (item: any) => item.id,
   className,
 }: ActionsCellProps<T>) {
   const handleEdit = () => {

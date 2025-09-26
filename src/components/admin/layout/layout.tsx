@@ -1,33 +1,24 @@
 "use client";
 
-import { useState } from "react";
+import { usePathname } from "next/navigation";
 import { AdminSidebar } from "@/components/admin/sidebar/sidebar";
 import { MainContent } from "@/components/admin/layout/main-content";
 
-/**
- * Props for the AdminLayout component
- */
 interface AdminLayoutProps {
   readonly children: React.ReactNode;
 }
 
-/**
- * Main admin layout component with collapsible sidebar
- *
- * @param props - The component props
- * @returns The admin layout JSX
- */
 export function AdminLayout({ children }: AdminLayoutProps): React.JSX.Element {
-  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const pathname = usePathname();
 
-  const toggleSidebar = (): void => {
-    setSidebarCollapsed(!sidebarCollapsed);
-  };
+  const shouldApplyPadding = !pathname.includes("/admin/dashboard");
 
   return (
-    <div className="admin-layout">
-      <AdminSidebar collapsed={sidebarCollapsed} onToggle={toggleSidebar} />
-      <MainContent collapsed={sidebarCollapsed}>{children}</MainContent>
+    <div className="flex md:flex-row flex-col gap-2 md:gap-0 bg-gray-100 dark:bg-gray-900 p-2 md:p-0 pt-4 md:pt-0 max-w-[100vw] min-h-screen overflow-x-hidden">
+      <AdminSidebar />
+      <MainContent shouldApplyPadding={shouldApplyPadding}>
+        {children}
+      </MainContent>
     </div>
   );
 }

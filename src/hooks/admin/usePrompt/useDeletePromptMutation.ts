@@ -24,9 +24,8 @@ export const useDeletePromptMutation = () => {
       });
       toast.success("Xóa prompt thành công");
     },
-    onError: (_error: any) => {
+    onError: () => {
       toast.error("Có lỗi xảy ra khi xóa prompt");
-      // console.error("Delete prompt error:", _error);
     },
   });
 };

@@ -90,7 +90,7 @@ export function DataTable<T = Record<string, unknown>>({
   }
 
   return (
-    <div className={cn("space-y-6", className)}>
+    <div className={cn("admin-data-table-container space-y-6", className)}>
       <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl overflow-hidden">
         <Table>
           <TableHeader>

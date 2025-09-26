@@ -14,7 +14,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { cn } from "@/lib/utils";
+// import { cn } from "@/lib/utils";
 
 export interface PaginationProps {
   currentPage: number;
@@ -37,8 +37,8 @@ export const Pagination = ({
   onPageChange,
   onPageSizeChange,
   className,
-  showPrevNext = true,
-  maxVisiblePages = 5,
+  // showPrevNext = true,
+  // maxVisiblePages = 5,
   loading = false,
 }: PaginationProps) => {
   // Page size options
@@ -47,47 +47,47 @@ export const Pagination = ({
   // If no page size selector and only 1 page, don't show pagination
   if (totalPages <= 1 && !onPageSizeChange) return null;
 
-  const getVisiblePages = () => {
-    const pages: (number | string)[] = [];
-    const half = Math.floor(maxVisiblePages / 2);
+  // const getVisiblePages = () => {
+  //   const pages: (number | string)[] = [];
+  //   const half = Math.floor(maxVisiblePages / 2);
 
-    let start = Math.max(1, currentPage - half);
-    let end = Math.min(totalPages, currentPage + half);
+  //   let start = Math.max(1, currentPage - half);
+  //   let end = Math.min(totalPages, currentPage + half);
 
-    // Adjust if we're near the beginning or end
-    if (end - start + 1 < maxVisiblePages) {
-      if (start === 1) {
-        end = Math.min(totalPages, start + maxVisiblePages - 1);
-      } else {
-        start = Math.max(1, end - maxVisiblePages + 1);
-      }
-    }
+  //   // Adjust if we're near the beginning or end
+  //   if (end - start + 1 < maxVisiblePages) {
+  //     if (start === 1) {
+  //       end = Math.min(totalPages, start + maxVisiblePages - 1);
+  //     } else {
+  //       start = Math.max(1, end - maxVisiblePages + 1);
+  //     }
+  //   }
 
-    // Add first page and ellipsis if needed
-    if (start > 1) {
-      pages.push(1);
-      if (start > 2) {
-        pages.push("...");
-      }
-    }
+  //   // Add first page and ellipsis if needed
+  //   if (start > 1) {
+  //     pages.push(1);
+  //     if (start > 2) {
+  //       pages.push("...");
+  //     }
+  //   }
 
-    // Add visible pages
-    for (let i = start; i <= end; i++) {
-      pages.push(i);
-    }
+  //   // Add visible pages
+  //   for (let i = start; i <= end; i++) {
+  //     pages.push(i);
+  //   }
 
-    // Add ellipsis and last page if needed
-    if (end < totalPages) {
-      if (end < totalPages - 1) {
-        pages.push("...");
-      }
-      pages.push(totalPages);
-    }
+  //   // Add ellipsis and last page if needed
+  //   if (end < totalPages) {
+  //     if (end < totalPages - 1) {
+  //       pages.push("...");
+  //     }
+  //     pages.push(totalPages);
+  //   }
 
-    return pages;
-  };
+  //   return pages;
+  // };
 
-  const visiblePages = getVisiblePages();
+  // const visiblePages = getVisiblePages();
 
   // Calculate display info
   const startItem = totalItems ? (currentPage - 1) * pageSize + 1 : 0;

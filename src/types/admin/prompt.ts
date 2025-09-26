@@ -4,7 +4,7 @@
  * Type definitions for admin prompt management components and functionality.
  */
 
-import type { Prompt } from "@/lib/types";
+import type { Category, Prompt } from "@/lib/types";
 
 /**
  * Form data structure for prompt creation/editing
@@ -122,7 +122,7 @@ export interface PromptFilterState {
  */
 export interface PromptFilterProps {
   readonly filters: PromptFilterState;
-  readonly categories: any[];
+  readonly categories: Category[];
   readonly onFilterChange: (filters: PromptFilterState) => void;
   readonly onClearFilters: () => void;
   readonly onPageReset?: () => void;

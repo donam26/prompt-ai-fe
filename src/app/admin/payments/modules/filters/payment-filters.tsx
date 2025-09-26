@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { BaseSelect } from "@/components/ui/base-select";
-import type { PaymentFilterProps, PaymentFilterState } from "@/types/admin";
+import type { PaymentFilterProps } from "@/types/admin";
 
 /**
  * Payment filter component with search, status, method, and date range filters

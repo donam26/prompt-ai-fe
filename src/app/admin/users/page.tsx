@@ -1,9 +1,8 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
 
-import { debounce } from "@/lib/utils";
 import { AdminContentCard } from "@/components/admin/common/admin-content-card";
 import {
   UserFilter,
@@ -11,29 +10,11 @@ import {
   createUserColumns,
   DataTable,
 } from "./modules";
-import { INITIAL_FILTER_STATE } from "@/constants";
+// import { USERS_CONSTANTS } from "@/constants/users";
 import { useAdminUsersQuery, useDeleteUserMutation } from "@/hooks";
-import type { User, UserFilterState } from "@/types/admin";
+import type { UserFilterState } from "@/types/admin";
+import type { User } from "@/lib/types";
 
-/**
- * Use constants from module
- */
-const INITIAL_FILTERS: UserFilterState = {
-  searchTerm: "",
-  role: "all",
-  status: "all",
-  dateRange: {
-    from: "",
-    to: "",
-  },
-};
-
-/**
- * User management page component following Berklee pattern
- * Main Management Page with state management, data hooks, and UI components
- *
- * @returns The user management page JSX
- */
 export default function UserManagementPage(): React.JSX.Element {
   const router = useRouter();
 
@@ -110,10 +91,10 @@ export default function UserManagementPage(): React.JSX.Element {
     []
   );
 
-  const handlePageSizeChange = useCallback((newPageSize: number): void => {
-    setPageSize(newPageSize);
-    setCurrentPage(1);
-  }, []);
+  // const handlePageSizeChange = useCallback((newPageSize: number): void => {
+  //   setPageSize(newPageSize);
+  //   setCurrentPage(1);
+  // }, []);
 
   const handleClearFilters = useCallback((): void => {
     setFilters(INITIAL_FILTERS);

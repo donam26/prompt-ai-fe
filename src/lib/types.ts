@@ -99,11 +99,16 @@ export interface Blog {
   id: string | number;
   title: string;
   content: string;
-  description?: string;
-  image?: string;
-  blog_category_id: string | number;
+  meta_description?: string;
+  featured_image?: string;
+  published_at?: string;
   created_at: string;
   updated_at: string;
+  category_id?: string | number;
+  category?: {
+    id: string | number;
+    name: string;
+  };
   blog_category?: BlogCategory;
 }
 

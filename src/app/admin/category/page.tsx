@@ -1,9 +1,8 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
 
-import { debounce } from "@/lib/utils";
 import { AdminContentCard } from "@/components/admin/common/admin-content-card";
 import {
   CategoryFilter,
@@ -11,7 +10,7 @@ import {
   createCategoryColumns,
   DataTable,
 } from "./modules";
-import { INITIAL_FILTER_STATE } from "@/constants";
+import { CATEGORY_CONSTANTS } from "@/constants/category";
 import {
   useAdminCategoriesQuery,
   useAdminSectionsQuery,
@@ -20,53 +19,35 @@ import {
 } from "@/hooks";
 import type { Category, FilterState } from "@/types/admin";
 
-/**
- * Use constants from module
- */
-const INITIAL_FILTERS: FilterState = INITIAL_FILTER_STATE;
-
-/**
- * Category management page component following Berklee pattern
- * Main Management Page with state management, data hooks, and UI components
- *
- * @returns The category management page JSX
- */
 export default function CategoryManagementPage(): React.JSX.Element {
   const router = useRouter();
 
   // 🎯 State Management
-  const [filters, setFilters] = useState<FilterState>(INITIAL_FILTERS);
-  const [debouncedFilters, setDebouncedFilters] =
-    useState<FilterState>(INITIAL_FILTERS);
+  const [filters, setFilters] = useState<FilterState>(
+    CATEGORY_CONSTANTS.INITIAL_FILTERS
+  );
   const [currentPage, setCurrentPage] = useState(1);
-  const [pageSize, setPageSize] = useState(10);
-
-  // Debounced filter update
-  const debouncedFilterUpdate = debounce((newFilters: FilterState) => {
-    setDebouncedFilters(newFilters);
-  }, 300);
-
-  // Update debounced filters when filters change
-  useEffect(() => {
-    debouncedFilterUpdate(filters);
-  }, [filters, debouncedFilterUpdate]);
+  const [pageSize, setPageSize] = useState<number>(
+    CATEGORY_CONSTANTS.PAGINATION.DEFAULT_PAGE_SIZE
+  );
 
   // 🔄 Data Hooks
+  const { searchTerm, sectionId, status, industryIds } = filters;
   const {
-    data: categoriesData,
+    categories: categoriesData = [],
     isLoading: categoriesLoading,
     totalPages,
     totalItems,
   } = useAdminCategoriesQuery({
     page: currentPage,
     pageSize: pageSize,
-    search: debouncedFilters.searchTerm,
-    sectionId: debouncedFilters.sectionId,
-    status: debouncedFilters.status,
-    industryIds: [...debouncedFilters.industryIds],
+    search: searchTerm,
+    sectionId: sectionId,
+    status: status,
+    industryIds: [...industryIds],
   });
 
-  const { data: sectionsData, isLoading: sectionsLoading } =
+  const { data: sectionsData = [], isLoading: sectionsLoading } =
     useAdminSectionsQuery();
   const {
     industriesWithPagination: industriesData,
@@ -75,11 +56,7 @@ export default function CategoryManagementPage(): React.JSX.Element {
   const deleteCategoryMutation = useDeleteCategoryMutation();
 
   // Extract data from API responses
-  const categories = Array.isArray(categoriesData?.data?.data)
-    ? categoriesData.data.data
-    : Array.isArray(categoriesData?.data)
-      ? categoriesData.data
-      : [];
+
   const sections = Array.isArray(sectionsData?.data?.data)
     ? sectionsData.data.data
     : Array.isArray(sectionsData?.data)
@@ -93,11 +70,11 @@ export default function CategoryManagementPage(): React.JSX.Element {
 
   // 🔗 Navigation handlers
   const handleAddCategory = () => {
-    router.push("/admin/category/create");
+    router.push(CATEGORY_CONSTANTS.ROUTES.CATEGORY_CREATE);
   };
 
   const handleEditCategory = (category: Category) => {
-    router.push(`/admin/category/${category.id}`);
+    router.push(CATEGORY_CONSTANTS.ROUTES.CATEGORY_EDIT(category.id));
   };
 
   const handleDeleteCategory = async (id: string | number): Promise<void> => {
@@ -113,13 +90,13 @@ export default function CategoryManagementPage(): React.JSX.Element {
     setCurrentPage(1);
   }, []);
 
-  const handlePageSizeChange = useCallback((newPageSize: number): void => {
-    setPageSize(newPageSize);
-    setCurrentPage(1);
-  }, []);
+  // const handlePageSizeChange = useCallback((newPageSize: number): void => {
+  //   setPageSize(newPageSize);
+  //   setCurrentPage(1);
+  // }, []);
 
   const handleClearFilters = useCallback((): void => {
-    setFilters(INITIAL_FILTERS);
+    setFilters(CATEGORY_CONSTANTS.INITIAL_FILTERS);
     setCurrentPage(1);
   }, []);
 
@@ -145,7 +122,7 @@ export default function CategoryManagementPage(): React.JSX.Element {
 
         <DataTable
           columns={columns}
-          data={categories}
+          data={categoriesData}
           pagination={{
             currentPage: currentPage,
             totalPages: totalPages,

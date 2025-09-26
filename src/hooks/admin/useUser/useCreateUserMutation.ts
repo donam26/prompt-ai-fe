@@ -32,9 +32,8 @@ export const useCreateUserMutation = () => {
       });
       toast.success("Tạo người dùng thành công");
     },
-    onError: (_error: any) => {
+    onError: () => {
       toast.error("Có lỗi xảy ra khi tạo người dùng");
-      // console.error("Create user error:", _error);
     },
   });
 };

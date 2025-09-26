@@ -1,29 +1,16 @@
 import { useQuery } from "@tanstack/react-query";
 import { categoryService } from "@/services";
 import { queryKeys } from "@/types/shared/types";
-
-interface UseAdminCategoriesQueryParams {
-  page?: number;
-  pageSize?: number;
-  search?: string;
-  sectionId?: string;
-  status?: string;
-  industryIds?: string[];
-}
-
-interface UseAdminCategoriesQueryResult {
-  data: any;
-  isLoading: boolean;
-  error: any;
-  refetch: () => void;
-  totalPages: number;
-  totalItems: number;
-}
+import type {
+  UseAdminCategoriesQueryParams,
+  UseAdminCategoriesQueryResult,
+  TransformedCategory,
+} from "@/types/api/categories";
 
 export const useAdminCategoriesQuery = (
   params?: UseAdminCategoriesQueryParams
 ): UseAdminCategoriesQueryResult => {
-  const { data, isLoading, error, refetch } = useQuery({
+  const { data, isLoading, error, refetch } = useQuery<any>({
     queryKey: [...queryKeys.admin.categories, params],
     queryFn: () =>
       categoryService.getCategoriesPage({
@@ -42,12 +29,16 @@ export const useAdminCategoriesQuery = (
   const currentPageSize = params?.pageSize || 10;
   const totalPages = Math.ceil(totalItems / currentPageSize);
 
+  // Transform API data to frontend format
+  const categories: TransformedCategory[] = data?.data?.data || [];
+
   return {
-    data,
+    data: data?.data || null,
     isLoading,
     error,
     refetch,
     totalPages,
     totalItems,
+    categories,
   };
 };

@@ -4,7 +4,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import type { Industry } from "@/lib/types";
 import type { PaginationParams } from "@/types/services/common";
-import type { PaginatedResponse } from "@/types/admin";
+// import type { PaginatedResponse } from "@/types/admin";
 import { industryService } from "@/services";
 import { DEFAULT_TOTAL, DEFAULT_TOTAL_PAGES } from "@/constants";
 

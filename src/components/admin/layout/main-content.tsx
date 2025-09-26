@@ -2,31 +2,21 @@
 
 import { cn } from "@/lib/utils";
 
-/**
- * Props for the MainContent component
- */
 interface MainContentProps {
   readonly children: React.ReactNode;
-  readonly collapsed: boolean;
+  readonly shouldApplyPadding: boolean;
 }
 
-/**
- * Main content area component
- *
- * @param props - The component props
- * @returns The main content JSX
- */
 export function MainContent({
   children,
-  collapsed,
+  shouldApplyPadding,
 }: MainContentProps): React.JSX.Element {
-  return (
-    <div
-      className={cn(
-        "transition-all duration-300 ease-in-out admin-main-content"
-      )}
-    >
-      <div className="admin-content-wrapper">{children}</div>
-    </div>
+  const contentClasses = cn(
+    "flex-1 bg-white dark:bg-gray-800 md:rounded-none rounded-t-2xl overflow-x-hidden",
+    {
+      "p-2 sm:p-4 md:p-8 lg:p-10": shouldApplyPadding,
+    }
   );
+
+  return <main className={contentClasses}>{children}</main>;
 }

@@ -1,13 +1,5 @@
 import type { FilterState } from "@/types/admin";
 
-/**
- * Filter helper utilities for dynamic filter operations
- * Based on Berklee project pattern
- */
-
-/**
- * Checks if there are any active filters
- */
 export const hasActiveFilters = (filters: FilterState): boolean => {
   return Object.values(filters).some(val => {
     if (Array.isArray(val)) {

@@ -113,26 +113,26 @@ export const UserFilter = ({
     return activeFilters;
   };
 
-  const removeItemFromFilter = (key: keyof UserFilterState): void => {
-    switch (key) {
-      case "searchTerm":
-        onFilterChange({ ...filters, searchTerm: "" });
-        break;
-      case "role":
-        onFilterChange({ ...filters, role: "all" });
-        break;
-      case "status":
-        onFilterChange({ ...filters, status: "all" });
-        break;
-      case "dateRange":
-        onFilterChange({
-          ...filters,
-          dateRange: { from: "", to: "" },
-        });
-        break;
-    }
-    onPageReset?.();
-  };
+  // const removeItemFromFilter = (key: keyof UserFilterState): void => {
+  //   switch (key) {
+  //     case "searchTerm":
+  //       onFilterChange({ ...filters, searchTerm: "" });
+  //       break;
+  //     case "role":
+  //       onFilterChange({ ...filters, role: "all" });
+  //       break;
+  //     case "status":
+  //       onFilterChange({ ...filters, status: "all" });
+  //       break;
+  //     case "dateRange":
+  //       onFilterChange({
+  //         ...filters,
+  //         dateRange: { from: "", to: "" },
+  //       });
+  //       break;
+  //   }
+  //   onPageReset?.();
+  // };
 
   const activeFilters = getActiveFilters();
   const hasActiveFilters = activeFilters.length > 0;

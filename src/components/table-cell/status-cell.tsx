@@ -36,7 +36,7 @@ const STATUS_THEMES = {
 
 export function StatusCell({
   isComingSoon = false,
-  isActive = true,
+  // isActive = true,
   isDeleted = false,
   className,
 }: StatusCellProps) {

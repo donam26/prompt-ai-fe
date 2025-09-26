@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 
 // Mock data for industries - replace with actual API call to your backend
 const mockIndustries = [
@@ -74,7 +74,7 @@ const mockIndustries = [
   },
 ];
 
-export async function GET(_request: NextRequest) {
+export async function GET() {
   try {
     // Simulate API delay
     await new Promise(resolve => setTimeout(resolve, 500));

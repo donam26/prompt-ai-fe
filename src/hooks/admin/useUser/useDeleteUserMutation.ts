@@ -23,9 +23,8 @@ export const useDeleteUserMutation = () => {
       });
       toast.success("Xóa người dùng thành công");
     },
-    onError: (_error: any) => {
+    onError: () => {
       toast.error("Có lỗi xảy ra khi xóa người dùng");
-      // console.error("Delete user error:", _error);
     },
   });
 };

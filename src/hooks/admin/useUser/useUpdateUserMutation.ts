@@ -38,9 +38,8 @@ export const useUpdateUserMutation = () => {
       });
       toast.success("Cập nhật người dùng thành công");
     },
-    onError: (_error: any) => {
+    onError: () => {
       toast.error("Có lỗi xảy ra khi cập nhật người dùng");
-      // console.error("Update user error:", _error);
     },
   });
 };

@@ -17,6 +17,7 @@ export * from "./admin/useCategory";
 export * from "./admin/useIndustry";
 export * from "./admin/useUser";
 export * from "./admin/usePrompt";
+export * from "./admin/useBlog";
 export * from "./useAdminPermissions";
 
 // Other hooks

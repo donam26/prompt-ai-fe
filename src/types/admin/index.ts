@@ -6,91 +6,19 @@
  */
 
 // Layout types
-export type { AdminLayoutProps } from "./layout";
+export * from "./layout";
 
 // Dashboard types
-export type {
-  PaginatedResponse,
-  SimpleResponse,
-  DashboardStats,
-  StatsGridProps,
-} from "./dashboard";
+export * from "./dashboard";
 
 // Category types
-export type {
-  CategoryFormData,
-  CategoryHeaderProps,
-  CategoryFormDialogProps,
-  CategoryFormFieldsProps,
-  CategoryFormActionsProps,
-  CategoryTableProps,
-  ColumnHandlers,
-  CategoryImageProps,
-  CategoryStatusProps,
-  CategoryActionsProps,
-  FilterState,
-  CategoryFilterProps,
-  ActiveFilterItem,
-  FilterCardProps,
-  SearchFilterProps,
-  SectionFilterProps,
-  StatusFilterProps,
-  ActiveFiltersListProps,
-  IndustryFilterProps,
-  FilterBadgeProps,
-  ActiveFiltersProps,
-} from "./category";
+export * from "./category";
 
 // User types
-export type {
-  UserFormData,
-  UserHeaderProps,
-  UserFormDialogProps,
-  UserFormFieldsProps,
-  UserFormActionsProps,
-  UserTableProps,
-  UserColumnHandlers,
-  UserImageProps,
-  UserStatusProps,
-  UserActionsProps,
-  UserFilterState,
-  UserFilterProps,
-  UserActiveFilterItem,
-  UserFilterCardProps,
-  UserSearchFilterProps,
-  UserRoleFilterProps,
-  UserStatusFilterProps,
-  UserDateRangeFilterProps,
-  UserActiveFiltersListProps,
-  UserFilterBadgeProps,
-  UserActiveFiltersProps,
-} from "./user";
+export type * from "./user";
 
 // Prompt types
-export type {
-  PromptFormData,
-  PromptHeaderProps,
-  PromptFormDialogProps,
-  PromptFormFieldsProps,
-  PromptFormActionsProps,
-  PromptTableProps,
-  PromptColumnHandlers,
-  PromptImageProps,
-  PromptStatusProps,
-  PromptActionsProps,
-  PromptFilterState,
-  PromptFilterProps,
-  PromptActiveFilterItem,
-  PromptFilterCardProps,
-  PromptSearchFilterProps,
-  PromptCategoryFilterProps,
-  PromptStatusFilterProps,
-  PromptPremiumFilterProps,
-  PromptTagsFilterProps,
-  PromptActiveFiltersListProps,
-  PromptFilterBadgeProps,
-  PromptActiveFiltersProps,
-} from "./prompt";
+export * from "./prompt";
 
-// Re-export common types from lib
-export type { Category, Section, AdminStats } from "@/lib/types";
+// Blog types
+export * from "./blog";

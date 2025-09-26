@@ -2,11 +2,11 @@
 
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { Loader2 } from "lucide-react";
 
 import { useAuth } from "@/hooks/useAuth";
 import { useAdminPermissions } from "@/hooks/useAdminPermissions";
-import { AdminLayout as NewAdminLayout } from "@/components/admin";
+import { AdminLayout as NewAdminLayout, Loading } from "@/components/admin";
+import { LOADING_TYPE } from "@/constants/loading";
 import type { AdminLayoutProps } from "@/types/admin";
 
 /**
@@ -30,11 +30,7 @@ export default function AdminLayout({
   }, [isLoading, isAdmin, router]);
 
   if (isLoading) {
-    return (
-      <div className="flex justify-center items-center min-h-screen">
-        <Loader2 className="w-8 h-8 animate-spin" />
-      </div>
-    );
+    return <Loading type={LOADING_TYPE.PAGE} text="Đang tải..." />;
   }
 
   if (!isAdmin) {

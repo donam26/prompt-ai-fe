@@ -13,7 +13,8 @@ import {
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { LoadingSpinner } from "@/components/ui/loading-spinner";
+import { Loading, AdminPageLayout, AdminContentCard } from "@/components/admin";
+import { LOADING_TYPE } from "@/constants/loading";
 import {
   ADMIN_LABELS,
   QUICK_ACTIONS,
@@ -21,12 +22,7 @@ import {
   ACTIVITY_STATS,
   createStatCards,
 } from "@/constants";
-import { AdminPageLayout, AdminContentCard } from "@/components/admin";
-import type {
-  PaginatedResponse,
-  DashboardStats,
-  StatsGridProps,
-} from "@/types/admin";
+import type { DashboardStats, StatsGridProps } from "@/types/admin";
 
 /**
  * Admin statistics card data structure
@@ -100,9 +96,11 @@ export default function AdminDashboard(): React.JSX.Element {
 
   if (isLoading) {
     return (
-      <div className="flex justify-center items-center h-64">
-        <LoadingSpinner size="lg" />
-      </div>
+      <Loading
+        type={LOADING_TYPE.CARD}
+        text="Đang tải dữ liệu dashboard..."
+        className="h-64"
+      />
     );
   }
 
