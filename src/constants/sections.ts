@@ -1,8 +1,5 @@
 import type { SectionFilterState } from "@/types/admin/section";
 
-/**
- * Sections constants following Berklee pattern
- */
 export const SECTIONS_CONSTANTS = {
   // Initial filter state
   INITIAL_FILTERS: {

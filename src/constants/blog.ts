@@ -1,8 +1,5 @@
 import type { BlogFilterState } from "@/types/admin/blog";
 
-/**
- * Blog constants following Berklee pattern
- */
 export const BLOG_CONSTANTS = {
   // Initial filter state
   INITIAL_FILTERS: {

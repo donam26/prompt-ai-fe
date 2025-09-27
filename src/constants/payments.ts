@@ -1,8 +1,5 @@
 import type { PaymentFilterState } from "@/types/admin/payment";
 
-/**
- * Payments constants following Berklee pattern
- */
 export const PAYMENTS_CONSTANTS = {
   // Initial filter state
   INITIAL_FILTERS: {

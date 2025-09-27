@@ -1,8 +1,5 @@
 import type { IndustryFilterState } from "@/types/admin/industry";
 
-/**
- * Industries constants following Berklee pattern
- */
 export const INDUSTRIES_CONSTANTS = {
   // Initial filter state
   INITIAL_FILTERS: {

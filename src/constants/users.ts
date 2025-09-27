@@ -1,8 +1,5 @@
 import type { UserFilterState } from "@/types/admin/user";
 
-/**
- * Users constants following Berklee pattern
- */
 export const USERS_CONSTANTS = {
   // Initial filter state
   INITIAL_FILTERS: {

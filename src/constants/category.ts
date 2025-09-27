@@ -14,9 +14,6 @@ export enum SectionType {
   GEMINI = "3",
 }
 
-/**
- * Category constants following Berklee pattern
- */
 export const CATEGORY_CONSTANTS = {
   // Initial filter state
   INITIAL_FILTERS: {

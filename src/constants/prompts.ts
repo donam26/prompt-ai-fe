@@ -1,8 +1,5 @@
 import type { PromptFilterState } from "@/types/admin/prompt";
 
-/**
- * Prompts constants following Berklee pattern
- */
 export const PROMPTS_CONSTANTS = {
   // Initial filter state
   INITIAL_FILTERS: {
