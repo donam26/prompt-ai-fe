@@ -1,41 +1,65 @@
-import { apiClient } from "../../base/apiClient";
+import { BaseService } from "../../base/baseService";
 import { ENDPOINTS, QUERY_PARAMS } from "@/constants";
-import { ServiceMethod } from "../../base/types";
+import type { Topic } from "@/lib/types";
+import type { ApiResponse } from "@/types/common";
 import type { PaginationParams } from "@/types/services/common";
 
 // Topic service parameters
 export type TopicListParams = PaginationParams;
 
-export class TopicService {
-  // Get all topics
-  getTopics: ServiceMethod = () => {
-    return apiClient.get(ENDPOINTS.TOPICS.BASE);
-  };
+/**
+ * TopicService extending BaseService
+ */
+export class TopicService extends BaseService {
+  constructor() {
+    super(ENDPOINTS.TOPICS.BASE);
+  }
 
-  // Get topics with pagination
-  getTopicsPage: ServiceMethod<TopicListParams> = params => {
+  /**
+   * Get all topics
+   */
+  async getTopics(params?: Record<string, unknown>) {
+    return this.list(params);
+  }
+
+  /**
+   * Get topics with pagination
+   */
+  async getTopicsPage(params?: TopicListParams) {
     const { page = 1, pageSize = 10 } = params || {};
-    return apiClient.get(
-      `${ENDPOINTS.TOPICS.LIST}?${QUERY_PARAMS.PAGE}=${page}&${QUERY_PARAMS.PAGE_SIZE}=${pageSize}`
-    );
-  };
+    return this.list({
+      [QUERY_PARAMS.PAGE]: page,
+      [QUERY_PARAMS.PAGE_SIZE]: pageSize,
+    });
+  }
 
-  // Create topic
-  createTopics: ServiceMethod<unknown> = data => {
-    return apiClient.post(ENDPOINTS.TOPICS.BASE, data);
-  };
+  /**
+   * Get topic by ID
+   */
+  async getTopic(id: string | number) {
+    return this.getById<Topic>(id);
+  }
 
-  // Update topic
-  updateTopics: ServiceMethod<{ id: string | number; data: unknown }> =
-    params => {
-      const { id, data } = params || {};
-      return apiClient.put(`${ENDPOINTS.TOPICS.BASE}/${id}`, data);
-    };
+  /**
+   * Create new topic
+   */
+  async createTopic(data: Partial<Topic>) {
+    return this.create<Topic, Partial<Topic>>(data);
+  }
 
-  // Delete topic
-  deleteTopics: ServiceMethod<string | number> = id => {
-    return apiClient.delete(`${ENDPOINTS.TOPICS.BASE}/${id}`);
-  };
+  /**
+   * Update topic
+   */
+  async updateTopic(id: string | number, data: Partial<Topic>) {
+    return this.update<Topic, Partial<Topic>>(id, data);
+  }
+
+  /**
+   * Delete topic
+   */
+  async deleteTopic(id: string | number): Promise<ApiResponse<void>> {
+    return this.delete<void>(id);
+  }
 }
 
 // Export singleton instance

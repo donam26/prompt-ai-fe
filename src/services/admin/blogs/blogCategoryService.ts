@@ -1,11 +1,6 @@
 import { BaseService } from "../../base/baseService";
 import { ENDPOINTS } from "@/constants";
 import type { BlogCategory } from "@/lib/types";
-import type {
-  ApiResponse,
-  PaginatedResponse,
-  SingleResponse,
-} from "../../base";
 
 /**
  * BlogCategoryService extending BaseService
@@ -18,58 +13,42 @@ export class BlogCategoryService extends BaseService {
   /**
    * Get all blog categories
    */
-  async getBlogCategories(): Promise<ApiResponse<BlogCategory[]>> {
-    return this.get<BlogCategory[]>("");
+  async getBlogCategories(params?: Record<string, unknown>) {
+    return this.list(params);
   }
 
   /**
    * Get blog categories with pagination
    */
-  async getBlogCategoriesPage(params?: {
-    page?: number;
-    pageSize?: number;
-    search?: string;
-  }): Promise<ApiResponse<PaginatedResponse<BlogCategory>>> {
-    return this.get<PaginatedResponse<BlogCategory>>("", params);
+  async getBlogCategoriesPage(params?: Record<string, unknown>) {
+    return this.list(params);
   }
 
   /**
    * Get blog category by ID
    */
-  async getBlogCategory(
-    id: string | number
-  ): Promise<ApiResponse<SingleResponse<BlogCategory>>> {
-    return this.getById<SingleResponse<BlogCategory>>(id);
+  async getBlogCategory(id: string | number) {
+    return this.getById(id);
   }
 
   /**
    * Create new blog category
    */
-  async createBlogCategory(
-    data: Partial<BlogCategory>
-  ): Promise<ApiResponse<SingleResponse<BlogCategory>>> {
-    return this.create<SingleResponse<BlogCategory>, Partial<BlogCategory>>(
-      data
-    );
+  async createBlogCategory(data: Partial<BlogCategory>) {
+    return this.create(data);
   }
 
   /**
    * Update blog category
    */
-  async updateBlogCategory(
-    id: string | number,
-    data: Partial<BlogCategory>
-  ): Promise<ApiResponse<SingleResponse<BlogCategory>>> {
-    return this.update<SingleResponse<BlogCategory>, Partial<BlogCategory>>(
-      id,
-      data
-    );
+  async updateBlogCategory(id: string | number, data: Partial<BlogCategory>) {
+    return this.update(id, data);
   }
 
   /**
    * Delete blog category
    */
-  async deleteBlogCategory(id: string | number): Promise<ApiResponse<void>> {
+  async deleteBlogCategory(id: string) {
     return this.delete<void>(id);
   }
 }

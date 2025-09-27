@@ -2,47 +2,51 @@
 
 import { useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
+
 import { AdminContentCard } from "@/components/admin/common/admin-content-card";
 import {
   BlogFilter,
   BlogHeader,
-  createBlogColumns,
-  DataTable,
+  useBlogColumns,
+  adaptColumnsForDataTable,
 } from "./modules";
 import { BLOG_CONSTANTS } from "@/constants/blog";
-import { useAdminBlogsQuery, useDeleteBlogMutation } from "@/hooks";
-import type { BlogFilterState } from "@/types/admin";
+import { useBlogs } from "@/hooks";
 import type { Blog } from "@/lib/types";
+import type { BlogFilterState } from "@/types/admin/blog";
+import { IPagination } from "@/types/common";
+import {
+  DEFAULT_PAGE_INDEX,
+  DEFAULT_PAGINATION,
+  DEFAULT_TOTAL_PAGES,
+  DEFAULT_TOTAL,
+} from "@/constants";
+import { DataTable } from "@/components/data-table";
+import { useDeleteBlog } from "@/hooks/admin/useBlog/useDeleteBlog";
 
 export default function BlogManagementPage(): React.JSX.Element {
   const router = useRouter();
 
-  // 🎯 State Management
   const [filters, setFilters] = useState<BlogFilterState>(
     BLOG_CONSTANTS.INITIAL_FILTERS
   );
-  const [currentPage, setCurrentPage] = useState(1);
-  const [pageSize, setPageSize] = useState<number>(
-    BLOG_CONSTANTS.PAGINATION.DEFAULT_PAGE_SIZE
-  );
 
-  // 🔄 Data Hooks
-  const { searchTerm, dateRange } = filters;
-  const { data: blogsData, isLoading: blogsLoading } = useAdminBlogsQuery({
-    page: currentPage,
-    pageSize: pageSize,
-    search: searchTerm,
-    dateFrom: dateRange.from,
-    dateTo: dateRange.to,
+  const [pagination, setPagination] = useState<IPagination>(DEFAULT_PAGINATION);
+
+  const { blogsWithPagination, isFetching: blogsLoading } = useBlogs({
+    pagination,
+    filters,
   });
 
-  const deleteBlogMutation = useDeleteBlogMutation();
+  const { mutate: deleteBlog, isLoading: isDeleting } = useDeleteBlog();
 
-  // Extract data from API responses
-  const blogs = blogsData?.data || [];
-  const totalPages = blogsData?.totalPages || 0;
-  const totalItems = blogsData?.total || 0;
-  const isLoading = blogsLoading;
+  const handlePaginationChange = useCallback(
+    (newPagination: IPagination) =>
+      setPagination(prev => ({ ...prev, ...newPagination })),
+    []
+  );
+
+  const isLoading = blogsLoading || isDeleting;
 
   // 🔗 Navigation handlers
   const handleAddBlog = () => {
@@ -53,42 +57,33 @@ export default function BlogManagementPage(): React.JSX.Element {
     router.push(BLOG_CONSTANTS.ROUTES.BLOG_EDIT(blog.id));
   };
 
-  const handleViewBlog = (blog: Blog) => {
-    router.push(BLOG_CONSTANTS.ROUTES.BLOG_VIEW(blog.id));
-  };
-
-  const handleDeleteBlog = async (id: string | number): Promise<void> => {
-    try {
-      deleteBlogMutation.mutate(id);
-    } catch {
-      // Error deleting blog - could be logged to monitoring service
+  const handleDeleteBlog = async (blog: Blog): Promise<void> => {
+    const success = await deleteBlog(blog);
+    if (success) {
+      // Blog deleted successfully - could trigger refresh or other actions
+      // The hook already handles toast notifications
     }
   };
 
   const handleFilterChange = useCallback(
     (newFilters: BlogFilterState): void => {
       setFilters(newFilters);
-      setCurrentPage(1);
+      setPagination(prev => ({ ...prev, pageIndex: DEFAULT_PAGE_INDEX }));
     },
     []
   );
 
-  // const handlePageSizeChange = useCallback((newPageSize: number): void => {
-  //   setPageSize(newPageSize);
-  //   setCurrentPage(1);
-  // }, []);
-
   const handleClearFilters = useCallback((): void => {
     setFilters(BLOG_CONSTANTS.INITIAL_FILTERS);
-    setCurrentPage(1);
+    setPagination(prev => ({ ...prev, pageIndex: DEFAULT_PAGE_INDEX }));
   }, []);
 
   // Create columns with handlers
-  const columns = createBlogColumns({
-    onEdit: handleEditBlog,
-    onDelete: handleDeleteBlog,
-    onView: handleViewBlog,
+  const tanstackColumns = useBlogColumns({
+    onEditAction: handleEditBlog,
+    onDeleteAction: handleDeleteBlog,
   });
+  const columns = adaptColumnsForDataTable(tanstackColumns);
 
   return (
     <AdminContentCard>
@@ -99,25 +94,19 @@ export default function BlogManagementPage(): React.JSX.Element {
           filters={filters}
           onFilterChange={handleFilterChange}
           onClearFilters={handleClearFilters}
-          onPageReset={() => setCurrentPage(1)}
+          onPageReset={() =>
+            setPagination(prev => ({ ...prev, pageIndex: DEFAULT_PAGE_INDEX }))
+          }
         />
 
-        <DataTable
+        <DataTable<Blog>
           columns={columns}
-          data={blogs}
-          pagination={{
-            currentPage: currentPage,
-            totalPages: totalPages,
-            totalItems: totalItems,
-            pageSize: pageSize,
-            onPageChange: (page: number) => setCurrentPage(page),
-            onPageSizeChange: (newPageSize: number) => {
-              setPageSize(newPageSize);
-              setCurrentPage(1);
-            },
-            showPrevNext: true,
-            maxVisiblePages: 5,
-          }}
+          data={blogsWithPagination?.data || []}
+          pageCount={blogsWithPagination?.totalPages || DEFAULT_TOTAL_PAGES}
+          pageIndex={pagination.pageIndex}
+          pageSize={pagination.pageSize}
+          totalItems={blogsWithPagination?.total || DEFAULT_TOTAL}
+          onPaginationChangeAction={handlePaginationChange}
           loading={isLoading}
         />
       </div>

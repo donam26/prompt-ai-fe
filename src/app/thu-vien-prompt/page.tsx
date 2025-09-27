@@ -31,7 +31,7 @@ export default function PromptLibraryPage() {
   const [categories, setCategories] = useState<Category[]>([]);
   const [topics, setTopics] = useState<Topic[]>([]);
   const [industries, setIndustries] = useState<Industry[]>([]);
-  const [favoritePrompts, setFavoritePrompts] = useState<number[]>([]);
+  const [favoritePrompts, setFavoritePrompts] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string>("");
@@ -56,7 +56,7 @@ export default function PromptLibraryPage() {
       });
 
       setPrompts((response.data.data as Prompt[]) || []);
-      setTotalPages(Math.ceil((response.data.total || 0) / 12));
+      setTotalPages(response.data.data.total);
     } catch {
       // Error loading prompts - could be logged to monitoring service
       toast.error("Có lỗi xảy ra khi tải prompts");
@@ -116,11 +116,11 @@ export default function PromptLibraryPage() {
     try {
       const response = await promptService.getFavoritePrompts(user.id);
       const favoriteIds = (
-        (response.data.data as unknown as any[]) ||
-        (response.data as unknown as any[]) ||
+        (response.data as unknown as Prompt[]) ||
+        (response.data as unknown as Prompt[]) ||
         []
-      ).map((fav: { prompt_id: number }) => fav.prompt_id);
-      setFavoritePrompts(favoriteIds);
+      ).map((fav: Prompt) => fav.id);
+      setFavoritePrompts(favoriteIds as string[]);
     } catch {
       // Error loading favorite prompts - could be logged to monitoring service
     }
@@ -136,7 +136,7 @@ export default function PromptLibraryPage() {
     loadPrompts();
   };
 
-  const handleFavorite = async (promptId: number) => {
+  const handleFavorite = async (promptId: string) => {
     if (!user) {
       toast.error("Vui lòng đăng nhập để thêm vào yêu thích");
       return;
@@ -150,7 +150,10 @@ export default function PromptLibraryPage() {
         toast.success("Đã xóa khỏi yêu thích");
       } else {
         // Add to favorites
-        await promptService.addFavoritePrompt({ promptId, userId: user.id });
+        await promptService.addFavoritePrompt({
+          promptId,
+          userId: user.id,
+        });
         setFavoritePrompts(prev => [...prev, promptId]);
         toast.success("Đã thêm vào yêu thích");
       }
@@ -324,9 +327,7 @@ export default function PromptLibraryPage() {
 
           <TabsContent value="favorites" className="mt-6">
             <PromptGrid
-              prompts={prompts.filter(p =>
-                favoritePrompts.includes(Number(p.id))
-              )}
+              prompts={prompts.filter(p => favoritePrompts.includes(p.id))}
               isLoading={isLoading}
               favoritePrompts={favoritePrompts}
               onFavorite={handleFavorite}
@@ -377,8 +378,8 @@ export default function PromptLibraryPage() {
 interface PromptGridProps {
   prompts: Prompt[];
   isLoading: boolean;
-  favoritePrompts: number[];
-  onFavorite: (promptId: number) => void;
+  favoritePrompts: string[];
+  onFavorite: (promptId: string) => void;
   onCopy: (content: string) => void;
 }
 
@@ -420,18 +421,16 @@ function PromptGrid({
               <Button
                 variant="ghost"
                 size="sm"
-                onClick={() => onFavorite(Number(prompt.id))}
+                onClick={() => onFavorite(prompt.id)}
                 className={
-                  favoritePrompts.includes(Number(prompt.id))
+                  favoritePrompts.includes(prompt.id)
                     ? "text-red-500"
                     : "text-gray-400"
                 }
               >
                 <Heart
                   className={`h-4 w-4 ${
-                    favoritePrompts.includes(Number(prompt.id))
-                      ? "fill-current"
-                      : ""
+                    favoritePrompts.includes(prompt.id) ? "fill-current" : ""
                   }`}
                 />
               </Button>

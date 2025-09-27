@@ -32,7 +32,7 @@ export interface BaseUser {
 
 // API user response (from backend)
 export interface ApiUser {
-  id: number;
+  id: string;
   fullName?: string;
   full_name?: string;
   email: string;

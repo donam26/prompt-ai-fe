@@ -97,6 +97,7 @@ export const ENDPOINTS = {
 
   // Payment endpoints
   PAYMENT: {
+    INDEX: "/payment",
     CREATE_URL: "/payment/create_payment_url",
     FILTER: "/payment/filter",
     EXPORT: "/payment/export",

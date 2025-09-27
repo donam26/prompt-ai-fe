@@ -107,15 +107,3 @@ a {
   background: linear-gradient(90deg, #e1f6ff 0%, #e6b8ff 100%);
   width: 100%;
 }
-
-.admin-content-card {
-  min-height: calc(100vh - 3rem);
-  display: flex;
-  flex-direction: column;
-}
-
-.admin-data-table-container {
-  flex: 1;
-  min-height: 0;
-  overflow: hidden;
-}

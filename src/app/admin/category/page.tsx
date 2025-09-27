@@ -7,63 +7,57 @@ import { AdminContentCard } from "@/components/admin/common/admin-content-card";
 import {
   CategoryFilter,
   CategoryHeader,
-  createCategoryColumns,
-  DataTable,
+  useCategoryColumns,
+  adaptColumnsForDataTable,
 } from "./modules";
 import { CATEGORY_CONSTANTS } from "@/constants/category";
-import {
-  useAdminCategoriesQuery,
-  useAdminIndustries,
-  useDeleteCategoryMutation,
-} from "@/hooks";
+import { useCategories, useIndustries } from "@/hooks";
+import { useDeleteCategory } from "@/hooks/admin/useCategory/useDeleteCategory";
 import type { Category, FilterState } from "@/types/admin";
+import { IPagination } from "@/types/common";
+import {
+  DEFAULT_PAGE_INDEX,
+  DEFAULT_PAGINATION,
+  DEFAULT_TOTAL_PAGES,
+  DEFAULT_TOTAL,
+} from "@/constants";
+import { DataTable } from "@/components/data-table";
 
 export default function CategoryManagementPage(): React.JSX.Element {
   const router = useRouter();
 
-  // 🎯 State Management
-  const [filters, setFilters] = useState<FilterState>(
+  const [filters, setFilters] = useState<Partial<FilterState>>(
     CATEGORY_CONSTANTS.INITIAL_FILTERS
   );
-  const [currentPage, setCurrentPage] = useState(1);
-  const [pageSize, setPageSize] = useState<number>(
-    CATEGORY_CONSTANTS.PAGINATION.DEFAULT_PAGE_SIZE
-  );
 
-  // 🔄 Data Hooks
-  const { searchTerm, sectionId, status, industryIds } = filters;
+  const [pagination, setPagination] = useState<IPagination>(DEFAULT_PAGINATION);
+
   const {
-    categories: categoriesData = [],
-    isLoading: categoriesLoading,
-    totalPages,
-    totalItems,
-  } = useAdminCategoriesQuery({
-    page: currentPage,
-    pageSize: pageSize,
-    search: searchTerm,
-    sectionId: sectionId,
-    status: status,
-    industryIds: [...industryIds],
+    categoriesWithPagination,
+    isFetching: categoriesLoading,
+    refetch,
+  } = useCategories({
+    pagination,
+    filters,
   });
 
   const {
     industriesWithPagination: industriesData,
     isLoading: industriesLoading,
-  } = useAdminIndustries();
-  const deleteCategoryMutation = useDeleteCategoryMutation();
+  } = useIndustries();
+  const { mutate: deleteCategory, isLoading: isDeleting } = useDeleteCategory();
 
-  // Extract data from API responses
+  const handlePaginationChange = useCallback(
+    (newPagination: IPagination) =>
+      setPagination(prev => ({ ...prev, ...newPagination })),
+    []
+  );
 
-  // const sections = Array.isArray(sectionsData?.data?.data)
-  //   ? sectionsData.data.data
-  //   : Array.isArray(sectionsData?.data)
-  //     ? sectionsData.data
-  //     : [];
   const industries = Array.isArray(industriesData?.data)
     ? industriesData.data
     : [];
 
-  const isLoading = categoriesLoading || industriesLoading;
+  const isLoading = categoriesLoading || industriesLoading || isDeleting;
 
   // 🔗 Navigation handlers
   const handleAddCategory = () => {
@@ -74,34 +68,29 @@ export default function CategoryManagementPage(): React.JSX.Element {
     router.push(CATEGORY_CONSTANTS.ROUTES.CATEGORY_DETAIL(category.id));
   };
 
-  const handleDeleteCategory = async (id: string | number): Promise<void> => {
-    try {
-      deleteCategoryMutation.mutate(id);
-    } catch {
-      // Error deleting category - could be logged to monitoring service
+  const handleDeleteCategory = async (category: Category): Promise<void> => {
+    const success = await deleteCategory(category);
+    if (success) {
+      refetch();
     }
   };
 
   const handleFilterChange = useCallback((newFilters: FilterState): void => {
     setFilters(newFilters);
-    setCurrentPage(1);
+    setPagination(prev => ({ ...prev, pageIndex: DEFAULT_PAGE_INDEX }));
   }, []);
-
-  // const handlePageSizeChange = useCallback((newPageSize: number): void => {
-  //   setPageSize(newPageSize);
-  //   setCurrentPage(1);
-  // }, []);
 
   const handleClearFilters = useCallback((): void => {
     setFilters(CATEGORY_CONSTANTS.INITIAL_FILTERS);
-    setCurrentPage(1);
+    setPagination(prev => ({ ...prev, pageIndex: DEFAULT_PAGE_INDEX }));
   }, []);
 
   // Create columns with handlers
-  const columns = createCategoryColumns({
-    onEdit: handleEditCategory,
-    onDelete: handleDeleteCategory,
+  const tanstackColumns = useCategoryColumns({
+    onEditAction: handleEditCategory,
+    onDeleteAction: handleDeleteCategory,
   });
+  const columns = adaptColumnsForDataTable(tanstackColumns);
 
   return (
     <AdminContentCard>
@@ -114,25 +103,21 @@ export default function CategoryManagementPage(): React.JSX.Element {
           industries={industries}
           onFilterChange={handleFilterChange}
           onClearFilters={handleClearFilters}
-          onPageReset={() => setCurrentPage(1)}
+          onPageReset={() =>
+            setPagination(prev => ({ ...prev, pageIndex: DEFAULT_PAGE_INDEX }))
+          }
         />
 
-        <DataTable
+        <DataTable<Category>
           columns={columns}
-          data={categoriesData}
-          pagination={{
-            currentPage: currentPage,
-            totalPages: totalPages,
-            totalItems: totalItems,
-            pageSize: pageSize,
-            onPageChange: (page: number) => setCurrentPage(page),
-            onPageSizeChange: (newPageSize: number) => {
-              setPageSize(newPageSize);
-              setCurrentPage(1);
-            },
-            showPrevNext: true,
-            maxVisiblePages: 5,
-          }}
+          data={categoriesWithPagination?.data || []}
+          pageCount={
+            categoriesWithPagination?.totalPages || DEFAULT_TOTAL_PAGES
+          }
+          pageIndex={pagination.pageIndex}
+          pageSize={pagination.pageSize}
+          totalItems={categoriesWithPagination?.total || DEFAULT_TOTAL}
+          onPaginationChangeAction={handlePaginationChange}
           loading={isLoading}
         />
       </div>

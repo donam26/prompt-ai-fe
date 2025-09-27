@@ -38,14 +38,6 @@ export const PaymentFilter = ({
     onPageReset?.();
   };
 
-  const handleMethodChange = (value: string): void => {
-    onFilterChange({
-      ...filters,
-      method: value,
-    });
-    onPageReset?.();
-  };
-
   const handleDateRangeChange = (range: { from: string; to: string }): void => {
     onFilterChange({
       ...filters,
@@ -105,22 +97,14 @@ export const PaymentFilter = ({
               />
             </div>
 
+            {/* Date Range Filter */}
             <div className="space-y-2">
-              <Label className="font-medium text-sm">Phương thức</Label>
-              <MethodFilter
-                value={filters.method}
-                onChange={handleMethodChange}
+              <Label className="font-medium text-sm">Khoảng thời gian</Label>
+              <DateRangeFilter
+                value={filters.dateRange}
+                onChange={handleDateRangeChange}
               />
             </div>
-          </div>
-
-          {/* Date Range Filter */}
-          <div className="space-y-2">
-            <Label className="font-medium text-sm">Khoảng thời gian</Label>
-            <DateRangeFilter
-              value={filters.dateRange}
-              onChange={handleDateRangeChange}
-            />
           </div>
         </div>
       </div>
@@ -139,11 +123,11 @@ const StatusFilter = ({
   onChange: (value: string) => void;
 }): React.JSX.Element => {
   const statusOptions = [
-    { value: "all", label: "Tất cả trạng thái" },
-    { value: "completed", label: "Hoàn thành" },
-    { value: "pending", label: "Đang xử lý" },
-    { value: "failed", label: "Thất bại" },
-    { value: "cancelled", label: "Đã hủy" },
+    { id: "all", name: "Tất cả trạng thái" },
+    { id: "completed", name: "Hoàn thành" },
+    { id: "pending", name: "Đang xử lý" },
+    { id: "failed", name: "Thất bại" },
+    { id: "cancelled", name: "Đã hủy" },
   ];
 
   return (
@@ -152,35 +136,6 @@ const StatusFilter = ({
       value={value}
       onValueChange={onChange}
       placeholder="Chọn trạng thái..."
-      className="w-full"
-    />
-  );
-};
-
-/**
- * Method filter component
- */
-const MethodFilter = ({
-  value,
-  onChange,
-}: {
-  value: string;
-  onChange: (value: string) => void;
-}): React.JSX.Element => {
-  const methodOptions = [
-    { value: "all", label: "Tất cả phương thức" },
-    { value: "credit_card", label: "Thẻ tín dụng" },
-    { value: "bank_transfer", label: "Chuyển khoản" },
-    { value: "paypal", label: "PayPal" },
-    { value: "momo", label: "MoMo" },
-  ];
-
-  return (
-    <BaseSelect
-      items={methodOptions}
-      value={value}
-      onValueChange={onChange}
-      placeholder="Chọn phương thức..."
       className="w-full"
     />
   );

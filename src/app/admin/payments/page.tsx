@@ -1,101 +1,86 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
 
-import { debounce } from "@/lib/utils";
 import { AdminContentCard } from "@/components/admin/common/admin-content-card";
 import {
   PaymentFilter,
   PaymentHeader,
-  createPaymentColumns,
-  DataTable,
+  usePaymentColumns,
+  adaptColumnsForDataTable,
 } from "./modules";
-import { useAdminPaymentsQuery, useDeletePaymentMutation } from "@/hooks";
-import type { Payment, PaymentFilterState } from "@/types/admin";
 import { PAYMENTS_CONSTANTS } from "@/constants/payments";
-
-/**
- * Use constants from module
- */
-const INITIAL_FILTERS = PAYMENTS_CONSTANTS.INITIAL_FILTERS;
+import { useAdminPaymentsQuery } from "@/hooks";
+import { useDeletePayment } from "@/hooks/admin/usePayment/useDeletePayment";
+import type { Payment } from "@/lib/types";
+import type { PaymentFilterState } from "@/types/admin/payment";
+import { IPagination } from "@/types/common";
+import {
+  DEFAULT_PAGE_INDEX,
+  DEFAULT_PAGINATION,
+  DEFAULT_TOTAL_PAGES,
+  DEFAULT_TOTAL,
+} from "@/constants";
+import { DataTable } from "@/components/data-table";
 
 export default function PaymentManagementPage(): React.JSX.Element {
   const router = useRouter();
 
-  // 🎯 State Management
-  const [filters, setFilters] = useState<PaymentFilterState>(INITIAL_FILTERS);
-  const [debouncedFilters, setDebouncedFilters] =
-    useState<PaymentFilterState>(INITIAL_FILTERS);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [pageSize, setPageSize] = useState(10);
+  const [filters, setFilters] = useState<PaymentFilterState>(
+    PAYMENTS_CONSTANTS.INITIAL_FILTERS
+  );
 
-  // Debounced filter update
-  const debouncedFilterUpdate = debounce((newFilters: PaymentFilterState) => {
-    setDebouncedFilters(newFilters);
-  }, 300);
+  const [pagination, setPagination] = useState<IPagination>(DEFAULT_PAGINATION);
 
-  // Update debounced filters when filters change
-  useEffect(() => {
-    debouncedFilterUpdate(filters);
-  }, [filters, debouncedFilterUpdate]);
-
-  // 🔄 Data Hooks
-  const { data: paymentsData, isLoading: paymentsLoading } =
+  const { paymentsWithPagination, isFetching: paymentsLoading } =
     useAdminPaymentsQuery({
-      page: currentPage,
-      pageSize: pageSize,
-      search: debouncedFilters.searchTerm,
-      status: debouncedFilters.status,
-      method: debouncedFilters.method,
-      dateFrom: debouncedFilters.dateRange.from,
-      dateTo: debouncedFilters.dateRange.to,
+      pagination,
+      filters,
     });
 
-  const deletePaymentMutation = useDeletePaymentMutation();
+  const { mutate: deletePayment, isLoading: isDeleting } = useDeletePayment();
 
-  // Extract data from API responses
-  const payments = paymentsData?.data || [];
-  const totalPages = paymentsData?.totalPages || 0;
-  const totalItems = paymentsData?.total || 0;
+  const handlePaginationChange = useCallback(
+    (newPagination: IPagination) =>
+      setPagination(prev => ({ ...prev, ...newPagination })),
+    []
+  );
 
-  const isLoading = paymentsLoading;
+  const isLoading = paymentsLoading || isDeleting;
 
+  // 🔗 Navigation handlers
   const handleViewPayment = (payment: Payment) => {
     router.push(PAYMENTS_CONSTANTS.ROUTES.PAYMENT_VIEW(payment.id));
   };
 
-  const handleDeletePayment = async (id: string | number): Promise<void> => {
-    try {
-      deletePaymentMutation.mutate(id);
-    } catch {
-      // Error deleting payment - could be logged to monitoring service
+  const handleDeletePayment = async (payment: Payment): Promise<void> => {
+    const success = await deletePayment(payment);
+    if (success) {
+      // Payment deleted successfully - could trigger refresh or other actions
+      // The hook already handles toast notifications
     }
   };
 
   const handleFilterChange = useCallback(
     (newFilters: PaymentFilterState): void => {
       setFilters(newFilters);
-      setCurrentPage(1);
+      setPagination(prev => ({ ...prev, pageIndex: DEFAULT_PAGE_INDEX }));
     },
     []
   );
 
-  // const handlePageSizeChange = useCallback((newPageSize: number): void => {
-  //   setPageSize(newPageSize);
-  //   setCurrentPage(1);
-  // }, []);
-
   const handleClearFilters = useCallback((): void => {
-    setFilters(INITIAL_FILTERS);
-    setCurrentPage(1);
+    setFilters(PAYMENTS_CONSTANTS.INITIAL_FILTERS);
+    setPagination(prev => ({ ...prev, pageIndex: DEFAULT_PAGE_INDEX }));
   }, []);
 
   // Create columns with handlers
-  const columns = createPaymentColumns({
-    onView: handleViewPayment,
-    onDelete: handleDeletePayment,
+  const tanstackColumns = usePaymentColumns({
+    onViewAction: handleViewPayment,
+    onDeleteAction: handleDeletePayment,
   });
+  const columns = adaptColumnsForDataTable(tanstackColumns);
 
   return (
     <AdminContentCard>
@@ -106,25 +91,19 @@ export default function PaymentManagementPage(): React.JSX.Element {
           filters={filters}
           onFilterChange={handleFilterChange}
           onClearFilters={handleClearFilters}
-          onPageReset={() => setCurrentPage(1)}
+          onPageReset={() =>
+            setPagination(prev => ({ ...prev, pageIndex: DEFAULT_PAGE_INDEX }))
+          }
         />
 
-        <DataTable
+        <DataTable<Payment>
           columns={columns}
-          data={payments}
-          pagination={{
-            currentPage: currentPage,
-            totalPages: totalPages,
-            totalItems: totalItems,
-            pageSize: pageSize,
-            onPageChange: (page: number) => setCurrentPage(page),
-            onPageSizeChange: (newPageSize: number) => {
-              setPageSize(newPageSize);
-              setCurrentPage(1);
-            },
-            showPrevNext: true,
-            maxVisiblePages: 5,
-          }}
+          data={paymentsWithPagination?.data || []}
+          pageCount={paymentsWithPagination?.totalPages || DEFAULT_TOTAL_PAGES}
+          pageIndex={pagination.pageIndex}
+          pageSize={pagination.pageSize}
+          totalItems={paymentsWithPagination?.total || DEFAULT_TOTAL}
+          onPaginationChangeAction={handlePaginationChange}
           loading={isLoading}
         />
       </div>

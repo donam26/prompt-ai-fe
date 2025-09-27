@@ -7,11 +7,8 @@ import {
   REFRESH_TOKEN_COOKIE_NAME,
   REFRESH_TOKEN_EXPIRE_SECONDS,
 } from "@/constants/auth";
-import { userService } from "@/services";
 import { CredentialActionType, IAuthType } from "@/types/auth";
-import type { UserSubscription } from "@/lib/types";
-import { getUserInfoFromToken } from "@/utils/TokenDecoder";
-import { transformUserDataForNextAuth } from "@/utils/userDataTransform";
+import { getUserInfoFromToken } from "@/utils/token-decoder";
 
 const setCookieToken = async (name: string, value: string, maxAge: number) => {
   const cookieStore = await cookies();
@@ -39,7 +36,7 @@ export const authOptions: AuthOptions = {
           return null;
         }
 
-        let user: IAuthType | null = null;
+        const user: IAuthType | null = null;
 
         try {
           switch (credentials.type) {
@@ -50,22 +47,6 @@ export const authOptions: AuthOptions = {
 
             case undefined:
             default:
-              // Handle regular login
-              const response = await userService.passwordLogin({
-                email: credentials.email,
-                password: credentials.password,
-                userIP: "", // You might want to get this from the request
-              });
-
-              if (response.data.success && response.data.data) {
-                const { user: userData, token } = response.data.data.data as {
-                  user: unknown;
-                  token: string;
-                };
-
-                // Create IAuthType object with new data structure
-                user = transformUserDataForNextAuth(userData, token);
-              }
               break;
           }
 
@@ -94,14 +75,7 @@ export const authOptions: AuthOptions = {
             refreshTokenMaxAge
           );
 
-          return {
-            ...user,
-            id: String(user.userId),
-            userSub: user.userSub as UserSubscription | undefined,
-            permissions: Array.isArray(user.permissions)
-              ? user.permissions
-              : [],
-          };
+          return null;
         } catch {
           return null;
         }

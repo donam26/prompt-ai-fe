@@ -12,46 +12,64 @@ import { Pagination } from "./pagination";
 import { cn } from "@/lib/utils";
 
 export interface Column<T> {
-  key: string;
-  title: string;
-  dataIndex?: keyof T;
-  render?: (
+  readonly key: string;
+  readonly title: string;
+  readonly dataIndex?: keyof T;
+  readonly render?: (
     value: unknown,
     record: T,
     index: number,
     context?: unknown
   ) => React.ReactNode;
-  width?: string | number;
-  align?: "left" | "center" | "right";
-  className?: string;
+  readonly width?: string | number;
+  readonly align?: "left" | "center" | "right";
+  readonly className?: string;
+  readonly sortable?: boolean;
+  readonly filterable?: boolean;
+}
+
+export interface PaginationConfig {
+  readonly currentPage: number;
+  readonly totalPages: number;
+  readonly totalItems?: number;
+  readonly pageSize?: number;
+  readonly onPaginationChange?: (pagination: {
+    pageIndex: number;
+    pageSize: number;
+  }) => void;
+  readonly onPageChange?: (page: number) => void;
+  readonly onPageSizeChange?: (pageSize: number) => void;
+  readonly showPrevNext?: boolean;
+  readonly maxVisiblePages?: number;
+  readonly compact?: boolean;
 }
 
 export interface DataTableProps<T> {
-  data: T[];
-  columns: Column<T>[];
-  loading?: boolean;
-  emptyText?: string;
-  className?: string;
-  // Pagination props
-  pagination?: {
-    currentPage: number;
-    totalPages: number;
-    totalItems?: number;
-    pageSize?: number;
-    onPageChange: (page: number) => void;
-    onPageSizeChange?: (pageSize: number) => void;
-    showPrevNext?: boolean;
-    maxVisiblePages?: number;
-  };
-  // Row props
-  rowKey?: keyof T | ((record: T) => string | number);
-  onRowClick?: (record: T, index: number) => void;
-  rowClassName?: string | ((record: T, index: number) => string);
-  // Context for column render functions
-  context?: unknown;
+  readonly data: T[];
+  readonly columns: Column<T>[];
+  readonly loading?: boolean;
+  readonly emptyText?: string;
+  readonly className?: string;
+  readonly pagination?: PaginationConfig;
+  readonly rowKey?: keyof T | ((record: T) => string | number);
+  readonly onRowClick?: (record: T, index: number) => void;
+  readonly rowClassName?: string | ((record: T, index: number) => string);
+  readonly context?: unknown;
+  readonly striped?: boolean;
+  readonly hoverable?: boolean;
+  readonly bordered?: boolean;
+  // Direct pagination props
+  readonly pageCount?: number;
+  readonly pageIndex?: number;
+  readonly pageSize?: number;
+  readonly totalItems?: number;
+  readonly onPaginationChangeAction?: (pagination: {
+    pageIndex: number;
+    pageSize: number;
+  }) => void;
 }
 
-export function DataTable<T = Record<string, unknown>>({
+export const DataTable = <T = Record<string, unknown>,>({
   data,
   columns,
   loading = false,
@@ -62,7 +80,16 @@ export function DataTable<T = Record<string, unknown>>({
   onRowClick,
   rowClassName,
   context,
-}: DataTableProps<T>) {
+  striped = false,
+  hoverable = true,
+  bordered = true,
+  // Direct pagination props
+  pageCount,
+  pageIndex,
+  pageSize,
+  totalItems,
+  onPaginationChangeAction,
+}: DataTableProps<T>) => {
   const getRowKey = (record: T, index: number): string | number => {
     if (typeof rowKey === "function") {
       return rowKey(record);
@@ -71,38 +98,58 @@ export function DataTable<T = Record<string, unknown>>({
   };
 
   const getRowClassName = (record: T, index: number): string => {
-    const baseClass =
-      "group hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors";
+    const baseClasses = [
+      "transition-colors duration-200",
+      striped && index % 2 === 1 && "bg-gray-50/50 dark:bg-gray-800/50",
+      hoverable && "hover:bg-gray-100 dark:hover:bg-gray-700",
+      onRowClick && "cursor-pointer",
+    ].filter(Boolean);
+
     const customClass =
       typeof rowClassName === "function"
         ? rowClassName(record, index)
         : rowClassName;
-    return cn(baseClass, customClass);
+
+    return cn(baseClasses, customClass);
+  };
+
+  const getTableClassName = (): string => {
+    return cn(
+      "w-full",
+      bordered &&
+        "border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden",
+      "bg-white dark:bg-gray-800"
+    );
   };
 
   if (loading) {
     return (
-      <div className="flex justify-center items-center py-8">
-        <Loader2 className="w-8 h-8 animate-spin" />
-        <span className="ml-2">Đang tải...</span>
+      <div className="flex flex-col justify-center items-center space-y-4 py-12">
+        <Loader2 className="w-8 h-8 text-blue-600 animate-spin" />
+        <span className="text-gray-600 dark:text-gray-400 text-sm">
+          Đang tải dữ liệu...
+        </span>
       </div>
     );
   }
 
   return (
-    <div className={cn("admin-data-table-container space-y-6", className)}>
-      <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl overflow-hidden">
+    <div className={cn("data-table-container space-y-4", className)}>
+      <div className={getTableClassName()}>
         <Table>
           <TableHeader>
-            <TableRow className="bg-gray-50 dark:bg-gray-900">
+            <TableRow className="bg-gray-50 dark:bg-gray-900 border-gray-200 dark:border-gray-700 border-b">
               {columns.map(column => (
                 <TableHead
                   key={column.key}
                   style={{ width: column.width }}
                   className={cn(
-                    "px-3 sm:px-6 py-4 font-semibold text-gray-700 dark:text-gray-200 text-sm sm:text-base",
+                    "px-4 py-3 font-semibold text-gray-700 dark:text-gray-200 text-sm",
+                    "border-r border-gray-200 dark:border-gray-700 last:border-r-0",
                     column.align === "center" && "text-center",
                     column.align === "right" && "text-right",
+                    column.sortable &&
+                      "cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800",
                     column.className
                   )}
                 >
@@ -116,9 +163,14 @@ export function DataTable<T = Record<string, unknown>>({
               <TableRow>
                 <TableCell
                   colSpan={columns.length}
-                  className="h-24 text-gray-500 dark:text-gray-400 text-lg text-center"
+                  className="h-32 text-gray-500 dark:text-gray-400 text-center"
                 >
-                  {emptyText}
+                  <div className="flex flex-col items-center space-y-2">
+                    <div className="font-medium text-lg">{emptyText}</div>
+                    <div className="text-gray-400 text-sm">
+                      Không có dữ liệu để hiển thị
+                    </div>
+                  </div>
                 </TableCell>
               </TableRow>
             ) : (
@@ -126,11 +178,7 @@ export function DataTable<T = Record<string, unknown>>({
                 <TableRow
                   key={getRowKey(record, index)}
                   onClick={() => onRowClick?.(record, index)}
-                  className={
-                    onRowClick
-                      ? getRowClassName(record, index)
-                      : "group hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
-                  }
+                  className={getRowClassName(record, index)}
                 >
                   {columns.map(column => {
                     const value = column.dataIndex
@@ -141,7 +189,8 @@ export function DataTable<T = Record<string, unknown>>({
                       <TableCell
                         key={column.key}
                         className={cn(
-                          "px-3 sm:px-6 py-4 text-gray-800 dark:text-gray-200 text-sm sm:text-base",
+                          "px-4 py-3 text-gray-800 dark:text-gray-200 text-sm",
+                          "border-r border-gray-200 dark:border-gray-700 last:border-r-0",
                           column.align === "center" && "text-center",
                           column.align === "right" && "text-right",
                           column.className
@@ -160,21 +209,29 @@ export function DataTable<T = Record<string, unknown>>({
         </Table>
       </div>
 
-      {pagination && (
-        <div className="bg-white dark:bg-gray-800 px-4 py-4 border-gray-200 dark:border-gray-700 border-t rounded-b-xl">
+      {(pagination || (pageCount && pageIndex !== undefined && pageSize)) && (
+        <div className="bg-white dark:bg-gray-800 px-4 py-3 border border-gray-200 dark:border-gray-700 rounded-lg">
           <Pagination
-            currentPage={pagination.currentPage}
-            totalPages={pagination.totalPages}
-            totalItems={pagination.totalItems}
-            pageSize={pagination.pageSize}
-            onPageChange={pagination.onPageChange}
-            onPageSizeChange={pagination.onPageSizeChange}
-            showPrevNext={pagination.showPrevNext}
-            maxVisiblePages={pagination.maxVisiblePages}
+            currentPage={
+              pagination ? pagination.currentPage : (pageIndex || 0) + 1
+            }
+            totalPages={pagination ? pagination.totalPages : pageCount || 1}
+            totalItems={pagination ? pagination.totalItems : totalItems}
+            pageSize={pagination ? pagination.pageSize : pageSize || 10}
+            onPaginationChange={
+              pagination
+                ? pagination.onPaginationChange
+                : onPaginationChangeAction
+            }
+            onPageChange={pagination?.onPageChange}
+            onPageSizeChange={pagination?.onPageSizeChange}
+            showPrevNext={pagination?.showPrevNext ?? true}
+            maxVisiblePages={pagination?.maxVisiblePages ?? 5}
+            compact={pagination?.compact ?? false}
             loading={loading}
           />
         </div>
       )}
     </div>
   );
-}
+};

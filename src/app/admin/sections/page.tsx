@@ -1,37 +1,89 @@
 "use client";
 
+import { useState, useCallback } from "react";
+import { useRouter } from "next/navigation";
+
 import { AdminContentCard } from "@/components/admin/common/admin-content-card";
 import {
   SectionFilter,
   SectionHeader,
-  createSectionColumns,
-  DataTable,
+  useSectionColumns,
+  adaptColumnsForDataTable,
 } from "./modules";
-import { useSectionManagement } from "@/hooks/admin/useSection";
+import { SECTIONS_CONSTANTS } from "@/constants/sections";
+import { useSections } from "@/hooks";
+import { useDeleteSection } from "@/hooks/admin/useSection/useDeleteSection";
+import type { Section } from "@/lib/types";
+import type { SectionFilterState } from "@/types/admin/section";
+import { IPagination } from "@/types/common";
+import {
+  DEFAULT_PAGE_INDEX,
+  DEFAULT_PAGINATION,
+  DEFAULT_TOTAL_PAGES,
+  DEFAULT_TOTAL,
+} from "@/constants";
+import { DataTable } from "@/components/data-table";
 
 export default function SectionManagementPage(): React.JSX.Element {
-  const {
+  const router = useRouter();
+
+  const [filters, setFilters] = useState<SectionFilterState>(
+    SECTIONS_CONSTANTS.INITIAL_FILTERS
+  );
+
+  const [pagination, setPagination] = useState<IPagination>(DEFAULT_PAGINATION);
+
+  const { sectionsWithPagination, isFetching: sectionsLoading } = useSections({
+    pagination,
     filters,
-    currentPage,
-    pageSize,
-    sections,
-    totalPages,
-    totalItems,
-    isLoading,
-    handleAddSection,
-    handleEditSection,
-    handleDeleteSection,
-    handleFilterChange,
-    handlePageChange,
-    handlePageSizeChange,
-    handleClearFilters,
-  } = useSectionManagement();
+  });
+
+  const { mutate: deleteSection, isLoading: isDeleting } = useDeleteSection();
+
+  const handlePaginationChange = useCallback(
+    (newPagination: IPagination) =>
+      setPagination(prev => ({ ...prev, ...newPagination })),
+    []
+  );
+
+  const isLoading = sectionsLoading || isDeleting;
+
+  // 🔗 Navigation handlers
+  const handleAddSection = () => {
+    router.push(SECTIONS_CONSTANTS.ROUTES.SECTION_CREATE);
+  };
+
+  const handleEditSection = (section: Section) => {
+    router.push(SECTIONS_CONSTANTS.ROUTES.SECTION_EDIT(section.id));
+  };
+
+  const handleDeleteSection = async (section: Section): Promise<void> => {
+    const success = await deleteSection(section);
+    if (success) {
+      // Section deleted successfully - could trigger refresh or other actions
+      // The hook already handles toast notifications
+    }
+  };
+
+  const handleFilterChange = useCallback(
+    (newFilters: SectionFilterState): void => {
+      setFilters(newFilters);
+      setPagination(prev => ({ ...prev, pageIndex: DEFAULT_PAGE_INDEX }));
+    },
+    []
+  );
+
+  const handleClearFilters = useCallback((): void => {
+    setFilters(SECTIONS_CONSTANTS.INITIAL_FILTERS);
+    setPagination(prev => ({ ...prev, pageIndex: DEFAULT_PAGE_INDEX }));
+  }, []);
 
   // Create columns with handlers
-  const columns = createSectionColumns({
-    onEdit: handleEditSection,
-    onDelete: handleDeleteSection,
+  const tanstackColumns = useSectionColumns({
+    onEditAction: handleEditSection,
+    onDeleteAction: handleDeleteSection,
   });
+  const columns = adaptColumnsForDataTable(tanstackColumns);
 
   return (
     <AdminContentCard>
@@ -42,22 +94,19 @@ export default function SectionManagementPage(): React.JSX.Element {
           filters={filters}
           onFilterChange={handleFilterChange}
           onClearFilters={handleClearFilters}
-          onPageReset={() => handlePageChange(1)}
+          onPageReset={() =>
+            setPagination(prev => ({ ...prev, pageIndex: DEFAULT_PAGE_INDEX }))
+          }
         />
 
-        <DataTable
+        <DataTable<Section>
           columns={columns}
-          data={sections}
-          pagination={{
-            currentPage: currentPage,
-            totalPages: totalPages,
-            totalItems: totalItems,
-            pageSize: pageSize,
-            onPageChange: handlePageChange,
-            onPageSizeChange: handlePageSizeChange,
-            showPrevNext: true,
-            maxVisiblePages: 5,
-          }}
+          data={sectionsWithPagination?.data || []}
+          pageCount={sectionsWithPagination?.totalPages || DEFAULT_TOTAL_PAGES}
+          pageIndex={pagination.pageIndex}
+          pageSize={pagination.pageSize}
+          totalItems={sectionsWithPagination?.total || DEFAULT_TOTAL}
+          onPaginationChangeAction={handlePaginationChange}
           loading={isLoading}
         />
       </div>

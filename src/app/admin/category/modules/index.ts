@@ -13,6 +13,3 @@ export * from "./modal";
 
 // Header component
 export * from "./header";
-
-// Re-export DataTable for main page usage
-export * from "@/components/data-table";

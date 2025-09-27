@@ -7,65 +7,56 @@ import { AdminContentCard } from "@/components/admin/common/admin-content-card";
 import {
   PromptFilter,
   PromptHeader,
-  createPromptColumns,
-  DataTable,
+  usePromptColumns,
+  adaptColumnsForDataTable,
 } from "./modules";
 import { PROMPTS_CONSTANTS } from "@/constants/prompts";
+import { usePrompts, useCategories } from "@/hooks";
+import { useDeletePrompt } from "@/hooks/admin/usePrompt/useDeletePrompt";
+import type { Prompt } from "@/lib/types";
+import type { PromptFilterState } from "@/types/admin/prompt";
+import { IPagination } from "@/types/common";
 import {
-  useAdminPromptsQuery,
-  useAdminCategoriesQuery,
-  useDeletePromptMutation,
-} from "@/hooks";
-import type { PromptFilterState } from "@/types/admin";
-import { Prompt } from "@/lib/types";
+  DEFAULT_PAGE_INDEX,
+  DEFAULT_PAGINATION,
+  DEFAULT_TOTAL_PAGES,
+  DEFAULT_TOTAL,
+} from "@/constants";
+import { DataTable } from "@/components/data-table";
 
 export default function PromptManagementPage(): React.JSX.Element {
   const router = useRouter();
 
-  // 🎯 State Management
   const [filters, setFilters] = useState<PromptFilterState>(
     PROMPTS_CONSTANTS.INITIAL_FILTERS
   );
-  const [currentPage, setCurrentPage] = useState(1);
-  const [pageSize, setPageSize] = useState<number>(
-    PROMPTS_CONSTANTS.PAGINATION.DEFAULT_PAGE_SIZE
-  );
 
-  // 🔄 Data Hooks
-  const { searchTerm, categoryId, status, isPremium, tags } = filters;
+  const [pagination, setPagination] = useState<IPagination>(DEFAULT_PAGINATION);
+
   const {
-    data: promptsData,
-    isLoading: promptsLoading,
-    totalPages,
-    totalItems,
-  } = useAdminPromptsQuery({
-    page: currentPage,
-    pageSize: pageSize,
-    search: searchTerm,
-    categoryId: categoryId,
-    status: status,
-    isPremium: isPremium,
-    tags: [...tags],
+    promptsWithPagination,
+    isFetching: promptsLoading,
+    refetch,
+  } = usePrompts({
+    pagination,
+    filters,
   });
 
-  const { categories: categoriesData, isLoading: categoriesLoading } =
-    useAdminCategoriesQuery();
-  const { mutate: deletePrompt } = useDeletePromptMutation();
+  const {
+    categoriesWithPagination: categoriesData,
+    isFetching: categoriesLoading,
+  } = useCategories();
+  const { mutate: deletePrompt, isLoading: isDeleting } = useDeletePrompt();
 
-  const prompts = Array.isArray(promptsData?.data?.data)
-    ? promptsData.data.data
-    : Array.isArray(promptsData?.data)
-      ? promptsData.data
-      : [];
+  const handlePaginationChange = useCallback(
+    (newPagination: IPagination) =>
+      setPagination(prev => ({ ...prev, ...newPagination })),
+    []
+  );
 
-  const isLoading = promptsLoading || categoriesLoading;
+  const isLoading = promptsLoading || categoriesLoading || isDeleting;
 
-  // useEffect(() => {
-  //   if (deleteError) {
-  //     // Handle delete error - could show toast notification
-  //   }
-  // }, [deleteError]);
-
+  // 🔗 Navigation handlers
   const handleAddPrompt = () => {
     router.push(PROMPTS_CONSTANTS.ROUTES.PROMPT_CREATE);
   };
@@ -74,49 +65,39 @@ export default function PromptManagementPage(): React.JSX.Element {
     router.push(PROMPTS_CONSTANTS.ROUTES.PROMPT_EDIT(prompt.id));
   };
 
-  const handleViewPrompt = (prompt: Prompt) => {
-    router.push(PROMPTS_CONSTANTS.ROUTES.PROMPT_VIEW(prompt.id));
-  };
-
-  const handleDeletePrompt = async (id: string | number): Promise<void> => {
-    try {
-      deletePrompt(id);
-    } catch {
-      // Error deleting prompt - could be logged to monitoring service
+  const handleDeletePrompt = async (prompt: Prompt): Promise<void> => {
+    const success = await deletePrompt(prompt);
+    if (success) {
+      refetch();
     }
   };
 
-  const handleTogglePublic = () => {
+  const handleTogglePublic = (prompt: Prompt) => {
     // TODO: Implement toggle public functionality
+    // eslint-disable-next-line no-console
+    console.log("Toggle public for prompt:", prompt.id);
   };
 
   const handleFilterChange = useCallback(
     (newFilters: PromptFilterState): void => {
       setFilters(newFilters);
-      setCurrentPage(1);
-    },
-    []
-  );
-
-  const handlePaginationChange = useCallback(
-    (newPagination: { currentPage?: number; pageSize?: number }) => {
-      if (newPagination.currentPage) setCurrentPage(newPagination.currentPage);
-      if (newPagination.pageSize) setPageSize(newPagination.pageSize);
+      setPagination(prev => ({ ...prev, pageIndex: DEFAULT_PAGE_INDEX }));
     },
     []
   );
 
   const handleClearFilters = useCallback((): void => {
     setFilters(PROMPTS_CONSTANTS.INITIAL_FILTERS);
-    setCurrentPage(1);
+    setPagination(prev => ({ ...prev, pageIndex: DEFAULT_PAGE_INDEX }));
   }, []);
 
-  const columns = createPromptColumns({
-    onEdit: handleEditPrompt,
-    onDelete: handleDeletePrompt,
-    onView: handleViewPrompt,
-    onTogglePublic: handleTogglePublic,
+  // Create columns with handlers
+  const tanstackColumns = usePromptColumns({
+    onEditAction: handleEditPrompt,
+    onDeleteAction: handleDeletePrompt,
+    onTogglePublicAction: handleTogglePublic,
   });
+  const columns = adaptColumnsForDataTable(tanstackColumns);
 
   return (
     <AdminContentCard>
@@ -125,28 +106,22 @@ export default function PromptManagementPage(): React.JSX.Element {
 
         <PromptFilter
           filters={filters}
-          categories={categoriesData}
+          categories={categoriesData?.data || []}
           onFilterChange={handleFilterChange}
           onClearFilters={handleClearFilters}
-          onPageReset={() => setCurrentPage(1)}
+          onPageReset={() =>
+            setPagination(prev => ({ ...prev, pageIndex: DEFAULT_PAGE_INDEX }))
+          }
         />
 
-        <DataTable
+        <DataTable<Prompt>
           columns={columns}
-          data={prompts}
-          pagination={{
-            currentPage: currentPage,
-            totalPages: totalPages,
-            totalItems: totalItems,
-            pageSize: pageSize,
-            onPageChange: (page: number) =>
-              handlePaginationChange({ currentPage: page }),
-            onPageSizeChange: (newPageSize: number) => {
-              handlePaginationChange({ pageSize: newPageSize, currentPage: 1 });
-            },
-            showPrevNext: true,
-            maxVisiblePages: 5,
-          }}
+          data={promptsWithPagination?.data || []}
+          pageCount={promptsWithPagination?.totalPages || DEFAULT_TOTAL_PAGES}
+          pageIndex={pagination.pageIndex}
+          pageSize={pagination.pageSize}
+          totalItems={promptsWithPagination?.total || DEFAULT_TOTAL}
+          onPaginationChangeAction={handlePaginationChange}
           loading={isLoading}
         />
       </div>

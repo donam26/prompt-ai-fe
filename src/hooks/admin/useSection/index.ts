@@ -1,3 +1,2 @@
-export * from "./useSectionManagement";
-export * from "./useAdminSectionsQuery";
-export * from "./useDeleteSectionMutation";
+export * from "./useSections";
+export * from "./useDeleteSection";

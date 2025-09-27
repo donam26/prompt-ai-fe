@@ -1,51 +1,82 @@
-import { apiClient } from "../../base/apiClient";
+import { BaseService } from "../../base/baseService";
 import { ENDPOINTS, QUERY_PARAMS } from "@/constants";
-import { ServiceMethod } from "../../base/types";
+import type { Subscription } from "@/lib/types";
+import type { ApiResponse } from "@/types/common";
 import type { PaginationParams } from "@/types/services/common";
 
 // Subscription service parameters
 export type SubscriptionListParams = PaginationParams;
 
-export class SubscriptionService {
-  // Get subscriptions with pagination
-  getSubPage: ServiceMethod<SubscriptionListParams> = params => {
+/**
+ * SubscriptionService extending BaseService
+ */
+export class SubscriptionService extends BaseService {
+  constructor() {
+    super(ENDPOINTS.SUBSCRIPTIONS.BASE);
+  }
+
+  /**
+   * Get all subscriptions
+   */
+  async getSubscriptions(params?: Record<string, unknown>) {
+    return this.list(params);
+  }
+
+  /**
+   * Get subscriptions with pagination
+   */
+  async getSubscriptionsPage(params?: SubscriptionListParams) {
     const { page = 1, pageSize = 10 } = params || {};
-    return apiClient.get(
-      `${ENDPOINTS.SUBSCRIPTIONS.LIST}?${QUERY_PARAMS.PAGE}=${page}&${QUERY_PARAMS.PAGE_SIZE}=${pageSize}`
-    );
-  };
+    return this.list({
+      [QUERY_PARAMS.PAGE]: page,
+      [QUERY_PARAMS.PAGE_SIZE]: pageSize,
+    });
+  }
 
-  // Create subscription
-  createSub: ServiceMethod<unknown> = data => {
-    return apiClient.post(ENDPOINTS.SUBSCRIPTIONS.BASE, data);
-  };
+  /**
+   * Get subscription by ID
+   */
+  async getSubscription(id: string | number) {
+    return this.getById<Subscription>(id);
+  }
 
-  // Update subscription
-  updateSub: ServiceMethod<{ id: string | number; data: unknown }> = params => {
-    const { id, data } = params || {};
-    return apiClient.put(`${ENDPOINTS.SUBSCRIPTIONS.BASE}/${id}`, data);
-  };
+  /**
+   * Create new subscription
+   */
+  async createSubscription(data: Partial<Subscription>) {
+    return this.create<Subscription, Partial<Subscription>>(data);
+  }
 
-  // Delete subscription
-  deleteSub: ServiceMethod<string | number> = id => {
-    return apiClient.delete(`${ENDPOINTS.SUBSCRIPTIONS.BASE}/${id}`);
-  };
+  /**
+   * Update subscription
+   */
+  async updateSubscription(id: string | number, data: Partial<Subscription>) {
+    return this.update<Subscription, Partial<Subscription>>(id, data);
+  }
 
-  // Get subscription by duration
-  getSubDuration: ServiceMethod<string> = duration => {
-    return apiClient.get(
-      `${ENDPOINTS.SUBSCRIPTIONS.BY_DURATION}?${QUERY_PARAMS.DURATION}=${duration}`
-    );
-  };
+  /**
+   * Delete subscription
+   */
+  async deleteSubscription(id: string | number): Promise<ApiResponse<void>> {
+    return this.delete<void>(id);
+  }
 
-  // Get subscription by duration and type
-  getSubByDurationAndType: ServiceMethod<{ duration: string; type: string }> =
-    params => {
-      const { duration, type } = params || {};
-      return apiClient.get(
-        `${ENDPOINTS.SUBSCRIPTIONS.BY_DURATION_AND_TYPE}?${QUERY_PARAMS.DURATION}=${duration}&type=${type}`
-      );
-    };
+  /**
+   * Get subscription by duration
+   */
+  async getSubscriptionByDuration(duration: string) {
+    return this.list({ [QUERY_PARAMS.DURATION]: duration });
+  }
+
+  /**
+   * Get subscription by duration and type
+   */
+  async getSubscriptionByDurationAndType(duration: string, type: string) {
+    return this.list({
+      [QUERY_PARAMS.DURATION]: duration,
+      type,
+    });
+  }
 }
 
 // Export singleton instance

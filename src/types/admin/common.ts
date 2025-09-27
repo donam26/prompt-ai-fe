@@ -1,3 +1,4 @@
+import type { UserSubscription } from "@/types/user";
 export interface User {
   id: string | number;
   full_name: string;
@@ -9,18 +10,6 @@ export interface User {
   userSub?: UserSubscription;
   avatar?: string;
   created_at?: string;
-}
-
-export interface UserSubscription {
-  id: string | number;
-  user_id: string | number;
-  subscription_id: string | number;
-  subscription?: Subscription;
-  start_date: string;
-  end_date: string;
-  status: string;
-  created_at: string;
-  updated_at: string;
 }
 
 export interface Subscription {
@@ -205,14 +194,6 @@ export interface DeviceLog {
   created_at: string;
 }
 
-export interface PaginatedResponse<T = unknown> {
-  data: T[];
-  total: number;
-  page: number;
-  pageSize: number;
-  totalPages: number;
-}
-
 export interface LoginRequest {
   email: string;
   password?: string;
@@ -332,17 +313,6 @@ export interface SearchFilters {
   sub_type?: string | number;
   status?: string;
   type?: string | number;
-}
-
-export interface TableColumn {
-  key: string;
-  title: string;
-  dataIndex?: string;
-  render?: (value: unknown, record: unknown, index: number) => React.ReactNode;
-  sorter?: boolean;
-  filterable?: boolean;
-  width?: number | string;
-  align?: "left" | "center" | "right";
 }
 
 export interface AdminStats {

@@ -4,20 +4,20 @@ import React from "react";
 import { BaseTextField, BaseTextareaField } from "@/components/ui/base";
 import { BlogFormSkeleton } from "@/components/ui/skeleton";
 import { FORM_CONSTANTS } from "@/constants";
-import type { BlogFormData } from "@/types/admin/blog";
+import type { BlogFormSchema } from "@/libs/form-schemas";
 
 // Import components
-import { StatusSelect } from "./components/status-select";
-import { CategorySelect } from "./components/category-select";
-import { TagsInput } from "./components/tags-input";
-import { FeaturedImageInput } from "./components/featured-image-input";
+import { StatusSelect } from "./status-select";
+import { CategorySelect } from "./category-select";
+import { TagsInput } from "./tags-input";
+import { FeaturedImageInput } from "./featured-image-input";
 
 export interface BlogFormProps {
-  readonly formData: BlogFormData;
-  readonly errors: Partial<Record<keyof BlogFormData, string>>;
+  readonly formData: BlogFormSchema;
+  readonly errors: any;
   readonly isLoading?: boolean;
   readonly onFieldChange: (
-    field: keyof BlogFormData,
+    field: keyof BlogFormSchema,
     value: string | string[]
   ) => void;
   readonly onSubmit: (e: React.FormEvent) => void;
@@ -31,7 +31,7 @@ export const BlogForm = ({
   onSubmit,
 }: BlogFormProps): React.JSX.Element => {
   const handleFieldChange = (
-    field: keyof BlogFormData,
+    field: keyof BlogFormSchema,
     value: string | string[]
   ) => {
     onFieldChange(field, value);

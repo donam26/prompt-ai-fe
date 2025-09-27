@@ -10,9 +10,5 @@ import { AdminSidebar as ModernSidebar } from "@/components/admin/sidebar/sideba
 export function AdminSidebar(): React.JSX.Element {
   const [collapsed, setCollapsed] = useState(false);
 
-  const handleToggle = (): void => {
-    setCollapsed(!collapsed);
-  };
-
-  return <ModernSidebar collapsed={collapsed} onToggle={handleToggle} />;
+  return <ModernSidebar className={collapsed ? "w-0" : "w-64"} />;
 }

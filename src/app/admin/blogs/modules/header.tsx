@@ -3,7 +3,9 @@
 import { Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogTrigger } from "@/components/ui/dialog";
-import type { BlogHeaderProps } from "@/types/admin";
+interface BlogHeaderProps {
+  onAddBlog: () => void;
+}
 
 /**
  * Blog page header component

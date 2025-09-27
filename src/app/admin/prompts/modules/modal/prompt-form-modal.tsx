@@ -16,14 +16,8 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import type { PromptFormDialogProps, PromptFormData } from "@/types/admin";
+import type { PromptFormData } from "@/types/admin";
 
-/**
- * Prompt form modal component
- *
- * @param props - The component props
- * @returns The prompt form modal JSX
- */
 export const PromptFormModal = ({
   isOpen,
   onOpenChange,
@@ -33,7 +27,7 @@ export const PromptFormModal = ({
   onSubmit,
   categories,
   onReset,
-}: PromptFormDialogProps): React.JSX.Element => {
+}: any): React.JSX.Element => {
   const handleFormDataChange = (
     field: keyof PromptFormData,
     value: string | boolean | string[]
@@ -226,8 +220,8 @@ const CategorySelect = ({
   onChange: (value: string) => void;
 }): React.JSX.Element => {
   const categoryOptions = categories.map(category => ({
-    value: category.id.toString(),
-    label: category.name,
+    id: category.id.toString(),
+    name: category.name,
   }));
 
   return (
@@ -266,7 +260,7 @@ const TagsSelect = ({
 
   return (
     <MultiSelect
-      items={tagOptions}
+      options={tagOptions}
       defaultValue={value}
       onValueChange={onChange}
       placeholder="Chọn tags..."

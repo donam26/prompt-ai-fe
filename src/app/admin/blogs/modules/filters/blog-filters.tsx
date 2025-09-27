@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { debounce } from "@/lib/utils";
-import type { BlogFilterProps, BlogFilterState } from "@/types/admin";
+import type { BlogFilterProps, BlogFilterState } from "@/types/admin/blog";
 
 /**
  * Blog filter component with search, status, category, and date range filters

@@ -1,53 +1,67 @@
-import { apiClient, buildUrlWithParams } from "../../base/apiClient";
+import { BaseService } from "../../base/baseService";
 import { ENDPOINTS } from "@/constants";
-import { ServiceMethod } from "../../base/types";
+import type { Coupon } from "@/lib/types";
+import type { ApiResponse } from "@/types/common";
 
-// Coupon service parameters
-export interface CouponListParams {
-  [key: string]: unknown;
-}
+/**
+ * CouponService extending BaseService
+ */
+export class CouponService extends BaseService {
+  constructor() {
+    super(ENDPOINTS.COUPONS.BASE);
+  }
 
-export class CouponService {
-  // Get coupons list
-  getListCoupon: ServiceMethod<CouponListParams> = params => {
-    const queryString =
-      buildUrlWithParams(ENDPOINTS.COUPONS.BASE, params).split("?")[1] || "";
-    return apiClient.get(`${ENDPOINTS.COUPONS.BASE}?${queryString}`);
-  };
+  /**
+   * Get all coupons
+   */
+  async getCoupons(params?: Record<string, unknown>) {
+    return this.list(params);
+  }
 
-  // Create coupon
-  createCoupon: ServiceMethod<unknown> = data => {
-    return apiClient.post(ENDPOINTS.COUPONS.BASE, data);
-  };
+  /**
+   * Get coupon by ID
+   */
+  async getCoupon(id: string | number) {
+    return this.getById<Coupon>(id);
+  }
 
-  // Update coupon
-  updateCoupon: ServiceMethod<{ id: string | number; data: unknown }> =
-    params => {
-      const { id, data } = params || {};
-      return apiClient.put(`${ENDPOINTS.COUPONS.BASE}/${id}`, data);
-    };
+  /**
+   * Create new coupon
+   */
+  async createCoupon(data: Partial<Coupon>) {
+    return this.create<Coupon, Partial<Coupon>>(data);
+  }
 
-  // Delete coupon
-  deleteCoupon: ServiceMethod<string | number> = id => {
-    return apiClient.delete(`${ENDPOINTS.COUPONS.BASE}/${id}`);
-  };
+  /**
+   * Update coupon
+   */
+  async updateCoupon(id: string | number, data: Partial<Coupon>) {
+    return this.update<Coupon, Partial<Coupon>>(id, data);
+  }
 
-  // Get coupon users
-  getCouponUsers: ServiceMethod<string | number> = id => {
-    return apiClient.get(
-      `${ENDPOINTS.COUPONS.BASE}/${id}${ENDPOINTS.COUPONS.USERS}`
-    );
-  };
+  /**
+   * Delete coupon
+   */
+  async deleteCoupon(id: string | number): Promise<ApiResponse<void>> {
+    return this.delete<void>(id);
+  }
 
-  // Validate coupon
-  validateCoupon: ServiceMethod<{ code: string; totalPrice: number }> =
-    params => {
-      const { code, totalPrice } = params || {};
-      return apiClient.post(ENDPOINTS.COUPONS.VALIDATE, {
-        code,
-        total: totalPrice,
-      });
-    };
+  /**
+   * Get coupon users
+   */
+  async getCouponUsers(id: string | number) {
+    return this.getById(`${id}${ENDPOINTS.COUPONS.USERS}`);
+  }
+
+  /**
+   * Validate coupon
+   */
+  async validateCoupon(code: string, totalPrice: number) {
+    return this.post(ENDPOINTS.COUPONS.VALIDATE, {
+      code,
+      total: totalPrice,
+    });
+  }
 }
 
 // Export singleton instance

@@ -42,7 +42,7 @@ export class UserService {
    * @param id - User ID
    * @returns Promise with user data
    */
-  async getUserById(id: string | number): Promise<User> {
+  async getUserById(id: string) {
     const response = await apiClient.get(`/admin/users/${id}`);
     return response.data;
   }
@@ -95,6 +95,18 @@ export class UserService {
    */
   async deleteUser(id: string | number): Promise<void> {
     await apiClient.delete(`/admin/users/${id}`);
+  }
+
+  async resendOTP(email: string) {
+    return await apiClient.post("/admin/users/resend-otp", { email });
+  }
+
+  async verifyOTP(email: string, otp: string) {
+    return await apiClient.post("/admin/users/verify-otp", { email, otp });
+  }
+
+  async loginUser(email: string) {
+    return await apiClient.post("/admin/users/login", { email });
   }
 }
 

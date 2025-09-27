@@ -1,8 +1,4 @@
-/**
- * User hooks exports
- */
-
-export * from "./useAdminUsersQuery";
-export * from "./useCreateUserMutation";
-export * from "./useUpdateUserMutation";
-export * from "./useDeleteUserMutation";
+export * from "./useUsers";
+export * from "./useDeleteUser";
+export * from "./useUpsertUser";
+export * from "./useUserDetail";

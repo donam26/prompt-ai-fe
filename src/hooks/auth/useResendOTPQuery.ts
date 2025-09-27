@@ -1,7 +1,6 @@
 import { useMutation } from "@tanstack/react-query";
 import { userService } from "@/services";
 import { showToast } from "@/components/ui/toast";
-import type { UserResendOTPResponse } from "@/types";
 
 interface UseResendOTPQueryResult {
   isLoading: boolean;
@@ -13,10 +12,10 @@ export const useResendOTPQuery = (): UseResendOTPQueryResult => {
   const resendOTPMutation = useMutation({
     mutationFn: async (email: string) => {
       const response = await userService.resendOTP(email);
-      return response.data as UserResendOTPResponse;
+      return response.data.data;
     },
-    onSuccess: (data: UserResendOTPResponse) => {
-      const message = data.message || "Mã OTP mới đã được gửi";
+    onSuccess: () => {
+      const message = "Mã OTP mới đã được gửi";
       showToast.success(message, {
         title: "Gửi lại mã OTP thành công",
         description: "Vui lòng kiểm tra email của bạn",

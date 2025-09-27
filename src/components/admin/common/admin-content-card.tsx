@@ -24,7 +24,7 @@ export function AdminContentCard({
   children,
   title,
   description,
-  padding = "md",
+  padding = "none",
   className,
 }: AdminContentCardProps): React.JSX.Element {
   const paddingClasses = {
@@ -35,7 +35,12 @@ export function AdminContentCard({
   };
 
   return (
-    <Card className={cn("admin-content-card", className)}>
+    <Card
+      className={cn(
+        "bg-white dark:bg-gray-800 shadow-lg border border-gray-200 dark:border-gray-700 rounded-xl overflow-hidden",
+        className
+      )}
+    >
       {(title || description) && (
         <CardHeader className="pb-4">
           {title && (

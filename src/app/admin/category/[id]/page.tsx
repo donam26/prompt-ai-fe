@@ -1,105 +1,83 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { useParams, useRouter } from "next/navigation";
-import { ArrowLeft } from "lucide-react";
-
-import { AdminContentCard } from "@/components/admin/common/admin-content-card";
-import { Button } from "@/components/ui/button";
-import { useAdminCategoriesQuery } from "@/hooks";
-import { CategoryDetail } from "./modules";
-import { CATEGORY_CONSTANTS } from "@/constants/category";
 import type { Category } from "@/lib/types";
+import { useParams, useRouter } from "next/navigation";
+import { useCallback, useEffect } from "react";
+import {
+  useCategoryDetail,
+  useUpsertCategory,
+} from "@/hooks/admin/useCategory";
+import { FormSkeleton } from "@/components/ui/skeleton";
+import { showToast } from "@/components/ui/toast";
+import { CATEGORY_CONSTANTS } from "@/constants/category";
+import { FormMode } from "@/constants/common.constants";
+import { CategoryForm } from "./modules/category-form";
 
-export default function CategoryDetailPage(): React.JSX.Element {
-  const params = useParams();
+export default function CategoryDetailsPage() {
+  const { id } = useParams<{ id?: string }>();
   const router = useRouter();
-  const categoryId = params.id as string;
 
-  const [category, setCategory] = useState<Category | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [isDeleting, setIsDeleting] = useState(false);
+  const formMode = id === "create" ? FormMode.CREATE : FormMode.EDIT;
+  const isCreateMode = formMode === FormMode.CREATE;
+  const categoryIdToUpdate = isCreateMode ? undefined : id;
 
-  // Fetch category data
-  const { categories, isLoading: categoriesLoading } = useAdminCategoriesQuery({
-    page: 1,
-    pageSize: 1000, // Get all categories to find the specific one
-  });
+  const {
+    category: categoryData,
+    isLoading,
+    error: categoryDetailError,
+  } = useCategoryDetail(categoryIdToUpdate);
+  const {
+    mutate: upsertCategory,
+    isUpserting,
+    error: upsertCategoryError,
+  } = useUpsertCategory();
+
+  const handleSave = useCallback(
+    async (data: Partial<Category>) => {
+      const result = await upsertCategory(data, categoryIdToUpdate);
+      if (result) {
+        showToast.success(
+          categoryIdToUpdate
+            ? "Category updated successfully"
+            : "Category created successfully"
+        );
+        router.push(CATEGORY_CONSTANTS.ROUTES.CATEGORY_LIST);
+      }
+    },
+    [categoryIdToUpdate, upsertCategory, router]
+  );
+
+  const handleCancel = useCallback(() => {
+    router.push(CATEGORY_CONSTANTS.ROUTES.CATEGORY_LIST);
+  }, [router]);
 
   useEffect(() => {
-    if (!categoriesLoading && categories) {
-      const foundCategory = categories.find(
-        cat => cat.id.toString() === categoryId
-      );
-      setCategory(foundCategory || null);
-      setIsLoading(false);
+    const errorMessage = categoryDetailError || upsertCategoryError;
+    if (!errorMessage) {
+      return;
     }
-  }, [categories, categoriesLoading, categoryId]);
-
-  const handleEdit = () => {
-    router.push(`/admin/category/${categoryId}`);
-  };
-
-  const handleDelete = async () => {
-    if (!category) return;
-
-    setIsDeleting(true);
-    try {
-      // TODO: Implement delete mutation
-      console.log("Deleting category:", category.id);
-      // await deleteCategoryMutation.mutate(category.id);
+    showToast.error(errorMessage);
+    if (categoryDetailError) {
       router.push(CATEGORY_CONSTANTS.ROUTES.CATEGORY_LIST);
-    } catch (error) {
-      console.error("Error deleting category:", error);
-    } finally {
-      setIsDeleting(false);
     }
-  };
+  }, [categoryDetailError, upsertCategoryError, router]);
 
-  const handleBack = () => {
-    router.push(CATEGORY_CONSTANTS.ROUTES.CATEGORY_LIST);
-  };
-
-  if (!category && !isLoading) {
-    return (
-      <AdminContentCard>
-        <div className="py-12 text-center">
-          <h2 className="mb-2 font-semibold text-gray-900 text-2xl">
-            Category not found
-          </h2>
-          <Button onClick={handleBack} variant="outline">
-            <ArrowLeft className="mr-2 w-4 h-4" />
-            Back to Categories
-          </Button>
-        </div>
-      </AdminContentCard>
-    );
+  if (isLoading) {
+    return <FormSkeleton />;
   }
 
-  if (!category) {
-    return (
-      <AdminContentCard>
-        <CategoryDetail
-          category={{} as Category}
-          isLoading={true}
-          onEdit={handleEdit}
-          onDelete={handleDelete}
-          onBack={handleBack}
-        />
-      </AdminContentCard>
-    );
+  if (isUpserting) {
+    return <FormSkeleton />;
   }
 
   return (
-    <AdminContentCard>
-      <CategoryDetail
-        category={category}
-        isLoading={isLoading}
-        isDeleting={isDeleting}
-        onEdit={handleEdit}
-        onDelete={handleDelete}
-        onBack={handleBack}
-      />
-    </AdminContentCard>
+    <CategoryForm
+      category={categoryData}
+      mode={formMode}
+      onSave={handleSave}
+      onCancel={handleCancel}
+      isSaving={isUpserting}
+      isLoading={isLoading}
+    />
   );
 }

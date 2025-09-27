@@ -1,6 +1,7 @@
-import { apiClient, buildUrlWithParams } from "../../base/apiClient";
+import { BaseService } from "../../base/baseService";
 import { ENDPOINTS, QUERY_PARAMS } from "@/constants";
-import { ServiceMethod } from "../../base/types";
+import type { Contact } from "@/lib/types";
+import type { ApiResponse } from "@/types/common";
 import type { PaginationParams } from "@/types/services/common";
 
 // Contact service parameters
@@ -9,55 +10,82 @@ export interface ContactListParams extends PaginationParams {
   type?: number;
 }
 
-export class ContactService {
-  // Get all contacts
-  getContacts: ServiceMethod = () => {
-    return apiClient.get(ENDPOINTS.CONTACTS.BASE);
-  };
+/**
+ * ContactService extending BaseService
+ */
+export class ContactService extends BaseService {
+  constructor() {
+    super(ENDPOINTS.CONTACTS.BASE);
+  }
 
-  // Get contacts with pagination
-  getContactsPage: ServiceMethod<ContactListParams> = params => {
+  /**
+   * Get all contacts
+   */
+  async getContacts(params?: Record<string, unknown>) {
+    return this.list(params);
+  }
+
+  /**
+   * Get contacts with pagination
+   */
+  async getContactsPage(params?: ContactListParams) {
     const { page = 1, pageSize = 10, status, type = 1 } = params || {};
-    return apiClient.get(
-      `${ENDPOINTS.CONTACTS.LIST}?${QUERY_PARAMS.PAGE}=${page}&${QUERY_PARAMS.PAGE_SIZE}=${pageSize}&${QUERY_PARAMS.STATUS}=${status}&type=${type}`
-    );
-  };
-
-  // Export contacts to Excel
-  exportContactsExcel: ServiceMethod<Record<string, unknown>> = (
-    filters,
-    config
-  ) => {
-    const queryString =
-      buildUrlWithParams(ENDPOINTS.CONTACTS.EXPORT, filters).split("?")[1] ||
-      "";
-    return apiClient.get(`${ENDPOINTS.CONTACTS.EXPORT}?${queryString}`, {
-      responseType: "blob",
-      ...config,
+    return this.list({
+      [QUERY_PARAMS.PAGE]: page,
+      [QUERY_PARAMS.PAGE_SIZE]: pageSize,
+      [QUERY_PARAMS.STATUS]: status,
+      type,
     });
-  };
+  }
 
-  // Send contact message
-  sendContacts: ServiceMethod<unknown> = data => {
-    return apiClient.post(ENDPOINTS.CONTACTS.BASE, data);
-  };
+  /**
+   * Get contact by ID
+   */
+  async getContact(id: string | number) {
+    return this.getById<Contact>(id);
+  }
 
-  // Reply to contact
-  repContacts: ServiceMethod<{ id: string | number; data: unknown }> =
-    params => {
-      const { id, data } = params || {};
-      return apiClient.put(`${ENDPOINTS.CONTACTS.BASE}/${id}`, { reply: data });
-    };
+  /**
+   * Create new contact
+   */
+  async createContact(data: Partial<Contact>) {
+    return this.create<Contact, Partial<Contact>>(data);
+  }
 
-  // Send survey mail
-  sendMail: ServiceMethod<unknown> = data => {
-    return apiClient.post(ENDPOINTS.CONTACTS.SURVEY, data);
-  };
+  /**
+   * Update contact
+   */
+  async updateContact(id: string | number, data: Partial<Contact>) {
+    return this.update<Contact, Partial<Contact>>(id, data);
+  }
 
-  // Send test survey mail
-  sendMailTest: ServiceMethod<unknown> = data => {
-    return apiClient.post(ENDPOINTS.CONTACTS.SURVEY_TEST, data);
-  };
+  /**
+   * Delete contact
+   */
+  async deleteContact(id: string | number): Promise<ApiResponse<void>> {
+    return this.delete<void>(id);
+  }
+
+  /**
+   * Reply to contact
+   */
+  async replyContact(id: string | number, reply: string) {
+    return this.update(id, { reply });
+  }
+
+  /**
+   * Send survey mail
+   */
+  async sendSurveyMail(data: unknown) {
+    return this.post(ENDPOINTS.CONTACTS.SURVEY, data);
+  }
+
+  /**
+   * Send test survey mail
+   */
+  async sendTestSurveyMail(data: unknown) {
+    return this.post(ENDPOINTS.CONTACTS.SURVEY_TEST, data);
+  }
 }
 
 // Export singleton instance

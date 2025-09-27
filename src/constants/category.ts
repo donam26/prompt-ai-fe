@@ -1,6 +1,20 @@
 import type { FilterState } from "@/types/admin";
 
 /**
+ * Category enums
+ */
+export enum CategoryType {
+  STANDARD = "standard",
+  PREMIUM = "premium",
+}
+
+export enum SectionType {
+  CHATGPT = "1",
+  CLAUDE = "2",
+  GEMINI = "3",
+}
+
+/**
  * Category constants following Berklee pattern
  */
 export const CATEGORY_CONSTANTS = {
@@ -53,5 +67,18 @@ export const CATEGORY_CONSTANTS = {
   API: {
     CATEGORIES: "/api/admin/categories",
     CATEGORY_BY_ID: (id: string | number) => `/api/admin/categories/${id}`,
+  },
+
+  // Form options
+  FORM_OPTIONS: {
+    SECTION_OPTIONS: [
+      { value: SectionType.CHATGPT, label: "ChatGPT" },
+      { value: SectionType.CLAUDE, label: "Claude" },
+      { value: SectionType.GEMINI, label: "Gemini" },
+    ],
+    TYPE_OPTIONS: [
+      { value: CategoryType.STANDARD, label: "Standard" },
+      { value: CategoryType.PREMIUM, label: "Premium" },
+    ],
   },
 } as const;

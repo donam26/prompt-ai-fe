@@ -1,6 +1,5 @@
-import React from "react";
-// import { User } from "lucide-react";
-
+import type { ColumnDef } from "@tanstack/react-table";
+import type { User as UserType } from "@/lib/types";
 import { Column } from "@/components/data-table/data-table";
 import {
   ImageCell,
@@ -8,136 +7,166 @@ import {
   BadgeCell,
   ActionsCell,
 } from "@/components/table-cell";
-import type { User as UserType } from "@/lib/types";
-import type { UserColumnHandlers } from "@/types/admin";
 
-/**
- * Base user columns configuration with responsive widths
- */
-export const userColumns: Column<UserType>[] = [
-  {
-    key: "avatar",
-    title: "Ảnh đại diện",
-    width: 80,
-    align: "center",
-    className: "hidden sm:table-cell",
-    render: (_, user) => (
-      <ImageCell
-        src={user.avatar || user.image}
-        alt={user.name || user.fullName || "User"}
-        size="sm"
-      />
-    ),
-  },
-  {
-    key: "name",
-    title: "Tên người dùng",
-    dataIndex: "name",
-    className: "font-semibold text-gray-900 min-w-[200px] max-w-[280px]",
-    render: (_, user) => (
-      <div className="flex flex-col space-y-1">
-        <div className="flex items-center gap-2">
-          <span
-            className="font-semibold text-gray-900 truncate"
-            title={user.name || user.fullName || "Unknown User"}
-          >
-            {user.name || user.fullName || "Unknown User"}
-          </span>
-          {user.isVerified && <BadgeCell label="Verified" variant="success" />}
+interface Props {
+  onEditAction: (user: UserType) => void;
+  onDeleteAction: (user: UserType) => void;
+}
+
+export function useUserColumns({
+  onEditAction,
+  onDeleteAction,
+}: Props): ColumnDef<UserType>[] {
+  return [
+    {
+      accessorKey: "avatar",
+      meta: { title: "Ảnh đại diện" },
+      header: () => (
+        <div className="w-full font-medium text-center">Ảnh đại diện</div>
+      ),
+      cell: ({ row }) => (
+        <div className="hidden sm:flex justify-center">
+          <ImageCell
+            src={row.original.avatar}
+            alt={row.original.full_name || "User"}
+            size="sm"
+          />
         </div>
-        <span
-          className="max-w-[240px] text-gray-500 text-sm truncate"
-          title={user.email}
-        >
-          {user.email}
-        </span>
-        {user.phone && (
-          <span
-            className="max-w-[240px] text-gray-400 text-xs truncate"
-            title={user.phone}
-          >
-            {user.phone}
-          </span>
-        )}
-      </div>
-    ),
-  },
-  {
-    key: "role",
-    title: "Vai trò",
-    width: 120,
-    className: "hidden md:table-cell",
-    render: (_, user) => (
-      <BadgeCell
-        label={user.role || "User"}
-        variant={user.role === "admin" ? "destructive" : "secondary"}
-        maxWidth="max-w-[100px]"
-      />
-    ),
-  },
-  {
-    key: "status",
-    title: "Trạng thái",
-    width: 120,
-    align: "center",
-    className: "min-w-[100px]",
-    render: (_, user) => (
-      <StatusCell
-        isActive={user.status === "active" || user.isActive}
-        isComingSoon={user.status === "suspended"}
-      />
-    ),
-  },
-  {
-    key: "createdAt",
-    title: "Ngày tạo",
-    width: 140,
-    className: "hidden lg:table-cell",
-    render: (_, user) => (
-      <span className="text-gray-600 text-sm">
-        {user.createdAt
-          ? new Date(user.createdAt).toLocaleDateString("vi-VN")
-          : "N/A"}
-      </span>
-    ),
-  },
-  {
-    key: "actions",
-    title: "Thao tác",
-    width: 140,
-    align: "center",
-    className: "min-w-[120px]",
-    render: (_, user, index, context) => {
-      const handlers = (context as UserColumnHandlers) || {};
-      return (
-        <ActionsCell
-          item={user}
-          onEdit={handlers.onEdit}
-          onDelete={item => handlers.onDelete?.(item.id)}
-          onView={handlers.onView}
-        />
-      );
+      ),
+      enableSorting: false,
     },
-  },
-];
+    {
+      accessorKey: "name",
+      meta: { title: "Tên người dùng" },
+      header: () => <div className="font-medium">Tên người dùng</div>,
+      cell: ({ row }) => (
+        <div className="flex flex-col space-y-1 min-w-[200px] max-w-[280px]">
+          <div className="flex items-center gap-2">
+            <span
+              className="font-semibold text-gray-900 truncate"
+              title={row.original.full_name || "Unknown User"}
+            >
+              {row.original.full_name || "Unknown User"}
+            </span>
+            {row.original.role_id === 1 && (
+              <BadgeCell label="Admin" variant="secondary" />
+            )}
+          </div>
+          <span
+            className="max-w-[240px] text-gray-500 text-sm truncate"
+            title={row.original.email}
+          >
+            {row.original.email}
+          </span>
+        </div>
+      ),
+    },
+    {
+      accessorKey: "role",
+      meta: { title: "Vai trò" },
+      header: () => <div className="hidden md:block font-medium">Vai trò</div>,
+      cell: ({ row }) => (
+        <div className="hidden md:block">
+          <BadgeCell
+            label={row.original.role_id === 1 ? "Admin" : "User"}
+            variant="secondary"
+            maxWidth="max-w-[100px]"
+          />
+        </div>
+      ),
+      enableSorting: false,
+    },
+    {
+      accessorKey: "status",
+      meta: { title: "Trạng thái" },
+      header: () => (
+        <div className="w-full font-medium text-center">Trạng thái</div>
+      ),
+      cell: () => (
+        <div className="flex justify-center items-center min-w-[100px]">
+          <StatusCell isActive={true} isComingSoon={false} />
+        </div>
+      ),
+      enableSorting: false,
+    },
+    {
+      accessorKey: "created_at",
+      meta: { title: "Ngày tạo" },
+      header: () => <div className="hidden lg:block font-medium">Ngày tạo</div>,
+      cell: ({ row }) => (
+        <div className="hidden lg:block">
+          <span className="text-gray-600 text-sm">
+            {row.original.created_at
+              ? new Date(row.original.created_at).toLocaleDateString("vi-VN")
+              : "N/A"}
+          </span>
+        </div>
+      ),
+      enableSorting: false,
+    },
+    {
+      id: "actions",
+      meta: { title: "Thao tác" },
+      header: () => <div className="font-medium text-center">Thao tác</div>,
+      cell: ({ row }) => (
+        <div className="flex justify-center items-center min-w-[120px]">
+          <ActionsCell
+            item={row.original}
+            onEdit={onEditAction}
+            onDelete={onDeleteAction}
+          />
+        </div>
+      ),
+      enableSorting: false,
+    },
+  ];
+}
 
 /**
- * Creates user columns with custom handlers
- *
- * @param handlers - The column handlers
- * @returns The configured user columns
+ * Legacy function for backward compatibility
+ * @deprecated Use useUserColumns instead
  */
-export const createUserColumns = (
-  handlers: UserColumnHandlers
+export const createUserColumns = (handlers: Props): ColumnDef<UserType>[] => {
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  return useUserColumns(handlers);
+};
+
+/**
+ * Adapter function to convert TanStack Table columns to custom DataTable columns
+ */
+export const adaptColumnsForDataTable = (
+  tanstackColumns: ColumnDef<UserType>[]
 ): Column<UserType>[] => {
-  return userColumns.map(column => {
-    if (column.key === "actions") {
-      return {
-        ...column,
-        render: (value, user, index) =>
-          column.render?.(value, user, index, handlers),
-      };
-    }
-    return column;
+  return tanstackColumns.map(col => {
+    const accessorKey = "accessorKey" in col ? col.accessorKey : "";
+    const id = "id" in col ? col.id : "";
+    const title = (col.meta as any)?.title || "";
+
+    return {
+      key: accessorKey || id || "",
+      title,
+      render: (_: unknown, record: UserType, index: number) => {
+        if (col.cell && typeof col.cell === "function") {
+          try {
+            return (col.cell as any)({
+              row: { original: record, index },
+              getValue: () =>
+                accessorKey ? record[accessorKey as keyof UserType] : undefined,
+              column: col,
+              table: {},
+              cell: {},
+              renderValue: () =>
+                accessorKey ? record[accessorKey as keyof UserType] : undefined,
+            });
+          } catch {
+            return accessorKey ? record[accessorKey as keyof UserType] : "";
+          }
+        }
+        return accessorKey ? record[accessorKey as keyof UserType] : "";
+      },
+      width: 200,
+      align: "left" as const,
+      className: "",
+    };
   });
 };

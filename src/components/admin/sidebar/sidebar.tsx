@@ -61,13 +61,13 @@ export function AdminSidebar({
           className={`bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 transition-all duration-300 ease-in-out overflow-hidden rounded-b-2xl ${
             isMobileExpanded ? "max-h-[80vh] opacity-100" : "max-h-0 opacity-0"
           }`}
+          style={{
+            transform: isMobileExpanded ? "translateX(0)" : "translateX(-100%)",
+            transition: "transform 300ms ease-in-out",
+          }}
         >
           <div className="max-h-[80vh] overflow-y-auto">
-            <SidebarNavigation
-              collapsed={false}
-              isMobile
-              onItemClick={onItemClick}
-            />
+            <SidebarNavigation collapsed={false} onItemClick={onItemClick} />
           </div>
         </div>
       </div>

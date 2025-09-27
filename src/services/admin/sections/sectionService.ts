@@ -1,65 +1,55 @@
-import { apiClient } from "@/services/base/apiClient";
+import { BaseService } from "../../base/baseService";
+import { ENDPOINTS } from "@/constants";
 import type { Section } from "@/lib/types";
+import type { ApiResponse } from "@/types/common";
 
 /**
- * Service for managing sections
+ * SectionService extending BaseService
  */
-export const sectionService = {
+export class SectionService extends BaseService {
+  constructor() {
+    super(ENDPOINTS.SECTIONS.BASE);
+  }
+
   /**
    * Get sections with pagination and filtering
    */
-  async getSectionsPage(params: {
-    page?: number;
-    pageSize?: number;
-    search?: string;
-    status?: string;
-  }) {
-    const searchParams = new URLSearchParams();
-
-    if (params.page) searchParams.append("page", params.page.toString());
-    if (params.pageSize)
-      searchParams.append("pageSize", params.pageSize.toString());
-    if (params.search) searchParams.append("search", params.search);
-    if (params.status && params.status !== "all")
-      searchParams.append("status", params.status);
-
-    const queryString = searchParams.toString();
-    const url = `/admin/sections${queryString ? `?${queryString}` : ""}`;
-
-    return apiClient.get(url);
-  },
+  async getSectionsPage(params?: Record<string, unknown>) {
+    return this.list(params);
+  }
 
   /**
-   * Get a single section by ID
+   * Get section by ID
    */
-  async getSection(id: string | number): Promise<Section> {
-    const response = await apiClient.get(`/admin/sections/${id}`);
-    return response.data;
-  },
+  async getSection(id: string | number) {
+    const response = await this.getById<Section>(id);
+    return {
+      success: response.success,
+      data: response.data,
+    };
+  }
 
   /**
-   * Create a new section
+   * Create new section
    */
-  async createSection(data: Partial<Section>): Promise<Section> {
-    const response = await apiClient.post("/admin/sections", data);
-    return response.data;
-  },
+  async createSection(data: Partial<Section>) {
+    return await this.create<Section, Partial<Section>>(data);
+  }
 
   /**
-   * Update an existing section
+   * Update section
    */
-  async updateSection(
-    id: string | number,
-    data: Partial<Section>
-  ): Promise<Section> {
-    const response = await apiClient.put(`/admin/sections/${id}`, data);
-    return response.data;
-  },
+  async updateSection(id: string | number, data: Partial<Section>) {
+    return await this.update<Section, Partial<Section>>(id, data);
+  }
 
   /**
-   * Delete a section
+   * Delete section
    */
-  async deleteSection(id: string | number): Promise<void> {
-    await apiClient.delete(`/admin/sections/${id}`);
-  },
-};
+  async deleteSection(id: string | number): Promise<ApiResponse<void>> {
+    return await this.delete<void>(id);
+  }
+}
+
+// Export singleton instance
+export const sectionService = new SectionService();

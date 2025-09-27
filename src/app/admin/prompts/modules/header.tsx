@@ -3,7 +3,9 @@
 import { Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogTrigger } from "@/components/ui/dialog";
-import type { PromptHeaderProps } from "@/types/admin";
+interface PromptHeaderProps {
+  onAddPrompt: () => void;
+}
 
 /**
  * Prompt page header component

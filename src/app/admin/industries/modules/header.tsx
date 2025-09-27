@@ -3,7 +3,9 @@
 import { Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogTrigger } from "@/components/ui/dialog";
-import type { IndustryHeaderProps } from "@/types/admin";
+interface IndustryHeaderProps {
+  onAddIndustry: () => void;
+}
 
 /**
  * Industry page header component

@@ -1,70 +1,52 @@
 "use client";
 
+import { useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
 
 import { AdminContentCard } from "@/components/admin/common/admin-content-card";
 import {
   UserFilter,
   UserHeader,
-  createUserColumns,
-  DataTable,
+  useUserColumns,
+  adaptColumnsForDataTable,
 } from "./modules";
 import { USERS_CONSTANTS } from "@/constants/users";
-import { useAdminUsersQuery, useDeleteUserMutation } from "@/hooks";
-import type { UserFilterState } from "@/types/admin";
+import { useAdminUsersQuery } from "@/hooks";
+import { useDeleteUser } from "@/hooks/admin/useUser/useDeleteUser";
 import type { User } from "@/lib/types";
-import { debounce } from "@/lib/utils";
-import { useState, useEffect, useCallback } from "react";
+import type { UserFilterState } from "@/types/admin/user";
+import { IPagination } from "@/types/common";
+import {
+  DEFAULT_PAGE_INDEX,
+  DEFAULT_PAGINATION,
+  DEFAULT_TOTAL_PAGES,
+  DEFAULT_TOTAL,
+} from "@/constants";
+import { DataTable } from "@/components/data-table";
 
 export default function UserManagementPage(): React.JSX.Element {
   const router = useRouter();
 
-  // 🎯 State Management
   const [filters, setFilters] = useState<UserFilterState>(
     USERS_CONSTANTS.INITIAL_FILTERS
   );
-  const [debouncedFilters, setDebouncedFilters] = useState<UserFilterState>(
-    USERS_CONSTANTS.INITIAL_FILTERS
-  );
-  const [currentPage, setCurrentPage] = useState(1);
-  const [pageSize, setPageSize] = useState(10);
 
-  // Debounced filter update
-  const debouncedFilterUpdate = debounce((newFilters: UserFilterState) => {
-    setDebouncedFilters(newFilters);
-  }, 300);
+  const [pagination, setPagination] = useState<IPagination>(DEFAULT_PAGINATION);
 
-  // Update debounced filters when filters change
-  useEffect(() => {
-    debouncedFilterUpdate(filters);
-  }, [filters, debouncedFilterUpdate]);
-
-  // 🔄 Data Hooks
-  const {
-    data: usersData,
-    isLoading: usersLoading,
-    totalPages,
-    totalItems,
-  } = useAdminUsersQuery({
-    page: currentPage,
-    pageSize: pageSize,
-    search: debouncedFilters.searchTerm,
-    role: debouncedFilters.role,
-    status: debouncedFilters.status,
-    dateFrom: debouncedFilters.dateRange.from,
-    dateTo: debouncedFilters.dateRange.to,
+  const { usersWithPagination, isFetching: usersLoading } = useAdminUsersQuery({
+    pagination,
+    filters,
   });
 
-  const deleteUserMutation = useDeleteUserMutation();
+  const { mutate: deleteUser, isLoading: isDeleting } = useDeleteUser();
 
-  // Extract data from API responses
-  const users = Array.isArray(usersData?.data?.data)
-    ? usersData.data.data
-    : Array.isArray(usersData?.data)
-      ? usersData.data
-      : [];
+  const handlePaginationChange = useCallback(
+    (newPagination: IPagination) =>
+      setPagination(prev => ({ ...prev, ...newPagination })),
+    []
+  );
 
-  const isLoading = usersLoading;
+  const isLoading = usersLoading || isDeleting;
 
   // 🔗 Navigation handlers
   const handleAddUser = () => {
@@ -75,42 +57,33 @@ export default function UserManagementPage(): React.JSX.Element {
     router.push(USERS_CONSTANTS.ROUTES.USER_EDIT(user.id));
   };
 
-  const handleViewUser = (user: User) => {
-    router.push(USERS_CONSTANTS.ROUTES.USER_VIEW(user.id));
-  };
-
-  const handleDeleteUser = async (id: string | number): Promise<void> => {
-    try {
-      deleteUserMutation.mutate(id);
-    } catch {
-      // Error deleting user - could be logged to monitoring service
+  const handleDeleteUser = async (user: User): Promise<void> => {
+    const success = await deleteUser(user);
+    if (success) {
+      // User deleted successfully - could trigger refresh or other actions
+      // The hook already handles toast notifications
     }
   };
 
   const handleFilterChange = useCallback(
     (newFilters: UserFilterState): void => {
       setFilters(newFilters);
-      setCurrentPage(1);
+      setPagination(prev => ({ ...prev, pageIndex: DEFAULT_PAGE_INDEX }));
     },
     []
   );
 
-  // const handlePageSizeChange = useCallback((newPageSize: number): void => {
-  //   setPageSize(newPageSize);
-  //   setCurrentPage(1);
-  // }, []);
-
   const handleClearFilters = useCallback((): void => {
     setFilters(USERS_CONSTANTS.INITIAL_FILTERS);
-    setCurrentPage(1);
+    setPagination(prev => ({ ...prev, pageIndex: DEFAULT_PAGE_INDEX }));
   }, []);
 
   // Create columns with handlers
-  const columns = createUserColumns({
-    onEdit: handleEditUser,
-    onDelete: handleDeleteUser,
-    onView: handleViewUser,
+  const tanstackColumns = useUserColumns({
+    onEditAction: handleEditUser,
+    onDeleteAction: handleDeleteUser,
   });
+  const columns = adaptColumnsForDataTable(tanstackColumns);
 
   return (
     <AdminContentCard>
@@ -121,25 +94,19 @@ export default function UserManagementPage(): React.JSX.Element {
           filters={filters}
           onFilterChange={handleFilterChange}
           onClearFilters={handleClearFilters}
-          onPageReset={() => setCurrentPage(1)}
+          onPageReset={() =>
+            setPagination(prev => ({ ...prev, pageIndex: DEFAULT_PAGE_INDEX }))
+          }
         />
 
-        <DataTable
+        <DataTable<User>
           columns={columns}
-          data={users}
-          pagination={{
-            currentPage: currentPage,
-            totalPages: totalPages,
-            totalItems: totalItems,
-            pageSize: pageSize,
-            onPageChange: (page: number) => setCurrentPage(page),
-            onPageSizeChange: (newPageSize: number) => {
-              setPageSize(newPageSize);
-              setCurrentPage(1);
-            },
-            showPrevNext: true,
-            maxVisiblePages: 5,
-          }}
+          data={usersWithPagination?.data || []}
+          pageCount={usersWithPagination?.totalPages || DEFAULT_TOTAL_PAGES}
+          pageIndex={pagination.pageIndex}
+          pageSize={pagination.pageSize}
+          totalItems={usersWithPagination?.total || DEFAULT_TOTAL}
+          onPaginationChangeAction={handlePaginationChange}
           loading={isLoading}
         />
       </div>

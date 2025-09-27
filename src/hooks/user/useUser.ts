@@ -9,7 +9,7 @@ export const useUser = () => {
 
   return useQuery({
     queryKey: queryKeys.user,
-    queryFn: () => userService.getMe({ userId: String(user?.id) }),
+    queryFn: () => userService.getUserById(user?.id || ""),
     enabled: !!user?.id, // Only fetch when user ID is available
   });
 };

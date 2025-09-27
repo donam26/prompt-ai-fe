@@ -13,7 +13,17 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import type { UserFormDialogProps, UserFormData } from "@/types/admin";
+import type { UserFormData } from "@/types/admin/user";
+
+interface Props {
+  isOpen: boolean;
+  onOpenChange: (open: boolean) => void;
+  editingUser?: any;
+  formData: UserFormData;
+  onFormDataChange: (key: keyof UserFormData, value: string) => void;
+  onSubmit: () => void;
+  isLoading: boolean;
+}
 
 /**
  * User form modal component
@@ -28,25 +38,20 @@ export const UserFormModal = ({
   formData,
   onFormDataChange,
   onSubmit,
-  onReset,
-}: UserFormDialogProps): React.JSX.Element => {
+}: Props): React.JSX.Element => {
   const handleFormDataChange = (
     field: keyof UserFormData,
     value: string | boolean
   ): void => {
-    onFormDataChange({
-      ...formData,
-      [field]: value,
-    });
+    onFormDataChange(field, value as string);
   };
 
   const handleSubmit = (e: React.FormEvent): void => {
     e.preventDefault();
-    onSubmit(e);
+    onSubmit();
   };
 
   const handleClose = (): void => {
-    onReset();
     onOpenChange(false);
   };
 
@@ -108,8 +113,8 @@ const UserFormFields = ({
         <Input
           id="name"
           type="text"
-          value={formData.name}
-          onChange={e => onFormDataChange("name", e.target.value)}
+          value={formData.full_name}
+          onChange={e => onFormDataChange("full_name", e.target.value)}
           placeholder="Nhập tên người dùng"
           required
         />
@@ -158,8 +163,8 @@ const UserFormFields = ({
         <Input
           id="phone"
           type="tel"
-          value={formData.phone || ""}
-          onChange={e => onFormDataChange("phone", e.target.value)}
+          value=""
+          onChange={() => {}}
           placeholder="Nhập số điện thoại"
         />
       </div>
@@ -171,8 +176,8 @@ const UserFormFields = ({
         <Input
           id="avatar"
           type="url"
-          value={formData.avatar || ""}
-          onChange={e => onFormDataChange("avatar", e.target.value)}
+          value=""
+          onChange={() => {}}
           placeholder="Nhập URL ảnh đại diện"
         />
       </div>
@@ -194,9 +199,9 @@ const RoleSelect = ({
   onChange: (value: string) => void;
 }): React.JSX.Element => {
   const roleOptions = [
-    { value: "user", label: "Người dùng" },
-    { value: "moderator", label: "Điều hành viên" },
-    { value: "admin", label: "Quản trị viên" },
+    { id: "user", name: "Người dùng" },
+    { id: "moderator", name: "Điều hành viên" },
+    { id: "admin", name: "Quản trị viên" },
   ];
 
   return (
@@ -224,9 +229,9 @@ const StatusSelect = ({
   onChange: (value: string) => void;
 }): React.JSX.Element => {
   const statusOptions = [
-    { value: "active", label: "Hoạt động" },
-    { value: "inactive", label: "Không hoạt động" },
-    { value: "suspended", label: "Bị đình chỉ" },
+    { id: "active", name: "Hoạt động" },
+    { id: "inactive", name: "Không hoạt động" },
+    { id: "suspended", name: "Bị đình chỉ" },
   ];
 
   return (

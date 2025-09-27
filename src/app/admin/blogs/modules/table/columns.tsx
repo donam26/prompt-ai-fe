@@ -1,184 +1,236 @@
-import React from "react";
-import { FileText } from "lucide-react";
-
+import type { ColumnDef } from "@tanstack/react-table";
+import type { Blog } from "@/lib/types";
 import { Column } from "@/components/data-table/data-table";
 import { ImageCell, BadgeCell, ActionsCell } from "@/components/table-cell";
 import { BLOG_CONSTANTS } from "@/constants/blog";
-import type { BlogColumnHandlers } from "@/types/admin/blog";
-import type { Blog } from "@/lib/types";
+import { FileText } from "lucide-react";
 
-/**
- * Base blog columns configuration with responsive widths
- */
-export const blogColumns: Column<Blog>[] = [
-  {
-    key: "id",
-    title: "ID",
-    width: 80,
-    align: "center",
-    className: "min-w-[60px]",
-    render: (_, blog) => (
-      <span className="font-mono text-gray-600 text-sm">#{blog.id}</span>
-    ),
-  },
-  {
-    key: "title",
-    title: "Tiêu đề Blog",
-    dataIndex: "title",
-    className: "font-semibold text-gray-900 min-w-[200px] max-w-[300px]",
-    render: (_, blog) => (
-      <div className="flex flex-col space-y-1">
-        <span
-          className="font-semibold text-gray-900 truncate"
-          title={blog.title}
-        >
-          {blog.title}
-        </span>
-        {blog.meta_description && (
-          <span
-            className="text-gray-500 text-xs truncate"
-            title={blog.meta_description}
-          >
-            {blog.meta_description}
+interface Props {
+  onEditAction: (blog: Blog) => void;
+  onDeleteAction: (blog: Blog) => void;
+}
+
+export function useBlogColumns({
+  onEditAction,
+  onDeleteAction,
+}: Props): ColumnDef<Blog>[] {
+  return [
+    {
+      accessorKey: "id",
+      meta: { title: "ID" },
+      header: () => <div className="w-full font-medium text-center">ID</div>,
+      cell: ({ row }) => (
+        <div className="flex justify-center items-center min-w-[60px]">
+          <span className="font-mono text-gray-600 text-sm">
+            #{row.original.id}
           </span>
-        )}
-      </div>
-    ),
-  },
-  {
-    key: "featuredImage",
-    title: "Hình ảnh",
-    width: 80,
-    align: "center",
-    className: "hidden md:table-cell",
-    render: (_, blog) => (
-      <div className="flex justify-center items-center">
-        {blog.featured_image ? (
-          <ImageCell
-            src={blog.featured_image}
-            alt={blog.title}
-            size="sm"
-            className="rounded-md"
+        </div>
+      ),
+      enableSorting: false,
+    },
+    {
+      accessorKey: "title",
+      meta: { title: "Tiêu đề Blog" },
+      header: () => <div className="font-medium">Tiêu đề Blog</div>,
+      cell: ({ row }) => (
+        <div className="flex flex-col space-y-1 min-w-[200px] max-w-[300px]">
+          <span
+            className="font-semibold text-gray-900 truncate"
+            title={row.original.title}
+          >
+            {row.original.title}
+          </span>
+          {row.original.meta_description && (
+            <span
+              className="text-gray-500 text-xs truncate"
+              title={row.original.meta_description}
+            >
+              {row.original.meta_description}
+            </span>
+          )}
+        </div>
+      ),
+    },
+    {
+      accessorKey: "featured_image",
+      meta: { title: "Hình ảnh" },
+      header: () => (
+        <div className="hidden md:block w-full font-medium text-center">
+          Hình ảnh
+        </div>
+      ),
+      cell: ({ row }) => (
+        <div className="hidden md:flex justify-center items-center">
+          {row.original.featured_image ? (
+            <ImageCell
+              src={row.original.featured_image}
+              alt={row.original.title}
+              size="sm"
+              className="rounded-md"
+            />
+          ) : (
+            <FileText className="w-6 h-6 text-gray-400" />
+          )}
+        </div>
+      ),
+      enableSorting: false,
+    },
+    {
+      accessorKey: "category",
+      meta: { title: "Danh mục" },
+      header: () => <div className="hidden lg:block font-medium">Danh mục</div>,
+      cell: ({ row }) => {
+        const categoryName =
+          row.original.category?.name ||
+          row.original.blog_category?.name ||
+          "N/A";
+
+        // Dynamic variant based on category name
+        const getCategoryVariant = (
+          name: string
+        ): "ai" | "tech" | "business" | "secondary" => {
+          const lowerName = name.toLowerCase();
+          if (
+            lowerName.includes(BLOG_CONSTANTS.CATEGORY.AI.toLowerCase()) ||
+            lowerName.includes("artificial")
+          )
+            return "ai";
+          if (lowerName.includes("tech") || lowerName.includes("technology"))
+            return "tech";
+          if (
+            lowerName.includes(
+              BLOG_CONSTANTS.CATEGORY.BUSINESS.toLowerCase()
+            ) ||
+            lowerName.includes(BLOG_CONSTANTS.CATEGORY.MARKETING.toLowerCase())
+          )
+            return "business";
+          return "secondary";
+        };
+
+        return (
+          <div className="hidden lg:block">
+            <BadgeCell
+              value={categoryName}
+              variant={getCategoryVariant(categoryName)}
+              className="text-xs"
+            />
+          </div>
+        );
+      },
+      enableSorting: false,
+    },
+    {
+      accessorKey: "published_at",
+      meta: { title: "Ngày xuất bản" },
+      header: () => (
+        <div className="hidden xl:block font-medium">Ngày xuất bản</div>
+      ),
+      cell: ({ row }) => (
+        <div className="hidden xl:block">
+          <span className="text-gray-600 text-sm">
+            {row.original.published_at
+              ? new Date(row.original.published_at).toLocaleDateString("vi-VN")
+              : "Chưa xuất bản"}
+          </span>
+        </div>
+      ),
+      enableSorting: false,
+    },
+    {
+      accessorKey: "created_at",
+      meta: { title: "Ngày tạo" },
+      header: () => <div className="hidden md:block font-medium">Ngày tạo</div>,
+      cell: ({ row }) => (
+        <div className="hidden md:block">
+          <span className="text-gray-600 text-sm">
+            {row.original.created_at
+              ? new Date(row.original.created_at).toLocaleDateString("vi-VN")
+              : "N/A"}
+          </span>
+        </div>
+      ),
+      enableSorting: false,
+    },
+    {
+      accessorKey: "updated_at",
+      meta: { title: "Cập nhật cuối" },
+      header: () => (
+        <div className="hidden lg:block font-medium">Cập nhật cuối</div>
+      ),
+      cell: ({ row }) => (
+        <div className="hidden lg:block">
+          <span className="text-gray-600 text-sm">
+            {row.original.updated_at
+              ? new Date(row.original.updated_at).toLocaleDateString("vi-VN")
+              : "N/A"}
+          </span>
+        </div>
+      ),
+      enableSorting: false,
+    },
+    {
+      id: "actions",
+      meta: { title: "Thao tác" },
+      header: () => <div className="font-medium text-center">Thao tác</div>,
+      cell: ({ row }) => (
+        <div className="flex justify-center items-center min-w-[120px]">
+          <ActionsCell
+            item={row.original}
+            onEdit={onEditAction}
+            onDelete={onDeleteAction}
           />
-        ) : (
-          <FileText className="w-6 h-6 text-gray-400" />
-        )}
-      </div>
-    ),
-  },
-  {
-    key: "category",
-    title: "Danh mục",
-    width: 120,
-    className: "hidden lg:table-cell",
-    render: (_, blog) => {
-      const categoryName =
-        blog.category?.name || blog.blog_category?.name || "N/A";
-
-      // Dynamic variant based on category name
-      const getCategoryVariant = (
-        name: string
-      ): "ai" | "tech" | "business" | "secondary" => {
-        const lowerName = name.toLowerCase();
-        if (
-          lowerName.includes(BLOG_CONSTANTS.CATEGORY.AI.toLowerCase()) ||
-          lowerName.includes("artificial")
-        )
-          return "ai";
-        if (lowerName.includes("tech") || lowerName.includes("technology"))
-          return "tech";
-        if (
-          lowerName.includes(BLOG_CONSTANTS.CATEGORY.BUSINESS.toLowerCase()) ||
-          lowerName.includes(BLOG_CONSTANTS.CATEGORY.MARKETING.toLowerCase())
-        )
-          return "business";
-        return "secondary";
-      };
-
-      return (
-        <BadgeCell
-          value={categoryName}
-          variant={getCategoryVariant(categoryName)}
-          className="text-xs"
-        />
-      );
+        </div>
+      ),
+      enableSorting: false,
     },
-  },
-  {
-    key: "publishedAt",
-    title: "Ngày xuất bản",
-    width: 140,
-    className: "hidden xl:table-cell",
-    render: (_, blog) => (
-      <span className="text-gray-600 text-sm">
-        {blog.published_at
-          ? new Date(blog.published_at).toLocaleDateString("vi-VN")
-          : "Chưa xuất bản"}
-      </span>
-    ),
-  },
-  {
-    key: "createdAt",
-    title: "Ngày tạo",
-    width: 140,
-    className: "hidden md:table-cell",
-    render: (_, blog) => (
-      <span className="text-gray-600 text-sm">
-        {blog.created_at
-          ? new Date(blog.created_at).toLocaleDateString("vi-VN")
-          : "N/A"}
-      </span>
-    ),
-  },
-  {
-    key: "updatedAt",
-    title: "Cập nhật cuối",
-    width: 140,
-    className: "hidden lg:table-cell",
-    render: (_, blog) => (
-      <span className="text-gray-600 text-sm">
-        {blog.updated_at
-          ? new Date(blog.updated_at).toLocaleDateString("vi-VN")
-          : "N/A"}
-      </span>
-    ),
-  },
-  {
-    key: "actions",
-    title: "Thao tác",
-    width: 140,
-    align: "center",
-    className: "min-w-[120px]",
-    render: (_, blog, index, context) => {
-      const handlers = (context as BlogColumnHandlers) || {};
-      return (
-        <ActionsCell
-          item={blog}
-          onEdit={handlers.onEdit}
-          onDelete={item => handlers.onDelete?.(item.id)}
-        />
-      );
-    },
-  },
-];
+  ];
+}
 
 /**
- * Creates blog columns with custom handlers
- *
- * @param handlers - The column handlers
- * @returns The configured blog columns
+ * Legacy function for backward compatibility
+ * @deprecated Use useBlogColumns instead
  */
-export const createBlogColumns = (
-  handlers: BlogColumnHandlers
+export const createBlogColumns = (handlers: Props): ColumnDef<Blog>[] => {
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  return useBlogColumns(handlers);
+};
+
+/**
+ * Adapter function to convert TanStack Table columns to custom DataTable columns
+ */
+export const adaptColumnsForDataTable = (
+  tanstackColumns: ColumnDef<Blog>[]
 ): Column<Blog>[] => {
-  return blogColumns.map(column => {
-    if (column.key === "actions") {
-      return {
-        ...column,
-        render: (value, blog, index) =>
-          column.render?.(value, blog, index, handlers),
-      };
-    }
-    return column;
+  return tanstackColumns.map(col => {
+    const accessorKey = "accessorKey" in col ? col.accessorKey : "";
+    const id = "id" in col ? col.id : "";
+    const title = (col.meta as any)?.title || "";
+
+    return {
+      key: accessorKey || id || "",
+      title,
+      render: (_: unknown, record: Blog, index: number) => {
+        if (col.cell && typeof col.cell === "function") {
+          try {
+            return (col.cell as any)({
+              row: { original: record, index },
+              getValue: () =>
+                accessorKey ? record[accessorKey as keyof Blog] : undefined,
+              column: col,
+              table: {},
+              cell: {},
+              renderValue: () =>
+                accessorKey ? record[accessorKey as keyof Blog] : undefined,
+            });
+          } catch {
+            return accessorKey ? record[accessorKey as keyof Blog] : "";
+          }
+        }
+        return accessorKey ? record[accessorKey as keyof Blog] : "";
+      },
+      width: 200,
+      align: "left" as const,
+      className: "",
+    };
   });
 };

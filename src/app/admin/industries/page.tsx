@@ -1,66 +1,53 @@
 "use client";
 
-import React, { useState, useCallback } from "react";
+import { useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
+
 import { AdminContentCard } from "@/components/admin/common/admin-content-card";
 import {
   IndustryFilter,
   IndustryHeader,
-  createIndustryColumns,
-  DataTable,
+  useIndustryColumns,
+  adaptColumnsForDataTable,
 } from "./modules";
-import type { IndustryFilterState } from "@/types/admin";
 import { INDUSTRIES_CONSTANTS } from "@/constants/industries";
-import { Industry } from "@/lib/types";
-import { useAdminIndustries } from "@/hooks/admin/useIndustry";
-
-const INITIAL_FILTERS: IndustryFilterState = {
-  searchTerm: "",
-  status: "all",
-};
+import { useIndustries } from "@/hooks";
+import { useDeleteIndustry } from "@/hooks/admin/useIndustry/useDeleteIndustry";
+import type { Industry } from "@/lib/types";
+import type { IndustryFilterState } from "@/types/admin/industry";
+import { IPagination } from "@/types/common";
+import {
+  DEFAULT_PAGE_INDEX,
+  DEFAULT_PAGINATION,
+  DEFAULT_TOTAL_PAGES,
+  DEFAULT_TOTAL,
+} from "@/constants";
+import { DataTable } from "@/components/data-table";
 
 export default function IndustryManagementPage(): React.JSX.Element {
   const router = useRouter();
 
-  // 🎯 State Management
-  const [pagination, setPagination] = useState({
-    currentPage: 1,
-    pageSize: 10,
-    totalPages: 0,
-    totalItems: 0,
-  });
-  const [filters, setFilters] = useState<IndustryFilterState>(INITIAL_FILTERS);
+  const [filters, setFilters] = useState<IndustryFilterState>(
+    INDUSTRIES_CONSTANTS.INITIAL_FILTERS
+  );
 
-  // 🔄 Data Hooks
+  const [pagination, setPagination] = useState<IPagination>(DEFAULT_PAGINATION);
+
   const { industriesWithPagination, isLoading: industriesLoading } =
-    useAdminIndustries({
-      page: pagination.currentPage,
-      pageSize: pagination.pageSize,
-      search: filters.searchTerm,
-      status: filters.status,
+    useIndustries({
+      pagination,
+      filters,
     });
 
-  const deleteIndustryMutation = useDeleteIndustryMutation();
+  const { mutate: deleteIndustry, isLoading: isDeleting } = useDeleteIndustry();
 
-  // Extract data from API responses
-  const industries = Array.isArray(industriesData?.data?.data)
-    ? industriesData.data.data
-    : Array.isArray(industriesData?.data)
-      ? industriesData.data
-      : [];
+  const handlePaginationChange = useCallback(
+    (newPagination: IPagination) =>
+      setPagination(prev => ({ ...prev, ...newPagination })),
+    []
+  );
 
-  const isLoading = industriesLoading;
-
-  // Update pagination when data changes
-  React.useEffect(() => {
-    if (industriesWithPagination) {
-      setPagination(prev => ({
-        ...prev,
-        totalPages: industriesWithPagination.totalPages || 0,
-        totalItems: industriesWithPagination.total || 0,
-      }));
-    }
-  }, [industriesWithPagination]);
+  const isLoading = industriesLoading || isDeleting;
 
   // 🔗 Navigation handlers
   const handleAddIndustry = () => {
@@ -71,37 +58,33 @@ export default function IndustryManagementPage(): React.JSX.Element {
     router.push(INDUSTRIES_CONSTANTS.ROUTES.INDUSTRY_EDIT(industry.id));
   };
 
-  const handleDeleteIndustry = async (id: string | number): Promise<void> => {
-    try {
-      deleteIndustryMutation.mutate(id);
-    } catch {
-      // Error deleting industry - could be logged to monitoring service
+  const handleDeleteIndustry = async (industry: Industry): Promise<void> => {
+    const success = await deleteIndustry(industry);
+    if (success) {
+      // Industry deleted successfully - could trigger refresh or other actions
+      // The hook already handles toast notifications
     }
   };
 
   const handleFilterChange = useCallback(
     (newFilters: IndustryFilterState): void => {
       setFilters(newFilters);
-      setPagination(prev => ({ ...prev, currentPage: 1 }));
+      setPagination(prev => ({ ...prev, pageIndex: DEFAULT_PAGE_INDEX }));
     },
     []
   );
 
-  // const handlePageSizeChange = useCallback((newPageSize: number): void => {
-  //   setPageSize(newPageSize);
-  //   setCurrentPage(1);
-  // }, []);
-
   const handleClearFilters = useCallback((): void => {
-    setFilters(INITIAL_FILTERS);
-    setPagination(prev => ({ ...prev, currentPage: 1 }));
+    setFilters(INDUSTRIES_CONSTANTS.INITIAL_FILTERS);
+    setPagination(prev => ({ ...prev, pageIndex: DEFAULT_PAGE_INDEX }));
   }, []);
 
   // Create columns with handlers
-  const columns = createIndustryColumns({
-    onEdit: handleEditIndustry,
-    onDelete: handleDeleteIndustry,
+  const tanstackColumns = useIndustryColumns({
+    onEditAction: handleEditIndustry,
+    onDeleteAction: handleDeleteIndustry,
   });
+  const columns = adaptColumnsForDataTable(tanstackColumns);
 
   return (
     <AdminContentCard>
@@ -113,30 +96,20 @@ export default function IndustryManagementPage(): React.JSX.Element {
           onFilterChange={handleFilterChange}
           onClearFilters={handleClearFilters}
           onPageReset={() =>
-            setPagination(prev => ({ ...prev, currentPage: 1 }))
+            setPagination(prev => ({ ...prev, pageIndex: DEFAULT_PAGE_INDEX }))
           }
         />
 
-        <DataTable
+        <DataTable<Industry>
           columns={columns}
-          data={industries}
-          pagination={{
-            currentPage: pagination.currentPage,
-            totalPages: industriesWithPagination?.totalPages || 0,
-            totalItems: industriesWithPagination?.total,
-            pageSize: pagination.pageSize,
-            onPageChange: (page: number) =>
-              setPagination(prev => ({ ...prev, currentPage: page })),
-            onPageSizeChange: (newPageSize: number) => {
-              setPagination(prev => ({
-                ...prev,
-                pageSize: newPageSize,
-                currentPage: 1,
-              }));
-            },
-            showPrevNext: true,
-            maxVisiblePages: 5,
-          }}
+          data={industriesWithPagination?.data || []}
+          pageCount={
+            industriesWithPagination?.totalPages || DEFAULT_TOTAL_PAGES
+          }
+          pageIndex={pagination.pageIndex}
+          pageSize={pagination.pageSize}
+          totalItems={industriesWithPagination?.total || DEFAULT_TOTAL}
+          onPaginationChangeAction={handlePaginationChange}
           loading={isLoading}
         />
       </div>

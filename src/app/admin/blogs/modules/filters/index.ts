@@ -1,5 +1,2 @@
-/**
- * Blog filter components exports
- */
-
 export * from "./blog-filters";
+export * from "./blog-active-filters";

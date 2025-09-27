@@ -86,18 +86,6 @@ export interface TransformedCategory {
 }
 
 /**
- * Hook parameters for categories query
- */
-export interface UseAdminCategoriesQueryParams {
-  readonly page?: number;
-  readonly pageSize?: number;
-  readonly search?: string;
-  readonly sectionId?: string;
-  readonly status?: string;
-  readonly industryIds?: string[];
-}
-
-/**
  * Hook result for categories query
  */
 export interface UseAdminCategoriesQueryResult {

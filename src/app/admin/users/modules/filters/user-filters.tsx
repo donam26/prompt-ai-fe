@@ -7,12 +7,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { BaseSelect } from "@/components/ui/base-select";
-import { UserActiveFilters } from "@/components/common";
-import type {
-  UserFilterProps,
-  UserFilterState,
-  UserActiveFilterItem,
-} from "@/types/admin";
+import { UserActiveFilters } from "./user-active-filters";
+import type { UserFilterProps, UserFilterState } from "@/types/admin/user";
 
 /**
  * User filter component with search, role, status, and date range filters
@@ -59,8 +55,8 @@ export const UserFilter = ({
     onPageReset?.();
   };
 
-  const getActiveFilters = (): UserActiveFilterItem[] => {
-    const activeFilters: UserActiveFilterItem[] = [];
+  const getActiveFilters = () => {
+    const activeFilters = [];
 
     if (filters.searchTerm) {
       activeFilters.push({
@@ -255,10 +251,10 @@ const RoleFilter = ({
   onChange: (value: string) => void;
 }): React.JSX.Element => {
   const roleOptions = [
-    { value: "all", label: "Tất cả vai trò" },
-    { value: "admin", label: "Quản trị viên" },
-    { value: "user", label: "Người dùng" },
-    { value: "moderator", label: "Điều hành viên" },
+    { id: "all", name: "Tất cả vai trò" },
+    { id: "admin", name: "Quản trị viên" },
+    { id: "user", name: "Người dùng" },
+    { id: "moderator", name: "Điều hành viên" },
   ];
 
   return (
@@ -286,10 +282,10 @@ const StatusFilter = ({
   onChange: (value: string) => void;
 }): React.JSX.Element => {
   const statusOptions = [
-    { value: "all", label: "Tất cả trạng thái" },
-    { value: "active", label: "Hoạt động" },
-    { value: "inactive", label: "Không hoạt động" },
-    { value: "suspended", label: "Bị đình chỉ" },
+    { id: "all", name: "Tất cả trạng thái" },
+    { id: "active", name: "Hoạt động" },
+    { id: "inactive", name: "Không hoạt động" },
+    { id: "suspended", name: "Bị đình chỉ" },
   ];
 
   return (

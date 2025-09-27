@@ -3,3 +3,4 @@
  */
 
 export * from "./user-filters";
+export * from "./user-active-filters";

@@ -1,122 +1,162 @@
-import React from "react";
-import { Folder } from "lucide-react";
-
+import type { ColumnDef } from "@tanstack/react-table";
+import type { Section } from "@/lib/types";
 import { Column } from "@/components/data-table/data-table";
 import { StatusCell, BadgeCell, ActionsCell } from "@/components/table-cell";
-import type { Section } from "@/lib/types";
-import type { SectionColumnHandlers } from "@/types/admin/section";
+import { Folder } from "lucide-react";
 
-/**
- * Base section columns configuration with responsive widths
- */
-export const sectionColumns: Column<Section>[] = [
-  {
-    key: "name",
-    title: "Tên phân loại",
-    dataIndex: "name",
-    className: "font-semibold text-gray-900 min-w-[200px] max-w-[300px]",
-    render: (_, section) => (
-      <div className="flex items-center gap-2">
-        <Folder className="w-4 h-4 text-gray-500" />
-        <span
-          className="font-semibold text-gray-900 truncate"
-          title={section.name}
-        >
-          {section.name}
-        </span>
-      </div>
-    ),
-  },
-  {
-    key: "description",
-    title: "Mô tả",
-    dataIndex: "description",
-    className: "hidden md:table-cell",
-    render: (_, section) => (
-      <span
-        className="max-w-[300px] text-gray-500 text-sm truncate"
-        title={section.description}
-      >
-        {section.description || "Không có mô tả"}
-      </span>
-    ),
-  },
-  {
-    key: "order",
-    title: "Thứ tự",
-    width: 100,
-    align: "center",
-    className: "hidden lg:table-cell",
-    render: (_, section) => (
-      <BadgeCell
-        label={section.order?.toString() || "0"}
-        variant="secondary"
-        maxWidth="max-w-[60px]"
-      />
-    ),
-  },
-  {
-    key: "status",
-    title: "Trạng thái",
-    width: 120,
-    align: "center",
-    className: "min-w-[100px]",
-    render: (_, section) => (
-      <StatusCell
-        isActive={section.status === "active"}
-        isComingSoon={section.status === "inactive"}
-      />
-    ),
-  },
-  {
-    key: "createdAt",
-    title: "Ngày tạo",
-    width: 140,
-    className: "hidden lg:table-cell",
-    render: (_, section) => (
-      <span className="text-gray-600 text-sm">
-        {section.created_at
-          ? new Date(section.created_at).toLocaleDateString("vi-VN")
-          : "N/A"}
-      </span>
-    ),
-  },
-  {
-    key: "actions",
-    title: "Thao tác",
-    width: 120,
-    align: "center",
-    className: "min-w-[100px]",
-    render: (_, section, index, context) => {
-      const handlers = (context as SectionColumnHandlers) || {};
-      return (
-        <ActionsCell
-          item={section}
-          onEdit={handlers.onEdit}
-          onDelete={item => handlers.onDelete?.(item)}
-        />
-      );
+interface Props {
+  onEditAction: (section: Section) => void;
+  onDeleteAction: (section: Section) => void;
+}
+
+export function useSectionColumns({
+  onEditAction,
+  onDeleteAction,
+}: Props): ColumnDef<Section>[] {
+  return [
+    {
+      accessorKey: "name",
+      meta: { title: "Tên phân loại" },
+      header: () => <div className="font-medium">Tên phân loại</div>,
+      cell: ({ row }) => (
+        <div className="flex items-center gap-2 min-w-[200px] max-w-[300px]">
+          <Folder className="w-4 h-4 text-gray-500" />
+          <span
+            className="font-semibold text-gray-900 truncate"
+            title={row.original.name}
+          >
+            {row.original.name}
+          </span>
+        </div>
+      ),
     },
-  },
-];
+    {
+      accessorKey: "description",
+      meta: { title: "Mô tả" },
+      header: () => <div className="hidden md:block font-medium">Mô tả</div>,
+      cell: ({ row }) => (
+        <div className="hidden md:block">
+          <span
+            className="max-w-[300px] text-gray-500 text-sm truncate"
+            title={row.original.description}
+          >
+            {row.original.description || "Không có mô tả"}
+          </span>
+        </div>
+      ),
+      enableSorting: false,
+    },
+    {
+      accessorKey: "order",
+      meta: { title: "Thứ tự" },
+      header: () => (
+        <div className="hidden lg:block font-medium text-center">Thứ tự</div>
+      ),
+      cell: ({ row }) => (
+        <div className="hidden lg:flex justify-center">
+          <BadgeCell
+            label={row.original.order?.toString() || "0"}
+            variant="secondary"
+            maxWidth="max-w-[60px]"
+          />
+        </div>
+      ),
+      enableSorting: false,
+    },
+    {
+      accessorKey: "status",
+      meta: { title: "Trạng thái" },
+      header: () => (
+        <div className="w-full font-medium text-center">Trạng thái</div>
+      ),
+      cell: ({ row }) => (
+        <div className="flex justify-center items-center min-w-[100px]">
+          <StatusCell
+            isActive={row.original.status === "active"}
+            isComingSoon={row.original.status === "inactive"}
+          />
+        </div>
+      ),
+      enableSorting: false,
+    },
+    {
+      accessorKey: "created_at",
+      meta: { title: "Ngày tạo" },
+      header: () => <div className="hidden lg:block font-medium">Ngày tạo</div>,
+      cell: ({ row }) => (
+        <div className="hidden lg:block">
+          <span className="text-gray-600 text-sm">
+            {row.original.created_at
+              ? new Date(row.original.created_at).toLocaleDateString("vi-VN")
+              : "N/A"}
+          </span>
+        </div>
+      ),
+      enableSorting: false,
+    },
+    {
+      id: "actions",
+      meta: { title: "Thao tác" },
+      header: () => <div className="font-medium text-center">Thao tác</div>,
+      cell: ({ row }) => (
+        <div className="flex justify-center items-center min-w-[100px]">
+          <ActionsCell
+            item={row.original}
+            onEdit={onEditAction}
+            onDelete={onDeleteAction}
+          />
+        </div>
+      ),
+      enableSorting: false,
+    },
+  ];
+}
 
 /**
- * Creates section columns with custom handlers
- *
- * @param handlers - The column handlers
- * @returns The configured section columns
+ * Legacy function for backward compatibility
+ * @deprecated Use useSectionColumns instead
  */
-export const createSectionColumns = (
-  handlers: SectionColumnHandlers
+export const createSectionColumns = (handlers: Props): ColumnDef<Section>[] => {
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  return useSectionColumns(handlers);
+};
+
+/**
+ * Adapter function to convert TanStack Table columns to custom DataTable columns
+ */
+export const adaptColumnsForDataTable = (
+  tanstackColumns: ColumnDef<Section>[]
 ): Column<Section>[] => {
-  return sectionColumns.map(column => {
-    if (column.key === "actions") {
-      return {
-        ...column,
-        render: (value, section, index) =>
-          column.render?.(value, section, index, handlers),
-      };
-    }
-    return column;
+  return tanstackColumns.map(col => {
+    const accessorKey = "accessorKey" in col ? col.accessorKey : "";
+    const id = "id" in col ? col.id : "";
+    const title = (col.meta as any)?.title || "";
+
+    return {
+      key: accessorKey || id || "",
+      title,
+      render: (_: unknown, record: Section, index: number) => {
+        if (col.cell && typeof col.cell === "function") {
+          try {
+            return (col.cell as any)({
+              row: { original: record, index },
+              getValue: () =>
+                accessorKey ? record[accessorKey as keyof Section] : undefined,
+              column: col,
+              table: {},
+              cell: {},
+              renderValue: () =>
+                accessorKey ? record[accessorKey as keyof Section] : undefined,
+            });
+          } catch {
+            return accessorKey ? record[accessorKey as keyof Section] : "";
+          }
+        }
+        return accessorKey ? record[accessorKey as keyof Section] : "";
+      },
+      width: 200,
+      align: "left" as const,
+      className: "",
+    };
   });
 };

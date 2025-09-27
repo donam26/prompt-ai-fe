@@ -81,7 +81,7 @@ export default function HomePage() {
 
   const fetchBlogs = async () => {
     try {
-      const response = await blogService.getBlogPage({
+      const response = await blogService.getBlogs({
         page: 1,
         pageSize: 3,
         search: "",
@@ -362,9 +362,6 @@ export default function HomePage() {
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <CardDescription className="mb-4 line-clamp-3">
-                    {post.description}
-                  </CardDescription>
                   <Link href={`/blog/${post.id}`}>
                     <Button
                       variant="outline"

@@ -1,12 +1,43 @@
-import { apiClient } from "../../base/apiClient";
+import { BaseService } from "../../base/baseService";
 import { ENDPOINTS } from "@/constants";
-import { ServiceMethod } from "../../base/types";
+import type { DeviceLog } from "@/lib/types";
+import type { ApiResponse } from "@/types/common";
 
-export class DeviceLogService {
-  // Get device log by user ID
-  getDeviceLog: ServiceMethod<string | number> = userId => {
-    return apiClient.get(`${ENDPOINTS.DEVICE_LOGS.BASE}/${userId}`);
-  };
+/**
+ * DeviceLogService extending BaseService
+ */
+export class DeviceLogService extends BaseService {
+  constructor() {
+    super(ENDPOINTS.DEVICE_LOGS.BASE);
+  }
+
+  /**
+   * Get device log by user ID
+   */
+  async getDeviceLog(userId: string | number) {
+    return this.getById<DeviceLog>(userId);
+  }
+
+  /**
+   * Get all device logs
+   */
+  async getDeviceLogs(params?: Record<string, unknown>) {
+    return this.list(params);
+  }
+
+  /**
+   * Create device log
+   */
+  async createDeviceLog(data: Partial<DeviceLog>) {
+    return this.create<DeviceLog, Partial<DeviceLog>>(data);
+  }
+
+  /**
+   * Delete device log
+   */
+  async deleteDeviceLog(id: string | number): Promise<ApiResponse<void>> {
+    return this.delete<void>(id);
+  }
 }
 
 // Export singleton instance

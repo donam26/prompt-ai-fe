@@ -1,5 +1,2 @@
-/**
- * Industry table components exports
- */
-
+// Column components and utilities
 export * from "./columns";

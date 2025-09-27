@@ -1,8 +1,4 @@
-import {
-  BaseService,
-  ApiResponse,
-  PaginatedResponse,
-} from "@/services/base/baseService";
+import { BaseService } from "@/services/base/baseService";
 import type { User } from "@/types/admin";
 
 /**
@@ -16,63 +12,50 @@ export class UserService extends BaseService {
   /**
    * Get users with pagination and filtering
    */
-  async getUsers(params: {
-    page?: number;
-    pageSize?: number;
-    search?: string;
-    role?: string;
-    status?: string;
-    dateFrom?: string;
-    dateTo?: string;
-  }): Promise<ApiResponse<PaginatedResponse<User>>> {
-    return this.get<PaginatedResponse<User>>("", params);
+  async getUsers(params: Record<string, unknown>) {
+    return this.list(params);
   }
 
   /**
    * Get user by ID
    */
-  async getUser(id: string | number): Promise<ApiResponse<User>> {
-    return this.getById<User>(id);
+  async getUser(id: string | number) {
+    return this.getById(id);
   }
 
   /**
    * Create new user
    */
-  async createUser(data: Partial<User>): Promise<ApiResponse<User>> {
-    return this.create<User, Partial<User>>(data);
+  async createUser(data: Partial<User>) {
+    return this.create(data);
   }
 
   /**
    * Update user
    */
-  async updateUser(
-    id: string | number,
-    data: Partial<User>
-  ): Promise<ApiResponse<User>> {
-    return this.update<User, Partial<User>>(id, data);
+  async updateUser(id: string | number, data: Partial<User>) {
+    return this.update(id, data);
   }
 
   /**
    * Delete user
    */
-  async deleteUser(id: string | number): Promise<ApiResponse<void>> {
+  async deleteUser(id: string) {
     return this.delete<void>(id);
   }
 
   /**
    * Toggle user status
    */
-  async toggleUserStatus(id: string | number): Promise<ApiResponse<User>> {
+  async toggleUserStatus(id: string) {
     return this.patch<User>(id, {});
   }
 
   /**
    * Reset user password
    */
-  async resetPassword(
-    id: string | number
-  ): Promise<ApiResponse<{ message: string }>> {
-    return this.post<{ message: string }>("reset-password", { userId: id });
+  async resetPassword(id: string) {
+    return this.post("reset-password", { userId: id });
   }
 }
 

@@ -34,9 +34,13 @@ export function AdminPageLayout({
       <div className="admin-page-header">
         <div className="flex justify-between items-center">
           <div className="space-y-1">
-            <h1 className="font-bold text-gray-900 text-2xl">{title}</h1>
+            <h1 className="mb-2 font-bold text-gray-900 dark:text-gray-100 text-3xl">
+              {title}
+            </h1>
             {description && (
-              <p className="text-gray-600 text-sm">{description}</p>
+              <p className="text-gray-600 dark:text-gray-400 text-lg">
+                {description}
+              </p>
             )}
           </div>
           {actions && (

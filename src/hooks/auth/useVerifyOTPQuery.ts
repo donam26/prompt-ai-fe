@@ -1,10 +1,10 @@
 import { useMutation } from "@tanstack/react-query";
 import { userService } from "@/services";
 import { showToast } from "@/components/ui/toast";
-import { transformUserData } from "@/utils/userDataTransform";
+import { transformUserData } from "@/utils/user-data-transform";
 import { useAuth } from "@/hooks/useAuth";
 import { ROUTES_URL } from "@/constants";
-import type { UserVerifyResponse, UserAuthParams, ApiUser } from "@/types";
+import type { UserVerifyResponse, UserAuthParams } from "@/types";
 import { useRouter } from "next/navigation";
 
 interface UseVerifyOTPQueryResult {
@@ -18,22 +18,12 @@ export const useVerifyOTPQuery = (): UseVerifyOTPQueryResult => {
   const router = useRouter();
 
   const verifyOTPMutation = useMutation({
-    mutationFn: async ({ email, otp, userIP }: UserAuthParams) => {
-      const response = await userService.verifyLogin({
-        email,
-        otp,
-        userIP,
-      });
-      return response as unknown as {
-        message: string;
-        data: {
-          user: ApiUser;
-          token: string;
-        };
-      };
+    mutationFn: async ({ email, otp }: UserAuthParams) => {
+      const response = await userService.verifyOTP(email, otp as string);
+      return response.data.data;
     },
     onSuccess: async (data: UserVerifyResponse) => {
-      if (data && data.data && data.data.user && data.data.token) {
+      if (data) {
         const { user, token } = data.data;
 
         // Transform user data to match expected structure

@@ -3,7 +3,9 @@
 import { Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogTrigger } from "@/components/ui/dialog";
-import type { UserHeaderProps } from "@/types/admin";
+interface UserHeaderProps {
+  onAddUser: () => void;
+}
 
 /**
  * User page header component

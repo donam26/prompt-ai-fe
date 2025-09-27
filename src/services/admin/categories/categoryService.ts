@@ -1,7 +1,7 @@
 import { BaseService } from "../../base/baseService";
 import { ENDPOINTS } from "@/constants";
 import type { Category } from "@/lib/types";
-import type { ApiResponse } from "../../base";
+import type { ApiResponse } from "@/types/common";
 
 /**
  * CategoryService extending BaseService
@@ -14,21 +14,14 @@ export class CategoryService extends BaseService {
   /**
    * Get all categories
    */
-  async getCategories() {
-    return this.get<Category[]>();
-  }
-
-  /**
-   * Get categories with pagination and filtering
-   */
-  async getCategoriesPage(params?: Record<string, any>) {
-    return await this.get(params);
+  async getCategories(params?: Record<string, unknown>) {
+    return this.list(params);
   }
 
   /**
    * Get category by ID
    */
-  async getCategory(id: string | number): Promise<ApiResponse<Category>> {
+  async getCategory(id: string | number) {
     const response = await this.getById<Category>(id);
     return {
       success: response.success,
@@ -39,28 +32,15 @@ export class CategoryService extends BaseService {
   /**
    * Create new category
    */
-  async createCategory(
-    data: Partial<Category>
-  ): Promise<ApiResponse<Category>> {
-    const response = await this.create<Category, Partial<Category>>(data);
-    return {
-      success: response.success,
-      data: response.data,
-    };
+  async createCategory(data: Partial<Category>) {
+    return await this.create<Category, Partial<Category>>(data);
   }
 
   /**
    * Update category
    */
-  async updateCategory(
-    id: string | number,
-    data: Partial<Category>
-  ): Promise<ApiResponse<Category>> {
-    const response = await this.update<Category, Partial<Category>>(id, data);
-    return {
-      success: response.success,
-      data: response.data,
-    };
+  async updateCategory(id: string | number, data: Partial<Category>) {
+    return await this.update<Category, Partial<Category>>(id, data);
   }
 
   /**
@@ -68,33 +48,6 @@ export class CategoryService extends BaseService {
    */
   async deleteCategory(id: string | number): Promise<ApiResponse<void>> {
     return await this.delete<void>(id);
-  }
-
-  /**
-   * Get categories by section
-   */
-  async getCategoriesBySection(sectionId: string | number) {
-    return await this.get({ sectionId });
-  }
-
-  /**
-   * Get categories by industry
-   */
-  async getCategoriesByIndustry(industryId: string | number) {
-    return await this.get({ industryId });
-  }
-
-  /**
-   * Toggle category status
-   */
-  async toggleCategoryStatus(
-    id: string | number
-  ): Promise<ApiResponse<Category>> {
-    const response = await this.patch<Category>(id, {});
-    return {
-      success: response.success,
-      data: response.data,
-    };
   }
 }
 

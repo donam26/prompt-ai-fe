@@ -1,8 +1,4 @@
-import {
-  BaseService,
-  ApiResponse,
-  PaginatedResponse,
-} from "@/services/base/baseService";
+import { BaseService } from "@/services/base/baseService";
 import type { Blog } from "@/types/admin";
 
 /**
@@ -16,70 +12,43 @@ export class BlogService extends BaseService {
   /**
    * Get blogs with pagination and filtering
    */
-  async getBlogs(params: {
-    page?: number;
-    pageSize?: number;
-    search?: string;
-    categoryId?: string;
-    status?: string;
-    dateFrom?: string;
-    dateTo?: string;
-  }): Promise<ApiResponse<PaginatedResponse<Blog>>> {
-    return this.get<PaginatedResponse<Blog>>("", params);
+  async getBlogs(params: Record<string, unknown>) {
+    return this.list(params);
   }
 
   /**
    * Get blog by ID
    */
-  async getBlog(id: string | number): Promise<ApiResponse<Blog>> {
+  async getBlog(id: string | number) {
     return this.getById<Blog>(id);
   }
 
   /**
    * Create new blog
    */
-  async createBlog(data: Partial<Blog>): Promise<ApiResponse<Blog>> {
+  async createBlog(data: Partial<Blog>) {
     return this.create<Blog, Partial<Blog>>(data);
   }
 
   /**
    * Update blog
    */
-  async updateBlog(
-    id: string | number,
-    data: Partial<Blog>
-  ): Promise<ApiResponse<Blog>> {
+  async updateBlog(id: string | number, data: Partial<Blog>) {
     return this.update<Blog, Partial<Blog>>(id, data);
   }
 
   /**
    * Delete blog
    */
-  async deleteBlog(id: string | number): Promise<ApiResponse<void>> {
+  async deleteBlog(id: string | number) {
     return this.delete<void>(id);
-  }
-
-  /**
-   * Publish blog
-   */
-  async publishBlog(id: string | number): Promise<ApiResponse<Blog>> {
-    return this.patch<Blog>(id, { status: "published" });
-  }
-
-  /**
-   * Unpublish blog
-   */
-  async unpublishBlog(id: string | number): Promise<ApiResponse<Blog>> {
-    return this.patch<Blog>(id, { status: "draft" });
   }
 
   /**
    * Get blog categories
    */
-  async getCategories(): Promise<
-    ApiResponse<Array<{ id: string; name: string }>>
-  > {
-    return this.get<Array<{ id: string; name: string }>>("categories");
+  async getCategories() {
+    return this.list<Array<{ id: string; name: string }>>();
   }
 }
 

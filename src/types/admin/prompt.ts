@@ -1,3 +1,5 @@
+import { Category } from "@/lib/types";
+
 /**
  * Prompt filter state interface
  */
@@ -22,6 +24,7 @@ export interface PromptFilterProps {
   readonly onClearFilters: () => void;
   readonly onPageReset?: () => void;
   readonly className?: string;
+  readonly categories: Category[];
 }
 
 /**
@@ -34,8 +37,18 @@ export interface PromptFormData {
   readonly status: string;
   readonly isPremium: boolean;
   readonly tags: string[];
+  readonly description?: string;
+  readonly image?: string;
+  readonly image_card?: string;
+  readonly is_type?: number;
+  readonly sub_type?: number;
+  readonly industry_id?: string;
+  readonly topic_id?: string;
+  readonly is_coming_soon?: boolean;
   readonly created_at?: string;
   readonly updated_at?: string;
+  readonly category?: Category;
+  readonly isPublic: boolean;
 }
 
 /**

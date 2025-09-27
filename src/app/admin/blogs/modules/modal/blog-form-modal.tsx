@@ -189,9 +189,9 @@ const StatusSelect = ({
   onChange: (value: string) => void;
 }): React.JSX.Element => {
   const statusOptions = [
-    { value: "draft", label: "Bản nháp" },
-    { value: "published", label: "Đã xuất bản" },
-    { value: "archived", label: "Đã lưu trữ" },
+    { id: "draft", name: "Bản nháp" },
+    { id: "published", name: "Đã xuất bản" },
+    { id: "archived", name: "Đã lưu trữ" },
   ];
 
   return (
@@ -216,10 +216,10 @@ const CategorySelect = ({
   onChange: (value: string) => void;
 }): React.JSX.Element => {
   const categoryOptions = [
-    { value: "technology", label: "Công nghệ" },
-    { value: "business", label: "Kinh doanh" },
-    { value: "lifestyle", label: "Lối sống" },
-    { value: "education", label: "Giáo dục" },
+    { id: "technology", name: "Công nghệ" },
+    { id: "business", name: "Kinh doanh" },
+    { id: "lifestyle", name: "Lối sống" },
+    { id: "education", name: "Giáo dục" },
   ];
 
   return (

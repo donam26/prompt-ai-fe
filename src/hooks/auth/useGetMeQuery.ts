@@ -20,8 +20,8 @@ export const useGetMeQuery = (): UseGetMeQueryResult => {
         throw new Error("User ID is required");
       }
 
-      const response = await userService.getMe({ userId: String(user.id) });
-      return response.data as unknown as UserGetMeResponse;
+      const response = await userService.getUserById(user.id);
+      return response.data.data;
     },
     enabled: !!user?.id, // Only run query when user ID is available
     staleTime: 5 * 60 * 1000, // 5 minutes

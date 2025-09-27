@@ -14,19 +14,25 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-// import { cn } from "@/lib/utils";
+import { cn } from "@/lib/utils";
 
 export interface PaginationProps {
-  currentPage: number;
-  totalPages: number;
-  totalItems?: number;
-  pageSize?: number;
-  onPageChange: (page: number) => void;
-  onPageSizeChange?: (pageSize: number) => void;
-  className?: string;
-  showPrevNext?: boolean;
-  maxVisiblePages?: number;
-  loading?: boolean;
+  readonly currentPage: number;
+  readonly totalPages: number;
+  readonly totalItems?: number;
+  readonly pageSize?: number;
+  readonly onPaginationChange?: (pagination: {
+    pageIndex: number;
+    pageSize: number;
+  }) => void;
+  readonly onPageChange?: (page: number) => void;
+  readonly onPageSizeChange?: (pageSize: number) => void;
+  readonly className?: string;
+  readonly showPrevNext?: boolean;
+  readonly maxVisiblePages?: number;
+  readonly loading?: boolean;
+  readonly compact?: boolean;
+  readonly showPageSizeSelector?: boolean;
 }
 
 export const Pagination = ({
@@ -34,60 +40,67 @@ export const Pagination = ({
   totalPages,
   totalItems,
   pageSize = 10,
+  onPaginationChange,
   onPageChange,
   onPageSizeChange,
   className,
-  // showPrevNext = true,
-  // maxVisiblePages = 5,
+  showPrevNext = true,
+  maxVisiblePages = 5,
   loading = false,
+  compact = false,
+  showPageSizeSelector = true,
 }: PaginationProps) => {
   // Page size options
   const pageSizeOptions = [5, 10, 20, 50, 100];
 
-  // If no page size selector and only 1 page, don't show pagination
-  if (totalPages <= 1 && !onPageSizeChange) return null;
+  // If only 1 page and no page size selector, don't show pagination
+  if (totalPages <= 1 && !onPageSizeChange && !onPaginationChange) return null;
 
-  // const getVisiblePages = () => {
-  //   const pages: (number | string)[] = [];
-  //   const half = Math.floor(maxVisiblePages / 2);
+  const getVisiblePages = (): (number | string)[] => {
+    if (compact) {
+      return [currentPage];
+    }
 
-  //   let start = Math.max(1, currentPage - half);
-  //   let end = Math.min(totalPages, currentPage + half);
+    const pages: (number | string)[] = [];
+    const half = Math.floor(maxVisiblePages / 2);
 
-  //   // Adjust if we're near the beginning or end
-  //   if (end - start + 1 < maxVisiblePages) {
-  //     if (start === 1) {
-  //       end = Math.min(totalPages, start + maxVisiblePages - 1);
-  //     } else {
-  //       start = Math.max(1, end - maxVisiblePages + 1);
-  //     }
-  //   }
+    let start = Math.max(1, currentPage - half);
+    let end = Math.min(totalPages, currentPage + half);
 
-  //   // Add first page and ellipsis if needed
-  //   if (start > 1) {
-  //     pages.push(1);
-  //     if (start > 2) {
-  //       pages.push("...");
-  //     }
-  //   }
+    // Adjust if we're near the beginning or end
+    if (end - start + 1 < maxVisiblePages) {
+      if (start === 1) {
+        end = Math.min(totalPages, start + maxVisiblePages - 1);
+      } else {
+        start = Math.max(1, end - maxVisiblePages + 1);
+      }
+    }
 
-  //   // Add visible pages
-  //   for (let i = start; i <= end; i++) {
-  //     pages.push(i);
-  //   }
+    // Add first page and ellipsis if needed
+    if (start > 1) {
+      pages.push(1);
+      if (start > 2) {
+        pages.push("...");
+      }
+    }
 
-  //   // Add ellipsis and last page if needed
-  //   if (end < totalPages) {
-  //     if (end < totalPages - 1) {
-  //       pages.push("...");
-  //     }
-  //     pages.push(totalPages);
-  //   }
+    // Add visible pages
+    for (let i = start; i <= end; i++) {
+      pages.push(i);
+    }
 
-  //   return pages;
-  // };
+    // Add ellipsis and last page if needed
+    if (end < totalPages) {
+      if (end < totalPages - 1) {
+        pages.push("...");
+      }
+      pages.push(totalPages);
+    }
 
-  // const visiblePages = getVisiblePages();
+    return pages;
+  };
+
+  const visiblePages = getVisiblePages();
 
   // Calculate display info
   const startItem = totalItems ? (currentPage - 1) * pageSize + 1 : 0;
@@ -96,15 +109,35 @@ export const Pagination = ({
     ? `${startItem}–${endItem} của ${totalItems}`
     : "";
 
+  const handlePageChange = (page: number): void => {
+    if (page >= 1 && page <= totalPages && page !== currentPage && !loading) {
+      if (onPaginationChange) {
+        onPaginationChange({ pageIndex: page - 1, pageSize });
+      } else if (onPageChange) {
+        onPageChange(page);
+      }
+    }
+  };
+
+  const handlePageSizeChange = (newPageSize: number): void => {
+    if (newPageSize !== pageSize && !loading) {
+      if (onPaginationChange) {
+        onPaginationChange({ pageIndex: 0, pageSize: newPageSize });
+      } else if (onPageSizeChange) {
+        onPageSizeChange(newPageSize);
+      }
+    }
+  };
+
   return (
-    <div className={className}>
+    <div className={cn("pagination-container", className)}>
       {/* Mobile Layout */}
       <div className="lg:hidden flex flex-col space-y-4">
-        {onPageSizeChange ? (
+        {showPageSizeSelector && (onPageSizeChange || onPaginationChange) ? (
           // Show page size selector when available
           <div className="flex flex-col items-center space-y-2">
             {totalPages > 1 && (
-              <div className="flex justify-center items-center font-semibold text-gray-700 dark:text-gray-200 text-sm">
+              <div className="flex justify-center items-center font-medium text-gray-700 dark:text-gray-200 text-sm">
                 Trang {currentPage} của {totalPages}
               </div>
             )}
@@ -115,7 +148,7 @@ export const Pagination = ({
               </span>
               <Select
                 value={String(pageSize)}
-                onValueChange={value => onPageSizeChange(Number(value))}
+                onValueChange={value => handlePageSizeChange(Number(value))}
                 disabled={loading}
               >
                 <SelectTrigger className="w-16 h-7 text-xs">
@@ -136,7 +169,7 @@ export const Pagination = ({
           </div>
         ) : (
           // Show page info when no page size selector
-          <div className="flex justify-center items-center font-semibold text-gray-700 dark:text-gray-200 text-sm">
+          <div className="flex justify-center items-center font-medium text-gray-700 dark:text-gray-200 text-sm">
             {totalPages > 0 ? (
               <>
                 Trang {currentPage} của {totalPages}
@@ -149,40 +182,48 @@ export const Pagination = ({
 
         {totalPages > 1 && (
           <div className="flex justify-center items-center space-x-2">
+            {showPrevNext && (
+              <Button
+                variant="outline"
+                size="sm"
+                className="p-0 w-8 h-8"
+                onClick={() => handlePageChange(1)}
+                disabled={currentPage === 1 || loading}
+              >
+                <ChevronsLeft className="w-4 h-4" />
+              </Button>
+            )}
             <Button
               variant="outline"
-              className="bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 p-0 border-gray-200 dark:border-gray-600 rounded-lg w-9 h-9 text-gray-700 dark:text-gray-200 active:scale-95 transition-all duration-200"
-              onClick={() => onPageChange(1)}
-              disabled={currentPage === 1 || loading}
-            >
-              <ChevronsLeft className="w-4 h-4" />
-            </Button>
-            <Button
-              variant="outline"
-              className="bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 p-0 border-gray-200 dark:border-gray-600 rounded-lg w-9 h-9 text-gray-700 dark:text-gray-200 active:scale-95 transition-all duration-200"
-              onClick={() => onPageChange(Math.max(1, currentPage - 1))}
+              size="sm"
+              className="p-0 w-8 h-8"
+              onClick={() => handlePageChange(Math.max(1, currentPage - 1))}
               disabled={currentPage === 1 || loading}
             >
               <ChevronLeft className="w-4 h-4" />
             </Button>
             <Button
               variant="outline"
-              className="bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 p-0 border-gray-200 dark:border-gray-600 rounded-lg w-9 h-9 text-gray-700 dark:text-gray-200 active:scale-95 transition-all duration-200"
+              size="sm"
+              className="p-0 w-8 h-8"
               onClick={() =>
-                onPageChange(Math.min(totalPages, currentPage + 1))
+                handlePageChange(Math.min(totalPages, currentPage + 1))
               }
               disabled={currentPage === totalPages || loading}
             >
               <ChevronRight className="w-4 h-4" />
             </Button>
-            <Button
-              variant="outline"
-              className="bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 p-0 border-gray-200 dark:border-gray-600 rounded-lg w-9 h-9 text-gray-700 dark:text-gray-200 active:scale-95 transition-all duration-200"
-              onClick={() => onPageChange(totalPages)}
-              disabled={currentPage === totalPages || loading}
-            >
-              <ChevronsRight className="w-4 h-4" />
-            </Button>
+            {showPrevNext && (
+              <Button
+                variant="outline"
+                size="sm"
+                className="p-0 w-8 h-8"
+                onClick={() => handlePageChange(totalPages)}
+                disabled={currentPage === totalPages || loading}
+              >
+                <ChevronsRight className="w-4 h-4" />
+              </Button>
+            )}
           </div>
         )}
       </div>
@@ -190,23 +231,23 @@ export const Pagination = ({
       {/* Desktop Layout */}
       <div className="hidden lg:flex justify-between items-center">
         <div className="flex items-center gap-4">
-          <div className="text-gray-600 dark:text-gray-300 text-base">
-            {displayInfo && (
+          {displayInfo && (
+            <div className="text-gray-600 dark:text-gray-300 text-sm">
               <span className="flex items-center gap-2">
                 {loading && <Loader2 className="w-4 h-4 animate-spin" />}
                 {displayInfo}
               </span>
-            )}
-          </div>
+            </div>
+          )}
 
-          {onPageSizeChange && (
+          {showPageSizeSelector && (onPageSizeChange || onPaginationChange) && (
             <div className="flex items-center gap-2">
               <span className="text-gray-600 dark:text-gray-300 text-sm">
                 Hiển thị:
               </span>
               <Select
                 value={String(pageSize)}
-                onValueChange={value => onPageSizeChange(Number(value))}
+                onValueChange={value => handlePageSizeChange(Number(value))}
                 disabled={loading}
               >
                 <SelectTrigger className="w-20 h-8 text-sm">
@@ -228,46 +269,80 @@ export const Pagination = ({
         </div>
 
         {totalPages > 1 && (
-          <div className="flex items-center space-x-6 lg:space-x-8">
-            <div className="flex justify-center items-center w-[120px] font-medium text-gray-700 dark:text-gray-200 text-base">
+          <div className="flex items-center space-x-4">
+            <div className="flex justify-center items-center min-w-[120px] font-medium text-gray-700 dark:text-gray-200 text-sm">
               Trang {currentPage} của {totalPages}
             </div>
 
-            <div className="flex items-center space-x-2">
+            <div className="flex items-center space-x-1">
+              {showPrevNext && (
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="p-0 w-8 h-8"
+                  onClick={() => handlePageChange(1)}
+                  disabled={currentPage === 1 || loading}
+                >
+                  <ChevronsLeft className="w-4 h-4" />
+                </Button>
+              )}
               <Button
                 variant="outline"
-                className="hidden lg:flex bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 p-0 border-gray-200 dark:border-gray-600 rounded-lg w-10 h-10 text-gray-700 dark:text-gray-200 active:scale-95 transition-all duration-200"
-                onClick={() => onPageChange(1)}
+                size="sm"
+                className="p-0 w-8 h-8"
+                onClick={() => handlePageChange(Math.max(1, currentPage - 1))}
                 disabled={currentPage === 1 || loading}
               >
-                <ChevronsLeft className="w-5 h-5" />
+                <ChevronLeft className="w-4 h-4" />
               </Button>
+
+              {/* Page numbers */}
+              {!compact && (
+                <div className="flex items-center space-x-1">
+                  {visiblePages.map((page, index) => (
+                    <React.Fragment key={index}>
+                      {page === "..." ? (
+                        <span className="px-2 py-1 text-gray-500 text-sm">
+                          ...
+                        </span>
+                      ) : (
+                        <Button
+                          variant={page === currentPage ? "default" : "outline"}
+                          size="sm"
+                          className="p-0 w-8 h-8 text-sm"
+                          onClick={() => handlePageChange(page as number)}
+                          disabled={loading}
+                        >
+                          {page}
+                        </Button>
+                      )}
+                    </React.Fragment>
+                  ))}
+                </div>
+              )}
+
               <Button
                 variant="outline"
-                className="bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 p-0 border-gray-200 dark:border-gray-600 rounded-lg w-10 h-10 text-gray-700 dark:text-gray-200 active:scale-95 transition-all duration-200"
-                onClick={() => onPageChange(Math.max(1, currentPage - 1))}
-                disabled={currentPage === 1 || loading}
-              >
-                <ChevronLeft className="w-5 h-5" />
-              </Button>
-              <Button
-                variant="outline"
-                className="bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 p-0 border-gray-200 dark:border-gray-600 rounded-lg w-10 h-10 text-gray-700 dark:text-gray-200 active:scale-95 transition-all duration-200"
+                size="sm"
+                className="p-0 w-8 h-8"
                 onClick={() =>
-                  onPageChange(Math.min(totalPages, currentPage + 1))
+                  handlePageChange(Math.min(totalPages, currentPage + 1))
                 }
                 disabled={currentPage === totalPages || loading}
               >
-                <ChevronRight className="w-5 h-5" />
+                <ChevronRight className="w-4 h-4" />
               </Button>
-              <Button
-                variant="outline"
-                className="hidden lg:flex bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 p-0 border-gray-200 dark:border-gray-600 rounded-lg w-10 h-10 text-gray-700 dark:text-gray-200 active:scale-95 transition-all duration-200"
-                onClick={() => onPageChange(totalPages)}
-                disabled={currentPage === totalPages || loading}
-              >
-                <ChevronsRight className="w-5 h-5" />
-              </Button>
+              {showPrevNext && (
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="p-0 w-8 h-8"
+                  onClick={() => handlePageChange(totalPages)}
+                  disabled={currentPage === totalPages || loading}
+                >
+                  <ChevronsRight className="w-4 h-4" />
+                </Button>
+              )}
             </div>
           </div>
         )}

@@ -1,22 +1,34 @@
-import { apiClient } from "../../base/apiClient";
+import { BaseService } from "../../base/baseService";
 import { ENDPOINTS } from "@/constants";
-import { ServiceMethod } from "../../base/types";
 
-export class GptService {
-  // Call GPT API
-  callGPT: ServiceMethod<unknown> = data => {
-    return apiClient.post(ENDPOINTS.CHAT.GPT, data);
-  };
+/**
+ * GptService extending BaseService
+ */
+export class GptService extends BaseService {
+  constructor() {
+    super(ENDPOINTS.CHAT.GPT);
+  }
 
-  // Get user history
-  getHistory: ServiceMethod<string | number> = userId => {
-    return apiClient.get(`${ENDPOINTS.HISTORY.USER}/${userId}`);
-  };
+  /**
+   * Call GPT API
+   */
+  async callGPT(data: unknown) {
+    return this.post(ENDPOINTS.CHAT.GPT, data);
+  }
 
-  // Get referral code
-  getCode: ServiceMethod<string> = data => {
-    return apiClient.get(`${ENDPOINTS.REFERRAL.GET_DISCOUNT}/${data}`);
-  };
+  /**
+   * Get user history
+   */
+  async getUserHistory(userId: string | number) {
+    return this.getById(`${ENDPOINTS.HISTORY.USER}/${userId}`);
+  }
+
+  /**
+   * Get referral code
+   */
+  async getReferralCode(code: string) {
+    return this.getById(`${ENDPOINTS.REFERRAL.GET_DISCOUNT}/${code}`);
+  }
 }
 
 // Export singleton instance

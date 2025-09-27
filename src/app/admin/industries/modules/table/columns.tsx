@@ -1,122 +1,131 @@
-import React from "react";
+import type { ColumnDef } from "@tanstack/react-table";
+import type { Industry } from "@/lib/types";
+import { Column } from "@/components/data-table/data-table";
+import { ActionsCell } from "@/components/table-cell";
 import { Building2 } from "lucide-react";
 
-import { Column } from "@/components/data-table/data-table";
-import { StatusCell, BadgeCell, ActionsCell } from "@/components/table-cell";
-import type { Industry } from "@/lib/types";
-import type { IndustryColumnHandlers } from "@/types/admin";
+interface Props {
+  onEditAction: (industry: Industry) => void;
+  onDeleteAction: (industry: Industry) => void;
+}
 
-/**
- * Base industry columns configuration with responsive widths
- */
-export const industryColumns: Column<Industry>[] = [
-  {
-    key: "name",
-    title: "Tên ngành nghề",
-    dataIndex: "name",
-    className: "font-semibold text-gray-900 min-w-[200px] max-w-[300px]",
-    render: (_, industry) => (
-      <div className="flex items-center gap-2">
-        <Building2 className="w-4 h-4 text-gray-500" />
-        <span
-          className="font-semibold text-gray-900 truncate"
-          title={industry.name}
-        >
-          {industry.name}
-        </span>
-      </div>
-    ),
-  },
-  {
-    key: "description",
-    title: "Mô tả",
-    dataIndex: "description",
-    className: "hidden md:table-cell",
-    render: (_, industry) => (
-      <span
-        className="max-w-[300px] text-gray-500 text-sm truncate"
-        title={industry.description}
-      >
-        {industry.description || "Không có mô tả"}
-      </span>
-    ),
-  },
-  {
-    key: "order",
-    title: "Thứ tự",
-    width: 100,
-    align: "center",
-    className: "hidden lg:table-cell",
-    render: (_, industry) => (
-      <BadgeCell
-        label={industry.order?.toString() || "0"}
-        variant="secondary"
-        maxWidth="max-w-[60px]"
-      />
-    ),
-  },
-  {
-    key: "status",
-    title: "Trạng thái",
-    width: 120,
-    align: "center",
-    className: "min-w-[100px]",
-    render: (_, industry) => (
-      <StatusCell
-        isActive={industry.status === "active"}
-        isComingSoon={industry.status === "inactive"}
-      />
-    ),
-  },
-  {
-    key: "createdAt",
-    title: "Ngày tạo",
-    width: 140,
-    className: "hidden lg:table-cell",
-    render: (_, industry) => (
-      <span className="text-gray-600 text-sm">
-        {industry.createdAt
-          ? new Date(industry.createdAt).toLocaleDateString("vi-VN")
-          : "N/A"}
-      </span>
-    ),
-  },
-  {
-    key: "actions",
-    title: "Thao tác",
-    width: 120,
-    align: "center",
-    className: "min-w-[100px]",
-    render: (_, industry, index, context) => {
-      const handlers = (context as IndustryColumnHandlers) || {};
-      return (
-        <ActionsCell
-          item={industry}
-          onEdit={handlers.onEdit}
-          onDelete={item => handlers.onDelete?.(item.id)}
-        />
-      );
+export function useIndustryColumns({
+  onEditAction,
+  onDeleteAction,
+}: Props): ColumnDef<Industry>[] {
+  return [
+    {
+      accessorKey: "name",
+      meta: { title: "Tên ngành nghề" },
+      header: () => <div className="font-medium">Tên ngành nghề</div>,
+      cell: ({ row }) => (
+        <div className="flex items-center gap-2 min-w-[200px] max-w-[300px]">
+          <Building2 className="w-4 h-4 text-gray-500" />
+          <span
+            className="font-semibold text-gray-900 truncate"
+            title={row.original.name}
+          >
+            {row.original.name}
+          </span>
+        </div>
+      ),
     },
-  },
-];
+    {
+      accessorKey: "description",
+      meta: { title: "Mô tả" },
+      header: () => <div className="hidden md:block font-medium">Mô tả</div>,
+      cell: ({ row }) => (
+        <div className="hidden md:block">
+          <span
+            className="max-w-[300px] text-gray-500 text-sm truncate"
+            title={row.original.description}
+          >
+            {row.original.description || "Không có mô tả"}
+          </span>
+        </div>
+      ),
+      enableSorting: false,
+    },
+    {
+      accessorKey: "created_at",
+      meta: { title: "Ngày tạo" },
+      header: () => <div className="hidden lg:block font-medium">Ngày tạo</div>,
+      cell: ({ row }) => (
+        <div className="hidden lg:block">
+          <span className="text-gray-600 text-sm">
+            {row.original.created_at
+              ? new Date(row.original.created_at).toLocaleDateString("vi-VN")
+              : "N/A"}
+          </span>
+        </div>
+      ),
+      enableSorting: false,
+    },
+    {
+      id: "actions",
+      meta: { title: "Thao tác" },
+      header: () => <div className="font-medium text-center">Thao tác</div>,
+      cell: ({ row }) => (
+        <div className="flex justify-center items-center min-w-[100px]">
+          <ActionsCell
+            item={row.original}
+            onEdit={onEditAction}
+            onDelete={onDeleteAction}
+          />
+        </div>
+      ),
+      enableSorting: false,
+    },
+  ];
+}
 
 /**
- * Creates industry columns with custom handlers
- *
- * @param handlers - The column handlers
- * @returns The configured industry columns
+ * Legacy function for backward compatibility
+ * @deprecated Use useIndustryColumns instead
  */
 export const createIndustryColumns = (
-  handlers: IndustryColumnHandlers
+  handlers: Props
+): ColumnDef<Industry>[] => {
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  return useIndustryColumns(handlers);
+};
+
+/**
+ * Adapter function to convert TanStack Table columns to custom DataTable columns
+ */
+export const adaptColumnsForDataTable = (
+  tanstackColumns: ColumnDef<Industry>[]
 ): Column<Industry>[] => {
-  return industryColumns.map(column => {
-    if (column.key === "actions") {
-      return {
-        ...column,
-        render: (value, industry, index) =>
-          column.render?.(value, industry, index, handlers),
-      };
-    }
-    return column;
+  return tanstackColumns.map(col => {
+    const accessorKey = "accessorKey" in col ? col.accessorKey : "";
+    const id = "id" in col ? col.id : "";
+    const title = (col.meta as any)?.title || "";
+
+    return {
+      key: accessorKey || id || "",
+      title,
+      render: (_: unknown, record: Industry, index: number) => {
+        if (col.cell && typeof col.cell === "function") {
+          try {
+            return (col.cell as any)({
+              row: { original: record, index },
+              getValue: () =>
+                accessorKey ? record[accessorKey as keyof Industry] : undefined,
+              column: col,
+              table: {},
+              cell: {},
+              renderValue: () =>
+                accessorKey ? record[accessorKey as keyof Industry] : undefined,
+            });
+          } catch {
+            return accessorKey ? record[accessorKey as keyof Industry] : "";
+          }
+        }
+        return accessorKey ? record[accessorKey as keyof Industry] : "";
+      },
+      width: 200,
+      align: "left" as const,
+      className: "",
+    };
   });
 };

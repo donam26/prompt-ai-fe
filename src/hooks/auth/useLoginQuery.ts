@@ -1,7 +1,7 @@
 import { useMutation } from "@tanstack/react-query";
 import { userService } from "@/services";
 import { showToast } from "@/components/ui/toast";
-import { transformUserData } from "@/utils/userDataTransform";
+import { transformUserData } from "@/utils/user-data-transform";
 import { useAuth } from "@/hooks/useAuth";
 import { ROUTES_URL, getVerifyOTPUrl } from "@/constants";
 import type { UserLoginResponse } from "@/types";

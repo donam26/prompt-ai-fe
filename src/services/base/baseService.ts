@@ -1,20 +1,6 @@
 import { AxiosResponse } from "axios";
 import { apiClient } from "./apiClient";
-
-/**
- * Generic API response interface
- */
-export interface ApiResponse<T = any> {
-  success: boolean;
-  message?: string;
-  data: T | T[];
-  total?: number;
-  page?: number;
-  pageSize?: number;
-  totalPages?: number;
-  totalItems?: number;
-  currentPage?: number;
-}
+import { ApiResponse } from "@/types/common";
 
 /**
  * Base service class with common CRUD operations
@@ -29,7 +15,7 @@ export class BaseService {
   /**
    * Generic GET request
    */
-  async get<T = any>(params?: Record<string, any>) {
+  async list<T = any>(params?: Record<string, unknown>) {
     const response: AxiosResponse<ApiResponse<T>> = await apiClient.get(
       this.baseUrl,
       {
@@ -135,54 +121,4 @@ export class BaseService {
     );
     return response.data;
   }
-}
-
-/**
- * Paginated response interface
- */
-export interface PaginatedResponse<T = any> {
-  data: T[];
-  total: number;
-  page: number;
-  pageSize: number;
-  totalPages: number;
-  totalItems: number;
-  currentPage: number;
-}
-
-/**
- * Helper function to create paginated response
- */
-export function createPaginatedResponse<T = any>(
-  data: T[],
-  total: number,
-  page: number,
-  pageSize: number
-): PaginatedResponse<T> {
-  const totalPages = Math.ceil(total / pageSize);
-  return {
-    data,
-    total,
-    page,
-    pageSize,
-    totalPages,
-    totalItems: total,
-    currentPage: page,
-  };
-}
-
-/**
- * Helper function to extract data from API response
- */
-export function extractData<T = any>(response: ApiResponse<T>): T {
-  return response.data as T;
-}
-
-/**
- * Helper function to extract paginated data from API response
- */
-export function extractPaginatedData<T = any>(
-  response: ApiResponse<PaginatedResponse<T>>
-): PaginatedResponse<T> {
-  return response.data as PaginatedResponse<T>;
 }

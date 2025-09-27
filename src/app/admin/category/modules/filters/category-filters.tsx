@@ -11,26 +11,23 @@ import { Card, CardContent } from "@/components/ui/card";
 import type {
   CategoryFilterProps,
   FilterCardProps,
-  SectionFilterProps,
   StatusFilterProps,
-  IndustryFilterProps,
-} from "@/types/admin";
-import type { Industry, Section } from "@/lib/types";
+} from "@/types/admin/category";
+import type { Industry } from "@/lib/types";
 import { FILTER_CONSTANTS, DEBOUNCE_DELAY } from "@/constants";
 import { debounce } from "@/lib/utils";
 import {
   hasActiveFilters,
   clearAllFilters,
   updateSearchFilter,
-  updateSingleFilter,
-  updateArrayFilter,
-  // removeItemFromFilter,
+  updateStateFilter,
+  updateItemFromFilter,
 } from "@/utils/filter-helpers";
-import { ActiveFilters } from "@/components/common";
+import type { FilterState } from "@/types/admin";
+import { ActiveFilters } from "@/app/admin/category/modules/filters/active-filters";
 
 export const CategoryFilter = ({
   filters,
-  sections,
   industries,
   onFilterChange,
   onClearFilters,
@@ -38,6 +35,9 @@ export const CategoryFilter = ({
   className,
 }: CategoryFilterProps): React.JSX.Element => {
   const [searchValue, setSearchValue] = useState(filters.searchTerm || "");
+
+  // Clear all filters function
+  const handleClearAllFilters = () => clearAllFilters<FilterState>();
 
   const updateSearchValue = useCallback((value: string) => {
     setSearchValue(value);
@@ -50,7 +50,13 @@ export const CategoryFilter = ({
   const debouncedSearchHandler = useMemo(
     () =>
       debounce((value: string) => {
-        onFilterChange(updateSearchFilter(filters, "searchTerm", value));
+        onFilterChange(
+          updateSearchFilter(
+            filters as Record<string, unknown>,
+            "searchTerm",
+            value
+          ) as unknown as FilterState
+        );
         onPageReset?.();
       }, DEBOUNCE_DELAY),
     [filters, onFilterChange, onPageReset]
@@ -68,24 +74,17 @@ export const CategoryFilter = ({
   );
 
   /**
-   * Handles section filter changes
-   */
-  const handleSectionChange = useCallback(
-    (value: string) => {
-      const newFilters = updateSingleFilter(filters, "sectionId", value);
-      onFilterChange(newFilters);
-      onPageReset?.();
-    },
-    [filters, onFilterChange, onPageReset]
-  );
-
-  /**
    * Handles status filter changes
    */
   const handleStatusChange = useCallback(
     (value: string) => {
-      const newFilters = updateSingleFilter(filters, "status", value);
-      onFilterChange(newFilters);
+      onFilterChange(
+        updateStateFilter(
+          filters as Record<string, unknown>,
+          "status",
+          value
+        ) as unknown as FilterState
+      );
       onPageReset?.();
     },
     [filters, onFilterChange, onPageReset]
@@ -96,35 +95,24 @@ export const CategoryFilter = ({
    */
   const handleIndustryChange = useCallback(
     (values: string[]): void => {
-      const newFilters = updateArrayFilter(filters, "industryIds", values);
-      onFilterChange(newFilters);
+      onFilterChange(
+        updateItemFromFilter(
+          filters as Record<string, unknown>,
+          "industryIds",
+          values
+        ) as unknown as FilterState
+      );
       onPageReset?.();
     },
     [filters, onFilterChange, onPageReset]
   );
 
   /**
-   * Handles removing individual industry from filter
-   */
-  // const handleIndustryRemove = useCallback(
-  //   (industryId: string) => {
-  //     const newFilters = removeItemFromFilter(
-  //       filters,
-  //       "industryIds",
-  //       industryId
-  //     );
-  //     onFilterChange(newFilters);
-  //     onPageReset?.();
-  //   },
-  //   [filters, onFilterChange, onPageReset]
-  // );
-
-  /**
    * Clears all filters and resets to initial state
    */
   const handleClearFilters = useCallback((): void => {
     setSearchValue("");
-    const clearedFilters = clearAllFilters();
+    const clearedFilters = handleClearAllFilters();
     onFilterChange(clearedFilters);
     onClearFilters();
     onPageReset?.();
@@ -134,18 +122,16 @@ export const CategoryFilter = ({
   const showActiveFilters = hasActiveFilters({
     ...filters,
     searchTerm: searchValue,
-  });
+  } as Record<string, unknown>);
 
   return (
     <Card className={`${className || ""}`}>
       <CardContent className="p-6">
         <div className={FILTER_CONSTANTS.CONTAINER}>
           <FilterCard
-            filters={{ ...filters, searchTerm: searchValue }}
-            sections={sections}
+            filters={{ ...filters, searchTerm: searchValue } as FilterState}
             industries={industries}
             onSearchChange={handleSearchChange}
-            onSectionChange={handleSectionChange}
             onStatusChange={handleStatusChange}
             onIndustryChange={handleIndustryChange}
             onClearFilters={handleClearFilters}
@@ -155,8 +141,7 @@ export const CategoryFilter = ({
           {/* Integrated ActiveFilters */}
           {showActiveFilters && (
             <ActiveFilters
-              filters={{ ...filters, searchTerm: searchValue }}
-              sections={sections}
+              filters={{ ...filters, searchTerm: searchValue } as FilterState}
               industries={industries}
               onFilterChange={onFilterChange}
               onClearAll={handleClearFilters}
@@ -177,14 +162,10 @@ export const CategoryFilter = ({
  */
 const FilterCard = ({
   filters,
-  sections,
   industries,
   onSearchChange,
-  onSectionChange,
   onStatusChange,
   onIndustryChange,
-  // onClearFilters,
-  // hasActiveFilters,
 }: FilterCardProps): React.JSX.Element => (
   <>
     {/* Search Input */}
@@ -202,61 +183,22 @@ const FilterCard = ({
     <div className={FILTER_CONSTANTS.SPACING}>
       <div className="gap-4 grid xl:grid-cols-2">
         <div className="space-y-2">
-          <Label className="font-medium text-sm">Phân loại</Label>
-          <SectionFilter
-            value={filters.sectionId}
-            sections={sections}
-            onChange={onSectionChange}
-          />
-        </div>
-
-        <div className="space-y-2">
           <Label className="font-medium text-sm">Trạng thái</Label>
           <StatusFilter value={filters.status} onChange={onStatusChange} />
         </div>
-      </div>
 
-      <div className="space-y-2">
-        <Label className="font-medium text-sm">Ngành nghề</Label>
-        <IndustryFilter
-          value={filters.industryIds}
-          industries={industries}
-          onChange={onIndustryChange}
-        />
+        <div className="space-y-2">
+          <Label className="font-medium text-sm">Ngành nghề</Label>
+          <IndustryFilter
+            value={filters.industryIds || []}
+            industries={industries}
+            onChange={onIndustryChange}
+          />
+        </div>
       </div>
     </div>
   </>
 );
-
-/**
- * Section filter component
- *
- * @param props - The component props
- * @returns The section filter JSX
- */
-const SectionFilter = ({
-  value,
-  sections,
-  onChange,
-}: SectionFilterProps): React.JSX.Element => {
-  const sectionOptions = [
-    { id: "all", name: "Tất cả phân loại" },
-    ...sections.map((section: Section) => ({
-      id: String(section.id),
-      name: section.name,
-    })),
-  ];
-
-  return (
-    <BaseSelect
-      items={sectionOptions}
-      value={value}
-      onValueChange={onChange}
-      placeholder="Tất cả phân loại"
-      triggerClassName="w-full"
-    />
-  );
-};
 
 /**
  * Status filter component
@@ -296,7 +238,11 @@ const IndustryFilter = ({
   value,
   industries,
   onChange,
-}: IndustryFilterProps): React.JSX.Element => {
+}: {
+  readonly value: readonly string[];
+  readonly industries: Industry[];
+  readonly onChange: (values: string[]) => void;
+}): React.JSX.Element => {
   const options = industries.map((industry: Industry) => ({
     value: industry.id.toString(),
     label: industry.name,
@@ -305,7 +251,7 @@ const IndustryFilter = ({
   return (
     <MultiSelect
       options={options}
-      defaultValue={[...value]}
+      defaultValue={Array.isArray(value) ? [...value] : []}
       onValueChange={onChange}
       placeholder="Chọn ngành nghề..."
       maxCount={3}

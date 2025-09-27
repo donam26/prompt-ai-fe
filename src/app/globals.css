@@ -91,32 +91,11 @@
     @apply space-y-6;
   }
 
-  .admin-page-header {
-    @apply bg-white shadow-sm p-6 border border-gray-200 rounded-lg;
-  }
-
   .admin-page-content {
     @apply space-y-6;
   }
 
-  .admin-content-card {
-    @apply bg-white shadow-sm border border-gray-200 rounded-lg;
-  }
-
-  /* Mobile responsive */
-  @media (max-width: 1024px) {
-    .admin-sidebar {
-      @apply transition-transform -translate-x-full duration-300 ease-in-out;
-    }
-
-    .admin-sidebar.open {
-      @apply translate-x-0;
-    }
-
-    .admin-main-content {
-      @apply ml-0;
-    }
-  }
+  /* Mobile responsive - moved to inline styles */
 }
 
 @layer base {

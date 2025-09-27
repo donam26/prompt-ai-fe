@@ -8,12 +8,11 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { BaseSelect } from "@/components/ui/base-select";
 import { MultiSelect } from "@/components/ui/multi-select";
-import { PromptActiveFilters } from "@/components/common";
+import { PromptActiveFilters } from "./prompt-active-filters";
 import type {
   PromptFilterProps,
   PromptFilterState,
-  PromptActiveFilterItem,
-} from "@/types/admin";
+} from "@/types/admin/prompt";
 import { Category } from "@/lib/types";
 
 /**
@@ -70,8 +69,8 @@ export const PromptFilter = ({
     onPageReset?.();
   };
 
-  const getActiveFilters = (): PromptActiveFilterItem[] => {
-    const activeFilters: PromptActiveFilterItem[] = [];
+  const getActiveFilters = () => {
+    const activeFilters = [];
 
     if (filters.searchTerm) {
       activeFilters.push({

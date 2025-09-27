@@ -3,3 +3,4 @@
  */
 
 export * from "./prompt-filters";
+export * from "./prompt-active-filters";

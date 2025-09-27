@@ -4,8 +4,7 @@ import { useParams } from "next/navigation";
 
 import { Loading, AdminPageLayout, AdminContentCard } from "@/components/admin";
 import { LOADING_TYPE } from "@/constants/loading";
-import { useBlogForm } from "@/hooks";
-import { BlogForm, BlogFormActions } from "./modules";
+import { BlogForm, BlogFormActions, useBlogForm } from "./modules";
 
 export default function BlogEditPage(): React.JSX.Element {
   const params = useParams();

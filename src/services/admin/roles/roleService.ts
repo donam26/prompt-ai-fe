@@ -1,109 +1,111 @@
-import { apiClient, buildUrlWithParams } from "../../base/apiClient";
+import { BaseService } from "../../base/baseService";
 import { ENDPOINTS } from "@/constants";
-import { ServiceMethod } from "../../base/types";
+import type { Role } from "@/lib/types";
+import type { ApiResponse } from "@/types/common";
 
-// Role service parameters
-export interface RoleListParams {
-  [key: string]: unknown;
-}
+/**
+ * RoleService extending BaseService
+ */
+export class RoleService extends BaseService {
+  constructor() {
+    super(ENDPOINTS.ROLES.BASE);
+  }
 
-export class RoleService {
-  // Get all roles
-  getRoles: ServiceMethod = () => {
-    return apiClient.get(ENDPOINTS.ROLES.BASE);
-  };
+  /**
+   * Get all roles
+   */
+  async getRoles(params?: Record<string, unknown>) {
+    return this.list(params);
+  }
 
-  // Get role by ID
-  getRoleById: ServiceMethod<string | number> = id => {
-    return apiClient.get(`${ENDPOINTS.ROLES.BASE}/${id}`);
-  };
+  /**
+   * Get role by ID
+   */
+  async getRole(id: string | number) {
+    return this.getById<Role>(id);
+  }
 
-  // Create role
-  createRole: ServiceMethod<unknown> = data => {
-    return apiClient.post(ENDPOINTS.ROLES.BASE, data);
-  };
+  /**
+   * Create new role
+   */
+  async createRole(data: Partial<Role>) {
+    return this.create<Role, Partial<Role>>(data);
+  }
 
-  // Update role
-  updateRole: ServiceMethod<{ id: string | number; data: unknown }> =
-    params => {
-      const { id, data } = params || {};
-      return apiClient.put(`${ENDPOINTS.ROLES.BASE}/${id}`, data);
-    };
+  /**
+   * Update role
+   */
+  async updateRole(id: string | number, data: Partial<Role>) {
+    return this.update<Role, Partial<Role>>(id, data);
+  }
 
-  // Delete role
-  deleteRole: ServiceMethod<string | number> = id => {
-    return apiClient.delete(`${ENDPOINTS.ROLES.BASE}/${id}`);
-  };
+  /**
+   * Delete role
+   */
+  async deleteRole(id: string | number): Promise<ApiResponse<void>> {
+    return this.delete<void>(id);
+  }
 
-  // Restore role
-  restoreRole: ServiceMethod<string | number> = id => {
-    return apiClient.patch(`${ENDPOINTS.ROLES.BASE}/${id}/restore`);
-  };
+  /**
+   * Restore role
+   */
+  async restoreRole(id: string | number) {
+    return this.patch(id, {});
+  }
 
-  // Get deleted roles
-  getDeletedRoles: ServiceMethod = () => {
-    return apiClient.get(ENDPOINTS.ROLES.DELETED);
-  };
+  /**
+   * Get deleted roles
+   */
+  async getDeletedRoles() {
+    return this.list({ deleted: true });
+  }
 
-  // Get users by role
-  getUsersByRole: ServiceMethod<{
-    roleId: string | number;
-    params?: Record<string, unknown>;
-  }> = params => {
-    const { roleId, params: queryParams = {} } = params || {};
-    const queryString =
-      buildUrlWithParams(
-        `${ENDPOINTS.ROLES.BASE}/${roleId}${ENDPOINTS.ROLES.USERS}`,
-        queryParams
-      ).split("?")[1] || "";
-    return apiClient.get(
-      `${ENDPOINTS.ROLES.BASE}/${roleId}${ENDPOINTS.ROLES.USERS}?${queryString}`
+  /**
+   * Get users by role
+   */
+  async getUsersByRole(
+    roleId: string | number,
+    params?: Record<string, unknown>
+  ) {
+    return this.list({ ...params, roleId });
+  }
+
+  /**
+   * Assign user to role
+   */
+  async assignUserToRole(roleId: string | number, userId: string | number) {
+    return this.post(`${roleId}${ENDPOINTS.ROLES.ASSIGN_MULTIPLE}`, {
+      userIds: [userId],
+    });
+  }
+
+  /**
+   * Assign multiple users to role
+   */
+  async assignMultipleUsersToRole(
+    roleId: string | number,
+    userIds: (string | number)[]
+  ) {
+    return this.post(`${roleId}${ENDPOINTS.ROLES.ASSIGN_MULTIPLE}`, {
+      userIds,
+    });
+  }
+
+  /**
+   * Remove user from role
+   */
+  async removeUserFromRole(roleId: string | number, userId: string | number) {
+    return this.deleteEndpoint(
+      `${roleId}${ENDPOINTS.ROLES.REMOVE_USER}/${userId}`
     );
-  };
+  }
 
-  // Assign user to role
-  assignUserToRole: ServiceMethod<{
-    roleId: string | number;
-    userId: string | number;
-  }> = params => {
-    const { roleId, userId } = params || {};
-    return apiClient.post(
-      `${ENDPOINTS.ROLES.BASE}/${roleId}${ENDPOINTS.ROLES.ASSIGN_MULTIPLE}`,
-      {
-        userIds: [userId],
-      }
-    );
-  };
-
-  // Assign multiple users to role
-  assignMultipleUsersToRole: ServiceMethod<{
-    roleId: string | number;
-    userIds: (string | number)[];
-  }> = params => {
-    const { roleId, userIds } = params || {};
-    return apiClient.post(
-      `${ENDPOINTS.ROLES.BASE}/${roleId}${ENDPOINTS.ROLES.ASSIGN_MULTIPLE}`,
-      {
-        userIds: userIds,
-      }
-    );
-  };
-
-  // Remove user from role
-  removeUserFromRole: ServiceMethod<{
-    roleId: string | number;
-    userId: string | number;
-  }> = params => {
-    const { roleId, userId } = params || {};
-    return apiClient.delete(
-      `${ENDPOINTS.ROLES.BASE}/${roleId}${ENDPOINTS.ROLES.REMOVE_USER}/${userId}`
-    );
-  };
-
-  // Get role user statistics
-  getRoleUserStats: ServiceMethod = () => {
-    return apiClient.get(ENDPOINTS.ROLES.USER_STATS);
-  };
+  /**
+   * Get role user statistics
+   */
+  async getRoleUserStats() {
+    return this.getById(ENDPOINTS.ROLES.USER_STATS);
+  }
 }
 
 // Export singleton instance

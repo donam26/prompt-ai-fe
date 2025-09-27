@@ -1,6 +1,3 @@
-// Common utility types for reuse across the application
-
-// Generic response wrapper
 export interface ResponseWrapper<T = unknown> {
   success: boolean;
   message?: string;
@@ -20,6 +17,10 @@ export interface PaginationMeta {
 
 // Paginated response
 export interface PaginatedResponse<T = unknown> extends ResponseWrapper<T[]> {
+  pagination: PaginationMeta;
+}
+
+export interface ApiResponse<T = unknown> extends ResponseWrapper<T> {
   pagination: PaginationMeta;
 }
 
@@ -124,90 +125,6 @@ export interface ApiEndpoint {
   timeout?: number;
 }
 
-// Cache configuration
-export interface CacheConfig {
-  ttl: number; // Time to live in seconds
-  key: string;
-  tags?: string[];
-}
-
-// Event types
-export interface BaseEvent {
-  type: string;
-  timestamp: string;
-  userId?: string;
-  sessionId?: string;
-}
-
-export interface UserEvent extends BaseEvent {
-  type: "login" | "logout" | "register" | "update_profile" | "change_password";
-  data?: Record<string, unknown>;
-}
-
-export interface SystemEvent extends BaseEvent {
-  type: "error" | "warning" | "info" | "debug";
-  level: "low" | "medium" | "high" | "critical";
-  message: string;
-  stack?: string;
-}
-
-// Configuration types
-export interface AppConfig {
-  api: {
-    baseUrl: string;
-    timeout: number;
-    retries: number;
-  };
-  auth: {
-    tokenExpiry: number;
-    refreshTokenExpiry: number;
-    sessionTimeout: number;
-  };
-  ui: {
-    theme: Theme;
-    language: Language;
-    animations: boolean;
-  };
-  features: {
-    notifications: boolean;
-    analytics: boolean;
-    darkMode: boolean;
-  };
-}
-
-// Generic entity with ID
-export interface Entity {
-  id: string | number;
-  createdAt: string;
-  updatedAt: string;
-}
-
-// Generic entity with soft delete
-export interface SoftDeleteEntity extends Entity {
-  deletedAt?: string;
-  isDeleted: boolean;
-}
-
-// Generic entity with status
-export interface StatusEntity extends Entity {
-  status: Status;
-}
-
-// Generic entity with timestamps and status
-export interface FullEntity extends SoftDeleteEntity, StatusEntity {}
-
-// Generic CRUD operations
-export interface CrudOperations<T extends Entity> {
-  create: (data: Omit<T, "id" | "createdAt" | "updatedAt">) => Promise<T>;
-  read: (id: T["id"]) => Promise<T | null>;
-  update: (
-    id: T["id"],
-    data: Partial<Omit<T, "id" | "createdAt" | "updatedAt">>
-  ) => Promise<T>;
-  delete: (id: T["id"]) => Promise<boolean>;
-  list: (filters?: Record<string, unknown>) => Promise<T[]>;
-}
-
 // Generic service response
 export interface ServiceResponse<T = unknown> {
   success: boolean;
@@ -216,19 +133,7 @@ export interface ServiceResponse<T = unknown> {
   message?: string;
 }
 
-// Generic hook return type
-export interface HookResult<T = unknown> {
-  data: T | undefined;
-  isLoading: boolean;
-  error: string | null;
-  refetch: () => void;
-}
-
-// Generic mutation result
-export interface MutationResult<T = unknown> {
-  data: T | undefined;
-  isLoading: boolean;
-  error: string | null;
-  mutate: (variables: unknown) => void;
-  reset: () => void;
+export interface IPagination {
+  pageIndex: number;
+  pageSize: number;
 }

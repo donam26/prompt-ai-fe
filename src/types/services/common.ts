@@ -52,3 +52,8 @@ export type ServiceMethodNoParams<TResponse = any> = () => Promise<{
 export type ServiceMethodWithId<TResponse = any> = (
   id: string | number
 ) => Promise<{ data: TResponse }>;
+export interface ApiCallResult<T> {
+  data: T;
+  total: number;
+  totalPages: number;
+}

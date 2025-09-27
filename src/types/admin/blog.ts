@@ -32,10 +32,12 @@ export interface BlogHeaderProps {
  * Filter state interface for blog filtering
  */
 export interface BlogFilterState {
-  readonly searchTerm: string;
-  readonly dateRange: {
-    readonly from: string;
-    readonly to: string;
+  searchTerm: string;
+  status: string;
+  categoryId: string;
+  dateRange: {
+    from: string;
+    to: string;
   };
 }
 

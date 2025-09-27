@@ -1,5 +1,6 @@
+import type { UserSubscription } from "@/types/user";
 export interface User {
-  id: string | number;
+  id: string;
   full_name: string;
   email: string;
   role_id: number;
@@ -9,18 +10,6 @@ export interface User {
   userSub?: UserSubscription;
   avatar?: string;
   created_at?: string;
-}
-
-export interface UserSubscription {
-  id: string | number;
-  user_id: string | number;
-  subscription_id: string | number;
-  subscription?: Subscription;
-  start_date: string;
-  end_date: string;
-  status: string;
-  created_at: string;
-  updated_at: string;
 }
 
 export interface Subscription {
@@ -35,23 +24,42 @@ export interface Subscription {
 }
 
 export interface Prompt {
-  id: string | number;
+  id: string;
   title: string;
   content: string;
+  short_description?: string;
   description?: string;
-  category_id: string | number;
-  topic_id?: string | number;
-  industry_id?: string | number;
+  category_id: string;
+  topic_id?: string;
+  industry_id?: string;
   is_type: number;
   sub_type: number;
+  what?: string | null;
+  tips?: string | null;
+  text?: string | null;
+  how?: string | null;
+  input?: string | null;
+  output?: string | null;
+  OptimationGuide?: string | null;
+  addtip?: string | null;
+  addinformation?: string | null;
   image?: string;
   image_card?: string;
   is_coming_soon?: boolean;
+  sum_view?: number;
   created_at: string;
   updated_at: string;
   category?: Category;
+  Category?: Category; // Support both field names
   topic?: Topic;
   industry?: Industry;
+  // Additional properties for UI
+  tags?: string[];
+  isActive?: boolean;
+  isComingSoon?: boolean;
+  isPremium?: boolean;
+  isPublic?: boolean;
+  createdAt?: string;
 }
 
 export interface Category {
@@ -207,14 +215,6 @@ export interface DeviceLog {
   created_at: string;
 }
 
-export interface PaginatedResponse<T = unknown> {
-  data: T[];
-  total: number;
-  page: number;
-  pageSize: number;
-  totalPages: number;
-}
-
 export interface LoginRequest {
   email: string;
   password?: string;
@@ -334,17 +334,6 @@ export interface SearchFilters {
   sub_type?: string | number;
   status?: string;
   type?: string | number;
-}
-
-export interface TableColumn {
-  key: string;
-  title: string;
-  dataIndex?: string;
-  render?: (value: unknown, record: unknown, index: number) => React.ReactNode;
-  sorter?: boolean;
-  filterable?: boolean;
-  width?: number | string;
-  align?: "left" | "center" | "right";
 }
 
 export interface AdminStats {

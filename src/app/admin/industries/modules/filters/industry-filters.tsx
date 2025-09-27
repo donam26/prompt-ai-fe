@@ -25,10 +25,13 @@ export const IndustryFilter = ({
 }: IndustryFilterProps): React.JSX.Element => {
   // Debounced filter update
   const debouncedFilterUpdate = useCallback(
-    debounce((newFilters: IndustryFilterState) => {
-      onFilterChange(newFilters);
-      onPageReset?.();
-    }, 300),
+    (newFilters: IndustryFilterState) => {
+      const debouncedFn = debounce(() => {
+        onFilterChange(newFilters);
+        onPageReset?.();
+      }, 300);
+      debouncedFn();
+    },
     [onFilterChange, onPageReset]
   );
 
@@ -112,9 +115,9 @@ const StatusFilter = ({
   onChange: (value: string) => void;
 }): React.JSX.Element => {
   const statusOptions = [
-    { value: "all", label: "Tất cả trạng thái" },
-    { value: "active", label: "Hoạt động" },
-    { value: "inactive", label: "Không hoạt động" },
+    { id: "all", name: "Tất cả trạng thái" },
+    { id: "active", name: "Hoạt động" },
+    { id: "inactive", name: "Không hoạt động" },
   ];
 
   return (

@@ -1,47 +1,61 @@
-import { apiClient } from "../../base/apiClient";
-import { ENDPOINTS, QUERY_PARAMS } from "@/constants";
-import { SearchParams, ServiceMethod } from "../../base/types";
-import type { PaginationParams } from "@/types/services/common";
+import { BaseService } from "../../base/baseService";
+import { ENDPOINTS } from "@/constants";
+import type { Industry } from "@/lib/types";
+import type { ApiResponse } from "@/types/common";
 
-// Industry service parameters
-export interface IndustryListParams extends PaginationParams, SearchParams {}
+/**
+ * IndustryService extending BaseService
+ */
+export class IndustryService extends BaseService {
+  constructor() {
+    super(ENDPOINTS.INDUSTRIES.BASE);
+  }
 
-export class IndustryService {
-  // Get all industries
-  getIndustries: ServiceMethod = () => {
-    return apiClient.get(ENDPOINTS.INDUSTRIES.BASE);
-  };
+  /**
+   * Get all industries
+   */
+  async getIndustries(params?: Record<string, unknown>) {
+    return this.list(params);
+  }
 
-  // Get industries with pagination
-  getIndustriesPage: ServiceMethod<IndustryListParams> = params => {
-    const { page = 1, pageSize = 10, search = "" } = params || {};
-    const url = search
-      ? `${ENDPOINTS.INDUSTRIES.BASE}?${QUERY_PARAMS.PAGE}=${page}&${QUERY_PARAMS.PAGE_SIZE}=${pageSize}&${QUERY_PARAMS.SEARCH}=${search}`
-      : `${ENDPOINTS.INDUSTRIES.BASE}?${QUERY_PARAMS.PAGE}=${page}&${QUERY_PARAMS.PAGE_SIZE}=${pageSize}`;
-    return apiClient.get(url);
-  };
+  /**
+   * Get industries with pagination
+   */
+  async getIndustriesPage(params?: Record<string, unknown>) {
+    return this.list(params);
+  }
 
-  // Get industry by ID
-  getIndustryById: ServiceMethod<string | number> = id => {
-    return apiClient.get(`${ENDPOINTS.INDUSTRIES.BASE}/${id}`);
-  };
-
-  // Create industry
-  createIndustry: ServiceMethod<unknown> = data => {
-    return apiClient.post(ENDPOINTS.INDUSTRIES.BASE, data);
-  };
-
-  // Update industry
-  updateIndustry: ServiceMethod<{ id: string | number; data: unknown }> =
-    params => {
-      const { id, data } = params || {};
-      return apiClient.put(`${ENDPOINTS.INDUSTRIES.BASE}/${id}`, data);
+  /**
+   * Get industry by ID
+   */
+  async getIndustryById(id: string | number) {
+    const response = await this.getById<Industry>(id);
+    return {
+      success: response.success,
+      data: response.data,
     };
+  }
 
-  // Delete industry
-  deleteIndustry: ServiceMethod<string | number> = id => {
-    return apiClient.delete(`${ENDPOINTS.INDUSTRIES.BASE}/${id}`);
-  };
+  /**
+   * Create industry
+   */
+  async createIndustry(data: Partial<Industry>) {
+    return await this.create<Industry, Partial<Industry>>(data);
+  }
+
+  /**
+   * Update industry
+   */
+  async updateIndustry(id: string | number, data: Partial<Industry>) {
+    return await this.update<Industry, Partial<Industry>>(id, data);
+  }
+
+  /**
+   * Delete industry
+   */
+  async deleteIndustry(id: string | number): Promise<ApiResponse<void>> {
+    return await this.delete<void>(id);
+  }
 }
 
 // Export singleton instance
