@@ -58,6 +58,58 @@ export function buildQueryStringFromFilters(
 }
 
 /**
+ * Build query string for prompts with specific handling for arrays and date ranges
+ */
+export function buildPromptsQueryString(
+  filters: Record<string, unknown>
+): string {
+  const queryParams: string[] = [];
+
+  for (const [key, value] of Object.entries(filters)) {
+    // Handle array values (categoryIds, industryIds) - multiple params with same key
+    if (isArray(value) && !isEmpty(value)) {
+      castArray(value).forEach(item => {
+        if (isUndefined(item) || isNull(item) || item === "") {
+          return;
+        }
+        queryParams.push(
+          `${encodeURIComponent(key)}=${encodeURIComponent(String(item))}`
+        );
+      });
+      continue;
+    }
+
+    // Handle date range - convert to dateFrom and dateTo
+    if (key === "dateRange" && value && typeof value === "object") {
+      const dateRange = value as { from?: string; to?: string };
+      if (dateRange.from) {
+        queryParams.push(`dateFrom=${encodeURIComponent(dateRange.from)}`);
+      }
+      if (dateRange.to) {
+        queryParams.push(`dateTo=${encodeURIComponent(dateRange.to)}`);
+      }
+      continue;
+    }
+
+    // Skip "all" values for type filters (isPremium)
+    if (key === "isPremium" && value === "all") {
+      continue;
+    }
+
+    // Skip empty values
+    if (isUndefined(value) || isNull(value) || value === "") {
+      continue;
+    }
+
+    queryParams.push(
+      `${encodeURIComponent(key)}=${encodeURIComponent(String(value))}`
+    );
+  }
+
+  return queryParams.join("&");
+}
+
+/**
  * Check if a value is valid (not null, undefined, empty string, or "null"/"undefined" strings)
  * @param value - The value to check
  * @returns true if the value is valid, false otherwise

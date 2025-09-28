@@ -1,44 +1,18 @@
 import type { ColumnDef } from "@tanstack/react-table";
 import type { Prompt } from "@/lib/types";
 import { Column } from "@/components/data-table/data-table";
-import {
-  ImageCell,
-  StatusCell,
-  BadgeCell,
-  ActionsCell,
-} from "@/components/table-cell";
-import { Button } from "@/components/ui/button";
-import { Eye, EyeOff } from "lucide-react";
+import { BadgeCell, ActionsCell } from "@/components/table-cell";
 
 interface Props {
   onEditAction: (prompt: Prompt) => void;
   onDeleteAction: (prompt: Prompt) => void;
-  onTogglePublicAction: (prompt: Prompt) => void;
 }
 
 export function usePromptColumns({
   onEditAction,
   onDeleteAction,
-  onTogglePublicAction,
 }: Props): ColumnDef<Prompt>[] {
   return [
-    {
-      accessorKey: "image",
-      meta: { title: "Hình ảnh" },
-      header: () => (
-        <div className="w-full font-medium text-center">Hình ảnh</div>
-      ),
-      cell: ({ row }) => (
-        <div className="hidden sm:flex justify-center">
-          <ImageCell
-            src={row.original.image}
-            alt={row.original.title}
-            size="md"
-          />
-        </div>
-      ),
-      enableSorting: false,
-    },
     {
       accessorKey: "title",
       meta: { title: "Tiêu đề" },
@@ -52,16 +26,18 @@ export function usePromptColumns({
             >
               {row.original.title}
             </span>
-            {row.original.isPremium && (
+            {row.original.is_type === 2 ? (
               <BadgeCell label="Premium" variant="premium" />
-            )}
+            ) : row.original.is_type === 1 ? (
+              <BadgeCell label="Free" variant="secondary" />
+            ) : null}
           </div>
-          {row.original.description && (
+          {(row.original.short_description || row.original.description) && (
             <span
               className="max-w-[280px] text-gray-500 text-sm truncate"
-              title={row.original.description}
+              title={row.original.short_description || row.original.description}
             >
-              {row.original.description}
+              {row.original.short_description || row.original.description}
             </span>
           )}
           {row.original.tags && row.original.tags.length > 0 && (
@@ -96,27 +72,35 @@ export function usePromptColumns({
       enableSorting: false,
     },
     {
-      accessorKey: "status",
-      meta: { title: "Trạng thái" },
+      accessorKey: "industries",
+      meta: { title: "Ngành nghề" },
       header: () => (
-        <div className="w-full font-medium text-center">Trạng thái</div>
+        <div className="hidden lg:block font-medium">Ngành nghề</div>
       ),
       cell: ({ row }) => (
-        <div className="flex flex-col items-center space-y-1 min-w-[100px]">
-          <StatusCell
-            isActive={row.original.isActive !== false}
-            isComingSoon={row.original.isComingSoon}
-          />
-          <div className="flex items-center gap-1">
-            {row.original.isPublic ? (
-              <Eye className="w-3 h-3 text-green-500" />
-            ) : (
-              <EyeOff className="w-3 h-3 text-gray-400" />
-            )}
-            <span className="text-gray-500 text-xs">
-              {row.original.isPublic ? "Công khai" : "Riêng tư"}
-            </span>
-          </div>
+        <div className="hidden lg:block">
+          {row.original.Category?.industries &&
+          row.original.Category.industries.length > 0 ? (
+            <div className="flex flex-wrap gap-1">
+              {row.original.Category.industries
+                .slice(0, 2)
+                .map((industry: any) => (
+                  <BadgeCell
+                    key={industry.id}
+                    label={industry.name}
+                    variant="industry"
+                    maxWidth="max-w-[80px]"
+                  />
+                ))}
+              {row.original.Category.industries.length > 2 && (
+                <span className="text-gray-400 text-xs">
+                  +{row.original.Category.industries.length - 2}
+                </span>
+              )}
+            </div>
+          ) : (
+            <span className="text-gray-400 text-sm">Chưa có</span>
+          )}
         </div>
       ),
       enableSorting: false,
@@ -128,8 +112,8 @@ export function usePromptColumns({
       cell: ({ row }) => (
         <div className="hidden lg:block">
           <span className="text-gray-600 text-sm">
-            {row.original.createdAt
-              ? new Date(row.original.createdAt).toLocaleDateString("vi-VN")
+            {row.original.created_at
+              ? new Date(row.original.created_at).toLocaleDateString("vi-VN")
               : "N/A"}
           </span>
         </div>
@@ -147,21 +131,6 @@ export function usePromptColumns({
             onEdit={onEditAction}
             onDelete={onDeleteAction}
           />
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => onTogglePublicAction(row.original)}
-            className="p-0 w-8 h-8"
-            title={
-              row.original.isPublic ? "Ẩn khỏi công khai" : "Hiện công khai"
-            }
-          >
-            {row.original.isPublic ? (
-              <EyeOff className="w-4 h-4" />
-            ) : (
-              <Eye className="w-4 h-4" />
-            )}
-          </Button>
         </div>
       ),
       enableSorting: false,

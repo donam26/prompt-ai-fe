@@ -11,7 +11,7 @@ import {
   adaptColumnsForDataTable,
 } from "./modules";
 import { PROMPTS_CONSTANTS } from "@/constants/prompts";
-import { usePrompts, useCategories } from "@/hooks";
+import { usePrompts, useCategories, useIndustries } from "@/hooks";
 import { useDeletePrompt } from "@/hooks/admin/usePrompt/useDeletePrompt";
 import type { Prompt } from "@/lib/types";
 import type { PromptFilterState } from "@/types/admin/prompt";
@@ -46,6 +46,12 @@ export default function PromptManagementPage(): React.JSX.Element {
     categoriesWithPagination: categoriesData,
     isFetching: categoriesLoading,
   } = useCategories();
+
+  const {
+    industriesWithPagination: industriesData,
+    isLoading: industriesLoading,
+  } = useIndustries();
+
   const { mutate: deletePrompt, isLoading: isDeleting } = useDeletePrompt();
 
   const handlePaginationChange = useCallback(
@@ -54,9 +60,9 @@ export default function PromptManagementPage(): React.JSX.Element {
     []
   );
 
-  const isLoading = promptsLoading || categoriesLoading || isDeleting;
+  const isLoading =
+    promptsLoading || categoriesLoading || industriesLoading || isDeleting;
 
-  // 🔗 Navigation handlers
   const handleAddPrompt = () => {
     router.push(PROMPTS_CONSTANTS.ROUTES.PROMPT_CREATE);
   };
@@ -70,12 +76,6 @@ export default function PromptManagementPage(): React.JSX.Element {
     if (success) {
       refetch();
     }
-  };
-
-  const handleTogglePublic = (prompt: Prompt) => {
-    // TODO: Implement toggle public functionality
-    // eslint-disable-next-line no-console
-    console.log("Toggle public for prompt:", prompt.id);
   };
 
   const handleFilterChange = useCallback(
@@ -95,7 +95,6 @@ export default function PromptManagementPage(): React.JSX.Element {
   const tanstackColumns = usePromptColumns({
     onEditAction: handleEditPrompt,
     onDeleteAction: handleDeletePrompt,
-    onTogglePublicAction: handleTogglePublic,
   });
   const columns = adaptColumnsForDataTable(tanstackColumns);
 
@@ -107,6 +106,7 @@ export default function PromptManagementPage(): React.JSX.Element {
         <PromptFilter
           filters={filters}
           categories={categoriesData?.data || []}
+          industries={(industriesData?.data as any[]) || []}
           onFilterChange={handleFilterChange}
           onClearFilters={handleClearFilters}
           onPageReset={() =>

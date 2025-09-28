@@ -4,14 +4,11 @@ export const PROMPTS_CONSTANTS = {
   // Initial filter state
   INITIAL_FILTERS: {
     searchTerm: "",
-    categoryId: "",
-    status: "all",
-    isPremium: "all",
-    tags: [],
-    dateRange: {
-      from: "",
-      to: "",
-    },
+    categoryIds: [],
+    isType: undefined,
+    industryIds: [],
+    dateFrom: "",
+    dateTo: "",
   } as PromptFilterState,
 
   // Pagination
@@ -57,5 +54,17 @@ export const PROMPTS_CONSTANTS = {
   API: {
     PROMPTS: "/api/admin/prompts",
     PROMPT_BY_ID: (id: string | number) => `/api/admin/prompts/${id}`,
+  },
+
+  // Form options
+  FORM_OPTIONS: {
+    TYPE_OPTIONS: [
+      { value: "1", label: "Free" },
+      { value: "2", label: "Premium" },
+    ],
+    SUB_TYPE_OPTIONS: [
+      { value: "1", label: "Standard" },
+      { value: "2", label: "Advanced" },
+    ],
   },
 } as const;

@@ -37,20 +37,32 @@ export function useCategories(options: Props = {}) {
   });
   const [error, setError] = useState<string>("");
 
-  const memoizedPagination = useMemo(() => pagination, [pagination]);
+  // Memoize pagination values individually to prevent unnecessary re-renders
+  const memoizedPageIndex = useMemo(
+    () => pagination.pageIndex,
+    [pagination.pageIndex]
+  );
+  const memoizedPageSize = useMemo(
+    () => pagination.pageSize,
+    [pagination.pageSize]
+  );
+
+  const memoizedFilters = useMemo(() => filters, [JSON.stringify(filters)]);
 
   // Manual refetch function that doesn't cause infinite loops
   const fetchCategories = useCallback(async () => {
+    if (isFetchingRef.current) return; // Prevent concurrent calls
+
     isFetchingRef.current = true;
     setIsFetching(true);
 
     try {
       const query: Record<string, unknown> = {
-        page: memoizedPagination.pageIndex + 1,
-        limit: memoizedPagination.pageSize,
+        page: memoizedPageIndex + 1,
+        limit: memoizedPageSize,
       };
 
-      applyNonEmptyFiltersToQuery(filters, query);
+      applyNonEmptyFiltersToQuery(memoizedFilters, query);
       const response = await categoryService.getCategories(query);
 
       // Extract data from the response structure
@@ -74,7 +86,7 @@ export function useCategories(options: Props = {}) {
       isFetchingRef.current = false;
       setIsFetching(false);
     }
-  }, [memoizedPagination.pageIndex, memoizedPagination.pageSize, filters]);
+  }, [memoizedPageIndex, memoizedPageSize, memoizedFilters]);
 
   useEffect(() => {
     fetchCategories();

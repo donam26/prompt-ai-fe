@@ -27,6 +27,15 @@ export class PromptService extends BaseService {
   }
 
   /**
+   * Get prompts with query string for proper array handling
+   */
+  async getPromptsPageWithQueryString(queryString: string) {
+    const { apiClient } = await import("../../base/apiClient");
+    const response = await apiClient.get(`${this.baseUrl}?${queryString}`);
+    return response;
+  }
+
+  /**
    * Get prompt by ID
    */
   async getPromptById(id: string | number) {

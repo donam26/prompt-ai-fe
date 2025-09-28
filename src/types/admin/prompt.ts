@@ -1,18 +1,12 @@
 import { Category } from "@/lib/types";
 
-/**
- * Prompt filter state interface
- */
 export interface PromptFilterState {
   readonly searchTerm: string;
-  readonly categoryId: string;
-  readonly status: string;
-  readonly isPremium: string;
-  readonly tags: string[];
-  readonly dateRange: {
-    readonly from: string;
-    readonly to: string;
-  };
+  readonly categoryIds: string[];
+  readonly industryIds: string[];
+  readonly isType: number | undefined;
+  readonly dateFrom: string;
+  readonly dateTo: string;
 }
 
 /**
@@ -25,6 +19,7 @@ export interface PromptFilterProps {
   readonly onPageReset?: () => void;
   readonly className?: string;
   readonly categories: Category[];
+  readonly industries: Category[];
 }
 
 /**
@@ -71,4 +66,19 @@ export interface PromptFormProps {
 export interface PromptColumnHandlers {
   onEdit: (prompt: any) => void;
   onDelete: (prompt: any) => void;
+}
+
+export interface IPromptFilterProps {
+  filters: PromptFilterState;
+  categories: Category[];
+  industries: Category[];
+  onSearchChange: (value: string) => void;
+  onCategoryChange: (value: string) => void;
+  onCategoriesChange: (values: string[]) => void;
+  onPremiumChange: (value: string) => void;
+  onIndustriesChange: (values: string[]) => void;
+  onDateFromChange: (value: string) => void;
+  onDateToChange: (value: string) => void;
+  onClearFilters: () => void;
+  hasActiveFilters: boolean;
 }

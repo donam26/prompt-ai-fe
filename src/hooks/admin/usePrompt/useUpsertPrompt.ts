@@ -1,34 +1,64 @@
 import { useCallback, useState } from "react";
 import { promptService } from "@/services/admin/prompts/promptService";
 
-export interface UpdatePromptData {
+export interface UpsertPromptData {
   title?: string;
   content?: string;
-  categoryId?: string;
-  tags?: string[];
-  isPublic?: boolean;
-  isPremium?: boolean;
-  description?: string;
+  short_description?: string;
+  category_id?: string | number;
+  topic_id?: string | number;
+  industry_id?: string | number;
+  is_type?: number;
+  sub_type?: number;
+  what?: string;
+  tips?: string;
+  text?: string;
+  how?: string;
+  input?: string;
+  output?: string;
+  OptimationGuide?: string;
+  addtip?: string;
+  addinformation?: string;
   image?: string;
+  image_card?: string;
+  is_coming_soon?: boolean;
+  tags?: string[];
+  industry_ids?: (string | number)[];
 }
 
 interface IResponse {
-  isUpdating: boolean;
+  isUpserting: boolean;
   error: string;
-  mutate: (data: UpdatePromptData, id: string) => Promise<boolean>;
+  mutate: (data: UpsertPromptData, id?: string) => Promise<boolean>;
 }
 
 export function useUpsertPrompt(): IResponse {
-  const [isUpdating, setIsUpdating] = useState(false);
+  const [isUpserting, setIsUpserting] = useState(false);
   const [error, setError] = useState<string>("");
 
   const mutate = useCallback(
-    async (data: UpdatePromptData, id: string): Promise<boolean> => {
-      setIsUpdating(() => true);
+    async (data: UpsertPromptData, id?: string): Promise<boolean> => {
+      setIsUpserting(() => true);
       setError(() => "");
 
       try {
-        await promptService.updatePrompt(id, data);
+        if (id) {
+          // Update existing prompt
+          await promptService.updatePrompt(id, {
+            ...data,
+            category_id: data.category_id?.toString() || "",
+            topic_id: data.topic_id?.toString() || "",
+            industry_id: data.industry_id?.toString() || "",
+          });
+        } else {
+          // Create new prompt
+          await promptService.createPrompt({
+            ...data,
+            category_id: data.category_id?.toString() || "",
+            topic_id: data.topic_id?.toString() || "",
+            industry_id: data.industry_id?.toString() || "",
+          });
+        }
         return true;
       } catch (error: unknown) {
         const errorMessage =
@@ -36,14 +66,14 @@ export function useUpsertPrompt(): IResponse {
         setError(() => errorMessage);
         return false;
       } finally {
-        setIsUpdating(() => false);
+        setIsUpserting(() => false);
       }
     },
     []
   );
 
   return {
-    isUpdating,
+    isUpserting,
     error,
     mutate,
   };

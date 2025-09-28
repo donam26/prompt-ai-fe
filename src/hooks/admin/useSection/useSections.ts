@@ -40,7 +40,16 @@ export function useSections(options: Props = {}) {
   });
   const [error, setError] = useState<string>("");
 
-  const memoizedPagination = useMemo(() => pagination, [pagination]);
+  // Memoize pagination values individually to prevent unnecessary re-renders
+  const memoizedPageIndex = useMemo(
+    () => pagination.pageIndex,
+    [pagination.pageIndex]
+  );
+  const memoizedPageSize = useMemo(
+    () => pagination.pageSize,
+    [pagination.pageSize]
+  );
+  const memoizedFilters = useMemo(() => filters, [JSON.stringify(filters)]);
 
   // Manual refetch function that doesn't cause infinite loops
   const fetchSections = useCallback(async () => {
@@ -53,11 +62,11 @@ export function useSections(options: Props = {}) {
 
     try {
       const query: Record<string, unknown> = {
-        page: memoizedPagination.pageIndex + 1,
-        limit: memoizedPagination.pageSize,
+        page: memoizedPageIndex + 1,
+        limit: memoizedPageSize,
       };
 
-      applyNonEmptyFiltersToQuery(filters, query);
+      applyNonEmptyFiltersToQuery(memoizedFilters, query);
       const response = await sectionService.getSectionsPage(query);
 
       // Extract data from the response structure
@@ -81,12 +90,7 @@ export function useSections(options: Props = {}) {
       isFetchingRef.current = false;
       setIsFetching(false);
     }
-  }, [
-    memoizedPagination.pageIndex,
-    memoizedPagination.pageSize,
-    filters,
-    enabled,
-  ]);
+  }, [memoizedPageIndex, memoizedPageSize, memoizedFilters, enabled]);
 
   useEffect(() => {
     fetchSections();

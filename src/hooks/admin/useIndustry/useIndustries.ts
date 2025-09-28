@@ -27,48 +27,21 @@ export function useIndustries({ pagination, filters }: Props = {}): IResponse {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string>("");
 
-  const prevFiltersRef = useRef<IndustryFilterState | undefined>(undefined);
-
-  const memoizedPagination = useMemo(
-    () => pagination || { page: 1, pageSize: 10 },
-    [pagination]
+  // Memoize pagination values individually to prevent unnecessary re-renders
+  const memoizedPage = useMemo(() => pagination?.page || 1, [pagination?.page]);
+  const memoizedPageSize = useMemo(
+    () => pagination?.pageSize || 10,
+    [pagination?.pageSize]
   );
-
-  const memoizedFilters = useMemo(() => {
-    const prevFilters = prevFiltersRef.current;
-
-    const isCurrentEmpty = !filters || Object.keys(filters).length === 0;
-    const isPrevEmpty = prevFilters
-      ? Object.keys(prevFilters).length === 0
-      : true;
-
-    if (isCurrentEmpty && isPrevEmpty) {
-      return prevFilters || filters;
-    }
-
-    if (isCurrentEmpty !== isPrevEmpty) {
-      prevFiltersRef.current = filters;
-      return filters;
-    }
-
-    if (
-      !prevFilters ||
-      JSON.stringify(filters) !== JSON.stringify(prevFilters)
-    ) {
-      prevFiltersRef.current = filters;
-      return filters;
-    }
-
-    return prevFilters;
-  }, [filters]);
+  const memoizedFilters = useMemo(() => filters, [JSON.stringify(filters)]);
 
   const fetchIndustries = useCallback(async () => {
     setIsLoading(true);
 
     try {
       const query: Record<string, unknown> = {
-        page: memoizedPagination.page || 1,
-        pageSize: memoizedPagination.pageSize || 10,
+        page: memoizedPage,
+        pageSize: memoizedPageSize,
       };
 
       // Apply filters to query
@@ -100,7 +73,7 @@ export function useIndustries({ pagination, filters }: Props = {}): IResponse {
     } finally {
       setIsLoading(false);
     }
-  }, [memoizedPagination.page, memoizedPagination.pageSize, memoizedFilters]);
+  }, [memoizedPage, memoizedPageSize, memoizedFilters]);
 
   useEffect(() => {
     fetchIndustries();

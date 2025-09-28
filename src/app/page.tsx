@@ -299,29 +299,30 @@ export default function HomePage() {
           </h2>
 
           <div className="gap-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 mb-8">
-            {newestPrompts.slice(0, 8).map(prompt => (
-              <Card
-                key={prompt.id}
-                className="group hover:shadow-xl transition-all duration-300"
-              >
-                <CardHeader>
-                  <div className="flex justify-between items-center">
-                    <Badge variant="secondary">ChatGPT</Badge>
-                    <Button variant="ghost" size="sm">
-                      <Star className="w-4 h-4" />
-                    </Button>
-                  </div>
-                  <CardTitle className="text-lg line-clamp-2">
-                    {prompt.title}
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <CardDescription className="line-clamp-3">
-                    {prompt.description || prompt.content}
-                  </CardDescription>
-                </CardContent>
-              </Card>
-            ))}
+            {newestPrompts.length > 0 &&
+              newestPrompts?.slice(0, 8)?.map(prompt => (
+                <Card
+                  key={prompt.id}
+                  className="group hover:shadow-xl transition-all duration-300"
+                >
+                  <CardHeader>
+                    <div className="flex justify-between items-center">
+                      <Badge variant="secondary">ChatGPT</Badge>
+                      <Button variant="ghost" size="sm">
+                        <Star className="w-4 h-4" />
+                      </Button>
+                    </div>
+                    <CardTitle className="text-lg line-clamp-2">
+                      {prompt.title}
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <CardDescription className="line-clamp-3">
+                      {prompt.description || prompt.content}
+                    </CardDescription>
+                  </CardContent>
+                </Card>
+              ))}
           </div>
 
           <div className="text-center">

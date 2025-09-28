@@ -7,7 +7,7 @@ import {
   DEFAULT_TOTAL_PAGES,
 } from "@/constants";
 import { promptService } from "@/services/admin/prompts/promptService";
-import { applyNonEmptyFiltersToQuery } from "@/utils";
+import { applyNonEmptyFiltersToQuery, buildPromptsQueryString } from "@/utils";
 import type { IPagination } from "@/types/common";
 
 interface Props {
@@ -40,7 +40,16 @@ export function usePrompts(options: Props = {}) {
   });
   const [error, setError] = useState<string>("");
 
-  const memoizedPagination = useMemo(() => pagination, [pagination]);
+  // Memoize pagination values individually to prevent unnecessary re-renders
+  const memoizedPageIndex = useMemo(
+    () => pagination.pageIndex,
+    [pagination.pageIndex]
+  );
+  const memoizedPageSize = useMemo(
+    () => pagination.pageSize,
+    [pagination.pageSize]
+  );
+  const memoizedFilters = useMemo(() => filters, [JSON.stringify(filters)]);
 
   // Manual refetch function that doesn't cause infinite loops
   const fetchPrompts = useCallback(async () => {
@@ -53,22 +62,43 @@ export function usePrompts(options: Props = {}) {
 
     try {
       const query: Record<string, unknown> = {
-        page: memoizedPagination.pageIndex + 1,
-        limit: memoizedPagination.pageSize,
+        page: memoizedPageIndex + 1,
+        limit: memoizedPageSize,
+        ...memoizedFilters,
       };
 
+      // Build query string for API call with proper array handling
+      const queryString = buildPromptsQueryString(query);
       applyNonEmptyFiltersToQuery(filters, query);
-      const response = await promptService.getPromptsPage(query);
+
+      const response =
+        await promptService.getPromptsPageWithQueryString(queryString);
 
       // Extract data from the response structure
-      const responseData = response.data.data || [];
-      const total = response.data.pagination?.total || DEFAULT_TOTAL;
+      const responseData = response.data || [];
+      const total = responseData.pagination.total || DEFAULT_TOTAL;
       const totalPages =
-        response.data.pagination?.totalPages || DEFAULT_TOTAL_PAGES;
+        responseData.pagination.totalPages || DEFAULT_TOTAL_PAGES;
 
-      setPrompts(responseData);
+      // Transform data to match expected format
+      const transformedData = responseData.data.map((item: Prompt) => ({
+        ...item,
+        // Map API fields to expected UI fields
+        description: item.short_description || item.description,
+        isPremium: item.is_type === 2,
+        isActive: true, // Default to active
+        isComingSoon: item.is_coming_soon || false,
+        isPublic: true, // Default to public for now
+        createdAt: item.created_at,
+        image: item.image || item.Category?.image,
+        tags: item.tags || [],
+        // Ensure industries are properly mapped
+        industries: item.Category?.industries || item.industries || [],
+      }));
+
+      setPrompts(transformedData);
       setPromptsWithPagination({
-        data: responseData,
+        data: transformedData,
         total,
         totalPages,
       });
@@ -81,12 +111,7 @@ export function usePrompts(options: Props = {}) {
       isFetchingRef.current = false;
       setIsFetching(false);
     }
-  }, [
-    memoizedPagination.pageIndex,
-    memoizedPagination.pageSize,
-    filters,
-    enabled,
-  ]);
+  }, [memoizedPageIndex, memoizedPageSize, memoizedFilters, enabled]);
 
   useEffect(() => {
     fetchPrompts();

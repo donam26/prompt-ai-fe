@@ -1,9 +1,3 @@
-/**
- * Admin category types
- *
- * Type definitions for admin category management components and functionality.
- */
-
 import type { Category, Section, Industry } from "@/lib/types";
 
 /**

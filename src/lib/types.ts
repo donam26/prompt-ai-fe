@@ -52,7 +52,7 @@ export interface Prompt {
   category?: Category;
   Category?: Category; // Support both field names
   topic?: Topic;
-  industry?: Industry;
+  industries?: Industry[];
   // Additional properties for UI
   tags?: string[];
   isActive?: boolean;
