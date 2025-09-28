@@ -12,6 +12,7 @@ import { categoryService } from "@/services/admin/categories";
 import { applyNonEmptyFiltersToQuery } from "@/utils";
 import type { IPagination } from "@/types/common";
 import type { ApiCallResult } from "@/types/services/common";
+import { useDeepMemo } from "@/hooks/useDeepMemo";
 
 interface Props {
   refetch?: () => void;
@@ -47,7 +48,7 @@ export function useCategories(options: Props = {}) {
     [pagination.pageSize]
   );
 
-  const memoizedFilters = useMemo(() => filters, [JSON.stringify(filters)]);
+  const memoizedFilters = useDeepMemo(filters);
 
   // Manual refetch function that doesn't cause infinite loops
   const fetchCategories = useCallback(async () => {

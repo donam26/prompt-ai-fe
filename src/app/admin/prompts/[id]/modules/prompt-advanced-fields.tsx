@@ -1,7 +1,10 @@
 "use client";
 
-import type { Control, ControllerRenderProps } from "react-hook-form";
-import { Controller } from "react-hook-form";
+import {
+  Controller,
+  type Control,
+  type ControllerRenderProps,
+} from "react-hook-form";
 import type { PromptFormValues } from "@/libs/form-schemas";
 import {
   FormField,

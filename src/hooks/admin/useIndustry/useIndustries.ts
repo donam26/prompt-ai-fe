@@ -1,12 +1,13 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 
 import type { Industry } from "@/lib/types";
 import type { ApiCallResult, PaginationParams } from "@/types/services/common";
 import { industryService } from "@/services";
 import { DEFAULT_TOTAL, DEFAULT_TOTAL_PAGES } from "@/constants";
 import type { IndustryFilterState } from "@/types/admin/industry";
+import { useDeepMemo } from "@/hooks/useDeepMemo";
 
 interface IResponse {
   industriesWithPagination: ApiCallResult<Industry[]> | null;
@@ -33,7 +34,7 @@ export function useIndustries({ pagination, filters }: Props = {}): IResponse {
     () => pagination?.pageSize || 10,
     [pagination?.pageSize]
   );
-  const memoizedFilters = useMemo(() => filters, [JSON.stringify(filters)]);
+  const memoizedFilters = useDeepMemo(filters);
 
   const fetchIndustries = useCallback(async () => {
     setIsLoading(true);

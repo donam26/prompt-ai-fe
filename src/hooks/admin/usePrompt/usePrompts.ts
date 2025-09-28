@@ -9,6 +9,7 @@ import {
 import { promptService } from "@/services/admin/prompts/promptService";
 import { applyNonEmptyFiltersToQuery, buildPromptsQueryString } from "@/utils";
 import type { IPagination } from "@/types/common";
+import { useDeepMemo } from "@/hooks/useDeepMemo";
 
 interface Props {
   refetch?: () => void;
@@ -49,7 +50,7 @@ export function usePrompts(options: Props = {}) {
     () => pagination.pageSize,
     [pagination.pageSize]
   );
-  const memoizedFilters = useMemo(() => filters, [JSON.stringify(filters)]);
+  const memoizedFilters = useDeepMemo(filters);
 
   // Manual refetch function that doesn't cause infinite loops
   const fetchPrompts = useCallback(async () => {
@@ -111,7 +112,7 @@ export function usePrompts(options: Props = {}) {
       isFetchingRef.current = false;
       setIsFetching(false);
     }
-  }, [memoizedPageIndex, memoizedPageSize, memoizedFilters, enabled]);
+  }, [memoizedPageIndex, memoizedPageSize, memoizedFilters, enabled, filters]);
 
   useEffect(() => {
     fetchPrompts();

@@ -9,6 +9,7 @@ import {
 import { paymentService } from "@/services/admin/payments/paymentService";
 import { applyNonEmptyFiltersToQuery } from "@/utils";
 import type { IPagination } from "@/types/common";
+import { useDeepMemo } from "@/hooks/useDeepMemo";
 
 interface Props {
   refetch?: () => void;
@@ -49,7 +50,7 @@ export function useAdminPaymentsQuery(options: Props = {}) {
     () => pagination.pageSize,
     [pagination.pageSize]
   );
-  const memoizedFilters = useMemo(() => filters, [JSON.stringify(filters)]);
+  const memoizedFilters = useDeepMemo(filters);
 
   // Manual refetch function that doesn't cause infinite loops
   const fetchPayments = useCallback(async () => {

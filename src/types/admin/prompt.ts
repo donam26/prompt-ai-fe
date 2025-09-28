@@ -73,7 +73,6 @@ export interface IPromptFilterProps {
   categories: Category[];
   industries: Category[];
   onSearchChange: (value: string) => void;
-  onCategoryChange: (value: string) => void;
   onCategoriesChange: (values: string[]) => void;
   onPremiumChange: (value: string) => void;
   onIndustriesChange: (values: string[]) => void;

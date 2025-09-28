@@ -9,9 +9,11 @@ import { Button } from "@/components/ui/button";
 import { BaseSelect } from "@/components/ui/base-select";
 import { MultiSelect } from "@/components/ui/multi-select";
 import { PromptActiveFilters } from "./prompt-active-filters";
-import type { PromptFilterProps } from "@/types/admin/prompt";
+import type {
+  PromptFilterProps,
+  IPromptFilterProps,
+} from "@/types/admin/prompt";
 import { Category } from "@/lib/types";
-import { IPromptFilterProps } from "@/types/admin/prompt";
 
 /**
  * Prompt filter component with search, category, status, premium, and tags filters
@@ -32,14 +34,6 @@ export const PromptFilter = ({
     onFilterChange({
       ...filters,
       searchTerm: value,
-    });
-    onPageReset?.();
-  };
-
-  const handleCategoryChange = (value: string): void => {
-    onFilterChange({
-      ...filters,
-      categoryIds: [value],
     });
     onPageReset?.();
   };
@@ -190,7 +184,6 @@ export const PromptFilter = ({
         categories={categories}
         industries={industries}
         onSearchChange={handleSearchChange}
-        onCategoryChange={handleCategoryChange}
         onCategoriesChange={handleCategoriesChange}
         onPremiumChange={handlePremiumChange}
         onIndustriesChange={handleIndustriesChange}
@@ -219,7 +212,6 @@ const PromptFilterCard = ({
   categories,
   industries,
   onSearchChange,
-  onCategoryChange,
   onCategoriesChange,
   onPremiumChange,
   onIndustriesChange,

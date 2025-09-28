@@ -2,7 +2,7 @@
 
 import type { Prompt } from "@/lib/types";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { AdminContentCard, AdminPageLayout } from "@/components/admin";
 import { FormActions } from "@/components/form-actions";
@@ -74,7 +74,6 @@ export const PromptForm = ({
     control,
     handleSubmit,
     setValue,
-    watch,
     formState: { isDirty },
   } = form;
 
