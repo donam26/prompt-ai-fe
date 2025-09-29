@@ -8,7 +8,7 @@ export interface UpsertPromptData {
   category_id?: string | number;
   topic_id?: string | number;
   industry_id?: string | number;
-  is_type?: number;
+  is_type?: string | number;
   sub_type?: number;
   what?: string;
   tips?: string;
@@ -49,6 +49,7 @@ export function useUpsertPrompt(): IResponse {
             category_id: data.category_id?.toString() || "",
             topic_id: data.topic_id?.toString() || "",
             industry_id: data.industry_id?.toString() || "",
+            is_type: data.is_type?.toString() || "1",
           });
         } else {
           // Create new prompt
@@ -57,6 +58,7 @@ export function useUpsertPrompt(): IResponse {
             category_id: data.category_id?.toString() || "",
             topic_id: data.topic_id?.toString() || "",
             industry_id: data.industry_id?.toString() || "",
+            is_type: data.is_type?.toString() || "1",
           });
         }
         return true;

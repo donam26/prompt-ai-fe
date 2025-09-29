@@ -1,4 +1,4 @@
-import type { Blog } from "@/lib/types";
+import type { Blog } from "@/types";
 import type { BlogFilterState } from "@/types/admin/blog";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
@@ -8,14 +8,14 @@ import {
 } from "@/constants";
 import { blogService } from "@/services/admin/blogs/blogService";
 import { applyNonEmptyFiltersToQuery } from "@/utils";
-import type { IPagination } from "@/types/common";
+import type { PaginationParams } from "@/types/base";
 import type { ApiCallResult } from "@/types/services/common";
 import { useDeepMemo } from "@/hooks/useDeepMemo";
 
 interface Props {
   refetch?: () => void;
   filters?: BlogFilterState;
-  pagination?: IPagination;
+  pagination?: PaginationParams;
 }
 
 export function useBlogs(options: Props = {}) {

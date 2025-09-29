@@ -1,4 +1,4 @@
-import type { Prompt } from "@/lib/types";
+import type { Prompt } from "@/types";
 import { useCallback, useState } from "react";
 import { promptService } from "@/services/admin/prompts/promptService";
 import { showToast } from "@/components/ui/toast";
@@ -18,7 +18,7 @@ export function useDeletePrompt(): IResponse {
     setError(() => "");
 
     try {
-      await promptService.deletePrompt(prompt.id);
+      await promptService.deletePrompt(prompt.id.toString());
       showToast.success("Prompt deleted successfully!");
       return true;
     } catch (error: unknown) {

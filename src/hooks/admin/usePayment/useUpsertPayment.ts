@@ -1,4 +1,4 @@
-import type { Payment } from "@/lib/types";
+import type { Payment } from "@/types";
 import { useCallback, useState } from "react";
 import { paymentService } from "@/services/admin/payments/paymentService";
 

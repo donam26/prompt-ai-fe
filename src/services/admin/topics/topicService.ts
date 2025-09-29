@@ -1,7 +1,6 @@
 import { BaseService } from "../../base/baseService";
 import { ENDPOINTS, QUERY_PARAMS } from "@/constants";
-import type { Topic } from "@/lib/types";
-import type { ApiResponse } from "@/types/common";
+import type { Topic } from "@/types";
 import type { PaginationParams } from "@/types/services/common";
 
 // Topic service parameters
@@ -57,7 +56,7 @@ export class TopicService extends BaseService {
   /**
    * Delete topic
    */
-  async deleteTopic(id: string | number): Promise<ApiResponse<void>> {
+  async deleteTopic(id: string | number) {
     return this.delete<void>(id);
   }
 }

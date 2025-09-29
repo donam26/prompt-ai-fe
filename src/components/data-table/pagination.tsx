@@ -185,7 +185,6 @@ export const Pagination = ({
             {showPrevNext && (
               <Button
                 variant="outline"
-                size="sm"
                 className="p-0 w-8 h-8"
                 onClick={() => handlePageChange(1)}
                 disabled={currentPage === 1 || loading}
@@ -195,7 +194,6 @@ export const Pagination = ({
             )}
             <Button
               variant="outline"
-              size="sm"
               className="p-0 w-8 h-8"
               onClick={() => handlePageChange(Math.max(1, currentPage - 1))}
               disabled={currentPage === 1 || loading}
@@ -204,7 +202,6 @@ export const Pagination = ({
             </Button>
             <Button
               variant="outline"
-              size="sm"
               className="p-0 w-8 h-8"
               onClick={() =>
                 handlePageChange(Math.min(totalPages, currentPage + 1))
@@ -216,7 +213,6 @@ export const Pagination = ({
             {showPrevNext && (
               <Button
                 variant="outline"
-                size="sm"
                 className="p-0 w-8 h-8"
                 onClick={() => handlePageChange(totalPages)}
                 disabled={currentPage === totalPages || loading}
@@ -278,7 +274,6 @@ export const Pagination = ({
               {showPrevNext && (
                 <Button
                   variant="outline"
-                  size="sm"
                   className="p-0 w-8 h-8"
                   onClick={() => handlePageChange(1)}
                   disabled={currentPage === 1 || loading}
@@ -288,7 +283,6 @@ export const Pagination = ({
               )}
               <Button
                 variant="outline"
-                size="sm"
                 className="p-0 w-8 h-8"
                 onClick={() => handlePageChange(Math.max(1, currentPage - 1))}
                 disabled={currentPage === 1 || loading}
@@ -308,7 +302,6 @@ export const Pagination = ({
                       ) : (
                         <Button
                           variant={page === currentPage ? "default" : "outline"}
-                          size="sm"
                           className="p-0 w-8 h-8 text-sm"
                           onClick={() => handlePageChange(page as number)}
                           disabled={loading}
@@ -323,7 +316,6 @@ export const Pagination = ({
 
               <Button
                 variant="outline"
-                size="sm"
                 className="p-0 w-8 h-8"
                 onClick={() =>
                   handlePageChange(Math.min(totalPages, currentPage + 1))
@@ -335,7 +327,6 @@ export const Pagination = ({
               {showPrevNext && (
                 <Button
                   variant="outline"
-                  size="sm"
                   className="p-0 w-8 h-8"
                   onClick={() => handlePageChange(totalPages)}
                   disabled={currentPage === totalPages || loading}

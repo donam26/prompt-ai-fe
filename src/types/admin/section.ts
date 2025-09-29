@@ -1,4 +1,4 @@
-import type { Section } from "@/lib/types";
+import type { Section } from "@/types";
 
 /**
  * Section filter state interface

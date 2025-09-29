@@ -57,7 +57,6 @@ export function AdminHeader() {
             {/* Mobile menu button */}
             <Button
               variant="ghost"
-              size="sm"
               className="lg:hidden mr-2"
               onClick={toggleSidebar}
             >
@@ -70,7 +69,7 @@ export function AdminHeader() {
 
           <div className="flex flex-shrink-0 items-center space-x-2 sm:space-x-4">
             {/* Notifications */}
-            <Button variant="ghost" size="sm" className="relative">
+            <Button variant="ghost" className="relative">
               <Bell className="w-4 sm:w-5 h-4 sm:h-5" />
               <Badge
                 variant="destructive"

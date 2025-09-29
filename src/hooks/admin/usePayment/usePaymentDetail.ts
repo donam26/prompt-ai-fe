@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import { paymentService } from "@/services/admin/payments/paymentService";
-import type { Payment } from "@/lib/types";
+import type { Payment } from "@/types";
 
 interface IResponse {
   payment: Payment | null;

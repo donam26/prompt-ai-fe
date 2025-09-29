@@ -1,6 +1,6 @@
 "use client";
 
-import type { Category } from "@/lib/types";
+import type { Category } from "@/types";
 import { useParams, useRouter } from "next/navigation";
 import { useCallback, useEffect } from "react";
 import {
@@ -10,7 +10,7 @@ import {
 import { FormSkeleton } from "@/components/ui/skeleton";
 import { showToast } from "@/components/ui/toast";
 import { CATEGORY_CONSTANTS } from "@/constants/category";
-import { FormMode } from "@/constants/common.constants";
+import { FormMode } from "@/constants/common";
 import { CategoryForm } from "./modules/category-form";
 
 export default function CategoryDetailsPage() {

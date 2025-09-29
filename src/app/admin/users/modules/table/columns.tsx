@@ -1,5 +1,5 @@
 import type { ColumnDef } from "@tanstack/react-table";
-import type { User as UserType } from "@/lib/types";
+import type { User } from "@/types";
 import { Column } from "@/components/data-table/data-table";
 import {
   ImageCell,
@@ -9,14 +9,14 @@ import {
 } from "@/components/table-cell";
 
 interface Props {
-  onEditAction: (user: UserType) => void;
-  onDeleteAction: (user: UserType) => void;
+  onEditAction: (user: User) => void;
+  onDeleteAction: (user: User) => void;
 }
 
 export function useUserColumns({
   onEditAction,
   onDeleteAction,
-}: Props): ColumnDef<UserType>[] {
+}: Props): ColumnDef<User>[] {
   return [
     {
       accessorKey: "avatar",
@@ -126,7 +126,7 @@ export function useUserColumns({
  * Legacy function for backward compatibility
  * @deprecated Use useUserColumns instead
  */
-export const createUserColumns = (handlers: Props): ColumnDef<UserType>[] => {
+export const createUserColumns = (handlers: Props): ColumnDef<User>[] => {
   // eslint-disable-next-line react-hooks/rules-of-hooks
   return useUserColumns(handlers);
 };
@@ -135,8 +135,8 @@ export const createUserColumns = (handlers: Props): ColumnDef<UserType>[] => {
  * Adapter function to convert TanStack Table columns to custom DataTable columns
  */
 export const adaptColumnsForDataTable = (
-  tanstackColumns: ColumnDef<UserType>[]
-): Column<UserType>[] => {
+  tanstackColumns: ColumnDef<User>[]
+): Column<User>[] => {
   return tanstackColumns.map(col => {
     const accessorKey = "accessorKey" in col ? col.accessorKey : "";
     const id = "id" in col ? col.id : "";
@@ -145,24 +145,24 @@ export const adaptColumnsForDataTable = (
     return {
       key: accessorKey || id || "",
       title,
-      render: (_: unknown, record: UserType, index: number) => {
+      render: (_: unknown, record: User, index: number) => {
         if (col.cell && typeof col.cell === "function") {
           try {
             return (col.cell as any)({
               row: { original: record, index },
               getValue: () =>
-                accessorKey ? record[accessorKey as keyof UserType] : undefined,
+                accessorKey ? record[accessorKey as keyof User] : undefined,
               column: col,
               table: {},
               cell: {},
               renderValue: () =>
-                accessorKey ? record[accessorKey as keyof UserType] : undefined,
+                accessorKey ? record[accessorKey as keyof User] : undefined,
             });
           } catch {
-            return accessorKey ? record[accessorKey as keyof UserType] : "";
+            return accessorKey ? record[accessorKey as keyof User] : "";
           }
         }
-        return accessorKey ? record[accessorKey as keyof UserType] : "";
+        return accessorKey ? record[accessorKey as keyof User] : "";
       },
       width: 200,
       align: "left" as const,

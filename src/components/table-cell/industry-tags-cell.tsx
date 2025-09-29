@@ -7,7 +7,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
-import type { Industry } from "@/lib/types";
+import type { Industry } from "@/types";
 
 export interface IndustryTagsCellProps {
   industries?: Industry[];

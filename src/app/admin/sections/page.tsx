@@ -13,9 +13,9 @@ import {
 import { SECTIONS_CONSTANTS } from "@/constants/sections";
 import { useSections } from "@/hooks";
 import { useDeleteSection } from "@/hooks/admin/useSection/useDeleteSection";
-import type { Section } from "@/lib/types";
+import type { Section } from "@/types";
 import type { SectionFilterState } from "@/types/admin/section";
-import { IPagination } from "@/types/common";
+import type { PaginationParams } from "@/types/base";
 import {
   DEFAULT_PAGE_INDEX,
   DEFAULT_PAGINATION,
@@ -31,7 +31,8 @@ export default function SectionManagementPage(): React.JSX.Element {
     SECTIONS_CONSTANTS.INITIAL_FILTERS
   );
 
-  const [pagination, setPagination] = useState<IPagination>(DEFAULT_PAGINATION);
+  const [pagination, setPagination] =
+    useState<PaginationParams>(DEFAULT_PAGINATION);
 
   const { sectionsWithPagination, isFetching: sectionsLoading } = useSections({
     pagination,
@@ -41,7 +42,7 @@ export default function SectionManagementPage(): React.JSX.Element {
   const { mutate: deleteSection, isLoading: isDeleting } = useDeleteSection();
 
   const handlePaginationChange = useCallback(
-    (newPagination: IPagination) =>
+    (newPagination: PaginationParams) =>
       setPagination(prev => ({ ...prev, ...newPagination })),
     []
   );

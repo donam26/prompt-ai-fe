@@ -4,7 +4,8 @@ import { showToast } from "@/components/ui/toast";
 import { transformUserData } from "@/utils/user-data-transform";
 import { useAuth } from "@/hooks/useAuth";
 import { ROUTES_URL } from "@/constants";
-import type { UserVerifyResponse, UserAuthParams } from "@/types";
+import type { User } from "@/types";
+import type { UserAuthParams } from "@/types/services/userService";
 import { useRouter } from "next/navigation";
 
 interface UseVerifyOTPQueryResult {
@@ -22,8 +23,8 @@ export const useVerifyOTPQuery = (): UseVerifyOTPQueryResult => {
       const response = await userService.verifyOTP(email, otp as string);
       return response.data.data;
     },
-    onSuccess: async (data: UserVerifyResponse) => {
-      if (data) {
+    onSuccess: async (data: any) => {
+      if (data && data.data) {
         const { user, token } = data.data;
 
         // Transform user data to match expected structure

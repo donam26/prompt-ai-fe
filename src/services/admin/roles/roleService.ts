@@ -1,7 +1,6 @@
 import { BaseService } from "../../base/baseService";
 import { ENDPOINTS } from "@/constants";
-import type { Role } from "@/lib/types";
-import type { ApiResponse } from "@/types/common";
+import type { Role } from "@/types";
 
 /**
  * RoleService extending BaseService
@@ -42,7 +41,7 @@ export class RoleService extends BaseService {
   /**
    * Delete role
    */
-  async deleteRole(id: string | number): Promise<ApiResponse<void>> {
+  async deleteRole(id: string | number) {
     return this.delete<void>(id);
   }
 

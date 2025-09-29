@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import { blogService } from "@/services/admin/blogs/blogService";
-import type { Blog } from "@/lib/types";
+import type { Blog } from "@/types";
 
 interface IResponse {
   blog: Blog | null;

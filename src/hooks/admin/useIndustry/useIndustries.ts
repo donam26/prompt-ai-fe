@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 
-import type { Industry } from "@/lib/types";
+import type { Industry } from "@/types";
 import type { ApiCallResult, PaginationParams } from "@/types/services/common";
 import { industryService } from "@/services";
 import { DEFAULT_TOTAL, DEFAULT_TOTAL_PAGES } from "@/constants";
@@ -58,8 +58,8 @@ export function useIndustries({ pagination, filters }: Props = {}): IResponse {
 
       setIndustriesWithPagination({
         data: response.data.data || [],
-        total: response.data.data.total || DEFAULT_TOTAL,
-        totalPages: response.data.data.totalPages || DEFAULT_TOTAL_PAGES,
+        total: response.data.pagination.total || DEFAULT_TOTAL,
+        totalPages: response.data.pagination.totalPages || DEFAULT_TOTAL_PAGES,
       });
     } catch (err: unknown) {
       const errorMessage =

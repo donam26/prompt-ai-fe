@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import { categoryService } from "@/services/admin/categories";
-import type { Category } from "@/lib/types";
+import type { Category } from "@/types";
 
 interface IResponse {
   category: Category | null;

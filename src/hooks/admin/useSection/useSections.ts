@@ -1,4 +1,4 @@
-import type { Section } from "@/lib/types";
+import type { Section } from "@/types";
 import type { SectionFilterState } from "@/types/admin/section";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
@@ -8,13 +8,13 @@ import {
 } from "@/constants";
 import { sectionService } from "@/services";
 import { applyNonEmptyFiltersToQuery } from "@/utils";
-import type { IPagination } from "@/types/common";
+import type { PaginationParams } from "@/types/base";
 import { useDeepMemo } from "@/hooks/useDeepMemo";
 
 interface Props {
   refetch?: () => void;
   filters?: SectionFilterState;
-  pagination?: IPagination;
+  pagination?: PaginationParams;
   enabled?: boolean;
 }
 

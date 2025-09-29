@@ -13,9 +13,9 @@ import {
 import { INDUSTRIES_CONSTANTS } from "@/constants/industries";
 import { useIndustries } from "@/hooks";
 import { useDeleteIndustry } from "@/hooks/admin/useIndustry/useDeleteIndustry";
-import type { Industry } from "@/lib/types";
+import type { Industry } from "@/types";
 import type { IndustryFilterState } from "@/types/admin/industry";
-import { IPagination } from "@/types/common";
+import type { PaginationParams as IPagination } from "@/types/base";
 import {
   DEFAULT_PAGE_INDEX,
   DEFAULT_PAGINATION,

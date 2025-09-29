@@ -24,13 +24,12 @@ import {
   BUTTON_CONSTANTS,
 } from "@/constants";
 import type {
-  // Category,
-  Section,
   // CategoryFormData,
   CategoryFormDialogProps,
   CategoryFormFieldsProps,
   CategoryFormActionsProps,
 } from "@/types/admin";
+import type { Section } from "@/types";
 
 /**
  * Category form dialog component for creating and editing categories

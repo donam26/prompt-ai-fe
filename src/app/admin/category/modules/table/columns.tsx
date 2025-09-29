@@ -1,5 +1,5 @@
 import type { ColumnDef } from "@tanstack/react-table";
-import type { Category } from "@/lib/types";
+import type { Category } from "@/types";
 import { Column } from "@/components/data-table/data-table";
 import {
   ImageCell,

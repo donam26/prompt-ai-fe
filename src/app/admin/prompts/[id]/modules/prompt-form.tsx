@@ -1,13 +1,13 @@
 "use client";
 
-import type { Prompt } from "@/lib/types";
+import type { Prompt } from "@/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useCallback, useEffect, useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { AdminContentCard, AdminPageLayout } from "@/components/admin";
 import { FormActions } from "@/components/form-actions";
 import { Form } from "@/components/ui/form";
-import { FormMode, BUTTON_TEXT } from "@/constants/common.constants";
+import { FormMode, BUTTON_TEXT } from "@/constants/common";
 import { PromptBasicFields } from "./prompt-basic-fields";
 import { PromptAdvancedFields } from "./prompt-advanced-fields";
 import { useCategories } from "@/hooks/admin/useCategory/useCategories";

@@ -1,13 +1,4 @@
-import { Category } from "@/lib/types";
-
-export interface PromptFilterState {
-  readonly searchTerm: string;
-  readonly categoryIds: string[];
-  readonly industryIds: string[];
-  readonly isType: number | undefined;
-  readonly dateFrom: string;
-  readonly dateTo: string;
-}
+import { Category, PromptFilterState } from "@/types";
 
 /**
  * Props for the PromptFilter component
@@ -35,7 +26,7 @@ export interface PromptFormData {
   readonly description?: string;
   readonly image?: string;
   readonly image_card?: string;
-  readonly is_type?: number;
+  readonly is_type?: string;
   readonly sub_type?: number;
   readonly industry_id?: string;
   readonly topic_id?: string;

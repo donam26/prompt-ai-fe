@@ -1,7 +1,7 @@
 import type { ColumnDef } from "@tanstack/react-table";
-import type { Section } from "@/lib/types";
+import type { Section } from "@/types";
 import { Column } from "@/components/data-table/data-table";
-import { StatusCell, BadgeCell, ActionsCell } from "@/components/table-cell";
+import { ActionsCell } from "@/components/table-cell";
 import { Folder } from "lucide-react";
 
 interface Props {
@@ -42,39 +42,6 @@ export function useSectionColumns({
           >
             {row.original.description || "Không có mô tả"}
           </span>
-        </div>
-      ),
-      enableSorting: false,
-    },
-    {
-      accessorKey: "order",
-      meta: { title: "Thứ tự" },
-      header: () => (
-        <div className="hidden lg:block font-medium text-center">Thứ tự</div>
-      ),
-      cell: ({ row }) => (
-        <div className="hidden lg:flex justify-center">
-          <BadgeCell
-            label={row.original.order?.toString() || "0"}
-            variant="secondary"
-            maxWidth="max-w-[60px]"
-          />
-        </div>
-      ),
-      enableSorting: false,
-    },
-    {
-      accessorKey: "status",
-      meta: { title: "Trạng thái" },
-      header: () => (
-        <div className="w-full font-medium text-center">Trạng thái</div>
-      ),
-      cell: ({ row }) => (
-        <div className="flex justify-center items-center min-w-[100px]">
-          <StatusCell
-            isActive={row.original.status === "active"}
-            isComingSoon={row.original.status === "inactive"}
-          />
         </div>
       ),
       enableSorting: false,

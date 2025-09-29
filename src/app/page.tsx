@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { useAuth } from "@/hooks/useAuth";
 import { promptService, blogService } from "@/services";
 import { ROUTES_URL } from "@/constants/routes-url";
-import { Prompt, Blog } from "@/lib/types";
+import { Prompt, Blog } from "@/types";
 import { Button } from "@/components/ui/button";
 import {
   Card,

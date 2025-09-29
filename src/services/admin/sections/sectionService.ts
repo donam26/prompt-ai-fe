@@ -1,7 +1,6 @@
 import { BaseService } from "../../base/baseService";
 import { ENDPOINTS } from "@/constants";
-import type { Section } from "@/lib/types";
-import type { ApiResponse } from "@/types/common";
+import type { Section } from "@/types";
 
 /**
  * SectionService extending BaseService
@@ -46,7 +45,7 @@ export class SectionService extends BaseService {
   /**
    * Delete section
    */
-  async deleteSection(id: string | number): Promise<ApiResponse<void>> {
+  async deleteSection(id: string | number) {
     return await this.delete<void>(id);
   }
 }

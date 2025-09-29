@@ -1,5 +1,5 @@
 import { BaseService } from "@/services/base/baseService";
-import type { Blog } from "@/types/admin";
+import type { Blog } from "@/types/entities/blog";
 
 /**
  * Blog service extending BaseService

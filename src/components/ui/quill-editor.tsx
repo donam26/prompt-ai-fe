@@ -3,18 +3,10 @@
 import { useCallback, useState, useRef } from "react";
 import ReactQuill from "react-quill-new";
 import "react-quill-new/dist/quill.snow.css";
-import { Button } from "@/components/ui/button";
-import { Eye, Upload, Code } from "lucide-react";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
+import { Eye, Code } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
-interface QuillEditorProps {
+interface Props {
   value: string;
   onChange: (value: string) => void;
   disabled?: boolean;
@@ -30,10 +22,8 @@ export const QuillEditor = ({
   disabled = false,
   placeholder = "Nhập nội dung...",
   minHeight = 200,
-  showPreview = true,
   className = "",
-}: QuillEditorProps) => {
-  const [isPreviewOpen, setIsPreviewOpen] = useState(false);
+}: Props) => {
   const [activeTab, setActiveTab] = useState<"edit" | "preview">("edit");
   const quillRef = useRef<ReactQuill>(null);
 
@@ -123,42 +113,6 @@ export const QuillEditor = ({
 
   return (
     <div className={`space-y-2 ${className}`}>
-      <div className="flex justify-between items-center">
-        <div className="flex items-center gap-2">
-          <Upload className="w-4 h-4 text-muted-foreground" />
-          <span className="text-muted-foreground text-sm">
-            Kéo thả hình ảnh hoặc click vào biểu tượng hình ảnh để upload
-          </span>
-        </div>
-        {showPreview && (
-          <Dialog open={isPreviewOpen} onOpenChange={setIsPreviewOpen}>
-            <DialogTrigger asChild>
-              <Button
-                type="button"
-                variant="outline"
-                size="sm"
-                className="gap-2"
-                disabled={disabled}
-              >
-                <Eye className="w-4 h-4" />
-                Preview
-              </Button>
-            </DialogTrigger>
-            <DialogContent className="max-w-4xl max-h-[80vh] overflow-auto">
-              <DialogHeader>
-                <DialogTitle>Preview Nội Dung</DialogTitle>
-              </DialogHeader>
-              <div className="max-w-none prose prose-sm">
-                <div
-                  className="ql-editor"
-                  dangerouslySetInnerHTML={{ __html: value || "" }}
-                />
-              </div>
-            </DialogContent>
-          </Dialog>
-        )}
-      </div>
-
       <Tabs
         value={activeTab}
         onValueChange={value => setActiveTab(value as "edit" | "preview")}

@@ -1,6 +1,6 @@
 import { BaseService } from "../../base/baseService";
 import { ENDPOINTS } from "@/constants";
-import type { BlogCategory } from "@/lib/types";
+import type { BlogCategory } from "@/types";
 
 /**
  * BlogCategoryService extending BaseService

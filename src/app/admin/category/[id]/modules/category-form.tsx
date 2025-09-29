@@ -1,6 +1,6 @@
 "use client";
 
-import type { Category } from "@/lib/types";
+import type { Category } from "@/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useForm, Controller } from "react-hook-form";
@@ -9,7 +9,7 @@ import { FormActions } from "@/components/form-actions";
 import { FormImageSection } from "@/components/form-image-section";
 import { FormSwitch } from "@/components/form-switch";
 import { Form } from "@/components/ui/form";
-import { FormMode, BUTTON_TEXT } from "@/constants/common.constants";
+import { FormMode, BUTTON_TEXT } from "@/constants/common";
 import { CategoryBasicFields } from "./category-basic-fields";
 import { useIndustries } from "@/hooks/admin/useIndustry";
 import {

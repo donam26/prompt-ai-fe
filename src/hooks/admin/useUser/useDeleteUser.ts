@@ -1,4 +1,4 @@
-import type { User } from "@/lib/types";
+import type { User } from "@/types";
 import { useCallback, useState } from "react";
 import { userService } from "@/services/admin/users/userService";
 import { showToast } from "@/components/ui/toast";
@@ -18,7 +18,7 @@ export function useDeleteUser(): IResponse {
     setError(() => "");
 
     try {
-      await userService.deleteUser(user.id);
+      await userService.deleteUser(user.id.toString());
       showToast.success("User deleted successfully!");
       return true;
     } catch (error: unknown) {

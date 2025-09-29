@@ -1,4 +1,4 @@
-import type { CreateBlogRequest } from "@/lib/types";
+import type { CreateBlogRequest } from "@/types";
 import { useCallback, useState } from "react";
 import { blogService } from "@/services/admin/blogs/blogService";
 

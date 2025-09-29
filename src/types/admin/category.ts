@@ -1,4 +1,4 @@
-import type { Category, Section, Industry } from "@/lib/types";
+import type { Category, Section, Industry } from "@/types";
 
 /**
  * Form data structure for category creation/editing
@@ -59,7 +59,7 @@ export interface ColumnHandlers {
 /**
  * Filter state interface for category filtering
  */
-export interface FilterState {
+export interface CategoryFilterState {
   searchTerm: string;
   sectionId: string; // "all" means no filter
   status: string; // "all" means no filter
@@ -70,10 +70,10 @@ export interface FilterState {
  * Props for the CategoryFilter component
  */
 export interface CategoryFilterProps {
-  readonly filters: Partial<FilterState>;
+  readonly filters: Partial<CategoryFilterState>;
   readonly sections: Section[];
   readonly industries: Industry[];
-  readonly onFilterChange: (filters: FilterState) => void;
+  readonly onFilterChange: (filters: CategoryFilterState) => void;
   readonly onClearFilters: () => void;
   readonly onPageReset?: () => void;
   readonly className?: string;
@@ -83,7 +83,7 @@ export interface CategoryFilterProps {
  * Active filter item interface
  */
 export interface ActiveFilterItem {
-  readonly key: keyof FilterState;
+  readonly key: keyof CategoryFilterState;
   readonly label: string;
   readonly value: string;
 }
@@ -92,7 +92,7 @@ export interface ActiveFilterItem {
  * Props for the FilterCard component
  */
 export interface FilterCardProps {
-  readonly filters: FilterState;
+  readonly filters: CategoryFilterState;
   readonly industries: Industry[];
   readonly onSearchChange: (value: string) => void;
   readonly onStatusChange: (value: string) => void;
@@ -121,9 +121,9 @@ export interface FilterBadgeProps {
  * Props for the ActiveFilters component
  */
 export interface ActiveFiltersProps {
-  readonly filters: FilterState;
+  readonly filters: CategoryFilterState;
   readonly industries: Industry[];
-  readonly onFilterChange: (filters: FilterState) => void;
+  readonly onFilterChange: (filters: CategoryFilterState) => void;
   readonly onClearAll: () => void;
   readonly onPageReset?: () => void;
 }

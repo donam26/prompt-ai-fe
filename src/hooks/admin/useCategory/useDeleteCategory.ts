@@ -1,4 +1,4 @@
-import type { Category } from "@/lib/types";
+import type { Category } from "@/types";
 import { useCallback, useState } from "react";
 import { categoryService } from "@/services";
 import { showToast } from "@/components/ui/toast";

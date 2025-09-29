@@ -13,3 +13,4 @@ export * from "./deviceLogs/deviceLogService";
 export * from "./sections";
 export * from "./payments";
 export * from "./categories";
+export * from "./users/userService";

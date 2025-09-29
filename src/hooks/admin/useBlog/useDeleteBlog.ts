@@ -1,4 +1,4 @@
-import type { Blog } from "@/lib/types";
+import type { Blog } from "@/types";
 import { useCallback, useState } from "react";
 import { blogService } from "@/services/admin/blogs/blogService";
 import { showToast } from "@/components/ui/toast";

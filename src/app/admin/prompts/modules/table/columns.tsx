@@ -1,7 +1,8 @@
 import type { ColumnDef } from "@tanstack/react-table";
-import type { Prompt } from "@/lib/types";
+import type { Prompt } from "@/types";
 import { Column } from "@/components/data-table/data-table";
-import { BadgeCell, ActionsCell } from "@/components/table-cell";
+import { BadgeCell, BadgeList, ActionsCell } from "@/components/table-cell";
+import { getBadgeVariantByIndustry, BADGE_CONSTANTS } from "@/constants/badges";
 
 interface Props {
   onEditAction: (prompt: Prompt) => void;
@@ -26,19 +27,23 @@ export function usePromptColumns({
             >
               {row.original.title}
             </span>
-            {row.original.is_type === 2 ? (
+            {row.original.is_type == "2" ? (
               <BadgeCell label="Premium" variant="premium" />
-            ) : row.original.is_type === 1 ? (
+            ) : row.original.is_type == "1" ? (
               <BadgeCell label="Free" variant="secondary" />
             ) : null}
           </div>
           {(row.original.short_description || row.original.description) && (
-            <span
-              className="max-w-[280px] text-gray-500 text-sm truncate"
+            <div
+              className="max-w-[280px] text-gray-500 text-sm line-clamp-2 prose prose-sm"
               title={row.original.short_description || row.original.description}
-            >
-              {row.original.short_description || row.original.description}
-            </span>
+              dangerouslySetInnerHTML={{
+                __html:
+                  row.original.short_description ||
+                  row.original.description ||
+                  "",
+              }}
+            />
           )}
           {row.original.tags && row.original.tags.length > 0 && (
             <div className="flex flex-wrap gap-1">
@@ -81,23 +86,15 @@ export function usePromptColumns({
         <div className="hidden lg:block">
           {row.original.Category?.industries &&
           row.original.Category.industries.length > 0 ? (
-            <div className="flex flex-wrap gap-1">
-              {row.original.Category.industries
-                .slice(0, 2)
-                .map((industry: any) => (
-                  <BadgeCell
-                    key={industry.id}
-                    label={industry.name}
-                    variant="industry"
-                    maxWidth="max-w-[80px]"
-                  />
-                ))}
-              {row.original.Category.industries.length > 2 && (
-                <span className="text-gray-400 text-xs">
-                  +{row.original.Category.industries.length - 2}
-                </span>
-              )}
-            </div>
+            <BadgeList
+              items={row.original.Category.industries.map((industry: any) => ({
+                id: industry.id,
+                label: industry.name,
+                variant: getBadgeVariantByIndustry(industry.name),
+              }))}
+              maxVisible={BADGE_CONSTANTS.LIST_CONFIG.TABLE_MAX_VISIBLE}
+              badgeClassName="max-w-[80px]"
+            />
           ) : (
             <span className="text-gray-400 text-sm">Chưa có</span>
           )}
@@ -125,7 +122,7 @@ export function usePromptColumns({
       meta: { title: "Thao tác" },
       header: () => <div className="font-medium text-center">Thao tác</div>,
       cell: ({ row }) => (
-        <div className="flex items-center gap-1 min-w-[140px]">
+        <div className="flex items-center gap-1 min-w-[100px]">
           <ActionsCell
             item={row.original}
             onEdit={onEditAction}

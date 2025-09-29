@@ -1,7 +1,6 @@
 import { BaseService } from "../../base/baseService";
 import { ENDPOINTS } from "@/constants";
-import type { Category } from "@/lib/types";
-import type { ApiResponse } from "@/types/common";
+import type { Category } from "@/types";
 
 /**
  * CategoryService extending BaseService
@@ -46,7 +45,7 @@ export class CategoryService extends BaseService {
   /**
    * Delete category
    */
-  async deleteCategory(id: string | number): Promise<ApiResponse<void>> {
+  async deleteCategory(id: string | number) {
     return await this.delete<void>(id);
   }
 }

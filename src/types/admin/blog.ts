@@ -4,7 +4,7 @@
  * Type definitions for admin blog management components and functionality.
  */
 
-import type { Blog } from "@/lib/types";
+import type { Blog } from "@/types";
 
 /**
  * Form data structure for blog creation/editing

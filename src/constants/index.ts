@@ -1,6 +1,6 @@
 // Export all constants from a single entry point
 
-export * from "./common.constants";
+export * from "./common";
 export * from "./homepage";
 export * from "./auth";
 export * from "./admin";

@@ -1,4 +1,4 @@
-import type { Prompt } from "@/lib/types";
+import type { Prompt } from "@/types";
 import type { PromptFilterState } from "@/types/admin/prompt";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
@@ -8,13 +8,13 @@ import {
 } from "@/constants";
 import { promptService } from "@/services/admin/prompts/promptService";
 import { applyNonEmptyFiltersToQuery, buildPromptsQueryString } from "@/utils";
-import type { IPagination } from "@/types/common";
+import type { PaginationParams } from "@/types/base";
 import { useDeepMemo } from "@/hooks/useDeepMemo";
 
 interface Props {
   refetch?: () => void;
   filters?: PromptFilterState;
-  pagination?: IPagination;
+  pagination?: PaginationParams;
   enabled?: boolean;
 }
 
@@ -86,7 +86,7 @@ export function usePrompts(options: Props = {}) {
         ...item,
         // Map API fields to expected UI fields
         description: item.short_description || item.description,
-        isPremium: item.is_type === 2,
+        isPremium: item.is_type.toString() == "2",
         isActive: true, // Default to active
         isComingSoon: item.is_coming_soon || false,
         isPublic: true, // Default to public for now

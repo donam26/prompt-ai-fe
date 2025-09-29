@@ -1,7 +1,6 @@
 import { BaseService } from "../../base/baseService";
 import { ENDPOINTS } from "@/constants";
-import type { DeviceLog } from "@/lib/types";
-import type { ApiResponse } from "@/types/common";
+import type { DeviceLog } from "@/types";
 
 /**
  * DeviceLogService extending BaseService
@@ -35,7 +34,7 @@ export class DeviceLogService extends BaseService {
   /**
    * Delete device log
    */
-  async deleteDeviceLog(id: string | number): Promise<ApiResponse<void>> {
+  async deleteDeviceLog(id: string | number) {
     return this.delete<void>(id);
   }
 }

@@ -3,7 +3,7 @@
  */
 
 import { apiClient } from "@/services/base/apiClient";
-import type { User } from "@/lib/types";
+import type { User } from "@/types";
 
 /**
  * User service class

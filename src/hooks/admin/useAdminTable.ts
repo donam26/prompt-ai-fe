@@ -1,19 +1,19 @@
 import { useState, useCallback } from "react";
-import { IPagination } from "@/types/common";
+import type { PaginationParams } from "@/types/base";
 import { DEFAULT_PAGE_INDEX, DEFAULT_PAGINATION } from "@/constants";
 
 interface UseAdminTableProps<T> {
   initialFilters?: T;
-  initialPagination?: IPagination;
+  initialPagination?: PaginationParams;
 }
 
 interface UseAdminTableReturn<T> {
   filters: T;
-  pagination: IPagination;
+  pagination: PaginationParams;
   setFilters: (filters: T) => void;
-  setPagination: (pagination: IPagination) => void;
+  setPagination: (pagination: PaginationParams) => void;
   handleFilterChange: (newFilters: T) => void;
-  handlePaginationChange: (newPagination: IPagination) => void;
+  handlePaginationChange: (newPagination: PaginationParams) => void;
   handleClearFilters: () => void;
   resetPagination: () => void;
 }
@@ -23,7 +23,8 @@ export function useAdminTable<T>({
   initialPagination = DEFAULT_PAGINATION,
 }: UseAdminTableProps<T>): UseAdminTableReturn<T> {
   const [filters, setFilters] = useState<T>(initialFilters as T);
-  const [pagination, setPagination] = useState<IPagination>(initialPagination);
+  const [pagination, setPagination] =
+    useState<PaginationParams>(initialPagination);
 
   const handleFilterChange = useCallback((newFilters: T): void => {
     setFilters(newFilters);
@@ -31,7 +32,7 @@ export function useAdminTable<T>({
   }, []);
 
   const handlePaginationChange = useCallback(
-    (newPagination: IPagination) =>
+    (newPagination: PaginationParams) =>
       setPagination(prev => ({ ...prev, ...newPagination })),
     []
   );

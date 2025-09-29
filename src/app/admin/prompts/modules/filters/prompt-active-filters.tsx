@@ -5,8 +5,8 @@ import { Filter, X } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import type { PromptFilterState } from "@/types/admin/prompt";
-import { Category } from "@/lib/types";
+import { Category } from "@/types";
+import { PromptFilterState } from "@/types/entities/prompt";
 
 interface PromptActiveFiltersProps {
   filters: PromptFilterState;
@@ -193,7 +193,9 @@ export const PromptActiveFilters = ({
               ? `${new Date(filters.dateFrom).toLocaleDateString("vi-VN")} - ${new Date(filters.dateTo).toLocaleDateString("vi-VN")}`
               : filters.dateFrom
                 ? `Từ ${new Date(filters.dateFrom).toLocaleDateString("vi-VN")}`
-                : `Đến ${new Date(filters.dateTo).toLocaleDateString("vi-VN")}`}
+                : filters.dateTo
+                  ? `Đến ${new Date(filters.dateTo).toLocaleDateString("vi-VN")}`
+                  : ""}
           </span>
           <button
             onClick={() => handleRemoveFilter("dateFrom")}
@@ -209,7 +211,6 @@ export const PromptActiveFilters = ({
       {activeTotal > 1 && (
         <Button
           variant="ghost"
-          size="sm"
           onClick={() => {
             onClearAll();
             onPageReset?.();

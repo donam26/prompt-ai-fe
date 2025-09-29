@@ -1,4 +1,4 @@
-import type { Industry } from "@/lib/types";
+import type { Industry } from "@/types";
 import { useCallback, useState } from "react";
 import { industryService } from "@/services/admin/industries/industryService";
 import { showToast } from "@/components/ui/toast";

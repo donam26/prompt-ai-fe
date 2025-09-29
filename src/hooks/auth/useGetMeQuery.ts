@@ -1,10 +1,10 @@
 import { useQuery } from "@tanstack/react-query";
 import { userService } from "@/services";
 import { useAuth } from "@/hooks/useAuth";
-import type { UserGetMeResponse } from "@/types";
+import type { User } from "@/types";
 
 interface UseGetMeQueryResult {
-  data: UserGetMeResponse["data"] | undefined;
+  data: User | undefined;
   isLoading: boolean;
   error: string | null;
   refetch: () => void;
@@ -20,7 +20,7 @@ export const useGetMeQuery = (): UseGetMeQueryResult => {
         throw new Error("User ID is required");
       }
 
-      const response = await userService.getUserById(user.id);
+      const response = await userService.getUserById(user.id.toString());
       return response.data.data;
     },
     enabled: !!user?.id, // Only run query when user ID is available

@@ -1,10 +1,6 @@
 "use client";
 
-import {
-  Controller,
-  type Control,
-  type ControllerRenderProps,
-} from "react-hook-form";
+import { type Control, type ControllerRenderProps } from "react-hook-form";
 import type { PromptFormValues } from "@/libs/form-schemas";
 import {
   FormField,
@@ -15,8 +11,6 @@ import {
   QuillEditor,
   FormMessage,
 } from "@/components/ui";
-import { Textarea } from "@/components/ui/textarea";
-import { FormSwitch } from "@/components/form-switch";
 
 interface Props {
   control: Control<PromptFormValues>;
@@ -74,22 +68,6 @@ export function PromptAdvancedFields({ control, isDisabled }: Props) {
             </FormControl>
             <FormMessage />
           </FormItem>
-        )}
-      />
-
-      {/* Coming Soon Switch */}
-      <Controller
-        name="is_coming_soon"
-        control={control}
-        render={({ field }) => (
-          <FormSwitch
-            name="is_coming_soon"
-            label="Coming Soon"
-            description="Mark this prompt as coming soon"
-            checked={field.value || false}
-            onCheckedChange={field.onChange}
-            isDisabled={isDisabled}
-          />
         )}
       />
     </div>

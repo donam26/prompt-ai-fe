@@ -1,5 +1,5 @@
 import type { ColumnDef } from "@tanstack/react-table";
-import type { Industry } from "@/lib/types";
+import type { Industry } from "@/types";
 import { Column } from "@/components/data-table/data-table";
 import { ActionsCell } from "@/components/table-cell";
 import { Building2 } from "lucide-react";

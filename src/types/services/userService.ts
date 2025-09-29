@@ -1,12 +1,7 @@
-import type {
-  FilterParams,
-  AuthParams,
-  ResendOtpApiResponse,
-  GetUserProfileApiResponse,
-} from "@/types/api";
-import type { ServiceResponse } from "@/types/common";
-import type { ApiUser, UserSubscription } from "@/types/user";
+import type { ServiceResponse } from "@/types/api/common";
+import type { UserSubscription, User } from "@/types/entities/user";
 import type { PaginationParams } from "@/types/services/common";
+import type { FilterParams, AuthParams } from "@/types/base";
 
 // User service parameters
 export type UserListParams = PaginationParams & FilterParams;
@@ -27,7 +22,7 @@ export interface UserPasswordParams {
 
 export interface UserUpdateInfoParams {
   id: string | number;
-  data: Partial<ApiUser>;
+  data: Partial<User>;
 }
 
 export interface UserSubscriptionParams {
@@ -45,7 +40,7 @@ export interface UserServiceResponse<T = unknown> extends ServiceResponse<T> {
 
 // User login data structure
 export interface UserLoginData {
-  user: ApiUser;
+  user: User;
   token: string;
   message?: string;
 }
@@ -60,7 +55,7 @@ export interface UserLoginResponse {
 
 // User verify data structure
 export interface UserVerifyData {
-  user: ApiUser;
+  user: User;
   token: string;
 }
 
@@ -69,9 +64,17 @@ export interface UserVerifyResponse {
   data: UserVerifyData;
 }
 
-export interface UserResendOTPResponse extends ResendOtpApiResponse {
+export interface UserResendOTPResponse {
   success: boolean;
+  message: string;
 }
 
 // Get Me API Response
-export type UserGetMeResponse = GetUserProfileApiResponse;
+export interface UserGetMeResponse {
+  success: boolean;
+  data: {
+    user: User;
+    userSub: UserSubscription | null;
+    allUserSubs: UserSubscription[];
+  };
+}

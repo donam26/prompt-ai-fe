@@ -1,7 +1,6 @@
 import { BaseService } from "../../base/baseService";
 import { ENDPOINTS } from "@/constants";
-import type { Coupon } from "@/lib/types";
-import type { ApiResponse } from "@/types/common";
+import type { Coupon } from "@/types";
 
 /**
  * CouponService extending BaseService
@@ -42,7 +41,7 @@ export class CouponService extends BaseService {
   /**
    * Delete coupon
    */
-  async deleteCoupon(id: string | number): Promise<ApiResponse<void>> {
+  async deleteCoupon(id: string | number) {
     return this.delete<void>(id);
   }
 

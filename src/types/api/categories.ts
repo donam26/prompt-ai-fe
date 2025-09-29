@@ -1,4 +1,4 @@
-import type { Section, Industry } from "@/lib/types";
+import type { Section, Industry } from "@/types";
 
 /**
  * Industry data structure from API

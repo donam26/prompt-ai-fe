@@ -1,4 +1,4 @@
-import type { Payment } from "@/lib/types";
+import type { Payment } from "@/types";
 import type { PaymentFilterState } from "@/types/admin/payment";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
@@ -8,13 +8,13 @@ import {
 } from "@/constants";
 import { paymentService } from "@/services/admin/payments/paymentService";
 import { applyNonEmptyFiltersToQuery } from "@/utils";
-import type { IPagination } from "@/types/common";
+import type { PaginationParams } from "@/types/base";
 import { useDeepMemo } from "@/hooks/useDeepMemo";
 
 interface Props {
   refetch?: () => void;
   filters?: PaymentFilterState;
-  pagination?: IPagination;
+  pagination?: PaginationParams;
   enabled?: boolean;
 }
 

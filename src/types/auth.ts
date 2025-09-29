@@ -1,4 +1,4 @@
-import { User } from "@/lib/types";
+import { User } from "@/types";
 
 export interface IAuthType {
   userId: string | number;

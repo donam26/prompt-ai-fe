@@ -4,7 +4,7 @@ import { showToast } from "@/components/ui/toast";
 import { transformUserData } from "@/utils/user-data-transform";
 import { useAuth } from "@/hooks/useAuth";
 import { ROUTES_URL, getVerifyOTPUrl } from "@/constants";
-import type { UserLoginResponse } from "@/types";
+import type { UserLoginResponse } from "@/types/services/userService";
 
 interface UseLoginQueryResult {
   isLoading: boolean;

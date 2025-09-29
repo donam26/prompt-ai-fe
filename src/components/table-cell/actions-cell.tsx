@@ -53,7 +53,6 @@ export function ActionsCell<T>({
       {onEdit && (
         <Button
           variant="ghost"
-          size="sm"
           onClick={handleEdit}
           className="hover:bg-blue-50 p-1 sm:p-1.5 w-7 sm:w-8 h-7 sm:h-8 hover:text-blue-600 transition-colors"
           title="Chỉnh sửa"
@@ -68,7 +67,6 @@ export function ActionsCell<T>({
           <AlertDialogTrigger asChild>
             <Button
               variant="ghost"
-              size="sm"
               className="hover:bg-red-50 p-1 sm:p-1.5 w-7 sm:w-8 h-7 sm:h-8 hover:text-red-600 transition-colors"
               title="Xóa"
             >
@@ -100,7 +98,6 @@ export function ActionsCell<T>({
       {onManageBadge && (
         <Button
           variant="ghost"
-          size="sm"
           onClick={handleManageBadge}
           className="hover:bg-purple-50 p-1 sm:p-1.5 w-7 sm:w-8 h-7 sm:h-8 hover:text-purple-600 transition-colors"
           title="Quản lý badge"

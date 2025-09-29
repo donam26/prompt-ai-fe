@@ -9,10 +9,9 @@ import {
   FormLabel,
   FormControl,
   FormMessage,
+  QuillEditor,
 } from "@/components/ui";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { QuillEditor } from "@/components/ui";
 import {
   Select,
   SelectContent,
@@ -123,7 +122,7 @@ export function PromptBasicFields({
               <FormLabel>Type</FormLabel>
               <Select
                 onValueChange={field.onChange}
-                defaultValue={field.value?.toString()}
+                value={field.value?.toString()}
                 disabled={isDisabled}
               >
                 <FormControl>

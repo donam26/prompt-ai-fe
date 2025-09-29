@@ -1,5 +1,5 @@
 import type { ColumnDef } from "@tanstack/react-table";
-import type { Payment } from "@/lib/types";
+import type { Payment } from "@/types";
 import { Column } from "@/components/data-table/data-table";
 import { StatusCell, BadgeCell, ActionsCell } from "@/components/table-cell";
 import { CreditCard, DollarSign } from "lucide-react";

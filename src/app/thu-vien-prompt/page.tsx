@@ -8,7 +8,7 @@ import {
   topicService,
   industryService,
 } from "@/services";
-import { Prompt, Category, Topic, Industry } from "@/lib/types";
+import { Prompt, Category, Topic, Industry } from "@/types";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -56,7 +56,7 @@ export default function PromptLibraryPage() {
       });
 
       setPrompts((response.data.data as Prompt[]) || []);
-      setTotalPages(response.data.data.total);
+      setTotalPages(response.data.pagination.total);
     } catch {
       // Error loading prompts - could be logged to monitoring service
       toast.error("Có lỗi xảy ra khi tải prompts");
@@ -152,7 +152,7 @@ export default function PromptLibraryPage() {
         // Add to favorites
         await promptService.addFavoritePrompt({
           promptId,
-          userId: user.id,
+          userId: user.id.toString(),
         });
         setFavoritePrompts(prev => [...prev, promptId]);
         toast.success("Đã thêm vào yêu thích");
@@ -307,7 +307,7 @@ export default function PromptLibraryPage() {
 
           <TabsContent value="chatgpt" className="mt-6">
             <PromptGrid
-              prompts={prompts.filter(p => p.is_type === 1)}
+              prompts={prompts.filter(p => p.is_type == "1")}
               isLoading={isLoading}
               favoritePrompts={favoritePrompts}
               onFavorite={handleFavorite}
@@ -317,7 +317,7 @@ export default function PromptLibraryPage() {
 
           <TabsContent value="midjourney" className="mt-6">
             <PromptGrid
-              prompts={prompts.filter(p => p.is_type === 2)}
+              prompts={prompts.filter(p => p.is_type == "2")}
               isLoading={isLoading}
               favoritePrompts={favoritePrompts}
               onFavorite={handleFavorite}
@@ -327,7 +327,9 @@ export default function PromptLibraryPage() {
 
           <TabsContent value="favorites" className="mt-6">
             <PromptGrid
-              prompts={prompts.filter(p => favoritePrompts.includes(p.id))}
+              prompts={prompts.filter(p =>
+                favoritePrompts.includes(p.id.toString())
+              )}
               isLoading={isLoading}
               favoritePrompts={favoritePrompts}
               onFavorite={handleFavorite}
@@ -416,21 +418,23 @@ function PromptGrid({
           <CardHeader>
             <div className="flex justify-between items-center">
               <Badge variant="secondary">
-                {prompt.is_type === 1 ? "ChatGPT" : "Midjourney"}
+                {prompt.is_type == "1" ? "ChatGPT" : "Midjourney"}
               </Badge>
               <Button
                 variant="ghost"
                 size="sm"
-                onClick={() => onFavorite(prompt.id)}
+                onClick={() => onFavorite(prompt.id.toString())}
                 className={
-                  favoritePrompts.includes(prompt.id)
+                  favoritePrompts.includes(prompt.id.toString())
                     ? "text-red-500"
                     : "text-gray-400"
                 }
               >
                 <Heart
                   className={`h-4 w-4 ${
-                    favoritePrompts.includes(prompt.id) ? "fill-current" : ""
+                    favoritePrompts.includes(prompt.id.toString())
+                      ? "fill-current"
+                      : ""
                   }`}
                 />
               </Button>

@@ -13,7 +13,7 @@ import type {
   FilterCardProps,
   StatusFilterProps,
 } from "@/types/admin/category";
-import type { Industry } from "@/lib/types";
+import type { Industry } from "@/types";
 import { FILTER_CONSTANTS, DEBOUNCE_DELAY } from "@/constants";
 import { debounce } from "@/lib/utils";
 import {
@@ -23,7 +23,7 @@ import {
   updateStateFilter,
   updateItemFromFilter,
 } from "@/utils/filter-helpers";
-import type { FilterState } from "@/types/admin";
+import type { CategoryFilterState } from "@/types/admin";
 import { ActiveFilters } from "@/app/admin/category/modules/filters/active-filters";
 
 export const CategoryFilter = ({
@@ -37,7 +37,7 @@ export const CategoryFilter = ({
   const [searchValue, setSearchValue] = useState(filters.searchTerm || "");
 
   // Clear all filters function
-  const handleClearAllFilters = () => clearAllFilters<FilterState>();
+  const handleClearAllFilters = () => clearAllFilters<CategoryFilterState>();
 
   const updateSearchValue = useCallback((value: string) => {
     setSearchValue(value);
@@ -55,7 +55,7 @@ export const CategoryFilter = ({
             filters as Record<string, unknown>,
             "searchTerm",
             value
-          ) as unknown as FilterState
+          ) as unknown as CategoryFilterState
         );
         onPageReset?.();
       }, DEBOUNCE_DELAY),
@@ -83,7 +83,7 @@ export const CategoryFilter = ({
           filters as Record<string, unknown>,
           "status",
           value
-        ) as unknown as FilterState
+        ) as unknown as CategoryFilterState
       );
       onPageReset?.();
     },
@@ -100,7 +100,7 @@ export const CategoryFilter = ({
           filters as Record<string, unknown>,
           "industryIds",
           values
-        ) as unknown as FilterState
+        ) as unknown as CategoryFilterState
       );
       onPageReset?.();
     },
@@ -129,7 +129,9 @@ export const CategoryFilter = ({
       <CardContent className="p-6">
         <div className={FILTER_CONSTANTS.CONTAINER}>
           <FilterCard
-            filters={{ ...filters, searchTerm: searchValue } as FilterState}
+            filters={
+              { ...filters, searchTerm: searchValue } as CategoryFilterState
+            }
             industries={industries}
             onSearchChange={handleSearchChange}
             onStatusChange={handleStatusChange}
@@ -141,7 +143,9 @@ export const CategoryFilter = ({
           {/* Integrated ActiveFilters */}
           {showActiveFilters && (
             <ActiveFilters
-              filters={{ ...filters, searchTerm: searchValue } as FilterState}
+              filters={
+                { ...filters, searchTerm: searchValue } as CategoryFilterState
+              }
               industries={industries}
               onFilterChange={onFilterChange}
               onClearAll={handleClearFilters}

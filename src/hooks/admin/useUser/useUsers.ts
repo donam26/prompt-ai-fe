@@ -1,4 +1,4 @@
-import type { User } from "@/lib/types";
+import type { User } from "@/types";
 import type { UserFilterState } from "@/types/admin/user";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
@@ -8,13 +8,13 @@ import {
 } from "@/constants";
 import { userService } from "@/services/admin/users/userService";
 import { applyNonEmptyFiltersToQuery } from "@/utils";
-import type { IPagination } from "@/types/common";
+import type { PaginationParams } from "@/types/base";
 import { useDeepMemo } from "@/hooks/useDeepMemo";
 
 interface Props {
   refetch?: () => void;
   filters?: UserFilterState;
-  pagination?: IPagination;
+  pagination?: PaginationParams;
   enabled?: boolean;
 }
 

@@ -1,7 +1,6 @@
 import { BaseService } from "../../base/baseService";
 import { ENDPOINTS, QUERY_PARAMS } from "@/constants";
-import type { Subscription } from "@/lib/types";
-import type { ApiResponse } from "@/types/common";
+import type { Subscription } from "@/types";
 import type { PaginationParams } from "@/types/services/common";
 
 // Subscription service parameters
@@ -57,7 +56,7 @@ export class SubscriptionService extends BaseService {
   /**
    * Delete subscription
    */
-  async deleteSubscription(id: string | number): Promise<ApiResponse<void>> {
+  async deleteSubscription(id: string | number) {
     return this.delete<void>(id);
   }
 

@@ -9,11 +9,11 @@ export const promptFormSchema = z.object({
     .string()
     .min(1, "Content is required")
     .max(5000, "Content must be less than 5000 characters"),
-  short_description: z.string().optional(),
+  short_description: z.string(),
   category_id: z.string().min(1, "Category is required"),
   topic_id: z.string().optional(),
   industry_id: z.string().optional(),
-  is_type: z.number().min(1).max(2),
+  is_type: z.string().or(z.number()),
   sub_type: z.number().min(1).max(2),
   what: z.string().optional(),
   tips: z.string().optional(),
@@ -43,7 +43,7 @@ export const getPromptFormDefaultValues = (prompt?: any): PromptFormValues => {
       prompt?.topic_id?.toString() || prompt?.topic?.id?.toString() || "",
     industry_id:
       prompt?.industry_id?.toString() || prompt?.industry?.id?.toString() || "",
-    is_type: prompt?.is_type || 1,
+    is_type: prompt?.is_type || "1",
     sub_type: prompt?.sub_type || 1,
     what: prompt?.what || "",
     tips: prompt?.tips || "",

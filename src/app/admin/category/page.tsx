@@ -13,8 +13,9 @@ import {
 import { CATEGORY_CONSTANTS } from "@/constants/category";
 import { useCategories, useIndustries } from "@/hooks";
 import { useDeleteCategory } from "@/hooks/admin/useCategory/useDeleteCategory";
-import type { Category, FilterState } from "@/types/admin";
-import { IPagination } from "@/types/common";
+import type { Category } from "@/types";
+import type { CategoryFilterState } from "@/types/admin/category";
+import type { PaginationParams as IPagination } from "@/types/base";
 import {
   DEFAULT_PAGE_INDEX,
   DEFAULT_PAGINATION,
@@ -26,7 +27,7 @@ import { DataTable } from "@/components/data-table";
 export default function CategoryManagementPage(): React.JSX.Element {
   const router = useRouter();
 
-  const [filters, setFilters] = useState<Partial<FilterState>>(
+  const [filters, setFilters] = useState<Partial<CategoryFilterState>>(
     CATEGORY_CONSTANTS.INITIAL_FILTERS
   );
 
@@ -75,10 +76,13 @@ export default function CategoryManagementPage(): React.JSX.Element {
     }
   };
 
-  const handleFilterChange = useCallback((newFilters: FilterState): void => {
-    setFilters(newFilters);
-    setPagination(prev => ({ ...prev, pageIndex: DEFAULT_PAGE_INDEX }));
-  }, []);
+  const handleFilterChange = useCallback(
+    (newFilters: CategoryFilterState): void => {
+      setFilters(newFilters);
+      setPagination(prev => ({ ...prev, pageIndex: DEFAULT_PAGE_INDEX }));
+    },
+    []
+  );
 
   const handleClearFilters = useCallback((): void => {
     setFilters(CATEGORY_CONSTANTS.INITIAL_FILTERS);

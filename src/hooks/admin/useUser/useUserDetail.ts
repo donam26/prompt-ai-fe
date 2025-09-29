@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import { userService } from "@/services/admin/users/userService";
-import type { User } from "@/lib/types";
+import type { User } from "@/types";
 
 interface IResponse {
   user: User | null;

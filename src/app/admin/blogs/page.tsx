@@ -12,9 +12,9 @@ import {
 } from "./modules";
 import { BLOG_CONSTANTS } from "@/constants/blog";
 import { useBlogs } from "@/hooks";
-import type { Blog } from "@/lib/types";
+import type { Blog } from "@/types";
 import type { BlogFilterState } from "@/types/admin/blog";
-import { IPagination } from "@/types/common";
+import type { PaginationParams } from "@/types/base";
 import {
   DEFAULT_PAGE_INDEX,
   DEFAULT_PAGINATION,
@@ -31,7 +31,8 @@ export default function BlogManagementPage(): React.JSX.Element {
     BLOG_CONSTANTS.INITIAL_FILTERS
   );
 
-  const [pagination, setPagination] = useState<IPagination>(DEFAULT_PAGINATION);
+  const [pagination, setPagination] =
+    useState<PaginationParams>(DEFAULT_PAGINATION);
 
   const { blogsWithPagination, isFetching: blogsLoading } = useBlogs({
     pagination,
@@ -41,7 +42,7 @@ export default function BlogManagementPage(): React.JSX.Element {
   const { mutate: deleteBlog, isLoading: isDeleting } = useDeleteBlog();
 
   const handlePaginationChange = useCallback(
-    (newPagination: IPagination) =>
+    (newPagination: PaginationParams) =>
       setPagination(prev => ({ ...prev, ...newPagination })),
     []
   );

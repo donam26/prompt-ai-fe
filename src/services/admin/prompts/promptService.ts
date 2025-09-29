@@ -1,7 +1,7 @@
 import { BaseService } from "../../base/baseService";
 import { ENDPOINTS } from "@/constants";
-import type { Prompt } from "@/lib/types";
-import type { ApiResponse } from "@/types/common";
+import type { Prompt } from "@/types";
+import type { BaseApiResponse } from "@/types/api/common";
 
 /**
  * PromptService extending BaseService
@@ -63,7 +63,7 @@ export class PromptService extends BaseService {
   /**
    * Delete prompt
    */
-  async deletePrompt(id: string): Promise<ApiResponse<void>> {
+  async deletePrompt(id: string): Promise<BaseApiResponse<void>> {
     return await this.delete<void>(id);
   }
 
@@ -80,6 +80,17 @@ export class PromptService extends BaseService {
 
   async removeFavoritePrompt(promptId: string) {
     return await this.delete(`${ENDPOINTS.PROMPTS.BASE}/favorite/${promptId}`);
+  }
+
+  /**
+   * Export prompts to Excel
+   */
+  async exportPromptsExcel(filters: Record<string, unknown> = {}) {
+    const blob = await this.exportExcel("export-excel", filters);
+    const timestamp = new Date().toISOString().split("T")[0];
+    const filename = `prompts-export-${timestamp}.xlsx`;
+    this.downloadBlob(blob, filename);
+    return blob;
   }
 }
 

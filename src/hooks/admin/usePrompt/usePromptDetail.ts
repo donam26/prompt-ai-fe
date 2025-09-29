@@ -1,6 +1,6 @@
-import { useQuery } from "@tanstack/react-query";
+import { useState, useEffect, useCallback } from "react";
 import { promptService } from "@/services/admin/prompts/promptService";
-import type { Prompt } from "@/lib/types";
+import type { Prompt } from "@/types";
 
 interface UsePromptDetailProps {
   promptId?: string;
@@ -11,27 +11,42 @@ export function usePromptDetail({
   promptId,
   enabled = true,
 }: UsePromptDetailProps) {
-  const {
-    data: prompt,
-    isLoading,
-    error,
-    refetch,
-  } = useQuery({
-    queryKey: ["prompt", promptId],
-    queryFn: async () => {
-      if (!promptId) {
-        return null;
-      }
+  const [prompt, setPrompt] = useState<Prompt | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState("");
+
+  const fetchPrompt = useCallback(async () => {
+    if (!promptId || !enabled) {
+      setPrompt(null);
+      return;
+    }
+
+    setIsLoading(true);
+    setError("");
+
+    try {
       const response = await promptService.getPromptById(promptId);
-      return response.data;
-    },
-    enabled: enabled && !!promptId,
-  });
+      setPrompt(response.data || null);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Có lỗi xảy ra");
+      setPrompt(null);
+    } finally {
+      setIsLoading(false);
+    }
+  }, [promptId, enabled]);
+
+  useEffect(() => {
+    fetchPrompt();
+  }, [fetchPrompt]);
+
+  const refetch = useCallback(() => {
+    fetchPrompt();
+  }, [fetchPrompt]);
 
   return {
-    prompt: prompt as Prompt | null,
+    prompt,
     isLoading,
-    error: error?.message || "",
+    error,
     refetch,
   };
 }

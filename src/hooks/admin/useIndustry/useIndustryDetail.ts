@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import { industryService } from "@/services/admin/industries/industryService";
-import type { Industry } from "@/lib/types";
+import type { Industry } from "@/types";
 
 interface IResponse {
   industry: Industry | null;

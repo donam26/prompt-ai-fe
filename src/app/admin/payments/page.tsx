@@ -13,9 +13,9 @@ import {
 import { PAYMENTS_CONSTANTS } from "@/constants/payments";
 import { useAdminPaymentsQuery } from "@/hooks";
 import { useDeletePayment } from "@/hooks/admin/usePayment/useDeletePayment";
-import type { Payment } from "@/lib/types";
+import type { Payment } from "@/types";
 import type { PaymentFilterState } from "@/types/admin/payment";
-import { IPagination } from "@/types/common";
+import type { PaginationParams as IPagination } from "@/types/base";
 import {
   DEFAULT_PAGE_INDEX,
   DEFAULT_PAGINATION,

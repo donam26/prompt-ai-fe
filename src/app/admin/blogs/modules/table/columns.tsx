@@ -1,5 +1,5 @@
 import type { ColumnDef } from "@tanstack/react-table";
-import type { Blog } from "@/lib/types";
+import type { Blog } from "@/types";
 import { Column } from "@/components/data-table/data-table";
 import { ImageCell, BadgeCell, ActionsCell } from "@/components/table-cell";
 import { BLOG_CONSTANTS } from "@/constants/blog";

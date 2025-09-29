@@ -13,9 +13,9 @@ import {
 import { USERS_CONSTANTS } from "@/constants/users";
 import { useAdminUsersQuery } from "@/hooks";
 import { useDeleteUser } from "@/hooks/admin/useUser/useDeleteUser";
-import type { User } from "@/lib/types";
+import type { User } from "@/types";
 import type { UserFilterState } from "@/types/admin/user";
-import { IPagination } from "@/types/common";
+import type { PaginationParams } from "@/types/base";
 import {
   DEFAULT_PAGE_INDEX,
   DEFAULT_PAGINATION,
@@ -31,7 +31,8 @@ export default function UserManagementPage(): React.JSX.Element {
     USERS_CONSTANTS.INITIAL_FILTERS
   );
 
-  const [pagination, setPagination] = useState<IPagination>(DEFAULT_PAGINATION);
+  const [pagination, setPagination] =
+    useState<PaginationParams>(DEFAULT_PAGINATION);
 
   const { usersWithPagination, isFetching: usersLoading } = useAdminUsersQuery({
     pagination,
@@ -41,7 +42,7 @@ export default function UserManagementPage(): React.JSX.Element {
   const { mutate: deleteUser, isLoading: isDeleting } = useDeleteUser();
 
   const handlePaginationChange = useCallback(
-    (newPagination: IPagination) =>
+    (newPagination: PaginationParams) =>
       setPagination(prev => ({ ...prev, ...newPagination })),
     []
   );

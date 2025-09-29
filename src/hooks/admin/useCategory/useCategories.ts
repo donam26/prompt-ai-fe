@@ -1,7 +1,7 @@
 "use client";
 
-import type { Category } from "@/lib/types";
-import type { FilterState } from "@/types/admin/category";
+import type { Category } from "@/types";
+import type { CategoryFilterState } from "@/types/admin/category";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   DEFAULT_PAGINATION,
@@ -10,14 +10,14 @@ import {
 } from "@/constants";
 import { categoryService } from "@/services/admin/categories";
 import { applyNonEmptyFiltersToQuery } from "@/utils";
-import type { IPagination } from "@/types/common";
+import type { PaginationParams } from "@/types/base";
 import type { ApiCallResult } from "@/types/services/common";
 import { useDeepMemo } from "@/hooks/useDeepMemo";
 
 interface Props {
   refetch?: () => void;
-  filters?: Partial<FilterState>;
-  pagination?: IPagination;
+  filters?: Partial<CategoryFilterState>;
+  pagination?: PaginationParams;
 }
 
 export function useCategories(options: Props = {}) {

@@ -102,7 +102,6 @@ export function Header({ className }: HeaderProps): React.JSX.Element {
               <SheetTrigger asChild>
                 <Button
                   variant="ghost"
-                  size="sm"
                   className="hover:bg-transparent p-2 text-gray-700 hover:text-primary-600"
                   aria-label="Open menu"
                 >
@@ -122,7 +121,6 @@ export function Header({ className }: HeaderProps): React.JSX.Element {
                     />
                     <Button
                       variant="ghost"
-                      size="sm"
                       onClick={() => setIsMobileMenuOpen(false)}
                       className="p-2"
                     >

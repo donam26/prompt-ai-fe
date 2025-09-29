@@ -1,13 +1,13 @@
 "use client";
 
-import type { Prompt } from "@/lib/types";
+import type { Prompt } from "@/types";
 import { useParams, useRouter } from "next/navigation";
 import { useCallback, useEffect } from "react";
 import { usePromptDetail, useUpsertPrompt } from "@/hooks/admin/usePrompt";
 import { FormSkeleton } from "@/components/ui/skeleton";
 import { showToast } from "@/components/ui/toast";
 import { PROMPTS_CONSTANTS } from "@/constants/prompts";
-import { FormMode } from "@/constants/common.constants";
+import { FormMode } from "@/constants/common";
 import { PromptForm } from "./modules/prompt-form";
 
 export default function PromptDetailsPage() {
@@ -43,6 +43,7 @@ export default function PromptDetailsPage() {
           OptimationGuide: data.OptimationGuide || "",
           addtip: data.addtip || "",
           addinformation: data.addinformation || "",
+          is_type: data.is_type || "1",
         },
         promptIdToUpdate
       );
@@ -75,10 +76,6 @@ export default function PromptDetailsPage() {
   }, [promptDetailError, upsertPromptError, router]);
 
   if (isLoading) {
-    return <FormSkeleton />;
-  }
-
-  if (isUpserting) {
     return <FormSkeleton />;
   }
 

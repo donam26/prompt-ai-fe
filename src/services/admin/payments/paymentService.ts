@@ -1,7 +1,6 @@
 import { BaseService } from "../../base/baseService";
 import { ENDPOINTS } from "@/constants";
-import type { Payment } from "@/lib/types";
-import type { ApiResponse } from "@/types/common";
+import type { Payment } from "@/types";
 
 /**
  * PaymentService extending BaseService
@@ -46,7 +45,7 @@ export class PaymentService extends BaseService {
   /**
    * Delete payment
    */
-  async deletePayment(id: string | number): Promise<ApiResponse<void>> {
+  async deletePayment(id: string | number) {
     return await this.delete<void>(id);
   }
 }

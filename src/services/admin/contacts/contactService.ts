@@ -1,7 +1,6 @@
 import { BaseService } from "../../base/baseService";
 import { ENDPOINTS, QUERY_PARAMS } from "@/constants";
-import type { Contact } from "@/lib/types";
-import type { ApiResponse } from "@/types/common";
+import type { Contact } from "@/types";
 import type { PaginationParams } from "@/types/services/common";
 
 // Contact service parameters
@@ -62,7 +61,7 @@ export class ContactService extends BaseService {
   /**
    * Delete contact
    */
-  async deleteContact(id: string | number): Promise<ApiResponse<void>> {
+  async deleteContact(id: string | number) {
     return this.delete<void>(id);
   }
 

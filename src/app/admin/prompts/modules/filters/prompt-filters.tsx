@@ -2,6 +2,7 @@
 
 import React from "react";
 import { Search, X } from "lucide-react";
+import DatePicker from "react-multi-date-picker";
 
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -13,7 +14,7 @@ import type {
   PromptFilterProps,
   IPromptFilterProps,
 } from "@/types/admin/prompt";
-import { Category } from "@/lib/types";
+import { Category } from "@/types";
 
 /**
  * Prompt filter component with search, category, status, premium, and tags filters
@@ -226,7 +227,6 @@ const PromptFilterCard = ({
       {hasActiveFilters && (
         <Button
           variant="ghost"
-          size="sm"
           onClick={onClearFilters}
           className="text-gray-500 hover:text-gray-700"
         >
@@ -287,30 +287,16 @@ const PromptFilterCard = ({
         </div>
       </div>
 
-      {/* Third Row - Date Range (Compact) */}
+      {/* Third Row - Date Range */}
       <div className="flex justify-start">
-        <div className="flex sm:flex-row flex-col gap-4 w-full lg:w-auto">
-          {/* Date From */}
-          <div className="space-y-2 w-full sm:w-auto">
-            <Label className="font-medium text-sm">Từ ngày</Label>
-            <Input
-              type="date"
-              value={filters.dateFrom}
-              onChange={e => onDateFromChange(e.target.value)}
-              className="w-full sm:w-48"
-            />
-          </div>
-
-          {/* Date To */}
-          <div className="space-y-2 w-full sm:w-auto">
-            <Label className="font-medium text-sm">Đến ngày</Label>
-            <Input
-              type="date"
-              value={filters.dateTo}
-              onChange={e => onDateToChange(e.target.value)}
-              className="w-full sm:w-48"
-            />
-          </div>
+        <div className="space-y-2 w-full lg:w-auto">
+          <Label className="font-medium text-sm">Khoảng thời gian</Label>
+          <DateRangePicker
+            dateFrom={filters.dateFrom}
+            dateTo={filters.dateTo}
+            onDateFromChange={onDateFromChange}
+            onDateToChange={onDateToChange}
+          />
         </div>
       </div>
     </div>
@@ -408,5 +394,63 @@ const IndustriesFilter = ({
       maxCount={3}
       className="w-full"
     />
+  );
+};
+
+/**
+ * Date range picker component
+ *
+ * @param props - The component props
+ * @returns The date range picker JSX
+ */
+const DateRangePicker = ({
+  dateFrom,
+  dateTo,
+  onDateFromChange,
+  onDateToChange,
+}: {
+  dateFrom: string;
+  dateTo: string;
+  onDateFromChange: (value: string) => void;
+  onDateToChange: (value: string) => void;
+}): React.JSX.Element => {
+  const handleDateFromChange = (date: any) => {
+    const dateString = date ? date.format("YYYY-MM-DD") : "";
+    onDateFromChange(dateString);
+  };
+
+  const handleDateToChange = (date: any) => {
+    const dateString = date ? date.format("YYYY-MM-DD") : "";
+    onDateToChange(dateString);
+  };
+
+  return (
+    <div className="flex sm:flex-row flex-col gap-4 w-full lg:w-auto">
+      {/* Date From */}
+      <div className="w-full sm:w-48">
+        <DatePicker
+          value={dateFrom || null}
+          onChange={handleDateFromChange}
+          format="DD/MM/YYYY"
+          placeholder="Từ ngày"
+          className="w-full"
+          containerClassName="w-full"
+          inputClass="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+        />
+      </div>
+
+      {/* Date To */}
+      <div className="w-full sm:w-48">
+        <DatePicker
+          value={dateTo || null}
+          onChange={handleDateToChange}
+          format="DD/MM/YYYY"
+          placeholder="Đến ngày"
+          className="w-full"
+          containerClassName="w-full"
+          inputClass="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+        />
+      </div>
+    </div>
   );
 };

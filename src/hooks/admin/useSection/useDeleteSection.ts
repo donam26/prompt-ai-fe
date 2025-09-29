@@ -1,4 +1,4 @@
-import type { Section } from "@/lib/types";
+import type { Section } from "@/types";
 import { useCallback, useState } from "react";
 import { sectionService } from "@/services";
 import { showToast } from "@/components/ui/toast";

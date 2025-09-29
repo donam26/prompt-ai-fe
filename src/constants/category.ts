@@ -1,4 +1,4 @@
-import type { FilterState } from "@/types/admin";
+import type { CategoryFilterState } from "@/types/admin";
 
 /**
  * Category enums
@@ -21,7 +21,7 @@ export const CATEGORY_CONSTANTS = {
     sectionId: "",
     status: "",
     industryIds: [],
-  } as FilterState,
+  } as CategoryFilterState,
 
   // Pagination
   PAGINATION: {
