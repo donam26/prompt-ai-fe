@@ -118,9 +118,9 @@ export interface PromptSearchFilters {
 
 export interface PromptFilterState {
   searchTerm: string;
-  categoryIds: EntityId[];
-  topicIds: EntityId[];
-  industryIds: EntityId[];
+  categoryIds: string[];
+  topicIds: string[];
+  industryIds: string[];
   isType?: number;
   subType?: number;
   status?: string;

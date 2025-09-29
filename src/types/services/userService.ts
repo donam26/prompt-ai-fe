@@ -1,6 +1,6 @@
 import type { ServiceResponse } from "@/types/api/common";
 import type { UserSubscription, User } from "@/types/entities/user";
-import type { PaginationParams } from "@/types/services/common";
+import type { PaginationParams } from "@/types";
 import type { FilterParams, AuthParams } from "@/types/base";
 
 // User service parameters

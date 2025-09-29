@@ -7,7 +7,7 @@ import {
   REFRESH_TOKEN_COOKIE_NAME,
   REFRESH_TOKEN_EXPIRE_SECONDS,
 } from "@/constants/auth";
-import { CredentialActionType, IAuthType } from "@/types/auth";
+import { CredentialActionType, NextAuthUser } from "@/types/auth";
 import { getUserInfoFromToken } from "@/utils/token-decoder";
 
 const setCookieToken = async (name: string, value: string, maxAge: number) => {
@@ -36,7 +36,7 @@ export const authOptions: AuthOptions = {
           return null;
         }
 
-        const user: IAuthType | null = null;
+        const user: NextAuthUser | null = null;
 
         try {
           switch (credentials.type) {

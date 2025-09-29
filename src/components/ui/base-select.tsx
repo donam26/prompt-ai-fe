@@ -1,4 +1,4 @@
-import type { Props } from "@/types/select.type";
+import type { SelectProps } from "@/types/select.type";
 import {
   Select,
   SelectContent,
@@ -15,7 +15,7 @@ export function BaseSelect({
   className = "flex justify-center",
   triggerClassName = "w-full max-w-xs",
   isDisabled,
-}: Props) {
+}: SelectProps) {
   return (
     <div className={className}>
       <Select value={value} onValueChange={onValueChange} disabled={isDisabled}>

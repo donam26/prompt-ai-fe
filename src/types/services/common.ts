@@ -24,12 +24,7 @@ export interface SubscriptionWithOptionalDataParams extends SubscriptionParams {
   data?: unknown;
 }
 
-export interface PaginationParams {
-  page?: number;
-  pageSize?: number;
-  limit?: number;
-  filters?: Record<string, unknown>;
-}
+// PaginationParams đã được định nghĩa trong base.ts
 
 export interface PasswordChangeParams extends BaseEntityParams {
   password: string;

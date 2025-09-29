@@ -107,3 +107,27 @@ export interface FilterParams {
   sortOrder?: "asc" | "desc";
   filters?: Record<string, unknown>;
 }
+
+// Common form props interface
+export interface BaseFormProps<T = Record<string, unknown>> {
+  formData: T;
+  errors: Partial<Record<keyof T, string>>;
+  isLoading?: boolean;
+  onSubmit: (e: React.FormEvent) => void;
+}
+
+// Common filter props interface
+export interface BaseFilterProps<T = Record<string, unknown>> {
+  filters: T;
+  onFilterChange: (filters: T) => void;
+  onClearFilters: () => void;
+  onPageReset?: () => void;
+  className?: string;
+}
+
+// Common column handlers interface
+export interface BaseColumnHandlers<T = unknown> {
+  onEdit?: (item: T) => void;
+  onDelete?: (item: T) => void;
+  onView?: (item: T) => void;
+}

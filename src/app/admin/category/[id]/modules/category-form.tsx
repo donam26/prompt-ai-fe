@@ -43,7 +43,7 @@ export const CategoryForm = ({
   const { industriesWithPagination, isLoading: industriesLoading } =
     useIndustries({
       pagination: {
-        page: 1,
+        pageIndex: 1,
         pageSize: 100,
       },
     });

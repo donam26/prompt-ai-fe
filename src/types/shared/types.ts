@@ -1,12 +1,4 @@
-// Error type for API responses
-export interface ApiErrorResult {
-  response?: {
-    data?: {
-      message?: string;
-    };
-  };
-  message?: string;
-}
+// ApiErrorResult đã được thay thế bằng ApiError trong api/common.ts
 
 // Query keys for consistent caching
 export const queryKeys = {

@@ -1,20 +1,6 @@
 import { User } from "@/types";
 
-export interface IAuthType {
-  userId: string | number;
-  email: string;
-  full_name: string;
-  role_id: number;
-  accessToken: string;
-  refreshToken: string;
-  expiresIn: number;
-  permissions?: string[] | string;
-  count_prompt?: number;
-  updated_at: string;
-  userSub?: unknown;
-  avatar?: string;
-  created_at?: string;
-}
+// IAuthType đã được thay thế bằng NextAuthUser để tránh trùng lặp
 
 export interface ISignInData {
   email: string;

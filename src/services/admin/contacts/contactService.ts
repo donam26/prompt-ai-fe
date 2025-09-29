@@ -1,7 +1,6 @@
 import { BaseService } from "../../base/baseService";
 import { ENDPOINTS, QUERY_PARAMS } from "@/constants";
-import type { Contact } from "@/types";
-import type { PaginationParams } from "@/types/services/common";
+import type { Contact, PaginationParams } from "@/types";
 
 // Contact service parameters
 export interface ContactListParams extends PaginationParams {
@@ -28,9 +27,9 @@ export class ContactService extends BaseService {
    * Get contacts with pagination
    */
   async getContactsPage(params?: ContactListParams) {
-    const { page = 1, pageSize = 10, status, type = 1 } = params || {};
+    const { pageIndex = 1, pageSize = 10, status, type = 1 } = params || {};
     return this.list({
-      [QUERY_PARAMS.PAGE]: page,
+      [QUERY_PARAMS.PAGE]: pageIndex,
       [QUERY_PARAMS.PAGE_SIZE]: pageSize,
       [QUERY_PARAMS.STATUS]: status,
       type,

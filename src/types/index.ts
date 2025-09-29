@@ -19,21 +19,13 @@ export * from "./entities/gpt";
 
 // Admin types
 export * from "./admin/dashboard";
+export * from "./admin";
 
 // Notification types
 export * from "./notification";
 
-// Legacy exports (để backward compatibility) - có thể xóa sau khi update hết imports
-export * from "./entities/user";
+// Shared types
+export * from "./shared/types";
 
-export * from "./entities/prompt";
-
-export * from "./entities/blog";
-
-export * from "./entities/payment";
-
-export * from "./entities/contact";
-
-export * from "./entities/gpt";
-
-export * from "./admin";
+// Service types
+export * from "./services/common";

@@ -5,6 +5,7 @@
  */
 
 import type { Blog } from "@/types";
+import type { BaseFilterProps, BaseColumnHandlers } from "../base";
 
 /**
  * Form data structure for blog creation/editing
@@ -44,19 +45,9 @@ export interface BlogFilterState {
 /**
  * Props for the BlogFilter component
  */
-export interface BlogFilterProps {
-  readonly filters: BlogFilterState;
-  readonly onFilterChange: (filters: BlogFilterState) => void;
-  readonly onClearFilters: () => void;
-  readonly onPageReset?: () => void;
-  readonly className?: string;
-}
+export type BlogFilterProps = BaseFilterProps<BlogFilterState>;
 
 /**
  * Context type for column handlers
  */
-export interface BlogColumnHandlers {
-  readonly onEdit?: (blog: Blog) => void;
-  readonly onDelete?: (id: string | number) => void;
-  readonly onView?: (blog: Blog) => void;
-}
+export type BlogColumnHandlers = BaseColumnHandlers<Blog>;

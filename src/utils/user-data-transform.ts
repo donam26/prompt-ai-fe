@@ -1,5 +1,21 @@
 import { User } from "@/types";
-import type { ApiUser } from "@/types/user";
+
+// API User interface for transformation
+interface ApiUser {
+  id: string | number;
+  fullName?: string;
+  full_name?: string;
+  email: string;
+  role?: number;
+  role_id?: number;
+  permissions?: string[] | string;
+  count_prompt?: number;
+  updated_at?: string;
+  userSub?: unknown;
+  profile_image?: string;
+  avatar?: string;
+  created_at?: string;
+}
 
 /**
  * Transforms API user data to match the expected User interface
@@ -19,7 +35,7 @@ export const transformUserData = (apiUser: unknown): User => {
     updated_at: user.updated_at || "",
     userSub: user.userSub as User["userSub"],
     avatar: user.profile_image || user.avatar,
-    created_at: user.created_at,
+    created_at: user.created_at || "",
   };
 };
 
@@ -48,6 +64,6 @@ export const transformUserDataForNextAuth = (
     updated_at: user.updated_at || "",
     userSub: user.userSub as User["userSub"],
     avatar: user.profile_image || user.avatar,
-    created_at: user.created_at,
+    created_at: user.created_at || "",
   };
 };

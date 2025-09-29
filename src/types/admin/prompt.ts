@@ -1,14 +1,18 @@
-import { Category, PromptFilterState } from "@/types";
+import { Category } from "@/types";
+import type { PromptFilterState } from "@/types/entities/prompt";
+import type {
+  BaseFormProps,
+  BaseFilterProps,
+  BaseColumnHandlers,
+} from "../base";
+
+// Re-export PromptFilterState for admin usage
+export type { PromptFilterState };
 
 /**
  * Props for the PromptFilter component
  */
-export interface PromptFilterProps {
-  readonly filters: PromptFilterState;
-  readonly onFilterChange: (filters: PromptFilterState) => void;
-  readonly onClearFilters: () => void;
-  readonly onPageReset?: () => void;
-  readonly className?: string;
+export interface PromptFilterProps extends BaseFilterProps<PromptFilterState> {
   readonly categories: Category[];
   readonly industries: Category[];
 }
@@ -40,24 +44,17 @@ export interface PromptFormData {
 /**
  * Props for the PromptForm component
  */
-export interface PromptFormProps {
-  readonly formData: PromptFormData;
-  readonly errors: Partial<Record<keyof PromptFormData, string>>;
-  readonly isLoading?: boolean;
+export interface PromptFormProps extends BaseFormProps<PromptFormData> {
   readonly onFieldChange: (
     field: keyof PromptFormData,
     value: string | boolean | string[]
   ) => void;
-  readonly onSubmit: (e: React.FormEvent) => void;
 }
 
 /**
  * Column handlers for the prompt table
  */
-export interface PromptColumnHandlers {
-  onEdit: (prompt: any) => void;
-  onDelete: (prompt: any) => void;
-}
+export type PromptColumnHandlers = BaseColumnHandlers;
 
 export interface IPromptFilterProps {
   filters: PromptFilterState;

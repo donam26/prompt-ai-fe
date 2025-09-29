@@ -1,7 +1,6 @@
 import { BaseService } from "../../base/baseService";
 import { ENDPOINTS, QUERY_PARAMS } from "@/constants";
-import type { Subscription } from "@/types";
-import type { PaginationParams } from "@/types/services/common";
+import type { Subscription, PaginationParams } from "@/types";
 
 // Subscription service parameters
 export type SubscriptionListParams = PaginationParams;
@@ -25,9 +24,9 @@ export class SubscriptionService extends BaseService {
    * Get subscriptions with pagination
    */
   async getSubscriptionsPage(params?: SubscriptionListParams) {
-    const { page = 1, pageSize = 10 } = params || {};
+    const { pageIndex = 1, pageSize = 10 } = params || {};
     return this.list({
-      [QUERY_PARAMS.PAGE]: page,
+      [QUERY_PARAMS.PAGE]: pageIndex,
       [QUERY_PARAMS.PAGE_SIZE]: pageSize,
     });
   }

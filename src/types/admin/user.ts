@@ -1,3 +1,9 @@
+import type {
+  BaseFormProps,
+  BaseFilterProps,
+  BaseColumnHandlers,
+} from "../base";
+
 /**
  * User filter state interface
  */
@@ -14,13 +20,7 @@ export interface UserFilterState {
 /**
  * Props for the UserFilter component
  */
-export interface UserFilterProps {
-  readonly filters: UserFilterState;
-  readonly onFilterChange: (filters: UserFilterState) => void;
-  readonly onClearFilters: () => void;
-  readonly onPageReset?: () => void;
-  readonly className?: string;
-}
+export type UserFilterProps = BaseFilterProps<UserFilterState>;
 
 /**
  * User form data interface
@@ -37,19 +37,11 @@ export interface UserFormData {
 /**
  * Props for the UserForm component
  */
-export interface UserFormProps {
-  readonly formData: UserFormData;
-  readonly errors: Partial<Record<keyof UserFormData, string>>;
-  readonly isLoading?: boolean;
+export interface UserFormProps extends BaseFormProps<UserFormData> {
   readonly onFieldChange: (field: keyof UserFormData, value: string) => void;
-  readonly onSubmit: (e: React.FormEvent) => void;
 }
 
 /**
  * Column handlers for the user table
  */
-export interface UserColumnHandlers {
-  onEdit: (user: any) => void;
-  onDelete: (user: any) => void;
-  onView: (user: any) => void;
-}
+export type UserColumnHandlers = BaseColumnHandlers;

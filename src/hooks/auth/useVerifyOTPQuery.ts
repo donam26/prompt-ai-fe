@@ -4,7 +4,7 @@ import { showToast } from "@/components/ui/toast";
 import { transformUserData } from "@/utils/user-data-transform";
 import { useAuth } from "@/hooks/useAuth";
 import { ROUTES_URL } from "@/constants";
-import type { User } from "@/types";
+// User type không được sử dụng trong file này
 import type { UserAuthParams } from "@/types/services/userService";
 import { useRouter } from "next/navigation";
 

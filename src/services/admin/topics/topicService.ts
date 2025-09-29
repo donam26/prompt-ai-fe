@@ -1,7 +1,6 @@
 import { BaseService } from "../../base/baseService";
 import { ENDPOINTS, QUERY_PARAMS } from "@/constants";
-import type { Topic } from "@/types";
-import type { PaginationParams } from "@/types/services/common";
+import type { Topic, PaginationParams } from "@/types";
 
 // Topic service parameters
 export type TopicListParams = PaginationParams;
@@ -25,9 +24,9 @@ export class TopicService extends BaseService {
    * Get topics with pagination
    */
   async getTopicsPage(params?: TopicListParams) {
-    const { page = 1, pageSize = 10 } = params || {};
+    const { pageIndex = 1, pageSize = 10 } = params || {};
     return this.list({
-      [QUERY_PARAMS.PAGE]: page,
+      [QUERY_PARAMS.PAGE]: pageIndex,
       [QUERY_PARAMS.PAGE_SIZE]: pageSize,
     });
   }

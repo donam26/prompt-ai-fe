@@ -66,7 +66,7 @@ export default function HomePage() {
   const getListNewestPrompts = async () => {
     try {
       const response = await promptService.getPromptsByCategoryId({
-        page: 1,
+        pageIndex: 1,
         pageSize: 8,
         categoryId: 8,
         searchText: "",
@@ -82,7 +82,7 @@ export default function HomePage() {
   const fetchBlogs = async () => {
     try {
       const response = await blogService.getBlogs({
-        page: 1,
+        pageIndex: 1,
         pageSize: 3,
         search: "",
       });

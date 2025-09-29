@@ -409,8 +409,8 @@ const DateRangePicker = ({
   onDateFromChange,
   onDateToChange,
 }: {
-  dateFrom: string;
-  dateTo: string;
+  dateFrom?: string;
+  dateTo?: string;
   onDateFromChange: (value: string) => void;
   onDateToChange: (value: string) => void;
 }): React.JSX.Element => {

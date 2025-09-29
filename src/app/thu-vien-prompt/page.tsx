@@ -236,7 +236,7 @@ export default function PromptLibraryPage() {
                   })),
                 ]}
                 value={selectedCategory}
-                onValueChange={value => {
+                onValueChange={(value: string) => {
                   setSelectedCategory(value);
                   handleFilterChange();
                 }}
@@ -253,7 +253,7 @@ export default function PromptLibraryPage() {
                   })),
                 ]}
                 value={selectedTopic}
-                onValueChange={value => {
+                onValueChange={(value: string) => {
                   setSelectedTopic(value);
                   handleFilterChange();
                 }}
@@ -270,7 +270,7 @@ export default function PromptLibraryPage() {
                   })),
                 ]}
                 value={selectedIndustry}
-                onValueChange={value => {
+                onValueChange={(value: string) => {
                   setSelectedIndustry(value);
                   handleFilterChange();
                 }}

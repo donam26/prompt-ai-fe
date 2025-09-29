@@ -5,6 +5,7 @@ export const PROMPTS_CONSTANTS = {
   INITIAL_FILTERS: {
     searchTerm: "",
     categoryIds: [],
+    topicIds: [],
     isType: undefined,
     industryIds: [],
     dateFrom: "",

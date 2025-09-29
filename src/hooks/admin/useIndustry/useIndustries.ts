@@ -2,8 +2,8 @@
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 
-import type { Industry } from "@/types";
-import type { ApiCallResult, PaginationParams } from "@/types/services/common";
+import type { Industry, PaginationParams } from "@/types";
+import type { ApiCallResult } from "@/types/services/common";
 import { industryService } from "@/services";
 import { DEFAULT_TOTAL, DEFAULT_TOTAL_PAGES } from "@/constants";
 import type { IndustryFilterState } from "@/types/admin/industry";
@@ -29,7 +29,10 @@ export function useIndustries({ pagination, filters }: Props = {}): IResponse {
   const [error, setError] = useState<string>("");
 
   // Memoize pagination values individually to prevent unnecessary re-renders
-  const memoizedPage = useMemo(() => pagination?.page || 1, [pagination?.page]);
+  const memoizedPage = useMemo(
+    () => pagination?.pageIndex || 1,
+    [pagination?.pageIndex]
+  );
   const memoizedPageSize = useMemo(
     () => pagination?.pageSize || 10,
     [pagination?.pageSize]
@@ -41,7 +44,7 @@ export function useIndustries({ pagination, filters }: Props = {}): IResponse {
 
     try {
       const query: Record<string, unknown> = {
-        page: memoizedPage,
+        pageIndex: memoizedPage,
         pageSize: memoizedPageSize,
       };
 
