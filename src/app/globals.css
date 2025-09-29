@@ -5,6 +5,231 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Quill Editor Styles */
+.ql-editor {
+  min-height: 150px !important;
+  font-family: inherit;
+}
+
+.ql-container {
+  border: 1px solid hsl(var(--border)) !important;
+  border-radius: 6px !important;
+  font-family: inherit;
+}
+
+.ql-toolbar {
+  border: 1px solid hsl(var(--border)) !important;
+  border-bottom: none !important;
+  border-radius: 6px 6px 0 0 !important;
+  background-color: hsl(var(--background)) !important;
+}
+
+.ql-toolbar .ql-stroke {
+  stroke: hsl(var(--foreground)) !important;
+}
+
+.ql-toolbar .ql-fill {
+  fill: hsl(var(--foreground)) !important;
+}
+
+.ql-toolbar button:hover {
+  background-color: hsl(var(--accent)) !important;
+}
+
+.ql-toolbar button.ql-active {
+  background-color: hsl(var(--accent)) !important;
+}
+
+.ql-editor.ql-blank::before {
+  color: hsl(var(--muted-foreground)) !important;
+  font-style: normal !important;
+}
+
+/* Image upload styles */
+.ql-editor img {
+  max-width: 100% !important;
+  height: auto !important;
+  border-radius: 4px !important;
+  margin: 8px 0 !important;
+}
+
+.ql-editor .ql-image {
+  position: relative;
+}
+
+/* Preview modal styles */
+.ql-editor.prose {
+  font-family: inherit;
+}
+
+.ql-editor.prose h1,
+.ql-editor.prose h2,
+.ql-editor.prose h3 {
+  font-weight: 600;
+  margin-top: 1.5em;
+  margin-bottom: 0.5em;
+}
+
+.ql-editor.prose p {
+  margin-bottom: 1em;
+}
+
+.ql-editor.prose ul,
+.ql-editor.prose ol {
+  margin-bottom: 1em;
+  padding-left: 1.5em;
+}
+
+.ql-editor.prose a {
+  color: hsl(var(--primary));
+  text-decoration: underline;
+}
+
+/* Markdown Editor Styles */
+.prose {
+  color: hsl(var(--foreground));
+}
+
+.prose h1,
+.prose h2,
+.prose h3,
+.prose h4,
+.prose h5,
+.prose h6 {
+  color: hsl(var(--foreground));
+  font-weight: 600;
+  margin-top: 1.5em;
+  margin-bottom: 0.5em;
+}
+
+.prose h1 {
+  font-size: 1.875rem;
+  line-height: 2.25rem;
+}
+
+.prose h2 {
+  font-size: 1.5rem;
+  line-height: 2rem;
+}
+
+.prose h3 {
+  font-size: 1.25rem;
+  line-height: 1.75rem;
+}
+
+.prose p {
+  margin-bottom: 1em;
+  color: hsl(var(--foreground));
+}
+
+.prose ul,
+.prose ol {
+  margin-bottom: 1em;
+  padding-left: 1.5em;
+  color: hsl(var(--foreground));
+}
+
+.prose li {
+  margin-bottom: 0.25em;
+}
+
+.prose strong {
+  font-weight: 600;
+  color: hsl(var(--foreground));
+}
+
+.prose em {
+  font-style: italic;
+}
+
+.prose a {
+  color: hsl(var(--primary));
+  text-decoration: underline;
+}
+
+.prose a:hover {
+  color: hsl(var(--primary) / 0.8);
+}
+
+.prose code {
+  background-color: hsl(var(--muted));
+  padding: 0.125rem 0.25rem;
+  border-radius: 0.25rem;
+  font-size: 0.875em;
+  font-family:
+    ui-monospace, SFMono-Regular, "SF Mono", Consolas, "Liberation Mono", Menlo,
+    monospace;
+}
+
+.prose pre {
+  background-color: hsl(var(--muted));
+  padding: 1rem;
+  border-radius: 0.5rem;
+  overflow-x: auto;
+  margin-bottom: 1em;
+}
+
+.prose pre code {
+  background-color: transparent;
+  padding: 0;
+}
+
+.prose blockquote {
+  border-left: 4px solid hsl(var(--border));
+  padding-left: 1rem;
+  margin: 1em 0;
+  font-style: italic;
+  color: hsl(var(--muted-foreground));
+}
+
+.prose img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 0.5rem;
+  margin: 1em 0;
+}
+
+.prose table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 1em;
+}
+
+.prose th,
+.prose td {
+  border: 1px solid hsl(var(--border));
+  padding: 0.5rem;
+  text-align: left;
+}
+
+.prose th {
+  background-color: hsl(var(--muted));
+  font-weight: 600;
+}
+
+/* Placeholder highlighting for Markdown */
+.prose .placeholder-highlight {
+  background-color: hsl(var(--primary) / 0.1);
+  color: hsl(var(--primary));
+  padding: 0.125rem 0.25rem;
+  border-radius: 0.25rem;
+  font-weight: 500;
+  font-family:
+    ui-monospace, SFMono-Regular, "SF Mono", Consolas, "Liberation Mono", Menlo,
+    monospace;
+  font-size: 0.875em;
+}
+
+/* Alternative placeholder styling */
+.prose .placeholder-highlight-alt {
+  background-color: hsl(280 100% 90% / 0.3);
+  color: hsl(280 100% 30%);
+  padding: 0.125rem 0.25rem;
+  border-radius: 0.25rem;
+  font-weight: 500;
+  border: 1px solid hsl(280 100% 80% / 0.5);
+}
+
 /* Toast loading animation */
 @keyframes spin {
   from {

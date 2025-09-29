@@ -11,6 +11,7 @@ import {
   FormItem,
   FormLabel,
   FormControl,
+  MarkdownEditor,
   FormMessage,
 } from "@/components/ui";
 import { Textarea } from "@/components/ui/textarea";
@@ -108,11 +109,12 @@ export function PromptAdvancedFields({ control, isDisabled }: Props) {
           <FormItem>
             <FormLabel>Optimization Guide</FormLabel>
             <FormControl>
-              <Textarea
-                placeholder="Enter optimization guide"
-                rows={6}
+              <MarkdownEditor
+                value={field.value || ""}
+                onChange={field.onChange}
                 disabled={isDisabled}
-                {...field}
+                placeholder="Nhập hướng dẫn tối ưu hóa (Markdown)"
+                minHeight={200}
               />
             </FormControl>
             <FormMessage />

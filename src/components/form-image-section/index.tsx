@@ -64,7 +64,7 @@ export function FormImageSection({
         }, 1000);
       } catch (error) {
         setIsUploading(false);
-        // eslint-disable-next-line no-console
+
         console.error("Upload failed:", error);
         showToast.error(uploadErrorMessage);
       }

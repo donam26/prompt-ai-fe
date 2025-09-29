@@ -204,30 +204,6 @@ export function PromptBasicFields({
           </FormItem>
         )}
       />
-
-      {/* Fifth row: Content */}
-      <FormField
-        control={control}
-        name="content"
-        render={({
-          field,
-        }: {
-          field: ControllerRenderProps<PromptFormValues, "content">;
-        }) => (
-          <FormItem>
-            <FormLabel>Content</FormLabel>
-            <FormControl>
-              <Textarea
-                placeholder="Enter prompt content"
-                rows={6}
-                disabled={isDisabled}
-                {...field}
-              />
-            </FormControl>
-            <FormMessage />
-          </FormItem>
-        )}
-      />
     </div>
   );
 }

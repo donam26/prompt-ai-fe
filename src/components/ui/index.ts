@@ -10,3 +10,5 @@ export * from "./checkbox";
 export * from "./dropdown-menu";
 export * from "./multi-select";
 export * from "./command";
+export * from "./quill-editor";
+export * from "./markdown-editor";

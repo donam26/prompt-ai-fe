@@ -19,16 +19,9 @@ const eslintConfig = [
     rules: {
       // Prettier integration
       "prettier/prettier": "error",
-      "no-console": [
-        "error",
-        "log",
-        {
-          allow: ["log", "warn", "error"],
-        },
-      ],
 
-      // General code quality rules
-      "no-console": "warn",
+      "no-console": ["warn", { allow: ["warn", "error"] }],
+
       "no-debugger": "error",
       "no-duplicate-imports": "error",
       "no-unused-expressions": "error",
