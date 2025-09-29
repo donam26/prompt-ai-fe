@@ -9,7 +9,6 @@ import { FormActions } from "@/components/form-actions";
 import { Form } from "@/components/ui/form";
 import { FormMode, BUTTON_TEXT } from "@/constants/common.constants";
 import { PromptBasicFields } from "./prompt-basic-fields";
-import { PromptContentFields } from "./prompt-content-fields";
 import { PromptAdvancedFields } from "./prompt-advanced-fields";
 import { useCategories } from "@/hooks/admin/useCategory/useCategories";
 import { useIndustries } from "@/hooks/admin/useIndustry";
@@ -161,17 +160,6 @@ export const PromptForm = ({
               categories={categories}
               industries={industries}
             />
-          </AdminContentCard>
-
-          {/* Content Details Card */}
-          <AdminContentCard>
-            <div className="mb-4">
-              <h3 className="font-semibold text-lg">
-                Content Details
-                <span className="text-red-500">*</span>
-              </h3>
-            </div>
-            <PromptContentFields control={control} isDisabled={isSaving} />
           </AdminContentCard>
 
           {/* Advanced Settings Card */}

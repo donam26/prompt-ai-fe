@@ -12,6 +12,7 @@ import {
 } from "@/components/ui";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { QuillEditor } from "@/components/ui";
 import {
   Select,
   SelectContent,
@@ -193,11 +194,37 @@ export function PromptBasicFields({
           <FormItem>
             <FormLabel>Short Description</FormLabel>
             <FormControl>
-              <Textarea
-                placeholder="Enter short description"
-                rows={3}
+              <QuillEditor
+                value={field.value || ""}
+                onChange={field.onChange}
                 disabled={isDisabled}
-                {...field}
+                placeholder="Nhập mô tả ngắn"
+                showPreview={true}
+              />
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
+
+      {/* Content - Main prompt content */}
+      <FormField
+        control={control}
+        name="content"
+        render={({
+          field,
+        }: {
+          field: ControllerRenderProps<PromptFormValues, "content">;
+        }) => (
+          <FormItem>
+            <FormLabel>Content</FormLabel>
+            <FormControl>
+              <QuillEditor
+                value={field.value || ""}
+                onChange={field.onChange}
+                disabled={isDisabled}
+                placeholder="Nhập nội dung prompt chính"
+                showPreview={true}
               />
             </FormControl>
             <FormMessage />

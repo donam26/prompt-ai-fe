@@ -12,6 +12,7 @@ import {
   FormLabel,
   FormControl,
   MarkdownEditor,
+  QuillEditor,
   FormMessage,
 } from "@/components/ui";
 import { Textarea } from "@/components/ui/textarea";
@@ -37,59 +38,13 @@ export function PromptAdvancedFields({ control, isDisabled }: Props) {
           <FormItem>
             <FormLabel>Text</FormLabel>
             <FormControl>
-              <Textarea
-                placeholder="Enter additional text content"
-                rows={3}
+              <QuillEditor
+                value={field.value || ""}
+                onChange={field.onChange}
                 disabled={isDisabled}
-                {...field}
-              />
-            </FormControl>
-            <FormMessage />
-          </FormItem>
-        )}
-      />
-
-      {/* Input - Input requirements */}
-      <FormField
-        control={control}
-        name="input"
-        render={({
-          field,
-        }: {
-          field: ControllerRenderProps<PromptFormValues, "input">;
-        }) => (
-          <FormItem>
-            <FormLabel>Input</FormLabel>
-            <FormControl>
-              <Textarea
-                placeholder="Describe input requirements"
-                rows={4}
-                disabled={isDisabled}
-                {...field}
-              />
-            </FormControl>
-            <FormMessage />
-          </FormItem>
-        )}
-      />
-
-      {/* Output - Expected output */}
-      <FormField
-        control={control}
-        name="output"
-        render={({
-          field,
-        }: {
-          field: ControllerRenderProps<PromptFormValues, "output">;
-        }) => (
-          <FormItem>
-            <FormLabel>Output</FormLabel>
-            <FormControl>
-              <Textarea
-                placeholder="Describe expected output"
-                rows={4}
-                disabled={isDisabled}
-                {...field}
+                placeholder="Nhập nội dung text bổ sung"
+                minHeight={150}
+                showPreview={true}
               />
             </FormControl>
             <FormMessage />
@@ -115,54 +70,6 @@ export function PromptAdvancedFields({ control, isDisabled }: Props) {
                 disabled={isDisabled}
                 placeholder="Nhập hướng dẫn tối ưu hóa (Markdown)"
                 minHeight={200}
-              />
-            </FormControl>
-            <FormMessage />
-          </FormItem>
-        )}
-      />
-
-      {/* Additional Tips */}
-      <FormField
-        control={control}
-        name="addtip"
-        render={({
-          field,
-        }: {
-          field: ControllerRenderProps<PromptFormValues, "addtip">;
-        }) => (
-          <FormItem>
-            <FormLabel>Additional Tips</FormLabel>
-            <FormControl>
-              <Textarea
-                placeholder="Enter additional tips"
-                rows={4}
-                disabled={isDisabled}
-                {...field}
-              />
-            </FormControl>
-            <FormMessage />
-          </FormItem>
-        )}
-      />
-
-      {/* Additional Information */}
-      <FormField
-        control={control}
-        name="addinformation"
-        render={({
-          field,
-        }: {
-          field: ControllerRenderProps<PromptFormValues, "addinformation">;
-        }) => (
-          <FormItem>
-            <FormLabel>Additional Information</FormLabel>
-            <FormControl>
-              <Textarea
-                placeholder="Enter additional information"
-                rows={4}
-                disabled={isDisabled}
-                {...field}
               />
             </FormControl>
             <FormMessage />
