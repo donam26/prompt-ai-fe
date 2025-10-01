@@ -8,15 +8,15 @@ import type { BaseEntity, EntityId } from "../base";
 export interface Blog extends BaseEntity {
   title: string;
   content: string;
-  meta_description?: string;
-  featured_image?: string;
-  published_at?: string;
-  category_id?: EntityId;
+  metaDescription?: string;
+  featuredImage?: string;
+  publishedAt?: string;
+  categoryId?: EntityId;
   category?: {
     id: EntityId;
     name: string;
   };
-  blog_category?: BlogCategory;
+  blogCategory?: BlogCategory;
 }
 
 // Blog category
@@ -30,7 +30,7 @@ export interface CreateBlogRequest {
   title: string;
   content: string;
   description?: string;
-  blog_category_id: EntityId;
+  blogCategoryId: EntityId;
   image?: File;
 }
 

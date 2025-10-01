@@ -34,8 +34,8 @@ export interface SectionFormData {
   readonly name: string;
   readonly description: string;
   readonly status: string;
-  readonly created_at?: string;
-  readonly updated_at?: string;
+  readonly createdAt?: string;
+  readonly updatedAt?: string;
 }
 
 /**

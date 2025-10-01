@@ -1,31 +1,20 @@
-/**
- * Main types export file - centralized exports
- * Tuân thủ convention: export từ các module riêng biệt
- */
-
 // Base types
 export * from "./base";
 
 // API types
-export * from "./api/common";
+export * from "./api";
 
 // Entity types
-export * from "./entities/user";
-export * from "./entities/prompt";
-export * from "./entities/blog";
-export * from "./entities/payment";
-export * from "./entities/contact";
-export * from "./entities/gpt";
+export * from "./entities";
 
 // Admin types
-export * from "./admin/dashboard";
 export * from "./admin";
 
 // Notification types
 export * from "./notification";
 
 // Shared types
-export * from "./shared/types";
+export * from "./shared";
 
 // Service types
-export * from "./services/common";
+export * from "./services";

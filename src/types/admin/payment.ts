@@ -30,8 +30,8 @@ export interface PaymentFormData {
   readonly method: string;
   readonly status: string;
   readonly description: string;
-  readonly created_at?: string;
-  readonly updated_at?: string;
+  readonly createdAt?: string;
+  readonly updatedAt?: string;
 }
 
 /**

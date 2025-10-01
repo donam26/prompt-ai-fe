@@ -113,8 +113,8 @@ const UserFormFields = ({
         <Input
           id="name"
           type="text"
-          value={formData.full_name}
-          onChange={e => onFormDataChange("full_name", e.target.value)}
+          value={formData.fullName}
+          onChange={e => onFormDataChange("fullName", e.target.value)}
           placeholder="Nhập tên người dùng"
           required
         />

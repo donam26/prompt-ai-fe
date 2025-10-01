@@ -9,12 +9,12 @@ export const categoryFormSchema = z.object({
     .string()
     .max(500, "Description must be less than 500 characters")
     .optional(),
-  section_id: z.string().min(1, "Section is required"),
+  sectionId: z.string().min(1, "Section is required"),
   type: z.enum(["standard", "premium"]),
-  is_comming_soon: z.boolean(),
+  isComingSoon: z.boolean(),
   image: z.string().optional(),
-  image_card: z.string().optional(),
-  industry_ids: z.array(z.string()).optional(),
+  imageCard: z.string().optional(),
+  industryIds: z.array(z.string()).optional(),
 });
 
 export type CategoryFormValues = z.infer<typeof categoryFormSchema>;
@@ -24,11 +24,11 @@ export const getCategoryFormDefaultValues = (
 ): CategoryFormValues => ({
   name: category?.name || "",
   description: category?.description || "",
-  section_id: category?.section_id?.toString() || "",
+  sectionId: category?.sectionId?.toString() || "",
   type: (category?.type as "standard" | "premium") || "standard",
-  is_comming_soon: category?.is_comming_soon || false,
+  isComingSoon: category?.isComingSoon || false,
   image: category?.image || "",
-  image_card: category?.image_card || "",
-  industry_ids:
+  imageCard: category?.imageCard || "",
+  industryIds:
     category?.industries?.map((industry: any) => industry.id.toString()) || [],
 });

@@ -67,11 +67,11 @@ export function CategoryBasicFields({
 
         <FormField
           control={control}
-          name="section_id"
+          name="sectionId"
           render={({
             field,
           }: {
-            field: ControllerRenderProps<CategoryFormValues, "section_id">;
+            field: ControllerRenderProps<CategoryFormValues, "sectionId">;
           }) => (
             <FormItem>
               <FormLabel>Section</FormLabel>
@@ -141,11 +141,11 @@ export function CategoryBasicFields({
       {/* Third row: Industries (full width) */}
       <FormField
         control={control}
-        name="industry_ids"
+        name="industryIds"
         render={({
           field,
         }: {
-          field: ControllerRenderProps<CategoryFormValues, "industry_ids">;
+          field: ControllerRenderProps<CategoryFormValues, "industryIds">;
         }) => {
           const options = industries.map(industry => ({
             value: industry.id.toString(),

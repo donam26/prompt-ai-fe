@@ -32,8 +32,8 @@ export function usePaymentColumns({
       cell: ({ row }) => (
         <div className="flex flex-col space-y-1 min-w-[180px]">
           <span className="font-semibold text-gray-900">
-            {row.original.user?.full_name ||
-              row.original.user?.full_name ||
+            {row.original.user?.fullName ||
+              row.original.user?.fullName ||
               "N/A"}
           </span>
           <span className="text-gray-500 text-sm">
@@ -67,7 +67,7 @@ export function usePaymentColumns({
         <div className="hidden md:flex items-center gap-2">
           <CreditCard className="w-4 h-4 text-gray-500" />
           <BadgeCell
-            label={row.original.payment_method || "N/A"}
+            label={row.original.paymentMethod || "N/A"}
             variant="secondary"
             maxWidth="max-w-[100px]"
           />
@@ -102,14 +102,14 @@ export function usePaymentColumns({
       enableSorting: false,
     },
     {
-      accessorKey: "created_at",
+      accessorKey: "createdAt",
       meta: { title: "Ngày tạo" },
       header: () => <div className="hidden lg:block font-medium">Ngày tạo</div>,
       cell: ({ row }) => (
         <div className="hidden lg:block">
           <span className="text-gray-600 text-sm">
-            {row.original.created_at
-              ? new Date(row.original.created_at).toLocaleDateString("vi-VN")
+            {row.original.createdAt
+              ? new Date(row.original.createdAt).toLocaleDateString("vi-VN")
               : "N/A"}
           </span>
         </div>

@@ -5,8 +5,7 @@ import { Filter, X } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Category } from "@/types";
-import { PromptFilterState } from "@/types/entities/prompt";
+import { Category, PromptFilterState } from "@/types";
 
 interface PromptActiveFiltersProps {
   filters: PromptFilterState;
@@ -29,8 +28,18 @@ export const PromptActiveFilters = ({
     return <></>;
   }
 
+  // Helper to remove item from array filter
+  const removeFromArrayFilter = (
+    arr: string[] | undefined,
+    valueToRemove: string
+  ): string[] | undefined => {
+    if (!arr || !valueToRemove) return arr;
+    const updated = arr.filter(item => item !== valueToRemove);
+    return updated.length > 0 ? updated : undefined;
+  };
+
   // Helper to remove a single filter
-  const handleRemoveFilter = (key: string) => {
+  const handleRemoveFilter = (key: string, valueToRemove?: string) => {
     const newFilters = { ...filters };
 
     switch (key) {
@@ -41,16 +50,24 @@ export const PromptActiveFilters = ({
         newFilters.isType = undefined;
         break;
       case "industryIds":
-        newFilters.industryIds = [];
+        if (valueToRemove) {
+          newFilters.industryIds =
+            removeFromArrayFilter(filters.industryIds, valueToRemove) || [];
+        } else {
+          newFilters.industryIds = [];
+        }
         break;
-      case "dateFrom":
+      case "dateRange":
         newFilters.dateFrom = "";
-        break;
-      case "dateTo":
         newFilters.dateTo = "";
         break;
       case "categoryIds":
-        newFilters.categoryIds = [];
+        if (valueToRemove) {
+          newFilters.categoryIds =
+            removeFromArrayFilter(filters.categoryIds, valueToRemove) || [];
+        } else {
+          newFilters.categoryIds = [];
+        }
         break;
       default:
         break;
@@ -60,14 +77,19 @@ export const PromptActiveFilters = ({
     onPageReset?.();
   };
 
+  const getTypeName = (type: number | undefined): string => {
+    if (type === 2) return "Premium";
+    if (type === 1) return "Miễn phí";
+    return "";
+  };
+
   // Calculate active filter count
-  const activeTotal = [
-    filters.searchTerm && filters.searchTerm !== "",
-    filters.categoryIds && filters.categoryIds.length > 0,
-    filters.isType && filters.isType !== undefined,
-    filters.industryIds && filters.industryIds.length > 0,
-    filters.dateFrom || filters.dateTo,
-  ].filter(Boolean).length;
+  const activeTotal =
+    (filters.searchTerm ? 1 : 0) +
+    (filters.categoryIds?.length || 0) +
+    (filters.industryIds?.length || 0) +
+    (filters.isType !== undefined ? 1 : 0) +
+    (filters.dateFrom || filters.dateTo ? 1 : 0);
 
   if (activeTotal === 0) {
     return <></>;
@@ -78,115 +100,71 @@ export const PromptActiveFilters = ({
       <div className="flex items-center gap-2">
         <Filter className="w-4 h-4 text-gray-500" />
         <span className="font-medium text-gray-700 text-sm">
-          Bộ lọc đang hoạt động ({activeTotal}):
+          Bộ lọc đang hoạt động:
         </span>
       </div>
 
       {/* Search filter */}
       {filters.searchTerm && filters.searchTerm !== "" && (
-        <Badge
-          variant="secondary"
-          className="flex items-center gap-1 px-2 py-1"
-        >
+        <Badge key="search" variant="secondary" className="gap-1">
           <span className="text-xs">Tìm kiếm: {filters.searchTerm}</span>
-          <button
+          <X
+            className="w-3 h-3 cursor-pointer"
             onClick={() => handleRemoveFilter("searchTerm")}
-            className="hover:bg-gray-300 ml-1 p-0.5 rounded-full"
-            type="button"
-          >
-            <X className="w-3 h-3" />
-          </button>
+          />
         </Badge>
       )}
 
-      {/* Category filter */}
-      {filters.categoryIds && filters.categoryIds.length > 0 && (
-        <Badge
-          variant="secondary"
-          className="flex items-center gap-1 px-2 py-1"
-        >
-          <span className="text-xs">
-            Danh mục: {filters.categoryIds.join(", ")}
-          </span>
-          <button
-            onClick={() => handleRemoveFilter("categoryId")}
-            className="hover:bg-gray-300 ml-1 p-0.5 rounded-full"
-            type="button"
+      {/* Category filters - individual badges */}
+      {filters.categoryIds?.map(categoryId => {
+        const category = categories.find(c => c.id.toString() === categoryId);
+        return category ? (
+          <Badge
+            key={`category-${categoryId}`}
+            variant="secondary"
+            className="gap-1"
           >
-            <X className="w-3 h-3" />
-          </button>
-        </Badge>
-      )}
+            <span className="text-xs">Danh mục: {category.name}</span>
+            <X
+              className="w-3 h-3 cursor-pointer"
+              onClick={() => handleRemoveFilter("categoryIds", categoryId)}
+            />
+          </Badge>
+        ) : null;
+      })}
 
-      {/* Categories multiple filter */}
-      {filters.categoryIds && filters.categoryIds.length > 0 && (
-        <Badge
-          variant="secondary"
-          className="flex items-center gap-1 px-2 py-1"
-        >
-          <span className="text-xs">
-            Danh mục:{" "}
-            {filters.categoryIds
-              .map(id => categories.find(cat => cat.id.toString() === id)?.name)
-              .filter(Boolean)
-              .join(", ")}
-          </span>
-          <button
-            onClick={() => handleRemoveFilter("categoryIds")}
-            className="hover:bg-gray-300 ml-1 p-0.5 rounded-full"
-            type="button"
+      {/* Industry filters - individual badges */}
+      {filters.industryIds?.map(industryId => {
+        const industry = industries.find(i => i.id.toString() === industryId);
+        return industry ? (
+          <Badge
+            key={`industry-${industryId}`}
+            variant="secondary"
+            className="gap-1"
           >
-            <X className="w-3 h-3" />
-          </button>
-        </Badge>
-      )}
+            <span className="text-xs">Ngành nghề: {industry.name}</span>
+            <X
+              className="w-3 h-3 cursor-pointer"
+              onClick={() => handleRemoveFilter("industryIds", industryId)}
+            />
+          </Badge>
+        ) : null;
+      })}
 
       {/* Premium filter */}
-      {filters.isType && filters.isType !== undefined && (
-        <Badge
-          variant="secondary"
-          className="flex items-center gap-1 px-2 py-1"
-        >
-          <span className="text-xs">Premium: {filters.isType}</span>
-          <button
+      {filters.isType !== undefined && (
+        <Badge key="isType" variant="secondary" className="gap-1">
+          <span className="text-xs">Loại: {getTypeName(filters.isType)}</span>
+          <X
+            className="w-3 h-3 cursor-pointer"
             onClick={() => handleRemoveFilter("isType")}
-            className="hover:bg-gray-300 ml-1 p-0.5 rounded-full"
-            type="button"
-          >
-            <X className="w-3 h-3" />
-          </button>
-        </Badge>
-      )}
-
-      {/* Industries filter */}
-      {filters.industryIds && filters.industryIds.length > 0 && (
-        <Badge
-          variant="secondary"
-          className="flex items-center gap-1 px-2 py-1"
-        >
-          <span className="text-xs">
-            Ngành nghề:{" "}
-            {filters.industryIds
-              .map(id => industries.find(ind => ind.id.toString() === id)?.name)
-              .filter(Boolean)
-              .join(", ")}
-          </span>
-          <button
-            onClick={() => handleRemoveFilter("industryIds")}
-            className="hover:bg-gray-300 ml-1 p-0.5 rounded-full"
-            type="button"
-          >
-            <X className="w-3 h-3" />
-          </button>
+          />
         </Badge>
       )}
 
       {/* Date range filter */}
       {(filters.dateFrom || filters.dateTo) && (
-        <Badge
-          variant="secondary"
-          className="flex items-center gap-1 px-2 py-1"
-        >
+        <Badge key="dateRange" variant="secondary" className="gap-1">
           <span className="text-xs">
             Khoảng thời gian:{" "}
             {filters.dateFrom && filters.dateTo
@@ -197,29 +175,25 @@ export const PromptActiveFilters = ({
                   ? `Đến ${new Date(filters.dateTo).toLocaleDateString("vi-VN")}`
                   : ""}
           </span>
-          <button
-            onClick={() => handleRemoveFilter("dateFrom")}
-            className="hover:bg-gray-300 ml-1 p-0.5 rounded-full"
-            type="button"
-          >
-            <X className="w-3 h-3" />
-          </button>
+          <X
+            className="w-3 h-3 cursor-pointer"
+            onClick={() => handleRemoveFilter("dateRange")}
+          />
         </Badge>
       )}
 
       {/* Clear all button */}
-      {activeTotal > 1 && (
-        <Button
-          variant="ghost"
-          onClick={() => {
-            onClearAll();
-            onPageReset?.();
-          }}
-          className="text-gray-600 hover:text-gray-800 text-xs"
-        >
-          Xóa tất cả
-        </Button>
-      )}
+      <Button
+        variant="ghost"
+        size="sm"
+        onClick={() => {
+          onClearAll();
+          onPageReset?.();
+        }}
+        className="hover:bg-gray-100 px-4 py-2 border border-gray-300 rounded-full text-xs"
+      >
+        Xóa tất cả ({activeTotal})
+      </Button>
     </div>
   );
 };

@@ -40,6 +40,20 @@ export function useIndustries({ pagination, filters }: Props = {}): IResponse {
   const memoizedFilters = useDeepMemo(filters);
 
   const fetchIndustries = useCallback(async () => {
+    // Don't fetch if no category filters are provided
+    if (
+      !memoizedFilters?.categoryIds ||
+      memoizedFilters.categoryIds.length === 0
+    ) {
+      setIndustriesWithPagination({
+        data: [],
+        total: DEFAULT_TOTAL,
+        totalPages: DEFAULT_TOTAL_PAGES,
+      });
+      setIsLoading(false);
+      return;
+    }
+
     setIsLoading(true);
 
     try {

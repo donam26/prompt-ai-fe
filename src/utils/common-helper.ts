@@ -11,7 +11,11 @@ export function applyNonEmptyFiltersToQuery(
   for (const [key, value] of Object.entries(filters)) {
     const isArrayWithValues = isArray(value) && !isEmpty(value);
     const isValidPrimitive =
-      !isArray(value) && !isUndefined(value) && !isNull(value) && value !== "";
+      !isArray(value) &&
+      !isUndefined(value) &&
+      !isNull(value) &&
+      value !== "" &&
+      value !== "all";
 
     if (!isArrayWithValues && !isValidPrimitive) {
       continue;
@@ -45,7 +49,13 @@ export function buildQueryStringFromFilters(
       continue;
     }
 
-    if (isUndefined(value) || isNull(value) || value === "") {
+    // Skip empty values and "all"
+    if (
+      isUndefined(value) ||
+      isNull(value) ||
+      value === "" ||
+      value === "all"
+    ) {
       continue;
     }
 
@@ -67,7 +77,10 @@ export function buildPromptsQueryString(
 
   for (const [key, value] of Object.entries(filters)) {
     // Handle array values (categoryIds, industryIds) - multiple params with same key
-    if (isArray(value) && !isEmpty(value)) {
+    if (isArray(value)) {
+      if (isEmpty(value)) {
+        continue;
+      }
       castArray(value).forEach(item => {
         if (isUndefined(item) || isNull(item) || item === "") {
           return;
@@ -91,13 +104,13 @@ export function buildPromptsQueryString(
       continue;
     }
 
-    // Skip "all" values for type filters (isPremium)
-    if (key === "isPremium" && value === "all") {
-      continue;
-    }
-
-    // Skip empty values
-    if (isUndefined(value) || isNull(value) || value === "") {
+    // Skip empty values and "all"
+    if (
+      isUndefined(value) ||
+      isNull(value) ||
+      value === "" ||
+      value === "all"
+    ) {
       continue;
     }
 

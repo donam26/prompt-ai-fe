@@ -1,4 +1,4 @@
-import type { PromptFilterState } from "@/types/admin/prompt";
+import { PromptFilterState } from "@/types";
 
 export const PROMPTS_CONSTANTS = {
   // Initial filter state
@@ -39,7 +39,7 @@ export const PROMPTS_CONSTANTS = {
     TITLE: "title",
     CATEGORY: "category",
     STATUS: "status",
-    CREATED_AT: "created_at",
+    CREATED_AT: "createdAt",
     ACTIONS: "actions",
   },
 

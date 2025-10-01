@@ -15,7 +15,7 @@ export * from "./dashboard";
 export * from "./category";
 
 // User types
-export type * from "./user";
+export * from "./user";
 
 // Prompt types
 export * from "./prompt";
@@ -31,6 +31,3 @@ export * from "./industry";
 
 // Payment types
 export * from "./payment";
-
-// User types
-export * from "./user";

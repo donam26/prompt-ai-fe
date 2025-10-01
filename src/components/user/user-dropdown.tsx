@@ -24,9 +24,9 @@ import { LAYOUT_ROUTES, LAYOUT_LABELS, LAYOUT_PAGE } from "@/constants/layout";
 interface UserDropdownProps {
   readonly user: {
     readonly id: number;
-    readonly full_name?: string;
+    readonly fullName?: string;
     readonly email?: string;
-    readonly role_id?: number;
+    readonly roleId?: number;
     readonly avatar?: string;
   };
   readonly onLogout: () => void;
@@ -59,10 +59,10 @@ export function UserDropdown({
           <Avatar>
             <AvatarImage
               src={user?.avatar || "/images/avatars/default_avatar.png"}
-              alt={user?.full_name || "User"}
+              alt={user?.fullName || "User"}
             />
             <AvatarFallback className="text-xs sm:text-sm">
-              {user?.full_name?.charAt(0)?.toUpperCase() || "U"}
+              {user?.fullName?.charAt(0)?.toUpperCase() || "U"}
             </AvatarFallback>
           </Avatar>
         </Button>
@@ -71,12 +71,12 @@ export function UserDropdown({
         <DropdownMenuLabel className="font-normal">
           <div className="flex flex-col space-y-1">
             <p className="font-medium text-sm leading-none">
-              {user?.full_name || "User"}
+              {user?.fullName || "User"}
             </p>
             <p className="text-muted-foreground text-xs leading-none">
               {user?.email || "user@example.com"}
             </p>
-            {user?.role_id === 2 && (
+            {user?.roleId === 2 && (
               <Badge variant="secondary" className="mt-1 w-fit">
                 Admin
               </Badge>

@@ -6,11 +6,11 @@ import type { BaseEntity, BaseAdminEntity, EntityId, Timestamp } from "../base";
 
 // User entity
 export interface User extends BaseEntity {
-  full_name: string;
+  fullName: string;
   email: string;
-  role_id: number;
+  roleId: number;
   permissions?: string[] | string;
-  count_prompt?: number;
+  countPrompt?: number;
   userSub?: UserSubscription;
   avatar?: string;
 }
@@ -18,15 +18,15 @@ export interface User extends BaseEntity {
 // User subscription
 export interface UserSubscription {
   id: EntityId;
-  user_id: EntityId;
-  subscription_id: EntityId;
+  userId: EntityId;
+  subscriptionId: EntityId;
   status: number;
-  start_date: Timestamp;
-  end_date: Timestamp;
+  startDate: Timestamp;
+  endDate: Timestamp;
   token: number;
   subscription?: Subscription;
-  created_at: Timestamp;
-  updated_at: Timestamp;
+  createdAt: Timestamp;
+  updatedAt: Timestamp;
 }
 
 // Subscription plan
@@ -65,7 +65,7 @@ export interface LoginResponse {
 }
 
 export interface RegisterRequest {
-  full_name: string;
+  fullName: string;
   email: string;
   password: string;
 }
@@ -86,7 +86,7 @@ export interface ChangePasswordRequest {
 }
 
 export interface UpdateUserRequest {
-  full_name?: string;
+  fullName?: string;
   email?: string;
   avatar?: File;
 }

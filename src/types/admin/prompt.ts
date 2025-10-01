@@ -1,20 +1,15 @@
-import { Category } from "@/types";
-import type { PromptFilterState } from "@/types/entities/prompt";
+import { Category, PromptFilterState } from "@/types";
 import type {
   BaseFormProps,
   BaseFilterProps,
   BaseColumnHandlers,
 } from "../base";
 
-// Re-export PromptFilterState for admin usage
-export type { PromptFilterState };
-
 /**
  * Props for the PromptFilter component
  */
 export interface PromptFilterProps extends BaseFilterProps<PromptFilterState> {
   readonly categories: Category[];
-  readonly industries: Category[];
 }
 
 /**
@@ -29,14 +24,14 @@ export interface PromptFormData {
   readonly tags: string[];
   readonly description?: string;
   readonly image?: string;
-  readonly image_card?: string;
-  readonly is_type?: string;
-  readonly sub_type?: number;
-  readonly industry_id?: string;
-  readonly topic_id?: string;
-  readonly is_coming_soon?: boolean;
-  readonly created_at?: string;
-  readonly updated_at?: string;
+  readonly imageCard?: string;
+  readonly isType?: string;
+  readonly subType?: number;
+  readonly industryId?: string;
+  readonly topicId?: string;
+  readonly isComingSoon?: boolean;
+  readonly createdAt?: string;
+  readonly updatedAt?: string;
   readonly category?: Category;
   readonly isPublic: boolean;
 }
@@ -59,7 +54,8 @@ export type PromptColumnHandlers = BaseColumnHandlers;
 export interface IPromptFilterProps {
   filters: PromptFilterState;
   categories: Category[];
-  industries: Category[];
+  filteredIndustries: Category[];
+  isLoadingIndustries?: boolean;
   onSearchChange: (value: string) => void;
   onCategoriesChange: (values: string[]) => void;
   onPremiumChange: (value: string) => void;

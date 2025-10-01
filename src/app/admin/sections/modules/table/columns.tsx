@@ -47,14 +47,14 @@ export function useSectionColumns({
       enableSorting: false,
     },
     {
-      accessorKey: "created_at",
+      accessorKey: "createdAt",
       meta: { title: "Ngày tạo" },
       header: () => <div className="hidden lg:block font-medium">Ngày tạo</div>,
       cell: ({ row }) => (
         <div className="hidden lg:block">
           <span className="text-gray-600 text-sm">
-            {row.original.created_at
-              ? new Date(row.original.created_at).toLocaleDateString("vi-VN")
+            {row.original.createdAt
+              ? new Date(row.original.createdAt).toLocaleDateString("vi-VN")
               : "N/A"}
           </span>
         </div>

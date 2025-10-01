@@ -99,8 +99,8 @@ export const INITIAL_FILTER_STATE = {
 export const INITIAL_FORM_DATA = {
   name: "",
   description: "",
-  section_id: "",
-  is_coming_soon: false,
+  sectionId: "",
+  isComingSoon: false,
 } as const;
 
 // Admin labels for dashboard
@@ -171,7 +171,7 @@ export const ACTIVITY_STATS = [
 export const RECENT_ACTIVITIES = [
   {
     id: "1",
-    type: "user_registration",
+    type: "userRegistration",
     message: "New user registered",
     timestamp: new Date().toISOString(),
     icon: "👤",
@@ -180,7 +180,7 @@ export const RECENT_ACTIVITIES = [
   },
   {
     id: "2",
-    type: "category_created",
+    type: "categoryCreated",
     message: "New category created",
     timestamp: new Date().toISOString(),
     icon: "📁",
@@ -189,7 +189,7 @@ export const RECENT_ACTIVITIES = [
   },
   {
     id: "3",
-    type: "system_update",
+    type: "systemUpdate",
     message: "System updated successfully",
     timestamp: new Date().toISOString(),
     icon: "🔄",

@@ -11,11 +11,11 @@ declare module "next-auth" {
   interface User extends NextAuthUser {
     // User interface extends NextAuthUser with additional properties
     permissions?: string[];
-    count_prompt?: number;
-    updated_at?: string;
+    countPrompt?: number;
+    updatedAt?: string;
     userSub?: import("@/lib/types").UserSubscription;
     avatar?: string;
-    created_at?: string;
+    createdAt?: string;
   }
 }
 

@@ -1,5 +1,5 @@
 import type { ColumnDef } from "@tanstack/react-table";
-import type { Prompt } from "@/types";
+import type { Industry, Prompt } from "@/types";
 import { Column } from "@/components/data-table/data-table";
 import { BadgeCell, BadgeList, ActionsCell } from "@/components/table-cell";
 import { getBadgeVariantByIndustry, BADGE_CONSTANTS } from "@/constants/badges";
@@ -27,19 +27,19 @@ export function usePromptColumns({
             >
               {row.original.title}
             </span>
-            {row.original.is_type == "2" ? (
+            {row.original.isType == "2" ? (
               <BadgeCell label="Premium" variant="premium" />
-            ) : row.original.is_type == "1" ? (
+            ) : row.original.isType == "1" ? (
               <BadgeCell label="Free" variant="secondary" />
             ) : null}
           </div>
-          {(row.original.short_description || row.original.description) && (
+          {(row.original.shortDescription || row.original.description) && (
             <div
               className="max-w-[280px] text-gray-500 text-sm line-clamp-2 prose prose-sm"
-              title={row.original.short_description || row.original.description}
+              title={row.original.shortDescription || row.original.description}
               dangerouslySetInnerHTML={{
                 __html:
-                  row.original.short_description ||
+                  row.original.shortDescription ||
                   row.original.description ||
                   "",
               }}
@@ -66,7 +66,7 @@ export function usePromptColumns({
           <BadgeCell
             label={
               row.original.category?.name ||
-              row.original.Category?.name ||
+              row.original.category?.name ||
               "Chưa phân loại"
             }
             variant="section"
@@ -84,14 +84,16 @@ export function usePromptColumns({
       ),
       cell: ({ row }) => (
         <div className="hidden lg:block">
-          {row.original.Category?.industries &&
-          row.original.Category.industries.length > 0 ? (
+          {row.original.promptIndustries &&
+          row.original.promptIndustries.length > 0 ? (
             <BadgeList
-              items={row.original.Category.industries.map((industry: any) => ({
-                id: industry.id,
-                label: industry.name,
-                variant: getBadgeVariantByIndustry(industry.name),
-              }))}
+              items={row.original.promptIndustries.map(
+                (industry: Industry) => ({
+                  id: industry.id,
+                  label: industry.name,
+                  variant: getBadgeVariantByIndustry(industry.name),
+                })
+              )}
               maxVisible={BADGE_CONSTANTS.LIST_CONFIG.TABLE_MAX_VISIBLE}
               badgeClassName="max-w-[80px]"
             />
@@ -103,14 +105,14 @@ export function usePromptColumns({
       enableSorting: false,
     },
     {
-      accessorKey: "created_at",
+      accessorKey: "createdAt",
       meta: { title: "Ngày tạo" },
       header: () => <div className="hidden lg:block font-medium">Ngày tạo</div>,
       cell: ({ row }) => (
         <div className="hidden lg:block">
           <span className="text-gray-600 text-sm">
-            {row.original.created_at
-              ? new Date(row.original.created_at).toLocaleDateString("vi-VN")
+            {row.original.createdAt
+              ? new Date(row.original.createdAt).toLocaleDateString("vi-VN")
               : "N/A"}
           </span>
         </div>

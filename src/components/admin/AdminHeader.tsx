@@ -87,9 +87,9 @@ export function AdminHeader() {
                   className="relative rounded-full w-7 sm:w-8 h-7 sm:h-8"
                 >
                   <Avatar className="w-7 sm:w-8 h-7 sm:h-8">
-                    <AvatarImage src={user?.avatar} alt={user?.full_name} />
+                    <AvatarImage src={user?.avatar} alt={user?.fullName} />
                     <AvatarFallback className="text-xs sm:text-sm">
-                      {user?.full_name?.charAt(0)?.toUpperCase() || "U"}
+                      {user?.fullName?.charAt(0)?.toUpperCase() || "U"}
                     </AvatarFallback>
                   </Avatar>
                 </Button>
@@ -98,13 +98,13 @@ export function AdminHeader() {
                 <DropdownMenuLabel className="font-normal">
                   <div className="flex flex-col space-y-1">
                     <p className="font-medium text-sm leading-none">
-                      {user?.full_name}
+                      {user?.fullName}
                     </p>
                     <p className="text-muted-foreground text-xs leading-none">
                       {user?.email}
                     </p>
                     <Badge variant="secondary" className="mt-1 w-fit">
-                      {user?.role_id === 2 ? "Super Admin" : "Admin"}
+                      {user?.roleId === 2 ? "Super Admin" : "Admin"}
                     </Badge>
                   </div>
                 </DropdownMenuLabel>

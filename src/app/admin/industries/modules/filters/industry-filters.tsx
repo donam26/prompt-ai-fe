@@ -6,16 +6,12 @@ import { Search, X } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import { BaseSelect } from "@/components/ui/base-select";
 import { debounce } from "@/lib/utils";
-import type { IndustryFilterProps, IndustryFilterState } from "@/types/admin";
+import type {
+  IndustryFilterProps,
+  IndustryFilterState,
+} from "@/types/admin/industry";
 
-/**
- * Industry filter component with search and status filters
- *
- * @param props - The component props
- * @returns The industry filter JSX
- */
 export const IndustryFilter = ({
   filters,
   onFilterChange,
@@ -47,14 +43,7 @@ export const IndustryFilter = ({
     });
   };
 
-  const handleStatusChange = (value: string): void => {
-    onFilterChange({
-      ...filters,
-      status: value,
-    });
-  };
-
-  const hasActiveFilters = filters.searchTerm || filters.status !== "all";
+  const hasActiveFilters = filters.searchTerm;
 
   return (
     <div className={`space-y-4 ${className || ""}`}>
@@ -89,44 +78,8 @@ export const IndustryFilter = ({
               />
             </div>
           </div>
-
-          {/* Status Filter */}
-          <div className="space-y-2">
-            <Label className="font-medium text-sm">Trạng thái</Label>
-            <StatusFilter
-              value={filters.status}
-              onChange={handleStatusChange}
-            />
-          </div>
         </div>
       </div>
     </div>
-  );
-};
-
-/**
- * Status filter component
- */
-const StatusFilter = ({
-  value,
-  onChange,
-}: {
-  value: string;
-  onChange: (value: string) => void;
-}): React.JSX.Element => {
-  const statusOptions = [
-    { id: "all", name: "Tất cả trạng thái" },
-    { id: "active", name: "Hoạt động" },
-    { id: "inactive", name: "Không hoạt động" },
-  ];
-
-  return (
-    <BaseSelect
-      items={statusOptions}
-      value={value}
-      onValueChange={onChange}
-      placeholder="Chọn trạng thái..."
-      className="w-full"
-    />
   );
 };

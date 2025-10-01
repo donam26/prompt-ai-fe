@@ -1,5 +1,4 @@
-import type { Prompt } from "@/types";
-import type { PromptFilterState } from "@/types/admin/prompt";
+import type { Prompt, PromptFilterState } from "@/types";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   DEFAULT_PAGINATION,
@@ -85,16 +84,16 @@ export function usePrompts(options: Props = {}) {
       const transformedData = responseData.data.map((item: Prompt) => ({
         ...item,
         // Map API fields to expected UI fields
-        description: item.short_description || item.description,
-        isPremium: item.is_type.toString() == "2",
+        description: item.shortDescription || item.description,
+        isPremium: item.isType.toString() == "2",
         isActive: true, // Default to active
-        isComingSoon: item.is_coming_soon || false,
+        isComingSoon: item.isComingSoon || false,
         isPublic: true, // Default to public for now
-        createdAt: item.created_at,
-        image: item.image || item.Category?.image,
+        createdAt: item.createdAt,
+        image: item.image || item.category?.image,
         tags: item.tags || [],
         // Ensure industries are properly mapped
-        industries: item.Category?.industries || item.industries || [],
+        industries: item.category?.industries || item.industries || [],
       }));
 
       setPrompts(transformedData);

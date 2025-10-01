@@ -4,22 +4,18 @@ import { Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 import { ExportExcelButton } from "@/components/admin/export-excel-button";
-import type { PromptFilterState } from "@/types/admin/prompt";
+import { PromptFilterState } from "@/types";
 
 interface PromptHeaderProps {
   onAddPrompt: () => void;
   filters: PromptFilterState;
+  disabled: boolean;
 }
 
-/**
- * Prompt page header component
- *
- * @param props - The component props
- * @returns The prompt header JSX
- */
 export const PromptHeader = ({
   onAddPrompt,
   filters,
+  disabled = false,
 }: PromptHeaderProps): React.JSX.Element => (
   <div className="flex justify-between items-center">
     <div>
@@ -27,7 +23,7 @@ export const PromptHeader = ({
       <p className="mt-2 text-gray-600">Quản lý các prompt trong hệ thống</p>
     </div>
     <div className="flex items-center gap-3">
-      <ExportExcelButton filters={filters} />
+      <ExportExcelButton filters={filters} disabled={disabled} />
       <Dialog>
         <DialogTrigger asChild>
           <Button

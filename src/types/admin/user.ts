@@ -26,12 +26,12 @@ export type UserFilterProps = BaseFilterProps<UserFilterState>;
  * User form data interface
  */
 export interface UserFormData {
-  readonly full_name: string;
+  readonly fullName: string;
   readonly email: string;
   readonly role: string;
   readonly status: string;
-  readonly created_at?: string;
-  readonly updated_at?: string;
+  readonly createdAt?: string;
+  readonly updatedAt?: string;
 }
 
 /**

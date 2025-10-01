@@ -4,26 +4,26 @@ import { promptService } from "@/services/admin/prompts/promptService";
 export interface UpsertPromptData {
   title?: string;
   content?: string;
-  short_description?: string;
-  category_id?: string | number;
-  topic_id?: string | number;
-  industry_id?: string | number;
-  is_type?: string | number;
-  sub_type?: number;
+  shortDescription?: string;
+  categoryId?: string | number;
+  topicId?: string | number;
+  industryId?: string | number;
+  isType?: string | number;
+  subType?: number;
   what?: string;
   tips?: string;
   text?: string;
   how?: string;
   input?: string;
   output?: string;
-  OptimationGuide?: string;
-  addtip?: string;
-  addinformation?: string;
+  optimizationGuide?: string;
+  addTip?: string;
+  addInformation?: string;
   image?: string;
-  image_card?: string;
-  is_coming_soon?: boolean;
+  imageCard?: string;
+  isComingSoon?: boolean;
   tags?: string[];
-  industry_ids?: (string | number)[];
+  industryIds?: (string | number)[];
 }
 
 interface IResponse {
@@ -46,19 +46,19 @@ export function useUpsertPrompt(): IResponse {
           // Update existing prompt
           await promptService.updatePrompt(id, {
             ...data,
-            category_id: data.category_id?.toString() || "",
-            topic_id: data.topic_id?.toString() || "",
-            industry_id: data.industry_id?.toString() || "",
-            is_type: data.is_type?.toString() || "1",
+            categoryId: data.categoryId?.toString() || "",
+            topicId: data.topicId?.toString() || "",
+            industryId: data.industryId?.toString() || "",
+            isType: data.isType?.toString() || "1",
           });
         } else {
           // Create new prompt
           await promptService.createPrompt({
             ...data,
-            category_id: data.category_id?.toString() || "",
-            topic_id: data.topic_id?.toString() || "",
-            industry_id: data.industry_id?.toString() || "",
-            is_type: data.is_type?.toString() || "1",
+            categoryId: data.categoryId?.toString() || "",
+            topicId: data.topicId?.toString() || "",
+            industryId: data.industryId?.toString() || "",
+            isType: data.isType?.toString() || "1",
           });
         }
         return true;

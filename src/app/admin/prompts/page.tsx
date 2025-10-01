@@ -11,10 +11,9 @@ import {
   adaptColumnsForDataTable,
 } from "./modules";
 import { PROMPTS_CONSTANTS } from "@/constants/prompts";
-import { usePrompts, useCategories, useIndustries } from "@/hooks";
+import { usePrompts, useCategories } from "@/hooks";
 import { useDeletePrompt } from "@/hooks/admin/usePrompt/useDeletePrompt";
-import type { Prompt } from "@/types";
-import type { PromptFilterState } from "@/types/entities/prompt";
+import type { Prompt, PromptFilterState } from "@/types";
 import type { PaginationParams } from "@/types/base";
 import {
   DEFAULT_PAGE_INDEX,
@@ -48,11 +47,6 @@ export default function PromptManagementPage(): React.JSX.Element {
     isFetching: categoriesLoading,
   } = useCategories();
 
-  const {
-    industriesWithPagination: industriesData,
-    isLoading: industriesLoading,
-  } = useIndustries();
-
   const { mutate: deletePrompt, isLoading: isDeleting } = useDeletePrompt();
 
   const handlePaginationChange = useCallback(
@@ -61,8 +55,7 @@ export default function PromptManagementPage(): React.JSX.Element {
     []
   );
 
-  const isLoading =
-    promptsLoading || categoriesLoading || industriesLoading || isDeleting;
+  const isLoading = promptsLoading || categoriesLoading || isDeleting;
 
   const handleAddPrompt = () => {
     router.push(PROMPTS_CONSTANTS.ROUTES.PROMPT_CREATE);
@@ -102,12 +95,15 @@ export default function PromptManagementPage(): React.JSX.Element {
   return (
     <AdminContentCard>
       <div className="space-y-6">
-        <PromptHeader onAddPrompt={handleAddPrompt} filters={filters} />
+        <PromptHeader
+          onAddPrompt={handleAddPrompt}
+          filters={filters}
+          disabled={!promptsWithPagination?.data.length}
+        />
 
         <PromptFilter
           filters={filters}
           categories={categoriesData?.data || []}
-          industries={(industriesData?.data as any[]) || []}
           onFilterChange={handleFilterChange}
           onClearFilters={handleClearFilters}
           onPageReset={() =>

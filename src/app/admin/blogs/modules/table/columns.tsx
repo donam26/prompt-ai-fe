@@ -40,19 +40,19 @@ export function useBlogColumns({
           >
             {row.original.title}
           </span>
-          {row.original.meta_description && (
+          {row.original.metaDescription && (
             <span
               className="text-gray-500 text-xs truncate"
-              title={row.original.meta_description}
+              title={row.original.metaDescription}
             >
-              {row.original.meta_description}
+              {row.original.metaDescription}
             </span>
           )}
         </div>
       ),
     },
     {
-      accessorKey: "featured_image",
+      accessorKey: "featuredImage",
       meta: { title: "Hình ảnh" },
       header: () => (
         <div className="hidden md:block w-full font-medium text-center">
@@ -61,9 +61,9 @@ export function useBlogColumns({
       ),
       cell: ({ row }) => (
         <div className="hidden md:flex justify-center items-center">
-          {row.original.featured_image ? (
+          {row.original.featuredImage ? (
             <ImageCell
-              src={row.original.featured_image}
+              src={row.original.featuredImage}
               alt={row.original.title}
               size="sm"
               className="rounded-md"
@@ -82,7 +82,7 @@ export function useBlogColumns({
       cell: ({ row }) => {
         const categoryName =
           row.original.category?.name ||
-          row.original.blog_category?.name ||
+          row.original.blogCategory?.name ||
           "N/A";
 
         // Dynamic variant based on category name
@@ -120,7 +120,7 @@ export function useBlogColumns({
       enableSorting: false,
     },
     {
-      accessorKey: "published_at",
+      accessorKey: "publishedAt",
       meta: { title: "Ngày xuất bản" },
       header: () => (
         <div className="hidden xl:block font-medium">Ngày xuất bản</div>
@@ -128,8 +128,8 @@ export function useBlogColumns({
       cell: ({ row }) => (
         <div className="hidden xl:block">
           <span className="text-gray-600 text-sm">
-            {row.original.published_at
-              ? new Date(row.original.published_at).toLocaleDateString("vi-VN")
+            {row.original.publishedAt
+              ? new Date(row.original.publishedAt).toLocaleDateString("vi-VN")
               : "Chưa xuất bản"}
           </span>
         </div>
@@ -137,14 +137,14 @@ export function useBlogColumns({
       enableSorting: false,
     },
     {
-      accessorKey: "created_at",
+      accessorKey: "createdAt",
       meta: { title: "Ngày tạo" },
       header: () => <div className="hidden md:block font-medium">Ngày tạo</div>,
       cell: ({ row }) => (
         <div className="hidden md:block">
           <span className="text-gray-600 text-sm">
-            {row.original.created_at
-              ? new Date(row.original.created_at).toLocaleDateString("vi-VN")
+            {row.original.createdAt
+              ? new Date(row.original.createdAt).toLocaleDateString("vi-VN")
               : "N/A"}
           </span>
         </div>
@@ -152,7 +152,7 @@ export function useBlogColumns({
       enableSorting: false,
     },
     {
-      accessorKey: "updated_at",
+      accessorKey: "updatedAt",
       meta: { title: "Cập nhật cuối" },
       header: () => (
         <div className="hidden lg:block font-medium">Cập nhật cuối</div>
@@ -160,8 +160,8 @@ export function useBlogColumns({
       cell: ({ row }) => (
         <div className="hidden lg:block">
           <span className="text-gray-600 text-sm">
-            {row.original.updated_at
-              ? new Date(row.original.updated_at).toLocaleDateString("vi-VN")
+            {row.original.updatedAt
+              ? new Date(row.original.updatedAt).toLocaleDateString("vi-VN")
               : "N/A"}
           </span>
         </div>

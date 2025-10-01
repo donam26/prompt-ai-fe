@@ -59,95 +59,69 @@ export const UserActiveFilters = ({
       <div className="flex items-center gap-2">
         <Filter className="w-4 h-4 text-gray-500" />
         <span className="font-medium text-gray-700 text-sm">
-          Bộ lọc đang hoạt động ({activeTotal}):
+          Bộ lọc đang hoạt động:
         </span>
       </div>
 
       {/* Search filter */}
       {filters.searchTerm && filters.searchTerm !== "" && (
-        <Badge
-          variant="secondary"
-          className="flex items-center gap-1 px-2 py-1"
-        >
+        <Badge key="search" variant="secondary" className="gap-1">
           <span className="text-xs">Tìm kiếm: {filters.searchTerm}</span>
-          <button
+          <X
+            className="w-3 h-3 cursor-pointer"
             onClick={() => handleRemoveFilter("searchTerm")}
-            className="hover:bg-gray-300 ml-1 p-0.5 rounded-full"
-            type="button"
-          >
-            <X className="w-3 h-3" />
-          </button>
+          />
         </Badge>
       )}
 
       {/* Role filter */}
       {filters.role && filters.role !== "all" && (
-        <Badge
-          variant="secondary"
-          className="flex items-center gap-1 px-2 py-1"
-        >
+        <Badge key="role" variant="secondary" className="gap-1">
           <span className="text-xs">Vai trò: {filters.role}</span>
-          <button
+          <X
+            className="w-3 h-3 cursor-pointer"
             onClick={() => handleRemoveFilter("role")}
-            className="hover:bg-gray-300 ml-1 p-0.5 rounded-full"
-            type="button"
-          >
-            <X className="w-3 h-3" />
-          </button>
+          />
         </Badge>
       )}
 
       {/* Status filter */}
       {filters.status && filters.status !== "all" && (
-        <Badge
-          variant="secondary"
-          className="flex items-center gap-1 px-2 py-1"
-        >
+        <Badge key="status" variant="secondary" className="gap-1">
           <span className="text-xs">Trạng thái: {filters.status}</span>
-          <button
+          <X
+            className="w-3 h-3 cursor-pointer"
             onClick={() => handleRemoveFilter("status")}
-            className="hover:bg-gray-300 ml-1 p-0.5 rounded-full"
-            type="button"
-          >
-            <X className="w-3 h-3" />
-          </button>
+          />
         </Badge>
       )}
 
       {/* Date range filter */}
       {(filters.dateRange.from || filters.dateRange.to) && (
-        <Badge
-          variant="secondary"
-          className="flex items-center gap-1 px-2 py-1"
-        >
+        <Badge key="dateRange" variant="secondary" className="gap-1">
           <span className="text-xs">
             Ngày: {filters.dateRange.from || "..."} -{" "}
             {filters.dateRange.to || "..."}
           </span>
-          <button
+          <X
+            className="w-3 h-3 cursor-pointer"
             onClick={() => handleRemoveFilter("dateRange")}
-            className="hover:bg-gray-300 ml-1 p-0.5 rounded-full"
-            type="button"
-          >
-            <X className="w-3 h-3" />
-          </button>
+          />
         </Badge>
       )}
 
       {/* Clear all button */}
-      {activeTotal > 1 && (
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={() => {
-            onClearAll();
-            onPageReset?.();
-          }}
-          className="text-gray-600 hover:text-gray-800 text-xs"
-        >
-          Xóa tất cả
-        </Button>
-      )}
+      <Button
+        variant="ghost"
+        size="sm"
+        onClick={() => {
+          onClearAll();
+          onPageReset?.();
+        }}
+        className="hover:bg-gray-100 px-4 py-2 border border-gray-300 rounded-full text-xs"
+      >
+        Xóa tất cả ({activeTotal})
+      </Button>
     </div>
   );
 };

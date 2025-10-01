@@ -10,8 +10,8 @@ export const useAdminPermissions = () => {
 
   const isAdmin =
     user &&
-    (user.role_id === 2 || // Super admin
-      (user.role_id > 1 && (user.permissions || []).length > 0)); // Tất cả role > 1 có permissions
+    (user.roleId === 2 || // Super admin
+      (user.roleId > 1 && (user.permissions || []).length > 0)); // Tất cả role > 1 có permissions
 
   const canAccess = (screen: string) => {
     return hasPermission(user, screen);
@@ -21,8 +21,7 @@ export const useAdminPermissions = () => {
     return getAccessibleScreens(user);
   };
 
-  const isSuperAdmin = user?.role_id === 2;
-
+  const isSuperAdmin = user?.roleId === 2;
   return {
     isAdmin: !!isAdmin,
     isSuperAdmin: !!isSuperAdmin,

@@ -34,6 +34,8 @@ interface Props {
     name: string;
     description?: string;
   }>;
+  selectedCategoryId?: string;
+  onCategoryChange?: (categoryId: string) => void;
 }
 
 // Get options from constants
@@ -44,6 +46,8 @@ export function PromptBasicFields({
   isDisabled,
   categories = [],
   industries = [],
+  selectedCategoryId,
+  onCategoryChange,
 }: Props) {
   return (
     <div className="space-y-6 mb-4">
@@ -73,17 +77,21 @@ export function PromptBasicFields({
 
         <FormField
           control={control}
-          name="category_id"
+          name="categoryId"
           render={({
             field,
           }: {
-            field: ControllerRenderProps<PromptFormValues, "category_id">;
+            field: ControllerRenderProps<PromptFormValues, "categoryId">;
           }) => (
             <FormItem>
               <FormLabel>Category</FormLabel>
               <Select
-                onValueChange={field.onChange}
+                onValueChange={value => {
+                  field.onChange(value);
+                  onCategoryChange?.(value);
+                }}
                 defaultValue={field.value}
+                value={field.value}
                 disabled={isDisabled}
               >
                 <FormControl>
@@ -112,11 +120,11 @@ export function PromptBasicFields({
       <div className="gap-6 grid grid-cols-1 md:grid-cols-2">
         <FormField
           control={control}
-          name="is_type"
+          name="isType"
           render={({
             field,
           }: {
-            field: ControllerRenderProps<PromptFormValues, "is_type">;
+            field: ControllerRenderProps<PromptFormValues, "isType">;
           }) => (
             <FormItem>
               <FormLabel>Type</FormLabel>
@@ -150,11 +158,11 @@ export function PromptBasicFields({
       {/* Third row: Industries (full width) */}
       <FormField
         control={control}
-        name="industry_ids"
+        name="industryIds"
         render={({
           field,
         }: {
-          field: ControllerRenderProps<PromptFormValues, "industry_ids">;
+          field: ControllerRenderProps<PromptFormValues, "industryIds">;
         }) => {
           const options = industries.map(industry => ({
             value: industry.id.toString(),
@@ -169,12 +177,21 @@ export function PromptBasicFields({
                   options={options}
                   defaultValue={field.value || []}
                   onValueChange={field.onChange}
-                  placeholder="Chọn ngành nghề..."
+                  placeholder={
+                    selectedCategoryId
+                      ? "Chọn ngành nghề..."
+                      : "Vui lòng chọn danh mục trước"
+                  }
                   maxCount={3}
                   className="w-full"
-                  disabled={isDisabled}
+                  disabled={isDisabled || !selectedCategoryId}
                 />
               </FormControl>
+              {!selectedCategoryId && (
+                <p className="mt-1 text-gray-500 text-sm">
+                  Vui lòng chọn danh mục để xem danh sách ngành nghề
+                </p>
+              )}
               <FormMessage />
             </FormItem>
           );
@@ -184,11 +201,11 @@ export function PromptBasicFields({
       {/* Fourth row: Short Description */}
       <FormField
         control={control}
-        name="short_description"
+        name="shortDescription"
         render={({
           field,
         }: {
-          field: ControllerRenderProps<PromptFormValues, "short_description">;
+          field: ControllerRenderProps<PromptFormValues, "shortDescription">;
         }) => (
           <FormItem>
             <FormLabel>Short Description</FormLabel>

@@ -1,45 +1,47 @@
-import { useMutation } from "@tanstack/react-query";
+import { useCallback, useState } from "react";
 import { userService } from "@/services";
 import { showToast } from "@/components/ui/toast";
 
 interface UseResendOTPQueryResult {
   isLoading: boolean;
   error: string | null;
-  mutate: (email: string) => void;
+  mutate: (email: string) => Promise<boolean>;
 }
 
 export const useResendOTPQuery = (): UseResendOTPQueryResult => {
-  const resendOTPMutation = useMutation({
-    mutationFn: async (email: string) => {
-      const response = await userService.resendOTP(email);
-      return response.data.data;
-    },
-    onSuccess: () => {
-      const message = "Mã OTP mới đã được gửi";
-      showToast.success(message, {
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const mutate = useCallback(async (email: string): Promise<boolean> => {
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      await userService.resendOTP(email);
+      showToast.success("Mã OTP mới đã được gửi", {
         title: "Gửi lại mã OTP thành công",
         description: "Vui lòng kiểm tra email của bạn",
       });
-    },
-    onError: (error: unknown) => {
+      return true;
+    } catch (err: unknown) {
       const errorMessage =
-        (error as { response?: { data?: { message?: string } } })?.response
-          ?.data?.message || "Không thể gửi lại mã OTP";
+        (err as { response?: { data?: { message?: string } } })?.response?.data
+          ?.message || "Không thể gửi lại mã OTP";
 
+      setError(errorMessage);
       showToast.error("Gửi lại mã OTP thất bại", {
         title: "Lỗi",
         description: errorMessage,
       });
-    },
-  });
-
-  const mutate = (email: string): void => {
-    resendOTPMutation.mutate(email);
-  };
+      return false;
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
 
   return {
-    isLoading: resendOTPMutation.isPending,
-    error: (resendOTPMutation.error as { message?: string })?.message || null,
+    isLoading,
+    error,
     mutate,
   };
 };

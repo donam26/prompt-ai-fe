@@ -217,7 +217,7 @@ const StatusFilter = ({
   const statusOptions = [
     { id: "all", name: "Tất cả trạng thái" },
     { id: "active", name: "Hoạt động" },
-    { id: "coming_soon", name: "Sắp ra mắt" },
+    { id: "comingSoon", name: "Sắp ra mắt" },
   ];
 
   return (

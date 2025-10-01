@@ -356,7 +356,7 @@ export default function HomePage() {
               >
                 <CardHeader>
                   <div className="mb-2 text-gray-500 text-sm">
-                    Đã tạo: {timeSince(post.updated_at)}
+                    Đã tạo: {timeSince(post.updatedAt)}
                   </div>
                   <CardTitle className="text-xl line-clamp-2">
                     {post.title}

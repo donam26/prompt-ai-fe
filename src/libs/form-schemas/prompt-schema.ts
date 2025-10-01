@@ -9,25 +9,25 @@ export const promptFormSchema = z.object({
     .string()
     .min(1, "Content is required")
     .max(5000, "Content must be less than 5000 characters"),
-  short_description: z.string(),
-  category_id: z.string().min(1, "Category is required"),
-  topic_id: z.string().optional(),
-  industry_id: z.string().optional(),
-  is_type: z.string().or(z.number()),
-  sub_type: z.number().min(1).max(2),
+  shortDescription: z.string(),
+  categoryId: z.string().min(1, "Category is required"),
+  topicId: z.string().optional(),
+  industryId: z.string().optional(),
+  isType: z.string().or(z.number()),
+  subType: z.number().min(1).max(2),
   what: z.string().optional(),
   tips: z.string().optional(),
   text: z.string().optional(),
   how: z.string().optional(),
   input: z.string().optional(),
   output: z.string().optional(),
-  OptimationGuide: z.string().optional(),
-  addtip: z.string().optional(),
-  addinformation: z.string().optional(),
+  optimizationGuide: z.string().optional(),
+  addTip: z.string().optional(),
+  addInformation: z.string().optional(),
   image: z.string().optional(),
-  image_card: z.string().optional(),
-  is_coming_soon: z.boolean().optional(),
-  industry_ids: z.array(z.string()).optional(),
+  imageCard: z.string().optional(),
+  isComingSoon: z.boolean().optional(),
+  industryIds: z.array(z.string()).optional(),
 });
 
 export type PromptFormValues = z.infer<typeof promptFormSchema>;
@@ -36,30 +36,29 @@ export const getPromptFormDefaultValues = (prompt?: any): PromptFormValues => {
   return {
     title: prompt?.title || "",
     content: prompt?.content || "",
-    short_description: prompt?.short_description || prompt?.description || "",
-    category_id:
-      prompt?.category_id?.toString() || prompt?.Category?.id?.toString() || "",
-    topic_id:
-      prompt?.topic_id?.toString() || prompt?.topic?.id?.toString() || "",
-    industry_id:
-      prompt?.industry_id?.toString() || prompt?.industry?.id?.toString() || "",
-    is_type: prompt?.is_type || "1",
-    sub_type: prompt?.sub_type || 1,
+    shortDescription: prompt?.shortDescription || prompt?.description || "",
+    categoryId:
+      prompt?.categoryId?.toString() || prompt?.category?.id?.toString() || "",
+    topicId: prompt?.topicId?.toString() || prompt?.topic?.id?.toString() || "",
+    industryId:
+      prompt?.industryId?.toString() || prompt?.industry?.id?.toString() || "",
+    isType: prompt?.isType || "1",
+    subType: prompt?.subType || 1,
     what: prompt?.what || "",
     tips: prompt?.tips || "",
     text: prompt?.text || "",
     how: prompt?.how || "",
     input: prompt?.input || "",
     output: prompt?.output || "",
-    OptimationGuide: prompt?.OptimationGuide || "",
-    addtip: prompt?.addtip || "",
-    addinformation: prompt?.addinformation || "",
+    optimizationGuide: prompt?.optimizationGuide || "",
+    addTip: prompt?.addTip || "",
+    addInformation: prompt?.addInformation || "",
     image: prompt?.image || "",
-    image_card: prompt?.image_card || "",
-    is_coming_soon: prompt?.is_coming_soon || false,
-    industry_ids:
-      prompt?.Category?.industries?.map((i: any) => i.id.toString()) ||
-      prompt?.industry_ids ||
+    imageCard: prompt?.imageCard || "",
+    isComingSoon: prompt?.isComingSoon || false,
+    industryIds:
+      prompt?.category?.industries?.map((i: any) => i.id.toString()) ||
+      prompt?.industryIds ||
       [],
   };
 };

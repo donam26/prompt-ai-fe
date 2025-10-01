@@ -39,8 +39,8 @@ export const BLOG_CONSTANTS = {
     TITLE: "title",
     CATEGORY: "category",
     STATUS: "status",
-    FEATURED_IMAGE: "featured_image",
-    PUBLISHED_AT: "published_at",
+    FEATURED_IMAGE: "featuredImage",
+    PUBLISHED_AT: "publishedAt",
     ACTIONS: "actions",
   },
 

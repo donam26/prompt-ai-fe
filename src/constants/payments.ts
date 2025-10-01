@@ -34,8 +34,8 @@ export const PAYMENTS_CONSTANTS = {
 
   // Payment method values
   PAYMENT_METHOD: {
-    CREDIT_CARD: "credit_card",
-    BANK_TRANSFER: "bank_transfer",
+    CREDIT_CARD: "creditCard",
+    BANK_TRANSFER: "bankTransfer",
     PAYPAL: "paypal",
     STRIPE: "stripe",
   },
@@ -46,8 +46,8 @@ export const PAYMENTS_CONSTANTS = {
     USER: "user",
     AMOUNT: "amount",
     STATUS: "status",
-    PAYMENT_METHOD: "payment_method",
-    CREATED_AT: "created_at",
+    PAYMENT_METHOD: "paymentMethod",
+    CREATED_AT: "createdAt",
     ACTIONS: "actions",
   },
 

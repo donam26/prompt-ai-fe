@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Search, X } from "lucide-react";
 import DatePicker from "react-multi-date-picker";
 
@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import { BaseSelect } from "@/components/ui/base-select";
 import { MultiSelect } from "@/components/ui/multi-select";
 import { PromptActiveFilters } from "./prompt-active-filters";
+import { industryService } from "@/services";
 import type {
   PromptFilterProps,
   IPromptFilterProps,
@@ -25,12 +26,43 @@ import { Category } from "@/types";
 export const PromptFilter = ({
   filters,
   categories,
-  industries,
   onFilterChange,
   onClearFilters,
   onPageReset,
   className,
 }: PromptFilterProps): React.JSX.Element => {
+  const [filteredIndustries, setFilteredIndustries] = useState<Category[]>([]);
+  const [isLoadingIndustries, setIsLoadingIndustries] = useState(false);
+
+  // Fetch industries when categoryIds change
+  useEffect(() => {
+    // Only fetch when categories are selected
+    if (!filters.categoryIds || filters.categoryIds.length === 0) {
+      setFilteredIndustries([]);
+      return;
+    }
+
+    const fetchIndustries = async () => {
+      setIsLoadingIndustries(true);
+      try {
+        const response = await industryService.getIndustries({
+          categoryIds: filters.categoryIds,
+        });
+        const industriesData: Category[] =
+          (response.data?.data as Category[]) ||
+          (Array.isArray(response.data) ? response.data : []);
+        setFilteredIndustries(industriesData);
+      } catch (error) {
+        console.error("Error fetching industries:", error);
+        setFilteredIndustries([]);
+      } finally {
+        setIsLoadingIndustries(false);
+      }
+    };
+
+    fetchIndustries();
+  }, [filters.categoryIds]);
+
   const handleSearchChange = (value: string): void => {
     onFilterChange({
       ...filters,
@@ -42,7 +74,7 @@ export const PromptFilter = ({
   const handlePremiumChange = (value: string): void => {
     onFilterChange({
       ...filters,
-      isType: parseInt(value),
+      isType: value === "all" ? undefined : parseInt(value),
     });
     onPageReset?.();
   };
@@ -59,6 +91,8 @@ export const PromptFilter = ({
     onFilterChange({
       ...filters,
       categoryIds: values,
+      // Clear industryIds when categories change
+      industryIds: [],
     });
     onPageReset?.();
   };
@@ -79,111 +113,22 @@ export const PromptFilter = ({
     onPageReset?.();
   };
 
-  const getActiveFilters = () => {
-    const activeFilters = [];
-
-    if (filters.searchTerm) {
-      activeFilters.push({
-        key: "searchTerm",
-        label: "Tìm kiếm",
-        value: filters.searchTerm,
-      });
-    }
-
-    if (filters.categoryIds.length > 0) {
-      const category = categories.find(
-        cat => cat.id.toString() === filters.categoryIds[0]
-      );
-      activeFilters.push({
-        key: "categoryId",
-        label: "Danh mục",
-        value: category?.name || filters.categoryIds.join(", "),
-      });
-    }
-
-    if (filters.categoryIds.length > 0) {
-      const categoryNames = filters.categoryIds
-        .map(id => categories.find(cat => cat.id.toString() === id)?.name)
-        .filter(Boolean);
-      activeFilters.push({
-        key: "categoryIds",
-        label: "Danh mục",
-        value: categoryNames.join(", "),
-      });
-    }
-
-    if (filters.isType !== undefined) {
-      const premiumLabels: Record<string, string> = {
-        premium: "Premium",
-        free: "Miễn phí",
-      };
-      activeFilters.push({
-        key: "isPremium",
-        label: "Loại",
-        value: premiumLabels[filters.isType] || filters.isType,
-      });
-    }
-
-    if (filters.industryIds.length > 0) {
-      const industryNames = filters.industryIds
-        .map(id => industries.find(ind => ind.id.toString() === id)?.name)
-        .filter(Boolean);
-      activeFilters.push({
-        key: "industryIds",
-        label: "Ngành nghề",
-        value: industryNames.join(", "),
-      });
-    }
-
-    if (filters.dateFrom || filters.dateTo) {
-      const fromDate = filters.dateFrom
-        ? new Date(filters.dateFrom).toLocaleDateString("vi-VN")
-        : "";
-      const toDate = filters.dateTo
-        ? new Date(filters.dateTo).toLocaleDateString("vi-VN")
-        : "";
-      const dateRangeText =
-        fromDate && toDate ? `${fromDate} - ${toDate}` : fromDate || toDate;
-      activeFilters.push({
-        key: "dateRange",
-        label: "Khoảng thời gian",
-        value: dateRangeText,
-      });
-    }
-
-    return activeFilters;
-  };
-
-  // const removeItemFromFilter = (key: keyof PromptFilterState): void => {
-  //   switch (key) {
-  //     case "searchTerm":
-  //       onFilterChange({ ...filters, searchTerm: "" });
-  //       break;
-  //     case "categoryId":
-  //       onFilterChange({ ...filters, categoryId: "all" });
-  //       break;
-  //     case "status":
-  //       onFilterChange({ ...filters, status: "all" });
-  //       break;
-  //     case "isPremium":
-  //       onFilterChange({ ...filters, isPremium: "all" });
-  //       break;
-  //     case "tags":
-  //       onFilterChange({ ...filters, tags: [] });
-  //       break;
-  //   }
-  //   onPageReset?.();
-  // };
-
-  const activeFilters = getActiveFilters();
-  const hasActiveFilters = activeFilters.length > 0;
+  // Calculate if has active filters
+  const hasActiveFilters =
+    !!filters.searchTerm ||
+    (filters.categoryIds && filters.categoryIds.length > 0) ||
+    (filters.industryIds && filters.industryIds.length > 0) ||
+    filters.isType !== undefined ||
+    !!filters.dateFrom ||
+    !!filters.dateTo;
 
   return (
     <div className={`space-y-4 ${className || ""}`}>
       <PromptFilterCard
         filters={filters}
         categories={categories}
-        industries={industries}
+        filteredIndustries={filteredIndustries}
+        isLoadingIndustries={isLoadingIndustries}
         onSearchChange={handleSearchChange}
         onCategoriesChange={handleCategoriesChange}
         onPremiumChange={handlePremiumChange}
@@ -198,7 +143,7 @@ export const PromptFilter = ({
         <PromptActiveFilters
           filters={filters}
           categories={categories}
-          industries={industries}
+          industries={filteredIndustries}
           onFilterChange={onFilterChange}
           onClearAll={onClearFilters}
           onPageReset={onPageReset}
@@ -211,7 +156,8 @@ export const PromptFilter = ({
 const PromptFilterCard = ({
   filters,
   categories,
-  industries,
+  filteredIndustries,
+  isLoadingIndustries,
   onSearchChange,
   onCategoriesChange,
   onPremiumChange,
@@ -238,7 +184,7 @@ const PromptFilterCard = ({
 
     <div className="space-y-4">
       {/* First Row - Search and Industries */}
-      <div className="gap-4 grid grid-cols-1 lg:grid-cols-2">
+      <div className="gap-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
         {/* Search Input */}
         <div className="space-y-2">
           <Label className="font-medium text-sm">Tìm kiếm</Label>
@@ -254,13 +200,23 @@ const PromptFilterCard = ({
           </div>
         </div>
 
-        {/* Industries Filter */}
+        {/* Premium Filter */}
         <div className="space-y-2">
-          <Label className="font-medium text-sm">Ngành nghề</Label>
-          <IndustriesFilter
-            value={filters.industryIds}
-            industries={industries}
-            onChange={onIndustriesChange}
+          <Label className="font-medium text-sm">Loại</Label>
+          <PremiumFilter
+            value={filters.isType?.toString() || ""}
+            onChange={onPremiumChange}
+          />
+        </div>
+
+        {/* Third Row - Date Range */}
+        <div className="space-y-2 w-full lg:w-auto">
+          <Label className="font-medium text-sm">Khoảng thời gian</Label>
+          <DateRangePicker
+            dateFrom={filters.dateFrom}
+            dateTo={filters.dateTo}
+            onDateFromChange={onDateFromChange}
+            onDateToChange={onDateToChange}
           />
         </div>
       </div>
@@ -277,25 +233,15 @@ const PromptFilterCard = ({
           />
         </div>
 
-        {/* Premium Filter */}
+        {/* Industries Filter */}
         <div className="space-y-2">
-          <Label className="font-medium text-sm">Loại</Label>
-          <PremiumFilter
-            value={filters.isType?.toString() || ""}
-            onChange={onPremiumChange}
-          />
-        </div>
-      </div>
-
-      {/* Third Row - Date Range */}
-      <div className="flex justify-start">
-        <div className="space-y-2 w-full lg:w-auto">
-          <Label className="font-medium text-sm">Khoảng thời gian</Label>
-          <DateRangePicker
-            dateFrom={filters.dateFrom}
-            dateTo={filters.dateTo}
-            onDateFromChange={onDateFromChange}
-            onDateToChange={onDateToChange}
+          <Label className="font-medium text-sm">Ngành nghề</Label>
+          <IndustriesFilter
+            value={filters.industryIds}
+            industries={filteredIndustries}
+            isLoading={isLoadingIndustries}
+            disabled={!filters.categoryIds || filters.categoryIds.length === 0}
+            onChange={onIndustriesChange}
           />
         </div>
       </div>
@@ -303,12 +249,6 @@ const PromptFilterCard = ({
   </div>
 );
 
-/**
- * Premium filter component
- *
- * @param props - The component props
- * @returns The premium filter JSX
- */
 const PremiumFilter = ({
   value,
   onChange,
@@ -333,12 +273,6 @@ const PremiumFilter = ({
   );
 };
 
-/**
- * Categories filter component with multiple select
- *
- * @param props - The component props
- * @returns The categories filter JSX
- */
 const CategoriesMultiFilter = ({
   value,
   categories,
@@ -365,19 +299,17 @@ const CategoriesMultiFilter = ({
   );
 };
 
-/**
- * Industries filter component with multiple select
- *
- * @param props - The component props
- * @returns The industries filter JSX
- */
 const IndustriesFilter = ({
   value,
   industries,
+  isLoading,
+  disabled,
   onChange,
 }: {
   value: string[];
   industries: Category[];
+  isLoading?: boolean;
+  disabled?: boolean;
   onChange: (values: string[]) => void;
 }): React.JSX.Element => {
   const industryOptions = industries.map(industry => ({
@@ -385,24 +317,25 @@ const IndustriesFilter = ({
     value: industry.id.toString(),
   }));
 
+  const placeholder = disabled
+    ? "Vui lòng chọn danh mục trước..."
+    : isLoading
+      ? "Đang tải ngành nghề..."
+      : "Chọn ngành nghề...";
+
   return (
     <MultiSelect
       options={industryOptions}
       value={value}
       onValueChange={onChange}
-      placeholder="Chọn ngành nghề..."
+      placeholder={placeholder}
       maxCount={3}
       className="w-full"
+      disabled={disabled || isLoading}
     />
   );
 };
 
-/**
- * Date range picker component
- *
- * @param props - The component props
- * @returns The date range picker JSX
- */
 const DateRangePicker = ({
   dateFrom,
   dateTo,
@@ -424,12 +357,18 @@ const DateRangePicker = ({
     onDateToChange(dateString);
   };
 
+  const formatDateForDisplay = (dateString?: string): Date | null => {
+    if (!dateString) return null;
+    const date = new Date(dateString);
+    return isNaN(date.getTime()) ? null : date;
+  };
+
   return (
     <div className="flex sm:flex-row flex-col gap-4 w-full lg:w-auto">
       {/* Date From */}
       <div className="w-full sm:w-48">
         <DatePicker
-          value={dateFrom || null}
+          value={formatDateForDisplay(dateFrom)}
           onChange={handleDateFromChange}
           format="DD/MM/YYYY"
           placeholder="Từ ngày"
@@ -442,7 +381,7 @@ const DateRangePicker = ({
       {/* Date To */}
       <div className="w-full sm:w-48">
         <DatePicker
-          value={dateTo || null}
+          value={formatDateForDisplay(dateTo)}
           onChange={handleDateToChange}
           format="DD/MM/YYYY"
           placeholder="Đến ngày"

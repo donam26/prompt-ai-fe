@@ -7,14 +7,14 @@ import type { User } from "./user";
 
 // Payment entity
 export interface Payment extends BaseEntity {
-  user_id: EntityId;
-  subscription_id: EntityId;
+  userId: EntityId;
+  subscriptionId: EntityId;
   amount: number;
   currency: string;
   status: string;
-  payment_method: string;
-  transaction_id?: string;
-  vnp_response_code?: string;
+  paymentMethod: string;
+  transactionId?: string;
+  vnpResponseCode?: string;
   user?: User;
   subscription?: {
     id: EntityId;
@@ -28,15 +28,15 @@ export interface Payment extends BaseEntity {
 export interface Coupon extends BaseEntity {
   code: string;
   description?: string;
-  discount_type: string; // 'percentage' | 'fixed'
-  discount_value: number;
-  min_amount?: number;
-  max_discount?: number;
-  usage_limit?: number;
-  used_count: number;
-  start_date: string;
-  end_date: string;
-  is_active: boolean;
+  discountType: string; // 'percentage' | 'fixed'
+  discountValue: number;
+  minAmount?: number;
+  maxDiscount?: number;
+  usageLimit?: number;
+  usedCount: number;
+  startDate: string;
+  endDate: string;
+  isActive: boolean;
 }
 
 // Product entity
@@ -45,27 +45,27 @@ export interface Product extends BaseEntity {
   description?: string;
   price: number;
   image?: string;
-  is_active: boolean;
+  isActive: boolean;
 }
 
 // Request types
 export interface PaymentRequest {
-  subscription_id: EntityId;
+  subscriptionId: EntityId;
   amount: number;
-  coupon_code?: string;
+  couponCode?: string;
 }
 
 export interface CreateCouponRequest {
   code: string;
   description?: string;
-  discount_type: string;
-  discount_value: number;
-  min_amount?: number;
-  max_discount?: number;
-  usage_limit?: number;
-  start_date: string;
-  end_date: string;
-  is_active: boolean;
+  discountType: string;
+  discountValue: number;
+  minAmount?: number;
+  maxDiscount?: number;
+  usageLimit?: number;
+  startDate: string;
+  endDate: string;
+  isActive: boolean;
 }
 
 export interface UpdateCouponRequest extends Partial<CreateCouponRequest> {

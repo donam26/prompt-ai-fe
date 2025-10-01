@@ -2,6 +2,24 @@ import axios from "axios";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api";
 
+/**
+ * Gets a cookie value by name
+ * @param name - The name of the cookie to retrieve
+ * @returns The cookie value or null if not found
+ */
+const getCookie = (name: string): string | null => {
+  if (typeof window === "undefined") return null;
+
+  const value = `; ${document.cookie}`;
+  const parts = value.split(`; ${name}=`);
+
+  if (parts.length === 2) {
+    return parts.pop()?.split(";").shift() || null;
+  }
+
+  return null;
+};
+
 export const apiClient = axios.create({
   baseURL: API_URL,
   headers: {
@@ -11,8 +29,7 @@ export const apiClient = axios.create({
 
 apiClient.interceptors.request.use(
   config => {
-    const token =
-      typeof window !== "undefined" ? localStorage.getItem("token") : null;
+    const token = getCookie("accessToken");
     if (token) {
       config.headers["Authorization"] = `Bearer ${token}`;
     }

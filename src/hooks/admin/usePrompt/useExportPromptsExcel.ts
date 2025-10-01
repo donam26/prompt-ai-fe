@@ -1,6 +1,7 @@
 import { useCallback, useState } from "react";
-import type { PromptFilterState } from "@/types/admin/prompt";
+import { PromptFilterState } from "@/types";
 import { promptService } from "@/services/admin/prompts/promptService";
+import { applyNonEmptyFiltersToQuery } from "@/utils";
 
 interface IResponse {
   isExporting: boolean;
@@ -27,7 +28,7 @@ export function useExportPromptsExcel(filters: PromptFilterState): IResponse {
         dateFrom: filters.dateFrom,
         dateTo: filters.dateTo,
       };
-
+      applyNonEmptyFiltersToQuery(exportFilters, exportFilters);
       // Call the service method
       await promptService.exportPromptsExcel(exportFilters);
     } catch (err) {

@@ -3,7 +3,7 @@
 import { Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useExportPromptsExcel } from "@/hooks/admin/usePrompt/useExportPromptsExcel";
-import type { PromptFilterState } from "@/types/admin/prompt";
+import { PromptFilterState } from "@/types";
 
 interface ExportExcelButtonProps {
   filters: PromptFilterState;

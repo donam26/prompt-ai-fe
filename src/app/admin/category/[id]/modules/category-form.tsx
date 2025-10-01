@@ -166,11 +166,11 @@ export const CategoryForm = ({
               industries={industries}
             />
             <Controller
-              name="is_comming_soon"
+              name="isCommingSoon"
               control={control}
               render={({ field }) => (
                 <FormSwitch
-                  name="is_comming_soon"
+                  name="isCommingSoon"
                   label="Coming Soon"
                   description="Mark this category as coming soon"
                   checked={field.value}

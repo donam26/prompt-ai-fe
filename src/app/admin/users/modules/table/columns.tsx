@@ -28,7 +28,7 @@ export function useUserColumns({
         <div className="hidden sm:flex justify-center">
           <ImageCell
             src={row.original.avatar}
-            alt={row.original.full_name || "User"}
+            alt={row.original.fullName || "User"}
             size="sm"
           />
         </div>
@@ -44,11 +44,11 @@ export function useUserColumns({
           <div className="flex items-center gap-2">
             <span
               className="font-semibold text-gray-900 truncate"
-              title={row.original.full_name || "Unknown User"}
+              title={row.original.fullName || "Unknown User"}
             >
-              {row.original.full_name || "Unknown User"}
+              {row.original.fullName || "Unknown User"}
             </span>
-            {row.original.role_id === 1 && (
+            {row.original.roleId === 1 && (
               <BadgeCell label="Admin" variant="secondary" />
             )}
           </div>
@@ -68,7 +68,7 @@ export function useUserColumns({
       cell: ({ row }) => (
         <div className="hidden md:block">
           <BadgeCell
-            label={row.original.role_id === 1 ? "Admin" : "User"}
+            label={row.original.roleId === 1 ? "Admin" : "User"}
             variant="secondary"
             maxWidth="max-w-[100px]"
           />
@@ -90,14 +90,14 @@ export function useUserColumns({
       enableSorting: false,
     },
     {
-      accessorKey: "created_at",
+      accessorKey: "createdAt",
       meta: { title: "Ngày tạo" },
       header: () => <div className="hidden lg:block font-medium">Ngày tạo</div>,
       cell: ({ row }) => (
         <div className="hidden lg:block">
           <span className="text-gray-600 text-sm">
-            {row.original.created_at
-              ? new Date(row.original.created_at).toLocaleDateString("vi-VN")
+            {row.original.createdAt
+              ? new Date(row.original.createdAt).toLocaleDateString("vi-VN")
               : "N/A"}
           </span>
         </div>

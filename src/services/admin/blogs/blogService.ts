@@ -1,12 +1,12 @@
 import { BaseService } from "@/services/base/baseService";
-import type { Blog } from "@/types/entities/blog";
+import type { Blog } from "@/types";
 
 /**
  * Blog service extending BaseService
  */
 export class BlogService extends BaseService {
   constructor() {
-    super("/admin/blogs");
+    super("/blog");
   }
 
   /**

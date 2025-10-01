@@ -307,7 +307,7 @@ export default function PromptLibraryPage() {
 
           <TabsContent value="chatgpt" className="mt-6">
             <PromptGrid
-              prompts={prompts.filter(p => p.is_type == "1")}
+              prompts={prompts.filter(p => p.isType == "1")}
               isLoading={isLoading}
               favoritePrompts={favoritePrompts}
               onFavorite={handleFavorite}
@@ -317,7 +317,7 @@ export default function PromptLibraryPage() {
 
           <TabsContent value="midjourney" className="mt-6">
             <PromptGrid
-              prompts={prompts.filter(p => p.is_type == "2")}
+              prompts={prompts.filter(p => p.isType == "2")}
               isLoading={isLoading}
               favoritePrompts={favoritePrompts}
               onFavorite={handleFavorite}
@@ -418,7 +418,7 @@ function PromptGrid({
           <CardHeader>
             <div className="flex justify-between items-center">
               <Badge variant="secondary">
-                {prompt.is_type == "1" ? "ChatGPT" : "Midjourney"}
+                {prompt.isType == "1" ? "ChatGPT" : "Midjourney"}
               </Badge>
               <Button
                 variant="ghost"

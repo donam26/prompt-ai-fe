@@ -1,76 +1,74 @@
-import { useMutation } from "@tanstack/react-query";
+import { useCallback, useState } from "react";
 import { userService } from "@/services";
 import { showToast } from "@/components/ui/toast";
 import { transformUserData } from "@/utils/user-data-transform";
 import { useAuth } from "@/hooks/useAuth";
 import { ROUTES_URL } from "@/constants";
-// User type không được sử dụng trong file này
-import type { UserAuthParams } from "@/types/services/userService";
 import { useRouter } from "next/navigation";
 
 interface UseVerifyOTPQueryResult {
   isLoading: boolean;
   error: string | null;
-  mutate: (email: string, otp: string) => void;
+  mutate: (email: string, otp: string) => Promise<boolean>;
 }
 
 export const useVerifyOTPQuery = (): UseVerifyOTPQueryResult => {
   const { login } = useAuth();
   const router = useRouter();
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  const verifyOTPMutation = useMutation({
-    mutationFn: async ({ email, otp }: UserAuthParams) => {
-      const response = await userService.verifyOTP(email, otp as string);
-      return response.data.data;
-    },
-    onSuccess: async (data: any) => {
-      if (data && data.data) {
-        const { user, token } = data.data;
+  const mutate = useCallback(
+    async (email: string, otp: string): Promise<boolean> => {
+      setIsLoading(true);
+      setError(null);
 
-        // Transform user data to match expected structure
-        const userData = transformUserData(user);
+      try {
+        // const userIP = await fetch("https://api.ipify.org?format=json")
+        //   .then(res => res.json())
+        //   .then(data => data.ip)
+        //   .catch(() => "127.0.0.1");
 
-        // Login and wait for completion
-        login(userData, token);
+        const response = await userService.verifyOTP(email, otp);
+        const data = response.data;
 
-        showToast.success(data.message || "Xác thực thành công!", {
-          title: "Đăng nhập thành công",
-          description: "Chào mừng bạn quay trở lại!",
+        if (data) {
+          const { user, token } = data.data;
+          const userData = transformUserData(user);
+
+          login(userData, token);
+
+          showToast.success(data.message || "Xác thực thành công!", {
+            title: "Đăng nhập thành công",
+            description: "Chào mừng bạn quay trở lại!",
+          });
+
+          router.push(ROUTES_URL.HOME);
+          return true;
+        }
+
+        return false;
+      } catch (err: unknown) {
+        const errorMessage =
+          (err as { response?: { data?: { message?: string } } })?.response
+            ?.data?.message || "Mã OTP không đúng hoặc đã hết hạn";
+
+        setError(errorMessage);
+        showToast.error("Xác thực thất bại", {
+          title: "Lỗi xác thực",
+          description: errorMessage,
         });
-
-        // Redirect to main page
-        router.push(ROUTES_URL.HOME);
+        return false;
+      } finally {
+        setIsLoading(false);
       }
     },
-    onError: (error: unknown) => {
-      const errorMessage =
-        (error as { response?: { data?: { message?: string } } })?.response
-          ?.data?.message || "Mã OTP không đúng hoặc đã hết hạn";
-
-      showToast.error("Xác thực thất bại", {
-        title: "Lỗi xác thực",
-        description: errorMessage,
-      });
-    },
-  });
-
-  const mutate = (email: string, otp: string): void => {
-    fetch("https://api.ipify.org?format=json")
-      .then(res => res.json())
-      .then(data => data.ip)
-      .catch(() => "127.0.0.1")
-      .then(userIP => {
-        verifyOTPMutation.mutate({
-          email,
-          otp,
-          userIP,
-        });
-      });
-  };
+    [login, router]
+  );
 
   return {
-    isLoading: verifyOTPMutation.isPending,
-    error: (verifyOTPMutation.error as { message?: string })?.message || null,
+    isLoading,
+    error,
     mutate,
   };
 };

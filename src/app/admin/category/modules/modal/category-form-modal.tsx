@@ -110,9 +110,9 @@ export const CategoryFormFields = ({
     <div className="space-y-2">
       <Label htmlFor="section">Phân loại</Label>
       <Select
-        value={formData.section_id}
+        value={formData.sectionId}
         onValueChange={value =>
-          onFormDataChange({ ...formData, section_id: value })
+          onFormDataChange({ ...formData, sectionId: value })
         }
       >
         <SelectTrigger>
@@ -130,14 +130,14 @@ export const CategoryFormFields = ({
     <div className="flex items-center space-x-2">
       <input
         type="checkbox"
-        id="coming_soon"
-        checked={formData.is_coming_soon}
+        id="comingSoon"
+        checked={formData.isComingSoon}
         onChange={e =>
-          onFormDataChange({ ...formData, is_coming_soon: e.target.checked })
+          onFormDataChange({ ...formData, isComingSoon: e.target.checked })
         }
         className="border-gray-300 rounded"
       />
-      <Label htmlFor="coming_soon">Sắp ra mắt</Label>
+      <Label htmlFor="comingSoon">Sắp ra mắt</Label>
     </div>
   </>
 );

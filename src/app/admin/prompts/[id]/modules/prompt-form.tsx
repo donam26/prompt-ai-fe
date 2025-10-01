@@ -2,7 +2,7 @@
 
 import type { Prompt } from "@/types";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useCallback, useEffect, useMemo } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { AdminContentCard, AdminPageLayout } from "@/components/admin";
 import { FormActions } from "@/components/form-actions";
@@ -38,6 +38,9 @@ export const PromptForm = ({
 }: Props) => {
   const isCreateMode = mode === FormMode.CREATE;
 
+  // State for category-based industry filtering
+  const [selectedCategoryId, setSelectedCategoryId] = useState<string>("");
+
   // Fetch categories data
   const { categoriesWithPagination, isFetching: categoriesLoading } =
     useCategories({
@@ -47,13 +50,18 @@ export const PromptForm = ({
       },
     });
 
-  // Fetch industries data
+  // Fetch industries data with category filter - only when category is selected
   const { industriesWithPagination, isLoading: industriesLoading } =
     useIndustries({
       pagination: {
         pageIndex: 1,
         pageSize: 100,
       },
+      filters: selectedCategoryId
+        ? {
+            categoryIds: [selectedCategoryId],
+          }
+        : undefined,
     });
 
   const categories = Array.isArray(categoriesWithPagination?.data)
@@ -76,6 +84,16 @@ export const PromptForm = ({
     formState: { isDirty },
   } = form;
 
+  // Handle category change to filter industries
+  const handleCategoryChange = useCallback(
+    (categoryId: string) => {
+      setSelectedCategoryId(categoryId);
+      // Clear industry selection when category changes
+      setValue("industryIds", []);
+    },
+    [setValue]
+  );
+
   // Update form when prompt changes
   useEffect(() => {
     if (prompt) {
@@ -83,6 +101,10 @@ export const PromptForm = ({
       Object.entries(defaultValues).forEach(([key, value]) => {
         setValue(key as keyof PromptFormValues, value);
       });
+      // Set the selected category ID for industry filtering
+      if (defaultValues.categoryId) {
+        setSelectedCategoryId(defaultValues.categoryId);
+      }
     }
   }, [prompt, setValue]);
 
@@ -159,6 +181,8 @@ export const PromptForm = ({
               isDisabled={isSaving}
               categories={categories}
               industries={industries}
+              selectedCategoryId={selectedCategoryId}
+              onCategoryChange={handleCategoryChange}
             />
           </AdminContentCard>
 

@@ -8,7 +8,7 @@ export interface ISignInData {
 }
 
 export enum CredentialActionType {
-  SetupPassword = "setup_password",
+  SetupPassword = "setupPassword",
   Login = "login",
 }
 

@@ -47,7 +47,7 @@ export const USERS_CONSTANTS = {
     EMAIL: "email",
     ROLE: "role",
     STATUS: "status",
-    CREATED_AT: "created_at",
+    CREATED_AT: "createdAt",
     ACTIONS: "actions",
   },
 

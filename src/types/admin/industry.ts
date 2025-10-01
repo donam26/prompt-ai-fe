@@ -2,8 +2,8 @@
  * Industry filter state interface
  */
 export interface IndustryFilterState {
-  readonly searchTerm: string;
-  readonly status: string;
+  readonly searchTerm?: string;
+  readonly categoryIds?: string[];
 }
 
 /**
@@ -24,8 +24,8 @@ export interface IndustryFormData {
   readonly name: string;
   readonly description: string;
   readonly status: string;
-  readonly created_at?: string;
-  readonly updated_at?: string;
+  readonly createdAt?: string;
+  readonly updatedAt?: string;
 }
 
 /**

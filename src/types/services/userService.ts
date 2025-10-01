@@ -1,7 +1,11 @@
-import type { ServiceResponse } from "@/types/api/common";
-import type { UserSubscription, User } from "@/types/entities/user";
-import type { PaginationParams } from "@/types";
-import type { FilterParams, AuthParams } from "@/types/base";
+import type {
+  ServiceResponse,
+  UserSubscription,
+  User,
+  PaginationParams,
+  FilterParams,
+  AuthParams,
+} from "@/types";
 
 // User service parameters
 export type UserListParams = PaginationParams & FilterParams;

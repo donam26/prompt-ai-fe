@@ -36,7 +36,7 @@ export const SECTIONS_CONSTANTS = {
     NAME: "name",
     DESCRIPTION: "description",
     STATUS: "status",
-    CREATED_AT: "created_at",
+    CREATED_AT: "createdAt",
     ACTIONS: "actions",
   },
 

@@ -17,8 +17,8 @@ export interface Contact extends BaseEntity {
 
 // Device log entity
 export interface DeviceLog extends BaseEntity {
-  user_id: EntityId;
-  device_info: string;
-  ip_address: string;
-  user_agent: string;
+  userId: EntityId;
+  deviceInfo: string;
+  ipAddress: string;
+  userAgent: string;
 }

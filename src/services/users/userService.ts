@@ -43,7 +43,7 @@ export class UserService {
    * @returns Promise with user data
    */
   async getUserById(id: string) {
-    const response = await apiClient.get(`/admin/users/${id}`);
+    const response = await apiClient.get(`/users/${id}`);
     return response.data;
   }
 
@@ -61,7 +61,7 @@ export class UserService {
     phone?: string;
     avatar?: string;
   }): Promise<User> {
-    const response = await apiClient.post("/admin/users", userData);
+    const response = await apiClient.post("/users", userData);
     return response.data;
   }
 
@@ -83,7 +83,7 @@ export class UserService {
       avatar?: string;
     }
   ): Promise<User> {
-    const response = await apiClient.put(`/admin/users/${id}`, userData);
+    const response = await apiClient.put(`/users/${id}`, userData);
     return response.data;
   }
 
@@ -94,19 +94,19 @@ export class UserService {
    * @returns Promise with deletion result
    */
   async deleteUser(id: string | number): Promise<void> {
-    await apiClient.delete(`/admin/users/${id}`);
+    await apiClient.delete(`/users/${id}`);
   }
 
   async resendOTP(email: string) {
-    return await apiClient.post("/admin/users/resend-otp", { email });
+    return await apiClient.post("/users/resend-otp", { email });
   }
 
   async verifyOTP(email: string, otp: string) {
-    return await apiClient.post("/admin/users/verify-otp", { email, otp });
+    return await apiClient.post("/users/verify-otp", { email, otp });
   }
 
   async loginUser(email: string) {
-    return await apiClient.post("/admin/users/login", { email });
+    return await apiClient.post("/users/login", { email });
   }
 }
 

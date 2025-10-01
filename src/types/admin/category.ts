@@ -6,8 +6,8 @@ import type { Category, Section, Industry } from "@/types";
 export interface CategoryFormData {
   readonly name: string;
   readonly description: string;
-  readonly section_id: string;
-  readonly is_coming_soon: boolean;
+  readonly sectionId: string;
+  readonly isComingSoon: boolean;
 }
 
 /**

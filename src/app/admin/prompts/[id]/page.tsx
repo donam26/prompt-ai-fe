@@ -40,10 +40,10 @@ export default function PromptDetailsPage() {
           how: data.how || "",
           input: data.input || "",
           output: data.output || "",
-          OptimationGuide: data.OptimationGuide || "",
-          addtip: data.addtip || "",
-          addinformation: data.addinformation || "",
-          is_type: data.is_type || "1",
+          optimizationGuide: data.optimizationGuide || "",
+          addTip: data.addTip || "",
+          addInformation: data.addInformation || "",
+          isType: data.isType || "1",
         },
         promptIdToUpdate
       );

@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query";
+import { useCallback, useEffect, useState } from "react";
 import { userService } from "@/services";
 import { useAuth } from "@/hooks/useAuth";
 import type { User } from "@/types";
@@ -7,31 +7,47 @@ interface UseGetMeQueryResult {
   data: User | undefined;
   isLoading: boolean;
   error: string | null;
-  refetch: () => void;
+  refetch: () => Promise<void>;
 }
 
 export const useGetMeQuery = (): UseGetMeQueryResult => {
   const { user } = useAuth();
+  const [data, setData] = useState<User | undefined>(undefined);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  const { data, isLoading, error, refetch } = useQuery({
-    queryKey: ["user", "me", user?.id],
-    queryFn: async () => {
-      if (!user?.id) {
-        throw new Error("User ID is required");
-      }
+  const fetchUser = useCallback(async () => {
+    if (!user?.id) {
+      setError("User ID is required");
+      return;
+    }
 
+    setIsLoading(true);
+    setError(null);
+
+    try {
       const response = await userService.getUserById(user.id.toString());
-      return response.data.data;
-    },
-    enabled: !!user?.id, // Only run query when user ID is available
-    staleTime: 5 * 60 * 1000, // 5 minutes
-    retry: 1,
-  });
+      setData(response.data.data?.data);
+    } catch (err: unknown) {
+      const errorMessage =
+        err instanceof Error ? err.message : "An error occurred";
+      setError(errorMessage);
+      setData(undefined);
+    } finally {
+      setIsLoading(false);
+    }
+  }, [user?.id]);
+
+  useEffect(() => {
+    if (user?.id) {
+      fetchUser();
+    }
+  }, [user?.id, fetchUser]);
 
   return {
-    data: data?.data,
+    data,
     isLoading,
-    error: error?.message || null,
-    refetch,
+    error,
+    refetch: fetchUser,
   };
 };

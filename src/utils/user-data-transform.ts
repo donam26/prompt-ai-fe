@@ -4,17 +4,15 @@ import { User } from "@/types";
 interface ApiUser {
   id: string | number;
   fullName?: string;
-  full_name?: string;
   email: string;
-  role?: number;
-  role_id?: number;
+  roleId?: number;
   permissions?: string[] | string;
-  count_prompt?: number;
-  updated_at?: string;
+  countPrompt?: number;
+  updatedAt?: string;
   userSub?: unknown;
-  profile_image?: string;
+  profileImage?: string;
   avatar?: string;
-  created_at?: string;
+  createdAt?: string;
 }
 
 /**
@@ -27,15 +25,15 @@ export const transformUserData = (apiUser: unknown): User => {
 
   return {
     id: user.id,
-    full_name: user.fullName || user.full_name || "",
+    fullName: user.fullName || "",
     email: user.email,
-    role_id: user.role || user.role_id || 1,
+    roleId: user.roleId || 1,
     permissions: user.permissions || [],
-    count_prompt: user.count_prompt || 0,
-    updated_at: user.updated_at || "",
+    countPrompt: user.countPrompt || 0,
+    updatedAt: user.updatedAt || "",
     userSub: user.userSub as User["userSub"],
-    avatar: user.profile_image || user.avatar,
-    created_at: user.created_at || "",
+    avatar: user.profileImage || user.avatar,
+    createdAt: user.createdAt || "",
   };
 };
 
@@ -54,16 +52,16 @@ export const transformUserDataForNextAuth = (
   return {
     userId: user.id,
     email: user.email,
-    full_name: user.fullName || user.full_name || "",
-    role_id: user.role || user.role_id || 1,
+    fullName: user.fullName || "",
+    roleId: user.roleId || 1,
     accessToken: token,
     refreshToken: token,
     expiresIn: 0, // Will be calculated from token
     permissions: user.permissions || [],
-    count_prompt: user.count_prompt || 0,
-    updated_at: user.updated_at || "",
+    countPrompt: user.countPrompt || 0,
+    updatedAt: user.updatedAt || "",
     userSub: user.userSub as User["userSub"],
-    avatar: user.profile_image || user.avatar,
-    created_at: user.created_at || "",
+    avatar: user.profileImage || user.avatar,
+    createdAt: user.createdAt || "",
   };
 };

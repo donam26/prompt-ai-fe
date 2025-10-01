@@ -25,13 +25,13 @@ export interface ApiCategory {
   readonly name: string;
   readonly image: string;
   readonly description: string | null;
-  readonly image_card: string;
-  readonly section_id: number;
+  readonly imageCard: string;
+  readonly sectionId: number;
   readonly type: "premium" | "free";
-  readonly created_at: string;
-  readonly updated_at: string;
-  readonly is_comming_soon: boolean;
-  readonly Section: ApiSection;
+  readonly createdAt: string;
+  readonly updatedAt: string;
+  readonly isComingSoon: boolean;
+  readonly section: ApiSection;
   readonly industries: ApiIndustry[];
 }
 
@@ -73,15 +73,13 @@ export interface TransformedCategory {
   readonly name: string;
   readonly description?: string;
   readonly image?: string;
-  readonly image_card?: string;
-  readonly section_id: string | number;
+  readonly imageCard?: string;
+  readonly sectionId: string | number;
   readonly type?: string;
-  readonly is_coming_soon?: boolean;
-  readonly is_comming_soon?: boolean;
-  readonly created_at: string;
-  readonly updated_at: string;
+  readonly isComingSoon?: boolean;
+  readonly createdAt: string;
+  readonly updatedAt: string;
   readonly section?: Section;
-  readonly Section?: Section;
   readonly industries?: Industry[];
 }
 

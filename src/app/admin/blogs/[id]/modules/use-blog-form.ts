@@ -81,7 +81,7 @@ export const useBlogForm = (blogId?: string): UseBlogFormReturn => {
             ? blog.category
             : blog.category?.name || "",
         tags: [], // Blog type doesn't have tags
-        featuredImage: blog.featured_image || "",
+        featuredImage: blog.featuredImage || "",
         authorId: "", // Blog type doesn't have authorId
       };
       reset(blogFormData);
@@ -105,7 +105,7 @@ export const useBlogForm = (blogId?: string): UseBlogFormReturn => {
         title: data.title,
         content: data.content,
         description: data.excerpt,
-        blog_category_id: data.category,
+        blogCategoryId: data.category,
         image: undefined, // Handle file upload separately if needed
       };
 

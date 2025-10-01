@@ -16,10 +16,14 @@ export class BaseService {
    * Generic GET request
    */
   async list<T = any>(params?: Record<string, unknown>) {
+    // Convert camelCase params to snake_case for API
+    const snakeParams = params ? params : undefined;
+
     const response: AxiosResponse<PaginatedApiResponse<T>> =
       await apiClient.get(this.baseUrl, {
-        params,
+        params: snakeParams,
       });
+
     return response;
   }
 
@@ -30,6 +34,7 @@ export class BaseService {
     const response: AxiosResponse<BaseApiResponse<T>> = await apiClient.get(
       `${this.baseUrl}/${id}`
     );
+
     return response.data;
   }
 
@@ -41,6 +46,7 @@ export class BaseService {
       this.baseUrl,
       data
     );
+
     return response.data;
   }
 
@@ -51,10 +57,13 @@ export class BaseService {
     id: string | number,
     data: D
   ): Promise<BaseApiResponse<T>> {
+    // Convert camelCase data to snake_case for API
+
     const response: AxiosResponse<BaseApiResponse<T>> = await apiClient.put(
       `${this.baseUrl}/${id}`,
       data
     );
+
     return response.data;
   }
 
@@ -65,10 +74,13 @@ export class BaseService {
     id: string | number,
     data: D
   ): Promise<BaseApiResponse<T>> {
+    // Convert camelCase data to snake_case for API
+
     const response: AxiosResponse<BaseApiResponse<T>> = await apiClient.patch(
       `${this.baseUrl}/${id}`,
       data
     );
+
     return response.data;
   }
 
@@ -93,6 +105,7 @@ export class BaseService {
       `${this.baseUrl}/${endpoint}`,
       data
     );
+
     return response.data;
   }
 
@@ -107,6 +120,7 @@ export class BaseService {
       `${this.baseUrl}/${endpoint}`,
       data
     );
+
     return response.data;
   }
 
@@ -120,28 +134,23 @@ export class BaseService {
     return response.data;
   }
 
-  /**
-   * Generic export Excel method
-   * @param endpoint - Export endpoint (e.g., 'export-excel')
-   * @param filters - Filter parameters
-   * @param filename - Optional custom filename
-   */
   async exportExcel(
     endpoint: string,
     filters: Record<string, unknown> = {}
   ): Promise<Blob> {
+    const { applyNonEmptyFiltersToQuery } = await import("@/utils");
     const queryParams = new URLSearchParams();
 
-    // Build query string from filters
-    Object.entries(filters).forEach(([key, value]) => {
-      if (value !== undefined && value !== null && value !== "") {
-        if (Array.isArray(value)) {
-          value.forEach(item =>
-            queryParams.append(`${key}[]`, item.toString())
-          );
-        } else {
-          queryParams.append(key, value.toString());
-        }
+    // Filter out empty/null/all values using shared utility
+    const filteredParams: Record<string, unknown> = {};
+    applyNonEmptyFiltersToQuery(filters, filteredParams);
+
+    // Build query string from filtered params
+    Object.entries(filteredParams).forEach(([key, value]) => {
+      if (Array.isArray(value)) {
+        value.forEach(item => queryParams.append(`${key}[]`, item.toString()));
+      } else {
+        queryParams.append(key, String(value));
       }
     });
 

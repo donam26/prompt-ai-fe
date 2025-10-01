@@ -6,18 +6,18 @@
 // Base entity interface với các field chung
 export interface BaseEntity {
   id: any;
-  created_at: string;
-  updated_at: string;
+  createdAt: string;
+  updatedAt: string;
 }
 
 // Base entity với soft delete
 export interface BaseEntityWithDelete extends BaseEntity {
-  deleted_at?: string;
+  deletedAt?: string;
 }
 
 // Base entity cho admin
 export interface BaseAdminEntity extends BaseEntity {
-  is_active: boolean;
+  isActive: boolean;
   status?: string;
 }
 
