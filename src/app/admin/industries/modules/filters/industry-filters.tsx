@@ -1,16 +1,13 @@
 "use client";
 
-import React, { useEffect, useCallback } from "react";
+import React, { useCallback, useLayoutEffect, useMemo, useState } from "react";
 import { Search, X } from "lucide-react";
 
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { debounce } from "@/lib/utils";
-import type {
-  IndustryFilterProps,
-  IndustryFilterState,
-} from "@/types/admin/industry";
+import type { IndustryFilterProps } from "@/types/admin/industry";
 
 export const IndustryFilter = ({
   filters,
@@ -19,29 +16,35 @@ export const IndustryFilter = ({
   onPageReset,
   className,
 }: IndustryFilterProps): React.JSX.Element => {
-  // Debounced filter update
-  const debouncedFilterUpdate = useCallback(
-    (newFilters: IndustryFilterState) => {
-      const debouncedFn = debounce(() => {
-        onFilterChange(newFilters);
+  const [searchValue, setSearchValue] = useState(filters.searchTerm || "");
+
+  const updateSearchValue = useCallback((value: string) => {
+    setSearchValue(value);
+  }, []);
+
+  useLayoutEffect(() => {
+    updateSearchValue(filters.searchTerm || "");
+  }, [filters.searchTerm, updateSearchValue]);
+
+  const debouncedSearchHandler = useMemo(
+    () =>
+      debounce((value: string) => {
+        onFilterChange({
+          ...filters,
+          searchTerm: value,
+        });
         onPageReset?.();
-      }, 300);
-      debouncedFn();
-    },
-    [onFilterChange, onPageReset]
+      }, 300),
+    [filters, onFilterChange, onPageReset]
   );
 
-  // Update debounced filters when filters change
-  useEffect(() => {
-    debouncedFilterUpdate(filters);
-  }, [filters, debouncedFilterUpdate]);
-
-  const handleSearchChange = (value: string): void => {
-    onFilterChange({
-      ...filters,
-      searchTerm: value,
-    });
-  };
+  const handleSearchChange = useCallback(
+    (value: string) => {
+      setSearchValue(value);
+      debouncedSearchHandler(value);
+    },
+    [debouncedSearchHandler]
+  );
 
   const hasActiveFilters = filters.searchTerm;
 
@@ -72,7 +75,7 @@ export const IndustryFilter = ({
               <Input
                 type="text"
                 placeholder="Tìm kiếm theo tên, mô tả..."
-                value={filters.searchTerm}
+                value={searchValue}
                 onChange={e => handleSearchChange(e.target.value)}
                 className="pl-10"
               />

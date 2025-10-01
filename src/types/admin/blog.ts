@@ -1,15 +1,5 @@
-/**
- * Admin blog types
- *
- * Type definitions for admin blog management components and functionality.
- */
+import type { BaseFilterProps } from "../base";
 
-import type { Blog } from "@/types";
-import type { BaseFilterProps, BaseColumnHandlers } from "../base";
-
-/**
- * Form data structure for blog creation/editing
- */
 export interface BlogFormData {
   readonly id?: string | number;
   readonly title: string;
@@ -34,20 +24,6 @@ export interface BlogHeaderProps {
  */
 export interface BlogFilterState {
   searchTerm: string;
-  status: string;
-  categoryId: string;
-  dateRange: {
-    from: string;
-    to: string;
-  };
+  dateFrom: string;
+  dateTo: string;
 }
-
-/**
- * Props for the BlogFilter component
- */
-export type BlogFilterProps = BaseFilterProps<BlogFilterState>;
-
-/**
- * Context type for column handlers
- */
-export type BlogColumnHandlers = BaseColumnHandlers<Blog>;

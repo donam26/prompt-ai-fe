@@ -1,11 +1,11 @@
-import type { CreateBlogRequest } from "@/types";
+import type { Blog } from "@/types";
 import { useCallback, useState } from "react";
 import { blogService } from "@/services/admin/blogs/blogService";
 
 interface IResponse {
   isUpserting: boolean;
   error: string;
-  mutate: (data: CreateBlogRequest, id?: string | number) => Promise<boolean>;
+  mutate: (data: Partial<Blog>, id?: string | number) => Promise<boolean>;
 }
 
 export function useUpsertBlog(): IResponse {
@@ -13,7 +13,7 @@ export function useUpsertBlog(): IResponse {
   const [error, setError] = useState<string>("");
 
   const mutate = useCallback(
-    async (data: CreateBlogRequest, id?: string | number): Promise<boolean> => {
+    async (data: Partial<Blog>, id?: string | number): Promise<boolean> => {
       setIsUpserting(() => true);
       setError(() => "");
 

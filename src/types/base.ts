@@ -1,30 +1,20 @@
-/**
- * Base types và interfaces chung cho toàn bộ dự án
- * Tuân thủ convention: PascalCase cho interfaces, camelCase cho properties
- */
-
-// Base entity interface với các field chung
 export interface BaseEntity {
   id: any;
   createdAt: string;
   updatedAt: string;
 }
 
-// Base entity với soft delete
 export interface BaseEntityWithDelete extends BaseEntity {
   deletedAt?: string;
 }
 
-// Base entity cho admin
 export interface BaseAdminEntity extends BaseEntity {
   isActive: boolean;
   status?: string;
 }
 
-// ID type union
 export type EntityId = string | number;
 
-// Timestamp type
 export type Timestamp = string;
 
 // Status enums
@@ -34,7 +24,6 @@ export type EntityStatus =
   | "pending"
   | "suspended"
   | "deleted";
-export type UserRole = "admin" | "user" | "moderator" | "guest";
 export type Theme = "light" | "dark" | "system";
 export type Language = "vi" | "en" | "ja" | "ko" | "zh";
 
@@ -53,7 +42,6 @@ export interface ImageUpload extends FileUpload {
   alt?: string;
 }
 
-// Sort và Filter types
 export interface SortOptions {
   field: string;
   direction: "asc" | "desc";

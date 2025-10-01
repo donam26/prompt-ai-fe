@@ -47,7 +47,7 @@ export interface Category extends BaseEntity {
   imageCard?: string;
   sectionId: EntityId;
   type?: string;
-  isComingSoon?: boolean;
+  isCommingSoon?: boolean;
   section?: Section;
   industries?: Industry[];
 }

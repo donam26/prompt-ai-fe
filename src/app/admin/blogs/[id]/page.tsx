@@ -1,85 +1,87 @@
 "use client";
 
-import { useParams } from "next/navigation";
-
-import { Loading, AdminPageLayout, AdminContentCard } from "@/components/admin";
-import { LOADING_TYPE } from "@/constants/loading";
-import { BlogForm, BlogFormActions, useBlogForm } from "./modules";
+import type { Blog } from "@/types";
+import { useParams, useRouter } from "next/navigation";
+import { useCallback, useEffect } from "react";
+import { useBlogDetail, useUpsertBlog } from "@/hooks/admin/useBlog";
+import { FormSkeleton } from "@/components/ui/skeleton";
+import { showToast } from "@/components/ui/toast";
+import { BLOG_CONSTANTS } from "@/constants/blog";
+import { FormMode } from "@/constants/common";
+import { BlogForm } from "./modules/blog-form";
 
 export default function BlogEditPage(): React.JSX.Element {
-  const params = useParams();
-  const blogId = params?.id as string;
+  const { id } = useParams<{ id?: string }>();
+  const router = useRouter();
 
-  // Form hook with all state management
+  const formMode = id === "create" ? FormMode.CREATE : FormMode.EDIT;
+  const isCreateMode = formMode === FormMode.CREATE;
+  const blogIdToUpdate = isCreateMode ? undefined : id;
+
   const {
-    formData,
-    errors,
+    blog: blogData,
     isLoading,
-    error,
-    handleFieldChange,
-    handleSubmit,
-    handleReset,
-  } = useBlogForm(blogId);
+    error: blogDetailError,
+  } = useBlogDetail(blogIdToUpdate);
+  const {
+    mutate: upsertBlog,
+    isUpserting,
+    error: upsertBlogError,
+  } = useUpsertBlog();
 
-  // Loading state
+  const handleSave = useCallback(
+    async (data: Partial<Blog>) => {
+      const result = await upsertBlog(
+        {
+          ...data,
+          title: data.title || "",
+          content: data.content || "",
+          metaDescription: data.metaDescription || "",
+          featuredImage: data.featuredImage || undefined,
+          publishedAt: data.publishedAt || null,
+        },
+        blogIdToUpdate
+      );
+
+      if (result) {
+        showToast.success(
+          blogIdToUpdate
+            ? "Bài viết đã được cập nhật thành công"
+            : "Bài viết đã được tạo thành công"
+        );
+        router.push(BLOG_CONSTANTS.ROUTES.BLOGS);
+      }
+    },
+    [blogIdToUpdate, upsertBlog, router]
+  );
+
+  const handleCancel = useCallback(() => {
+    router.push(BLOG_CONSTANTS.ROUTES.BLOGS);
+  }, [router]);
+
+  useEffect(() => {
+    const errorMessage = blogDetailError || upsertBlogError;
+    if (!errorMessage) {
+      return;
+    }
+    showToast.error(errorMessage);
+    if (blogDetailError) {
+      router.push(BLOG_CONSTANTS.ROUTES.BLOGS);
+    }
+  }, [blogDetailError, upsertBlogError, router]);
+
   if (isLoading) {
-    return (
-      <AdminPageLayout
-        title="Đang tải..."
-        description="Đang tải thông tin bài viết..."
-      >
-        <AdminContentCard>
-          <Loading
-            type={LOADING_TYPE.PAGE}
-            text="Đang tải thông tin bài viết..."
-          />
-        </AdminContentCard>
-      </AdminPageLayout>
-    );
-  }
-
-  // Error state
-  if (error) {
-    return (
-      <AdminPageLayout title="Lỗi" description="Không tìm thấy bài viết">
-        <AdminContentCard>
-          <div className="flex flex-col justify-center items-center py-12 text-center">
-            <div className="flex justify-center items-center bg-red-100 mb-4 rounded-full w-16 h-16">
-              <span className="text-2xl">⚠️</span>
-            </div>
-            <h3 className="mb-2 font-semibold text-gray-900 text-lg">
-              Không tìm thấy bài viết
-            </h3>
-            <p className="mb-6 text-gray-600">
-              Bài viết bạn đang tìm kiếm không tồn tại hoặc đã bị xóa.
-            </p>
-          </div>
-        </AdminContentCard>
-      </AdminPageLayout>
-    );
+    return <FormSkeleton />;
   }
 
   return (
-    <AdminPageLayout
-      title={blogId ? "Chỉnh sửa bài viết" : "Tạo bài viết mới"}
-      description={
-        blogId
-          ? "Cập nhật thông tin bài viết và đảm bảo nội dung chính xác và phù hợp."
-          : "Tạo bài viết mới với nội dung chất lượng và thông tin đầy đủ."
-      }
-      actions={
-        <BlogFormActions onReset={handleReset} onSubmit={handleSubmit} />
-      }
-    >
-      <AdminContentCard>
-        <BlogForm
-          formData={formData}
-          errors={errors}
-          isLoading={isLoading}
-          onFieldChange={handleFieldChange}
-          onSubmit={handleSubmit}
-        />
-      </AdminContentCard>
-    </AdminPageLayout>
+    <BlogForm
+      blog={blogData}
+      mode={formMode}
+      onSave={handleSave}
+      onCancel={handleCancel}
+      isSaving={isUpserting}
+      isLoading={isLoading}
+    />
   );
 }

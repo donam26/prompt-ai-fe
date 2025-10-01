@@ -1,6 +1,6 @@
 "use client";
 
-import type { Category } from "@/types";
+import type { Category, Industry } from "@/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useForm, Controller } from "react-hook-form";
@@ -11,7 +11,6 @@ import { FormSwitch } from "@/components/form-switch";
 import { Form } from "@/components/ui/form";
 import { FormMode, BUTTON_TEXT } from "@/constants/common";
 import { CategoryBasicFields } from "./category-basic-fields";
-import { useIndustries } from "@/hooks/admin/useIndustry";
 import {
   categoryFormSchema,
   getCategoryFormDefaultValues,
@@ -26,6 +25,8 @@ export interface Props {
   onSave: (data: CategoryFormValues) => void;
   onCancel: () => void;
   className?: string;
+  industries?: Industry[];
+  industriesLoading?: boolean;
 }
 
 export const CategoryForm = ({
@@ -35,22 +36,13 @@ export const CategoryForm = ({
   isSaving = false,
   onSave,
   onCancel,
+  industries = [],
+  industriesLoading = false,
 }: Props) => {
   const [isUploading, setIsUploading] = useState(false);
   const isCreateMode = mode === FormMode.CREATE;
 
-  // Fetch industries data
-  const { industriesWithPagination, isLoading: industriesLoading } =
-    useIndustries({
-      pagination: {
-        pageIndex: 1,
-        pageSize: 100,
-      },
-    });
-
-  const industries = Array.isArray(industriesWithPagination?.data)
-    ? industriesWithPagination.data
-    : [];
+  // Industries data is now passed as props from parent component
 
   const form = useForm<CategoryFormValues>({
     resolver: zodResolver(categoryFormSchema),
@@ -142,9 +134,11 @@ export const CategoryForm = ({
               name="image"
               title="Image"
               currentImage={categoryImage}
-              setValue={(name: string, value: any) =>
-                setValue(name as keyof CategoryFormValues, value)
-              }
+              setValue={(
+                name: string,
+                value: any,
+                options?: { shouldDirty?: boolean }
+              ) => setValue(name as keyof CategoryFormValues, value, options)}
               isUploading={isUploading}
               setIsUploading={setIsUploading}
               isDisabled={isSaving}
@@ -173,13 +167,53 @@ export const CategoryForm = ({
                   name="isCommingSoon"
                   label="Coming Soon"
                   description="Mark this category as coming soon"
-                  checked={field.value}
+                  checked={!!field.value}
                   onCheckedChange={field.onChange}
                   isDisabled={isSaving}
                 />
               )}
             />
           </AdminContentCard>
+
+          {/* Industries Section - only show in edit mode */}
+          {!isCreateMode && (
+            <AdminContentCard>
+              <div className="mb-4">
+                <h3 className="font-semibold text-lg">
+                  Industries in this category
+                  {industriesLoading && (
+                    <span className="ml-2 text-gray-500 text-sm">
+                      (Loading...)
+                    </span>
+                  )}
+                </h3>
+              </div>
+
+              {industries.length > 0 ? (
+                <div className="gap-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+                  {industries.map(industry => (
+                    <div
+                      key={industry.id}
+                      className="bg-gray-50 p-3 border rounded-lg"
+                    >
+                      <h4 className="font-medium text-sm">{industry.name}</h4>
+                      {industry.description && (
+                        <p className="mt-1 text-gray-600 text-xs">
+                          {industry.description}
+                        </p>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="py-8 text-gray-500 text-center">
+                  {industriesLoading
+                    ? "Loading industries..."
+                    : "No industries found in this category"}
+                </div>
+              )}
+            </AdminContentCard>
+          )}
         </form>
       </Form>
     </AdminPageLayout>

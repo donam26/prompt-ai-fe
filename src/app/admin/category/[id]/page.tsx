@@ -7,6 +7,7 @@ import {
   useCategoryDetail,
   useUpsertCategory,
 } from "@/hooks/admin/useCategory";
+import { useIndustries } from "@/hooks/admin/useIndustry";
 import { FormSkeleton } from "@/components/ui/skeleton";
 import { showToast } from "@/components/ui/toast";
 import { CATEGORY_CONSTANTS } from "@/constants/category";
@@ -31,6 +32,20 @@ export default function CategoryDetailsPage() {
     isUpserting,
     error: upsertCategoryError,
   } = useUpsertCategory();
+
+  // Fetch industries by category - only when category is selected
+  const { industriesWithPagination, isLoading: industriesLoading } =
+    useIndustries({
+      pagination: {
+        pageIndex: 1,
+        pageSize: 100,
+      },
+      filters: categoryIdToUpdate
+        ? {
+            categoryIds: [categoryIdToUpdate],
+          }
+        : undefined,
+    });
 
   const handleSave = useCallback(
     async (data: Partial<Category>) => {
@@ -70,6 +85,11 @@ export default function CategoryDetailsPage() {
     return <FormSkeleton />;
   }
 
+  // Extract industries data
+  const industries = Array.isArray(industriesWithPagination?.data)
+    ? industriesWithPagination.data
+    : [];
+
   return (
     <CategoryForm
       category={categoryData}
@@ -78,6 +98,8 @@ export default function CategoryDetailsPage() {
       onCancel={handleCancel}
       isSaving={isUpserting}
       isLoading={isLoading}
+      industries={industries}
+      industriesLoading={industriesLoading}
     />
   );
 }

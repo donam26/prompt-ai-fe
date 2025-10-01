@@ -28,14 +28,16 @@ export const BlogActiveFilters = ({
   const handleRemoveFilter = (key: string) => {
     const newFilters = { ...filters };
 
-    if (key === "searchTerm") {
-      newFilters.searchTerm = "";
-    } else if (key === "status") {
-      newFilters.status = "all";
-    } else if (key === "categoryId") {
-      newFilters.categoryId = "all";
-    } else if (key === "dateRange") {
-      newFilters.dateRange = { from: "", to: "" };
+    switch (key) {
+      case "searchTerm":
+        newFilters.searchTerm = "";
+        break;
+      case "dateFrom":
+        newFilters.dateFrom = "";
+        break;
+      case "dateTo":
+        newFilters.dateTo = "";
+        break;
     }
 
     onFilterChange(newFilters);
@@ -45,9 +47,7 @@ export const BlogActiveFilters = ({
   // Calculate active filter count
   const activeTotal = [
     filters.searchTerm && filters.searchTerm !== "",
-    filters.status && filters.status !== "all",
-    filters.categoryId && filters.categoryId !== "all",
-    filters.dateRange.from || filters.dateRange.to,
+    filters.dateFrom || filters.dateTo,
   ].filter(Boolean).length;
 
   if (activeTotal === 0) {
@@ -74,38 +74,24 @@ export const BlogActiveFilters = ({
         </Badge>
       )}
 
-      {/* Status filter */}
-      {filters.status && filters.status !== "all" && (
-        <Badge key="status" variant="secondary" className="gap-1">
-          <span className="text-xs">Trạng thái: {filters.status}</span>
+      {/* Date From filter */}
+      {filters.dateFrom && (
+        <Badge key="dateFrom" variant="secondary" className="gap-1">
+          <span className="text-xs">Từ: {filters.dateFrom}</span>
           <X
             className="w-3 h-3 cursor-pointer"
-            onClick={() => handleRemoveFilter("status")}
+            onClick={() => handleRemoveFilter("dateFrom")}
           />
         </Badge>
       )}
 
-      {/* Category filter */}
-      {filters.categoryId && filters.categoryId !== "all" && (
-        <Badge key="categoryId" variant="secondary" className="gap-1">
-          <span className="text-xs">Danh mục: {filters.categoryId}</span>
+      {/* Date To filter */}
+      {filters.dateTo && (
+        <Badge key="dateTo" variant="secondary" className="gap-1">
+          <span className="text-xs">Đến: {filters.dateTo}</span>
           <X
             className="w-3 h-3 cursor-pointer"
-            onClick={() => handleRemoveFilter("categoryId")}
-          />
-        </Badge>
-      )}
-
-      {/* Date range filter */}
-      {(filters.dateRange.from || filters.dateRange.to) && (
-        <Badge key="dateRange" variant="secondary" className="gap-1">
-          <span className="text-xs">
-            Ngày: {filters.dateRange.from || "..."} -{" "}
-            {filters.dateRange.to || "..."}
-          </span>
-          <X
-            className="w-3 h-3 cursor-pointer"
-            onClick={() => handleRemoveFilter("dateRange")}
+            onClick={() => handleRemoveFilter("dateTo")}
           />
         </Badge>
       )}

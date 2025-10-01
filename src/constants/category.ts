@@ -1,12 +1,5 @@
 import type { CategoryFilterState } from "@/types/admin";
-
-/**
- * Category enums
- */
-export enum CategoryType {
-  STANDARD = "standard",
-  PREMIUM = "premium",
-}
+import { CATEGORY_TYPE_OPTIONS } from "@/types/enums";
 
 export enum SectionType {
   CHATGPT = "1",
@@ -73,9 +66,6 @@ export const CATEGORY_CONSTANTS = {
       { value: SectionType.CLAUDE, label: "Claude" },
       { value: SectionType.GEMINI, label: "Gemini" },
     ],
-    TYPE_OPTIONS: [
-      { value: CategoryType.STANDARD, label: "Standard" },
-      { value: CategoryType.PREMIUM, label: "Premium" },
-    ],
+    TYPE_OPTIONS: CATEGORY_TYPE_OPTIONS,
   },
 } as const;

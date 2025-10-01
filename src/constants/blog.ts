@@ -4,10 +4,8 @@ export const BLOG_CONSTANTS = {
   // Initial filter state
   INITIAL_FILTERS: {
     searchTerm: "",
-    dateRange: {
-      from: "",
-      to: "",
-    },
+    dateFrom: "",
+    dateTo: "",
   } as BlogFilterState,
 
   // Pagination

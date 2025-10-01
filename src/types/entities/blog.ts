@@ -9,8 +9,8 @@ export interface Blog extends BaseEntity {
   title: string;
   content: string;
   metaDescription?: string;
-  featuredImage?: string;
-  publishedAt?: string;
+  featuredImage?: File | string;
+  publishedAt?: string | null;
   categoryId?: EntityId;
   category?: {
     id: EntityId;
@@ -29,9 +29,10 @@ export interface BlogCategory extends BaseEntity {
 export interface CreateBlogRequest {
   title: string;
   content: string;
-  description?: string;
+  metaDescription?: string;
   blogCategoryId: EntityId;
-  image?: File;
+  featuredImage?: string;
+  publishedAt?: string | null;
 }
 
 export interface UpdateBlogRequest extends Partial<CreateBlogRequest> {

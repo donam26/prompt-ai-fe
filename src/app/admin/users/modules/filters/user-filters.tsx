@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useCallback, useLayoutEffect, useMemo, useState } from "react";
 import { Search, X } from "lucide-react";
 
 import { Input } from "@/components/ui/input";
@@ -8,6 +8,7 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { BaseSelect } from "@/components/ui/base-select";
 import { UserActiveFilters } from "./user-active-filters";
+import { debounce } from "@/lib/utils";
 import type { UserFilterProps, UserFilterState } from "@/types/admin/user";
 
 /**
@@ -23,13 +24,35 @@ export const UserFilter = ({
   onPageReset,
   className,
 }: UserFilterProps): React.JSX.Element => {
-  const handleSearchChange = (value: string): void => {
-    onFilterChange({
-      ...filters,
-      searchTerm: value,
-    });
-    onPageReset?.();
-  };
+  const [searchValue, setSearchValue] = useState(filters.searchTerm || "");
+
+  const updateSearchValue = useCallback((value: string) => {
+    setSearchValue(value);
+  }, []);
+
+  useLayoutEffect(() => {
+    updateSearchValue(filters.searchTerm || "");
+  }, [filters.searchTerm, updateSearchValue]);
+
+  const debouncedSearchHandler = useMemo(
+    () =>
+      debounce((value: string) => {
+        onFilterChange({
+          ...filters,
+          searchTerm: value,
+        });
+        onPageReset?.();
+      }, 300),
+    [filters, onFilterChange, onPageReset]
+  );
+
+  const handleSearchChange = useCallback(
+    (value: string) => {
+      setSearchValue(value);
+      debouncedSearchHandler(value);
+    },
+    [debouncedSearchHandler]
+  );
 
   const handleRoleChange = (value: string): void => {
     onFilterChange({
@@ -137,6 +160,7 @@ export const UserFilter = ({
     <div className={`space-y-4 ${className || ""}`}>
       <UserFilterCard
         filters={filters}
+        searchValue={searchValue}
         onSearchChange={handleSearchChange}
         onRoleChange={handleRoleChange}
         onStatusChange={handleStatusChange}
@@ -165,6 +189,7 @@ export const UserFilter = ({
  */
 const UserFilterCard = ({
   filters,
+  searchValue,
   onSearchChange,
   onRoleChange,
   onStatusChange,
@@ -173,6 +198,7 @@ const UserFilterCard = ({
   hasActiveFilters,
 }: {
   filters: UserFilterState;
+  searchValue: string;
   onSearchChange: (value: string) => void;
   onRoleChange: (value: string) => void;
   onStatusChange: (value: string) => void;
@@ -205,7 +231,7 @@ const UserFilterCard = ({
           <Input
             type="text"
             placeholder="Tìm kiếm theo tên, email..."
-            value={filters.searchTerm}
+            value={searchValue}
             onChange={e => onSearchChange(e.target.value)}
             className="pl-10"
           />

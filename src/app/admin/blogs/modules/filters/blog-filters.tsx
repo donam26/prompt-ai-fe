@@ -1,63 +1,68 @@
 "use client";
 
-import React, { useEffect, useCallback } from "react";
+import React, { useCallback, useLayoutEffect, useMemo, useState } from "react";
 import { Search, X } from "lucide-react";
 
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
+import { BlogActiveFilters } from "./blog-active-filters";
 import { debounce } from "@/lib/utils";
-import type { BlogFilterProps, BlogFilterState } from "@/types/admin/blog";
+import type { BlogFilterState } from "@/types/admin/blog";
+import { BaseFilterProps } from "@/types/base";
 
-/**
- * Blog filter component with search, status, category, and date range filters
- *
- * @param props - The component props
- * @returns The blog filter JSX
- */
 export const BlogFilter = ({
   filters,
   onFilterChange,
   onClearFilters,
   onPageReset,
   className,
-}: BlogFilterProps): React.JSX.Element => {
-  // Debounced filter update
-  const debouncedFilterUpdate = useCallback(
-    (newFilters: BlogFilterState) => {
-      const debouncedUpdate = debounce(() => {
-        onFilterChange(newFilters);
-      }, 300);
-      debouncedUpdate();
-    },
-    [onFilterChange]
+}: BaseFilterProps<BlogFilterState>): React.JSX.Element => {
+  const [searchValue, setSearchValue] = useState(filters.searchTerm || "");
+
+  const updateSearchValue = useCallback((value: string) => {
+    setSearchValue(value);
+  }, []);
+
+  useLayoutEffect(() => {
+    updateSearchValue(filters.searchTerm || "");
+  }, [filters.searchTerm, updateSearchValue]);
+
+  const debouncedSearchHandler = useMemo(
+    () =>
+      debounce((value: string) => {
+        onFilterChange({
+          ...filters,
+          searchTerm: value,
+        });
+      }, 300),
+    [filters, onFilterChange]
   );
 
-  // Update debounced filters when filters change
-  useEffect(() => {
-    debouncedFilterUpdate(filters);
-  }, [filters, debouncedFilterUpdate]);
+  const handleSearchChange = useCallback(
+    (value: string) => {
+      setSearchValue(value);
+      debouncedSearchHandler(value);
+    },
+    [debouncedSearchHandler]
+  );
 
-  const handleSearchChange = (value: string): void => {
-    const newFilters = {
+  const handleDateFromChange = (value: string): void => {
+    onFilterChange({
       ...filters,
-      searchTerm: value,
-    };
-    onFilterChange(newFilters);
-    onPageReset?.();
+      dateFrom: value,
+    });
   };
 
-  const handleDateRangeChange = (range: { from: string; to: string }): void => {
-    const newFilters = {
+  const handleDateToChange = (value: string): void => {
+    onFilterChange({
       ...filters,
-      dateRange: range,
-    };
-    onFilterChange(newFilters);
-    onPageReset?.();
+      dateTo: value,
+    });
   };
 
   const hasActiveFilters =
-    filters.searchTerm || filters.dateRange.from || filters.dateRange.to;
+    filters.searchTerm || filters.dateFrom || filters.dateTo;
 
   return (
     <div className={`space-y-4 ${className || ""}`}>
@@ -86,7 +91,7 @@ export const BlogFilter = ({
               <Input
                 type="text"
                 placeholder="Tìm kiếm theo tên blog..."
-                value={filters.searchTerm}
+                value={searchValue}
                 onChange={e => handleSearchChange(e.target.value)}
                 className="pl-10"
               />
@@ -97,12 +102,22 @@ export const BlogFilter = ({
           <div className="space-y-2">
             <Label className="font-medium text-sm">Khoảng thời gian</Label>
             <DateRangeFilter
-              value={filters.dateRange}
-              onChange={handleDateRangeChange}
+              dateFrom={filters.dateFrom}
+              dateTo={filters.dateTo}
+              onDateFromChange={handleDateFromChange}
+              onDateToChange={handleDateToChange}
             />
           </div>
         </div>
       </div>
+
+      {/* Active Filters */}
+      <BlogActiveFilters
+        filters={filters}
+        onFilterChange={onFilterChange}
+        onClearAll={onClearFilters}
+        onPageReset={onPageReset}
+      />
     </div>
   );
 };
@@ -111,18 +126,22 @@ export const BlogFilter = ({
  * Date range filter component
  */
 const DateRangeFilter = ({
-  value,
-  onChange,
+  dateFrom,
+  dateTo,
+  onDateFromChange,
+  onDateToChange,
 }: {
-  value: { from: string; to: string };
-  onChange: (range: { from: string; to: string }) => void;
+  dateFrom: string;
+  dateTo: string;
+  onDateFromChange: (value: string) => void;
+  onDateToChange: (value: string) => void;
 }): React.JSX.Element => (
   <div className="gap-2 grid grid-cols-2">
     <div>
       <Input
         type="date"
-        value={value.from}
-        onChange={e => onChange({ ...value, from: e.target.value })}
+        value={dateFrom}
+        onChange={e => onDateFromChange(e.target.value)}
         placeholder="Từ ngày"
         className="w-full"
       />
@@ -130,8 +149,8 @@ const DateRangeFilter = ({
     <div>
       <Input
         type="date"
-        value={value.to}
-        onChange={e => onChange({ ...value, to: e.target.value })}
+        value={dateTo}
+        onChange={e => onDateToChange(e.target.value)}
         placeholder="Đến ngày"
         className="w-full"
       />

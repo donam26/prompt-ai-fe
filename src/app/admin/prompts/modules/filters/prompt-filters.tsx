@@ -1,6 +1,12 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, {
+  useState,
+  useEffect,
+  useCallback,
+  useLayoutEffect,
+  useMemo,
+} from "react";
 import { Search, X } from "lucide-react";
 import DatePicker from "react-multi-date-picker";
 
@@ -11,18 +17,13 @@ import { BaseSelect } from "@/components/ui/base-select";
 import { MultiSelect } from "@/components/ui/multi-select";
 import { PromptActiveFilters } from "./prompt-active-filters";
 import { industryService } from "@/services";
+import { debounce } from "@/lib/utils";
 import type {
   PromptFilterProps,
   IPromptFilterProps,
 } from "@/types/admin/prompt";
 import { Category } from "@/types";
 
-/**
- * Prompt filter component with search, category, status, premium, and tags filters
- *
- * @param props - The component props
- * @returns The prompt filter JSX
- */
 export const PromptFilter = ({
   filters,
   categories,
@@ -33,6 +34,35 @@ export const PromptFilter = ({
 }: PromptFilterProps): React.JSX.Element => {
   const [filteredIndustries, setFilteredIndustries] = useState<Category[]>([]);
   const [isLoadingIndustries, setIsLoadingIndustries] = useState(false);
+  const [searchValue, setSearchValue] = useState(filters.searchTerm || "");
+
+  const updateSearchValue = useCallback((value: string) => {
+    setSearchValue(value);
+  }, []);
+
+  useLayoutEffect(() => {
+    updateSearchValue(filters.searchTerm || "");
+  }, [filters.searchTerm, updateSearchValue]);
+
+  const debouncedSearchHandler = useMemo(
+    () =>
+      debounce((value: string) => {
+        onFilterChange({
+          ...filters,
+          searchTerm: value,
+        });
+        onPageReset?.();
+      }, 300),
+    [filters, onFilterChange, onPageReset]
+  );
+
+  const handleSearchChange = useCallback(
+    (value: string) => {
+      setSearchValue(value);
+      debouncedSearchHandler(value);
+    },
+    [debouncedSearchHandler]
+  );
 
   // Fetch industries when categoryIds change
   useEffect(() => {
@@ -62,14 +92,6 @@ export const PromptFilter = ({
 
     fetchIndustries();
   }, [filters.categoryIds]);
-
-  const handleSearchChange = (value: string): void => {
-    onFilterChange({
-      ...filters,
-      searchTerm: value,
-    });
-    onPageReset?.();
-  };
 
   const handlePremiumChange = (value: string): void => {
     onFilterChange({
@@ -129,6 +151,7 @@ export const PromptFilter = ({
         categories={categories}
         filteredIndustries={filteredIndustries}
         isLoadingIndustries={isLoadingIndustries}
+        searchValue={searchValue}
         onSearchChange={handleSearchChange}
         onCategoriesChange={handleCategoriesChange}
         onPremiumChange={handlePremiumChange}
@@ -158,6 +181,7 @@ const PromptFilterCard = ({
   categories,
   filteredIndustries,
   isLoadingIndustries,
+  searchValue,
   onSearchChange,
   onCategoriesChange,
   onPremiumChange,
@@ -166,7 +190,7 @@ const PromptFilterCard = ({
   onDateToChange,
   onClearFilters,
   hasActiveFilters,
-}: IPromptFilterProps): React.JSX.Element => (
+}: IPromptFilterProps & { searchValue: string }): React.JSX.Element => (
   <div className="space-y-4 bg-white p-4 border border-gray-200 rounded-lg">
     <div className="flex justify-between items-center">
       <h3 className="font-medium text-gray-900 text-lg">Bộ lọc</h3>
@@ -193,7 +217,7 @@ const PromptFilterCard = ({
             <Input
               type="text"
               placeholder="Tìm kiếm theo tiêu đề, nội dung..."
-              value={filters.searchTerm}
+              value={searchValue}
               onChange={e => onSearchChange(e.target.value)}
               className="pl-10"
             />

@@ -2,17 +2,6 @@
 
 import { Edit, Trash2, Award } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
 import { cn } from "@/lib/utils";
 
 export interface ActionsCellProps<T> {
@@ -20,7 +9,6 @@ export interface ActionsCellProps<T> {
   onEdit?: (item: T) => void;
   onDelete?: (item: T) => void;
   onManageBadge?: (item: T) => void;
-  getItemName?: (item: T) => string;
   getItemId?: (item: T) => string | number;
   className?: string;
 }
@@ -30,7 +18,6 @@ export function ActionsCell<T>({
   onEdit,
   onDelete,
   onManageBadge,
-  getItemName = (item: any) => item.name || "Item",
   // getItemId = (item: any) => item.id,
   className,
 }: ActionsCellProps<T>) {
@@ -39,8 +26,7 @@ export function ActionsCell<T>({
   };
 
   const handleDelete = () => {
-    const itemId = (item as any).id;
-    onDelete?.(itemId);
+    onDelete?.(item);
   };
 
   const handleManageBadge = () => {
@@ -63,35 +49,14 @@ export function ActionsCell<T>({
 
       {/* Delete Button */}
       {onDelete && (
-        <AlertDialog>
-          <AlertDialogTrigger asChild>
-            <Button
-              variant="ghost"
-              className="hover:bg-red-50 p-1 sm:p-1.5 w-7 sm:w-8 h-7 sm:h-8 hover:text-red-600 transition-colors"
-              title="Xóa"
-            >
-              <Trash2 className="w-3.5 sm:w-4 h-3.5 sm:h-4" />
-            </Button>
-          </AlertDialogTrigger>
-          <AlertDialogContent>
-            <AlertDialogHeader>
-              <AlertDialogTitle>Xác nhận xóa</AlertDialogTitle>
-              <AlertDialogDescription>
-                Bạn có chắc chắn muốn xóa &quot;
-                {getItemName(item)}&quot;? Hành động này không thể hoàn tác.
-              </AlertDialogDescription>
-            </AlertDialogHeader>
-            <AlertDialogFooter>
-              <AlertDialogCancel>Hủy</AlertDialogCancel>
-              <AlertDialogAction
-                onClick={handleDelete}
-                className="bg-red-600 hover:bg-red-700"
-              >
-                Xóa
-              </AlertDialogAction>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialog>
+        <Button
+          variant="ghost"
+          onClick={handleDelete}
+          className="hover:bg-red-50 p-1 sm:p-1.5 w-7 sm:w-8 h-7 sm:h-8 hover:text-red-600 transition-colors"
+          title="Xóa"
+        >
+          <Trash2 className="w-3.5 sm:w-4 h-3.5 sm:h-4" />
+        </Button>
       )}
 
       {/* Manage Badge Button */}

@@ -20,7 +20,9 @@ export function useBlogDetail(id?: string | number): IResponse {
 
     try {
       const response = await blogService.getBlog(blogId);
-      setBlog(response.data || null);
+      // Handle different response structures
+      const blogData = response.data;
+      setBlog(blogData || null);
     } catch (error: unknown) {
       const errorMessage =
         error instanceof Error ? error.message : "An error occurred";

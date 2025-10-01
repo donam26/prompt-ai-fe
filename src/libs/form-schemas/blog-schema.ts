@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { BlogStatus } from "@/types/enums";
 
 export const blogFormSchema = z.object({
   id: z.union([z.string(), z.number()]).optional(),
@@ -16,11 +17,12 @@ export const blogFormSchema = z.object({
     .min(1, "Tóm tắt là bắt buộc")
     .min(10, "Tóm tắt phải có ít nhất 10 ký tự")
     .max(500, "Tóm tắt không được vượt quá 500 ký tự"),
-  status: z.enum(["draft", "published", "archived"]),
+  status: z.nativeEnum(BlogStatus),
   category: z.string().min(1, "Danh mục là bắt buộc"),
   tags: z.array(z.string()).default([]).optional(),
   featuredImage: z.string().optional(),
-  authorId: z.string().min(1, "Tác giả là bắt buộc"),
+  authorId: z.string().optional(),
+  publishedAt: z.string().nullable().optional(),
 });
 
 export type BlogFormSchema = z.infer<typeof blogFormSchema>;

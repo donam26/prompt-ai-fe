@@ -16,14 +16,25 @@ export function useBlogColumns({
 }: Props): ColumnDef<Blog>[] {
   return [
     {
-      accessorKey: "id",
-      meta: { title: "ID" },
-      header: () => <div className="w-full font-medium text-center">ID</div>,
+      accessorKey: "featuredImage",
+      meta: { title: "Hình ảnh" },
+      header: () => (
+        <div className="hidden md:block w-full font-medium text-center">
+          Hình ảnh
+        </div>
+      ),
       cell: ({ row }) => (
-        <div className="flex justify-center items-center min-w-[60px]">
-          <span className="font-mono text-gray-600 text-sm">
-            #{row.original.id}
-          </span>
+        <div className="hidden md:flex justify-center items-center">
+          {row.original.featuredImage ? (
+            <ImageCell
+              src={row.original.featuredImage as string}
+              alt={row.original.title}
+              size="sm"
+              className="rounded-md"
+            />
+          ) : (
+            <FileText className="w-6 h-6 text-gray-400" />
+          )}
         </div>
       ),
       enableSorting: false,
@@ -52,28 +63,22 @@ export function useBlogColumns({
       ),
     },
     {
-      accessorKey: "featuredImage",
-      meta: { title: "Hình ảnh" },
+      accessorKey: "status",
+      meta: { title: "Trạng thái" },
       header: () => (
-        <div className="hidden md:block w-full font-medium text-center">
-          Hình ảnh
-        </div>
+        <div className="hidden lg:block font-medium">Trạng thái</div>
       ),
       cell: ({ row }) => (
-        <div className="hidden md:flex justify-center items-center">
-          {row.original.featuredImage ? (
-            <ImageCell
-              src={row.original.featuredImage}
-              alt={row.original.title}
-              size="sm"
-              className="rounded-md"
-            />
-          ) : (
-            <FileText className="w-6 h-6 text-gray-400" />
-          )}
+        <div className="hidden lg:block">
+          <BadgeCell
+            label={row.original.publishedAt ? "Đã xuất bản" : "Bản nháp"}
+            variant={row.original.publishedAt ? "premium" : "default"}
+            className="min-w-[100px]"
+          />
         </div>
       ),
       enableSorting: false,
+      size: 120,
     },
     {
       accessorKey: "category",
@@ -117,23 +122,6 @@ export function useBlogColumns({
           </div>
         );
       },
-      enableSorting: false,
-    },
-    {
-      accessorKey: "publishedAt",
-      meta: { title: "Ngày xuất bản" },
-      header: () => (
-        <div className="hidden xl:block font-medium">Ngày xuất bản</div>
-      ),
-      cell: ({ row }) => (
-        <div className="hidden xl:block">
-          <span className="text-gray-600 text-sm">
-            {row.original.publishedAt
-              ? new Date(row.original.publishedAt).toLocaleDateString("vi-VN")
-              : "Chưa xuất bản"}
-          </span>
-        </div>
-      ),
       enableSorting: false,
     },
     {

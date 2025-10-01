@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { CategoryType } from "@/types/enums";
 
 export const categoryFormSchema = z.object({
   name: z
@@ -10,8 +11,8 @@ export const categoryFormSchema = z.object({
     .max(500, "Description must be less than 500 characters")
     .optional(),
   sectionId: z.string().min(1, "Section is required"),
-  type: z.enum(["standard", "premium"]),
-  isComingSoon: z.boolean(),
+  type: z.nativeEnum(CategoryType),
+  isCommingSoon: z.boolean(),
   image: z.string().optional(),
   imageCard: z.string().optional(),
   industryIds: z.array(z.string()).optional(),
@@ -25,8 +26,8 @@ export const getCategoryFormDefaultValues = (
   name: category?.name || "",
   description: category?.description || "",
   sectionId: category?.sectionId?.toString() || "",
-  type: (category?.type as "standard" | "premium") || "standard",
-  isComingSoon: category?.isComingSoon || false,
+  type: (category?.type as CategoryType) || CategoryType.FREE,
+  isCommingSoon: category?.isCommingSoon || false,
   image: category?.image || "",
   imageCard: category?.imageCard || "",
   industryIds:

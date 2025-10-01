@@ -5,12 +5,17 @@ import Image from "next/image";
 import { Upload, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { showToast } from "@/components/ui/toast";
+import { useImageUpload } from "@/hooks/useImageUpload";
 
 interface Props {
   name: string;
   title: string;
   currentImage: string | null | undefined;
-  setValue: (name: string, value: any) => void;
+  setValue: (
+    name: string,
+    value: any,
+    options?: { shouldDirty?: boolean }
+  ) => void;
   isUploading: boolean;
   setIsUploading: (uploading: boolean) => void;
   isDisabled: boolean;
@@ -36,47 +41,35 @@ export function FormImageSection({
   const isNewPhotoRef = useRef(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
+  const { uploadSingle } = useImageUpload({
+    onSuccess: url => {
+      setValue(name, url as string, { shouldDirty: true });
+      isNewPhotoRef.current = true;
+      showToast.success(uploadSuccessMessage);
+    },
+    onError: () => {
+      showToast.error(uploadErrorMessage);
+    },
+  });
+
   const handleImageUpload = useCallback(
     async (file: File) => {
       setIsUploading(true);
       try {
-        // Simulate upload - replace with actual upload service
-        const formData = new FormData();
-        formData.append("file", file);
+        // Use the upload hook
+        const uploadedUrl = await uploadSingle(file);
 
-        // Mock upload response
-        const mockResponse = {
-          url: URL.createObjectURL(file),
-          filename: file.name,
-        };
-
-        setValue(name, mockResponse.url);
-        const isNewPhoto = mockResponse.url !== currentImage;
-        isNewPhotoRef.current = isNewPhoto;
-
-        // Simulate upload delay
-        setTimeout(() => {
-          setIsUploading(false);
-          if (isNewPhotoRef.current) {
-            showToast.success(uploadSuccessMessage);
-            isNewPhotoRef.current = false;
-          }
-        }, 1000);
+        if (!uploadedUrl) {
+          throw new Error("Upload failed");
+        }
       } catch (error) {
-        setIsUploading(false);
-
         console.error("Upload failed:", error);
         showToast.error(uploadErrorMessage);
+      } finally {
+        setIsUploading(false);
       }
     },
-    [
-      setIsUploading,
-      setValue,
-      name,
-      currentImage,
-      uploadSuccessMessage,
-      uploadErrorMessage,
-    ]
+    [uploadSingle, uploadErrorMessage, setIsUploading]
   );
 
   const handleFileSelect = useCallback(
@@ -94,7 +87,7 @@ export function FormImageSection({
   }, []);
 
   const handleRemoveImage = useCallback(() => {
-    setValue(name, null);
+    setValue(name, null, { shouldDirty: true });
   }, [setValue, name]);
 
   return (

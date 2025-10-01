@@ -2,12 +2,10 @@
 
 import React from "react";
 import { BaseSelectField } from "@/components/ui/base";
-import { BLOG_CONSTANTS } from "@/constants/blog";
+import { useBlogCategories } from "@/hooks/admin/useBlog/useBlogCategories";
 import type { SelectOption } from "@/types/select.type";
+import { v4 as uuidv4 } from "uuid";
 
-/**
- * Category select component using base field
- */
 export const CategorySelect = ({
   value,
   onChange,
@@ -17,18 +15,42 @@ export const CategorySelect = ({
   onChange: (value: string) => void;
   error?: string;
 }): React.JSX.Element => {
-  const categoryOptions: SelectOption[] = [...BLOG_CONSTANTS.CATEGORY_OPTIONS];
+  const {
+    data: categoriesData,
+    isLoading,
+    error: fetchError,
+  } = useBlogCategories();
+
+  const safeValue = typeof value === "string" ? value : "";
+
+  // Ensure error is always a string
+  const safeError =
+    typeof error === "string" ? error : (error as any)?.message || "";
+  const id = uuidv4();
+  // Transform API data to SelectOption format
+  const categoryOptions: SelectOption[] =
+    (categoriesData as any)?.data?.map((category: any) => ({
+      id: category.id.toString(),
+      name: category.name,
+    })) || [];
+
+  const placeholder = isLoading
+    ? "Đang tải danh mục..."
+    : fetchError
+      ? "Lỗi tải danh mục"
+      : "Chọn danh mục...";
 
   return (
     <BaseSelectField
-      id="category"
+      id={id}
       label="Danh mục"
-      value={value}
+      value={safeValue}
       onChange={onChange}
       options={categoryOptions}
-      placeholder="Chọn danh mục..."
+      placeholder={placeholder}
       required
-      error={error}
+      error={safeError}
+      disabled={isLoading || !!fetchError}
     />
   );
 };

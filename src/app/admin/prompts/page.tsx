@@ -13,6 +13,7 @@ import {
 import { PROMPTS_CONSTANTS } from "@/constants/prompts";
 import { usePrompts, useCategories } from "@/hooks";
 import { useDeletePrompt } from "@/hooks/admin/usePrompt/useDeletePrompt";
+import { DeletePromptModal } from "@/components/admin/delete-prompt-modal";
 import type { Prompt, PromptFilterState } from "@/types";
 import type { PaginationParams } from "@/types/base";
 import {
@@ -32,6 +33,10 @@ export default function PromptManagementPage(): React.JSX.Element {
 
   const [pagination, setPagination] =
     useState<PaginationParams>(DEFAULT_PAGINATION);
+
+  // Delete modal state
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [promptToDelete, setPromptToDelete] = useState<Prompt | null>(null);
 
   const {
     promptsWithPagination,
@@ -65,11 +70,25 @@ export default function PromptManagementPage(): React.JSX.Element {
     router.push(PROMPTS_CONSTANTS.ROUTES.PROMPT_EDIT(prompt.id));
   };
 
-  const handleDeletePrompt = async (prompt: Prompt): Promise<void> => {
-    const success = await deletePrompt(prompt);
+  const handleDeletePrompt = (prompt: Prompt): void => {
+    setPromptToDelete(prompt);
+    setDeleteModalOpen(true);
+  };
+
+  const handleConfirmDelete = async (): Promise<void> => {
+    if (!promptToDelete) return;
+
+    const success = await deletePrompt(promptToDelete);
     if (success) {
       refetch();
+      setDeleteModalOpen(false);
+      setPromptToDelete(null);
     }
+  };
+
+  const handleCloseDeleteModal = (): void => {
+    setDeleteModalOpen(false);
+    setPromptToDelete(null);
   };
 
   const handleFilterChange = useCallback(
@@ -120,6 +139,15 @@ export default function PromptManagementPage(): React.JSX.Element {
           totalItems={promptsWithPagination?.total || DEFAULT_TOTAL}
           onPaginationChangeAction={handlePaginationChange}
           loading={isLoading}
+        />
+
+        {/* Delete Modal */}
+        <DeletePromptModal
+          prompt={promptToDelete}
+          isOpen={deleteModalOpen}
+          onClose={handleCloseDeleteModal}
+          onConfirm={handleConfirmDelete}
+          isLoading={isDeleting}
         />
       </div>
     </AdminContentCard>

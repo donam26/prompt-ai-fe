@@ -1,12 +1,13 @@
 "use client";
 
-import React from "react";
+import React, { useCallback, useLayoutEffect, useMemo, useState } from "react";
 import { Search, X } from "lucide-react";
 
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { BaseSelect } from "@/components/ui/base-select";
+import { debounce } from "@/lib/utils";
 import type { PaymentFilterProps } from "@/types/admin";
 
 /**
@@ -22,13 +23,35 @@ export const PaymentFilter = ({
   onPageReset,
   className,
 }: PaymentFilterProps): React.JSX.Element => {
-  const handleSearchChange = (value: string): void => {
-    onFilterChange({
-      ...filters,
-      searchTerm: value,
-    });
-    onPageReset?.();
-  };
+  const [searchValue, setSearchValue] = useState(filters.searchTerm || "");
+
+  const updateSearchValue = useCallback((value: string) => {
+    setSearchValue(value);
+  }, []);
+
+  useLayoutEffect(() => {
+    updateSearchValue(filters.searchTerm || "");
+  }, [filters.searchTerm, updateSearchValue]);
+
+  const debouncedSearchHandler = useMemo(
+    () =>
+      debounce((value: string) => {
+        onFilterChange({
+          ...filters,
+          searchTerm: value,
+        });
+        onPageReset?.();
+      }, 300),
+    [filters, onFilterChange, onPageReset]
+  );
+
+  const handleSearchChange = useCallback(
+    (value: string) => {
+      setSearchValue(value);
+      debouncedSearchHandler(value);
+    },
+    [debouncedSearchHandler]
+  );
 
   const handleStatusChange = (value: string): void => {
     onFilterChange({
@@ -80,7 +103,7 @@ export const PaymentFilter = ({
               <Input
                 type="text"
                 placeholder="Tìm kiếm theo mã GD, người dùng..."
-                value={filters.searchTerm}
+                value={searchValue}
                 onChange={e => handleSearchChange(e.target.value)}
                 className="pl-10"
               />
