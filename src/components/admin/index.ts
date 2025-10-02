@@ -22,3 +22,6 @@ export type { SidebarItemType } from "@/components/admin/types/sidebar";
 
 // Constants
 export { sidebarConfig } from "@/components/admin/constants/sidebar-config";
+
+export { ActionModal } from "./action-modal";
+export type { ActionModalProps } from "./action-modal";

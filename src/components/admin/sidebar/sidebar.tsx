@@ -5,13 +5,11 @@ import { SidebarHeader } from "@/components/admin/sidebar/sidebar-header";
 import { SidebarNavigation } from "@/components/admin/sidebar/sidebar-navigation";
 import { cn } from "@/lib/utils";
 
-interface AdminSidebarProps {
+interface Props {
   readonly className?: string;
 }
 
-export function AdminSidebar({
-  className = "",
-}: AdminSidebarProps): React.JSX.Element {
+export function AdminSidebar({ className = "" }: Props): React.JSX.Element {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [isMobileExpanded, setIsMobileExpanded] = useState(false);
   const [isMobile, setIsMobile] = useState(false);

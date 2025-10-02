@@ -1,10 +1,5 @@
 "use client";
 
-/**
- * Payment page header component
- *
- * @returns The payment header JSX
- */
 export const PaymentHeader = (): React.JSX.Element => (
   <div className="flex justify-between items-center">
     <div>

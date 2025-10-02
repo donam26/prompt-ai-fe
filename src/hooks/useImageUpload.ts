@@ -1,6 +1,8 @@
 import { useCallback, useState } from "react";
 
 interface UploadResponse {
+  success: boolean;
+  message: string;
   data: {
     imageUrl?: string;
     imageUrls?: string[];
@@ -47,6 +49,11 @@ export const useImageUpload = ({
         }
 
         const data: UploadResponse = await response.json();
+
+        if (!data.success) {
+          throw new Error(data.message || "Upload failed");
+        }
+
         const imageUrl = data.data.imageUrl;
 
         if (!imageUrl) {
@@ -87,6 +94,11 @@ export const useImageUpload = ({
         }
 
         const data: UploadResponse = await response.json();
+
+        if (!data.success) {
+          throw new Error(data.message || "Upload failed");
+        }
+
         const imageUrls = data.data.imageUrls;
 
         if (!imageUrls || imageUrls.length === 0) {

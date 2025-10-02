@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useCallback } from "react";
-import { useRouter } from "next/navigation";
 
 import { AdminContentCard } from "@/components/admin/common/admin-content-card";
 import {
@@ -9,10 +8,11 @@ import {
   SectionHeader,
   useSectionColumns,
   adaptColumnsForDataTable,
+  SectionFormModal,
 } from "./modules";
 import { SECTIONS_CONSTANTS } from "@/constants/sections";
 import { useSections } from "@/hooks";
-import { useDeleteSection } from "@/hooks/admin/useSection/useDeleteSection";
+import { useDeleteSection, useUpsertSection } from "@/hooks/admin/useSection";
 import type { Section } from "@/types";
 import type { SectionFilterState } from "@/types/admin/section";
 import type { PaginationParams } from "@/types/base";
@@ -23,10 +23,10 @@ import {
   DEFAULT_TOTAL,
 } from "@/constants";
 import { DataTable } from "@/components/data-table";
+import { showToast } from "@/components/ui/toast";
+import { ActionModal } from "@/components/admin/action-modal";
 
 export default function SectionManagementPage(): React.JSX.Element {
-  const router = useRouter();
-
   const [filters, setFilters] = useState<SectionFilterState>(
     SECTIONS_CONSTANTS.INITIAL_FILTERS
   );
@@ -34,12 +34,19 @@ export default function SectionManagementPage(): React.JSX.Element {
   const [pagination, setPagination] =
     useState<PaginationParams>(DEFAULT_PAGINATION);
 
+  // Modal states
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [sectionToDelete, setSectionToDelete] = useState<Section | null>(null);
+  const [formModalOpen, setFormModalOpen] = useState(false);
+  const [editingSection, setEditingSection] = useState<Section | null>(null);
+
   const { sectionsWithPagination, isFetching: sectionsLoading } = useSections({
     pagination,
     filters,
   });
 
   const { mutate: deleteSection, isLoading: isDeleting } = useDeleteSection();
+  const { mutate: upsertSection, isUpserting } = useUpsertSection();
 
   const handlePaginationChange = useCallback(
     (newPagination: PaginationParams) =>
@@ -47,23 +54,54 @@ export default function SectionManagementPage(): React.JSX.Element {
     []
   );
 
-  const isLoading = sectionsLoading || isDeleting;
+  const isLoading = sectionsLoading || isDeleting || isUpserting;
 
-  // 🔗 Navigation handlers
+  // 🔗 Modal handlers
   const handleAddSection = () => {
-    router.push(SECTIONS_CONSTANTS.ROUTES.SECTION_CREATE);
+    setEditingSection(null);
+    setFormModalOpen(true);
   };
 
   const handleEditSection = (section: Section) => {
-    router.push(SECTIONS_CONSTANTS.ROUTES.SECTION_EDIT(section.id));
+    setEditingSection(section);
+    setFormModalOpen(true);
   };
 
-  const handleDeleteSection = async (section: Section): Promise<void> => {
-    const success = await deleteSection(section);
-    if (success) {
-      // Section deleted successfully - could trigger refresh or other actions
-      // The hook already handles toast notifications
+  const handleDeleteSection = (section: Section): void => {
+    setSectionToDelete(section);
+    setDeleteModalOpen(true);
+  };
+
+  const handleConfirmDelete = async (): Promise<void> => {
+    if (!sectionToDelete) return;
+    await deleteSection(sectionToDelete);
+    setDeleteModalOpen(false);
+    setSectionToDelete(null);
+  };
+
+  const handleCloseDeleteModal = (): void => {
+    setDeleteModalOpen(false);
+    setSectionToDelete(null);
+  };
+
+  const handleSubmitSection = async (sectionData: any): Promise<void> => {
+    try {
+      await upsertSection(sectionData);
+      setFormModalOpen(false);
+      setEditingSection(null);
+    } catch (error) {
+      console.error("Submit section error:", error);
+      // Error will be handled by the hook
     }
+  };
+
+  const handleCloseFormModal = (): void => {
+    setFormModalOpen(false);
+    setEditingSection(null);
+  };
+
+  const handleSuccess = (): void => {
+    // This can be used for additional success handling if needed
   };
 
   const handleFilterChange = useCallback(
@@ -109,6 +147,30 @@ export default function SectionManagementPage(): React.JSX.Element {
           totalItems={sectionsWithPagination?.total || DEFAULT_TOTAL}
           onPaginationChangeAction={handlePaginationChange}
           loading={isLoading}
+        />
+
+        {editingSection && (
+          <SectionFormModal
+            section={editingSection}
+            onSubmit={handleSubmitSection}
+            onCancel={handleCloseFormModal}
+            isLoading={isUpserting}
+            isOpen={formModalOpen}
+          />
+        )}
+
+        {/* Delete Modal */}
+        <ActionModal
+          isOpen={deleteModalOpen}
+          onClose={handleCloseDeleteModal}
+          onConfirm={handleConfirmDelete}
+          title="Xác nhận xóa section"
+          description="Bạn có chắc chắn muốn xóa section này không?"
+          confirmText="Xóa"
+          cancelText="Hủy"
+          isLoading={isDeleting}
+          variant="destructive"
+          itemName={sectionToDelete?.name}
         />
       </div>
     </AdminContentCard>

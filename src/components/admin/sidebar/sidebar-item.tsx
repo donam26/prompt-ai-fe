@@ -6,24 +6,16 @@ import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 import type { SidebarItemType } from "@/components/admin/types/sidebar";
 
-/**
- * Props for the SidebarItem component
- */
-interface SidebarItemProps {
+interface Props {
   readonly item: SidebarItemType;
   readonly isActive: boolean;
   readonly level?: number;
   readonly isCollapsed: boolean;
   readonly onItemClick?: (itemId: string, hasChildren: boolean) => void;
   readonly isExpanded?: boolean;
+  readonly isDisabled?: boolean;
 }
 
-/**
- * Individual sidebar menu item component with collapsible functionality
- *
- * @param props - The component props
- * @returns The sidebar item JSX
- */
 export function SidebarItem({
   item,
   isActive,
@@ -31,7 +23,8 @@ export function SidebarItem({
   isCollapsed,
   onItemClick,
   isExpanded = false,
-}: SidebarItemProps): React.JSX.Element {
+  isDisabled = false,
+}: Props): React.JSX.Element {
   const pathname = usePathname();
   const hasChildren = item.children && item.children.length > 0;
 
@@ -150,7 +143,7 @@ export function SidebarItem({
 
   // Handle simple items without children
   return (
-    <Link href={item.href || "#"} className="block">
+    <Link href={item.href || "#"} className="block" aria-disabled={isDisabled}>
       {itemContent}
     </Link>
   );

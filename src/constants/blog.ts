@@ -8,6 +8,12 @@ export const BLOG_CONSTANTS = {
     dateTo: "",
   } as BlogFilterState,
 
+  // Messages
+  MESSAGES: {
+    DELETE_SUCCESS: "Bài viết đã được xóa thành công",
+    DELETE_CONFIRM: "Bạn có chắc chắn muốn xóa bài viết này không?",
+  },
+
   // Pagination
   PAGINATION: {
     DEFAULT_PAGE_SIZE: 10,
@@ -19,7 +25,7 @@ export const BLOG_CONSTANTS = {
     { id: "draft", name: "Bản nháp" },
     { id: "published", name: "Đã xuất bản" },
     { id: "archived", name: "Đã lưu trữ" },
-  ] as const,
+  ],
 
   // Category options
   CATEGORY_OPTIONS: [
@@ -29,7 +35,7 @@ export const BLOG_CONSTANTS = {
     { id: "Marketing", name: "Marketing" },
     { id: "Giáo dục", name: "Giáo dục" },
     { id: "Lối sống", name: "Lối sống" },
-  ] as const,
+  ],
 
   // Table columns
   TABLE_COLUMNS: {

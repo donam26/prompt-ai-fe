@@ -44,7 +44,7 @@ export default function CategoryManagementPage(): React.JSX.Element {
 
   const {
     industriesWithPagination: industriesData,
-    isLoading: industriesLoading,
+    isFetching: industriesLoading,
   } = useIndustries();
   const { mutate: deleteCategory, isLoading: isDeleting } = useDeleteCategory();
 

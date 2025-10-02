@@ -18,6 +18,15 @@ export class PaymentService extends BaseService {
   }
 
   /**
+   * Get payments with pagination and query string
+   */
+  async getPaymentsPageWithQueryString(queryString: string) {
+    const { apiClient } = await import("../../base/apiClient");
+    const response = await apiClient.get(`${this.baseUrl}?${queryString}`);
+    return response;
+  }
+
+  /**
    * Get payment by ID
    */
   async getPayment(id: string | number) {

@@ -20,6 +20,7 @@ export interface SidebarItemType {
   readonly badge?: SidebarBadge;
   readonly isGroup?: boolean;
   readonly isExpanded?: boolean;
+  readonly isDisabled?: boolean;
 }
 
 /**

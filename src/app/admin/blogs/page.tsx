@@ -23,6 +23,8 @@ import {
 } from "@/constants";
 import { DataTable } from "@/components/data-table";
 import { useDeleteBlog } from "@/hooks/admin/useBlog/useDeleteBlog";
+import { showToast } from "@/components/ui/toast";
+import { ActionModal } from "@/components/admin/action-modal";
 
 export default function BlogManagementPage(): React.JSX.Element {
   const router = useRouter();
@@ -33,6 +35,10 @@ export default function BlogManagementPage(): React.JSX.Element {
 
   const [pagination, setPagination] =
     useState<PaginationParams>(DEFAULT_PAGINATION);
+
+  // Delete modal state
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [blogToDelete, setBlogToDelete] = useState<Blog | null>(null);
 
   const { blogsWithPagination, isFetching: blogsLoading } = useBlogs({
     pagination,
@@ -49,7 +55,6 @@ export default function BlogManagementPage(): React.JSX.Element {
 
   const isLoading = blogsLoading || isDeleting;
 
-  // 🔗 Navigation handlers
   const handleAddBlog = () => {
     router.push(BLOG_CONSTANTS.ROUTES.BLOG_CREATE);
   };
@@ -58,12 +63,22 @@ export default function BlogManagementPage(): React.JSX.Element {
     router.push(BLOG_CONSTANTS.ROUTES.BLOG_EDIT(blog.id));
   };
 
-  const handleDeleteBlog = async (blog: Blog): Promise<void> => {
-    const success = await deleteBlog(blog);
-    if (success) {
-      // Blog deleted successfully - could trigger refresh or other actions
-      // The hook already handles toast notifications
-    }
+  const handleDeleteBlog = (blog: Blog): void => {
+    setBlogToDelete(blog);
+    setDeleteModalOpen(true);
+  };
+
+  const handleConfirmDelete = async (): Promise<void> => {
+    if (!blogToDelete) return;
+    await deleteBlog(blogToDelete);
+    showToast.success(BLOG_CONSTANTS.MESSAGES.DELETE_SUCCESS);
+    setDeleteModalOpen(false);
+    setBlogToDelete(null);
+  };
+
+  const handleCloseDeleteModal = (): void => {
+    setDeleteModalOpen(false);
+    setBlogToDelete(null);
   };
 
   const handleFilterChange = useCallback(
@@ -109,6 +124,20 @@ export default function BlogManagementPage(): React.JSX.Element {
           totalItems={blogsWithPagination?.total || DEFAULT_TOTAL}
           onPaginationChangeAction={handlePaginationChange}
           loading={isLoading}
+        />
+
+        {/* Delete Modal */}
+        <ActionModal
+          isOpen={deleteModalOpen}
+          onClose={handleCloseDeleteModal}
+          onConfirm={handleConfirmDelete}
+          title="Xác nhận xóa blog"
+          description="Bạn có chắc chắn muốn xóa blog này không?"
+          confirmText="Xóa"
+          cancelText="Hủy"
+          isLoading={isDeleting}
+          variant="destructive"
+          itemName={blogToDelete?.title}
         />
       </div>
     </AdminContentCard>

@@ -16,17 +16,66 @@ export const BLOG_STATUS_LABELS = {
 
 // User role enum
 export enum UserRole {
-  ADMIN = "admin",
-  USER = "user",
-  MODERATOR = "moderator",
+  USER = 1,
+  ADMIN = 2,
+  MARKETER = 3,
+  NV_A_HIEU = 4,
+  ANGELS = 5,
 }
 
 // User role labels
 export const USER_ROLE_LABELS = {
-  [UserRole.ADMIN]: "Quản trị viên",
-  [UserRole.USER]: "Người dùng",
-  [UserRole.MODERATOR]: "Điều hành viên",
+  [UserRole.USER]: "User",
+  [UserRole.ADMIN]: "Admin",
+  [UserRole.MARKETER]: "Marketer",
+  [UserRole.NV_A_HIEU]: "NV A Hiếu",
+  [UserRole.ANGELS]: "Angels",
 } as const;
+
+// User role options
+export const USER_ROLE_OPTIONS = [
+  {
+    value: UserRole.USER,
+    label: USER_ROLE_LABELS[UserRole.USER],
+  },
+  {
+    value: UserRole.ADMIN,
+    label: USER_ROLE_LABELS[UserRole.ADMIN],
+  },
+  {
+    value: UserRole.MARKETER,
+    label: USER_ROLE_LABELS[UserRole.MARKETER],
+  },
+  {
+    value: UserRole.NV_A_HIEU,
+    label: USER_ROLE_LABELS[UserRole.NV_A_HIEU],
+  },
+  {
+    value: UserRole.ANGELS,
+    label: USER_ROLE_LABELS[UserRole.ANGELS],
+  },
+] as const;
+
+// User role utility functions
+export const getUserRoleLabel = (roleId: number): string => {
+  return USER_ROLE_LABELS[roleId as UserRole] || "Unknown";
+};
+
+export const isAdminRole = (roleId: number): boolean => {
+  return roleId === UserRole.ADMIN;
+};
+
+export const isMarketerRole = (roleId: number): boolean => {
+  return roleId === UserRole.MARKETER;
+};
+
+export const isNVAHieuRole = (roleId: number): boolean => {
+  return roleId === UserRole.NV_A_HIEU;
+};
+
+export const isAngelsRole = (roleId: number): boolean => {
+  return roleId === UserRole.ANGELS;
+};
 
 // User status enum
 export enum UserStatus {
@@ -105,6 +154,41 @@ export const INDUSTRY_STATUS_LABELS = {
   [IndustryStatus.ACTIVE]: "Hoạt động",
   [IndustryStatus.INACTIVE]: "Không hoạt động",
 } as const;
+
+// Billing cycle enum
+export enum BillingCycle {
+  YEARLY = "yearly",
+  MONTHLY = "monthly",
+  LIFETIME = "lifetime",
+}
+
+// Billing cycle labels
+export const BILLING_CYCLE_LABELS = {
+  [BillingCycle.YEARLY]: "Năm",
+  [BillingCycle.MONTHLY]: "Tháng",
+  [BillingCycle.LIFETIME]: "Trọn đời",
+} as const;
+
+// Billing cycle options
+export const BILLING_CYCLE_OPTIONS = [
+  {
+    value: BillingCycle.YEARLY,
+    label: BILLING_CYCLE_LABELS[BillingCycle.YEARLY],
+  },
+  {
+    value: BillingCycle.MONTHLY,
+    label: BILLING_CYCLE_LABELS[BillingCycle.MONTHLY],
+  },
+  {
+    value: BillingCycle.LIFETIME,
+    label: BILLING_CYCLE_LABELS[BillingCycle.LIFETIME],
+  },
+] as const;
+
+// Billing cycle formatter
+export const formatBillingCycle = (billingCycle: string): string => {
+  return BILLING_CYCLE_LABELS[billingCycle as BillingCycle] || "Không xác định";
+};
 
 // Re-export category type enum
 export {

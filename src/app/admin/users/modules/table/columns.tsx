@@ -1,12 +1,8 @@
 import type { ColumnDef } from "@tanstack/react-table";
 import type { User } from "@/types";
 import { Column } from "@/components/data-table/data-table";
-import {
-  ImageCell,
-  StatusCell,
-  BadgeCell,
-  ActionsCell,
-} from "@/components/table-cell";
+import { StatusCell, BadgeCell, ActionsCell } from "@/components/table-cell";
+import { getUserRoleLabel, isAdminRole } from "@/types/enums";
 
 interface Props {
   onEditAction: (user: User) => void;
@@ -18,23 +14,6 @@ export function useUserColumns({
   onDeleteAction,
 }: Props): ColumnDef<User>[] {
   return [
-    {
-      accessorKey: "avatar",
-      meta: { title: "Ảnh đại diện" },
-      header: () => (
-        <div className="w-full font-medium text-center">Ảnh đại diện</div>
-      ),
-      cell: ({ row }) => (
-        <div className="hidden sm:flex justify-center">
-          <ImageCell
-            src={row.original.avatar}
-            alt={row.original.fullName || "User"}
-            size="sm"
-          />
-        </div>
-      ),
-      enableSorting: false,
-    },
     {
       accessorKey: "name",
       meta: { title: "Tên người dùng" },
@@ -48,7 +27,7 @@ export function useUserColumns({
             >
               {row.original.fullName || "Unknown User"}
             </span>
-            {row.original.roleId === 1 && (
+            {isAdminRole(row.original.roleId) && (
               <BadgeCell label="Admin" variant="secondary" />
             )}
           </div>
@@ -68,7 +47,7 @@ export function useUserColumns({
       cell: ({ row }) => (
         <div className="hidden md:block">
           <BadgeCell
-            label={row.original.roleId === 1 ? "Admin" : "User"}
+            label={getUserRoleLabel(row.original.roleId)}
             variant="secondary"
             maxWidth="max-w-[100px]"
           />
@@ -77,14 +56,17 @@ export function useUserColumns({
       enableSorting: false,
     },
     {
-      accessorKey: "status",
+      accessorKey: "accountStatus",
       meta: { title: "Trạng thái" },
       header: () => (
         <div className="w-full font-medium text-center">Trạng thái</div>
       ),
-      cell: () => (
+      cell: ({ row }) => (
         <div className="flex justify-center items-center min-w-[100px]">
-          <StatusCell isActive={true} isComingSoon={false} />
+          <StatusCell
+            isActive={row.original.accountStatus === 1}
+            isComingSoon={false}
+          />
         </div>
       ),
       enableSorting: false,
@@ -98,6 +80,23 @@ export function useUserColumns({
           <span className="text-gray-600 text-sm">
             {row.original.createdAt
               ? new Date(row.original.createdAt).toLocaleDateString("vi-VN")
+              : "N/A"}
+          </span>
+        </div>
+      ),
+      enableSorting: false,
+    },
+    {
+      accessorKey: "otpExpiresAt",
+      meta: { title: "OTP hết hạn" },
+      header: () => (
+        <div className="hidden lg:block font-medium">OTP hết hạn</div>
+      ),
+      cell: ({ row }) => (
+        <div className="hidden lg:block">
+          <span className="text-gray-600 text-sm">
+            {row.original.otpExpiresAt
+              ? new Date(row.original.otpExpiresAt).toLocaleDateString("vi-VN")
               : "N/A"}
           </span>
         </div>

@@ -1,6 +1,6 @@
 "use client";
 
-import { Edit, Trash2, Award } from "lucide-react";
+import { Edit, Trash2, Award, Eye } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
@@ -8,6 +8,7 @@ export interface ActionsCellProps<T> {
   item: T;
   onEdit?: (item: T) => void;
   onDelete?: (item: T) => void;
+  onView?: (item: T) => void;
   onManageBadge?: (item: T) => void;
   getItemId?: (item: T) => string | number;
   className?: string;
@@ -17,6 +18,7 @@ export function ActionsCell<T>({
   item,
   onEdit,
   onDelete,
+  onView,
   onManageBadge,
   // getItemId = (item: any) => item.id,
   className,
@@ -29,12 +31,28 @@ export function ActionsCell<T>({
     onDelete?.(item);
   };
 
+  const handleView = () => {
+    onView?.(item);
+  };
+
   const handleManageBadge = () => {
     onManageBadge?.(item);
   };
 
   return (
     <div className={cn("flex justify-center items-center gap-1", className)}>
+      {/* View Button */}
+      {onView && (
+        <Button
+          variant="ghost"
+          onClick={handleView}
+          className="hover:bg-green-50 p-1 sm:p-1.5 w-7 sm:w-8 h-7 sm:h-8 hover:text-green-600 transition-colors"
+          title="Xem chi tiết"
+        >
+          <Eye className="w-3.5 sm:w-4 h-3.5 sm:h-4" />
+        </Button>
+      )}
+
       {/* Edit Button */}
       {onEdit && (
         <Button

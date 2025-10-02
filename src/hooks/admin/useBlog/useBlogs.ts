@@ -57,8 +57,8 @@ export function useBlogs(options: Props = {}) {
 
     try {
       const query: Record<string, unknown> = {
-        page: memoizedPageIndex + 1,
-        limit: memoizedPageSize,
+        pageIndex: memoizedPageIndex + 1,
+        pageSize: memoizedPageSize,
       };
 
       applyNonEmptyFiltersToQuery(memoizedFilters, query);

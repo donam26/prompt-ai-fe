@@ -5,12 +5,6 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 import type { SectionHeaderProps } from "@/types/admin";
 
-/**
- * Section page header component
- *
- * @param props - The component props
- * @returns The section header JSX
- */
 export const SectionHeader = ({
   onAddSection,
 }: SectionHeaderProps): React.JSX.Element => (

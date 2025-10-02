@@ -5,7 +5,6 @@ import type { Section } from "@/types";
  */
 export interface SectionFilterState {
   readonly searchTerm: string;
-  readonly status: string;
 }
 
 /**
@@ -31,11 +30,10 @@ export interface SectionHeaderProps {
  * Section form data interface
  */
 export interface SectionFormData {
+  readonly id?: string | number;
   readonly name: string;
-  readonly description: string;
+  readonly description?: string;
   readonly status: string;
-  readonly createdAt?: string;
-  readonly updatedAt?: string;
 }
 
 /**
@@ -50,13 +48,15 @@ export interface SectionFormProps {
 }
 
 /**
- * Props for the SectionFormDialog component
+ * Props for the SectionFormModal component
  */
-export interface SectionFormDialogProps {
-  readonly isOpen: boolean;
-  readonly onClose: () => void;
+export interface SectionFormModalProps {
   readonly section?: Section;
-  readonly onSuccess?: () => void;
+  readonly onSubmit: (sectionData: SectionFormData) => void;
+  readonly onCancel: () => void;
+  readonly isLoading?: boolean;
+  readonly errors?: Record<string, string>;
+  readonly isOpen?: boolean;
 }
 
 /**
@@ -81,6 +81,6 @@ export interface SectionFormActionsProps {
  * Column handlers for the section table
  */
 export interface SectionColumnHandlers {
-  onEdit: (section: Section) => void;
-  onDelete: (section: Section) => void;
+  onEditAction: (section: Section) => void;
+  onDeleteAction: (section: Section) => void;
 }

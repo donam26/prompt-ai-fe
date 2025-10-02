@@ -1,4 +1,5 @@
 import type { PaymentFilterState } from "@/types/admin/payment";
+import { PaymentStatus } from "./payment-status";
 
 export const PAYMENTS_CONSTANTS = {
   // Initial filter state
@@ -6,6 +7,7 @@ export const PAYMENTS_CONSTANTS = {
     searchTerm: "",
     status: "all",
     method: "all",
+    subscriptionIds: [],
     dateRange: {
       from: "",
       to: "",
@@ -21,16 +23,11 @@ export const PAYMENTS_CONSTANTS = {
   // Routes
   ROUTES: {
     PAYMENTS: "/admin/payments",
-    PAYMENT_VIEW: (id: string | number) => `/admin/payments/${id}/view`,
+    PAYMENT_VIEW: (id: string | number) => `/admin/payments/${id}`,
   },
 
-  // Status values
-  STATUS: {
-    PENDING: "pending",
-    COMPLETED: "completed",
-    FAILED: "failed",
-    REFUNDED: "refunded",
-  },
+  // Status values - using enum
+  STATUS: PaymentStatus,
 
   // Payment method values
   PAYMENT_METHOD: {

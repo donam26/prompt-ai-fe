@@ -18,6 +18,8 @@ export * from "./admin/useUser";
 export * from "./admin/usePrompt";
 export * from "./admin/useBlog";
 export * from "./admin/usePayment";
+export * from "./admin/useRole";
+export * from "./admin/useCoupon";
 export * from "./useAdminPermissions";
 
 // Other hooks

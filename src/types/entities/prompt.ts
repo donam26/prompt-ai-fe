@@ -61,7 +61,6 @@ export interface Section extends BaseEntity {
 // Topic entity
 export interface Topic extends BaseEntity {
   name: string;
-  description?: string;
 }
 
 // Industry entity

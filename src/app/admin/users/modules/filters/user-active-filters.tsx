@@ -34,8 +34,10 @@ export const UserActiveFilters = ({
       newFilters.role = "all";
     } else if (key === "status") {
       newFilters.status = "all";
-    } else if (key === "dateRange") {
-      newFilters.dateRange = { from: "", to: "" };
+    } else if (key === "dateFrom") {
+      newFilters.dateFrom = "";
+    } else if (key === "dateTo") {
+      newFilters.dateTo = "";
     }
 
     onFilterChange(newFilters);
@@ -47,7 +49,7 @@ export const UserActiveFilters = ({
     filters.searchTerm && filters.searchTerm !== "",
     filters.role && filters.role !== "all",
     filters.status && filters.status !== "all",
-    filters.dateRange.from || filters.dateRange.to,
+    filters.dateFrom || filters.dateTo,
   ].filter(Boolean).length;
 
   if (activeTotal === 0) {
@@ -97,15 +99,17 @@ export const UserActiveFilters = ({
       )}
 
       {/* Date range filter */}
-      {(filters.dateRange.from || filters.dateRange.to) && (
+      {(filters.dateFrom || filters.dateTo) && (
         <Badge key="dateRange" variant="secondary" className="gap-1">
           <span className="text-xs">
-            Ngày: {filters.dateRange.from || "..."} -{" "}
-            {filters.dateRange.to || "..."}
+            Ngày: {filters.dateFrom || "..."} - {filters.dateTo || "..."}
           </span>
           <X
             className="w-3 h-3 cursor-pointer"
-            onClick={() => handleRemoveFilter("dateRange")}
+            onClick={() => {
+              handleRemoveFilter("dateFrom");
+              handleRemoveFilter("dateTo");
+            }}
           />
         </Badge>
       )}

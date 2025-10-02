@@ -22,3 +22,9 @@ export * from "./contact";
 
 // GPT entity
 export * from "./gpt";
+
+// Product entity
+export * from "./product";
+
+// Coupon entity
+export * from "./coupon";

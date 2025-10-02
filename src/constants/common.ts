@@ -8,6 +8,7 @@ export const DEFAULT_TOTAL_PAGES = 1;
 
 // Default page sizes
 export const DEFAULT_PAGE_SIZE = 10;
+export const DEFAULT_PAGE_MAX_SIZE = 100;
 export const DEFAULT_PAGE_INDEX = 0;
 
 // Default pagination object

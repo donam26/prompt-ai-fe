@@ -34,7 +34,7 @@ export default function CategoryDetailsPage() {
   } = useUpsertCategory();
 
   // Fetch industries by category - only when category is selected
-  const { industriesWithPagination, isLoading: industriesLoading } =
+  const { industriesWithPagination, isFetching: industriesLoading } =
     useIndustries({
       pagination: {
         pageIndex: 1,

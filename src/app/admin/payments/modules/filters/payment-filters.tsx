@@ -7,8 +7,12 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { BaseSelect } from "@/components/ui/base-select";
+import { MultiSelect } from "@/components/ui/multi-select";
 import { debounce } from "@/lib/utils";
 import type { PaymentFilterProps } from "@/types/admin";
+import { PaymentStatus } from "@/constants/payment-status";
+import { PaymentActiveFilters } from "./payment-active-filters";
+import { useSubscriptions } from "@/hooks/admin/useSubscription";
 
 /**
  * Payment filter component with search, status, method, and date range filters
@@ -16,7 +20,7 @@ import type { PaymentFilterProps } from "@/types/admin";
  * @param props - The component props
  * @returns The payment filter JSX
  */
-export const PaymentFilter = ({
+export const PaymentFilters = ({
   filters,
   onFilterChange,
   onClearFilters,
@@ -24,6 +28,9 @@ export const PaymentFilter = ({
   className,
 }: PaymentFilterProps): React.JSX.Element => {
   const [searchValue, setSearchValue] = useState(filters.searchTerm || "");
+
+  // Fetch subscriptions data for filter
+  const { subscriptions } = useSubscriptions({});
 
   const updateSearchValue = useCallback((value: string) => {
     setSearchValue(value);
@@ -69,10 +76,19 @@ export const PaymentFilter = ({
     onPageReset?.();
   };
 
+  const handleSubscriptionChange = (values: string[]): void => {
+    onFilterChange({
+      ...filters,
+      subscriptionIds: values,
+    });
+    onPageReset?.();
+  };
+
   const hasActiveFilters =
     filters.searchTerm ||
     filters.status !== "all" ||
     filters.method !== "all" ||
+    (filters.subscriptionIds && filters.subscriptionIds.length > 0) ||
     filters.dateRange.from ||
     filters.dateRange.to;
 
@@ -81,17 +97,6 @@ export const PaymentFilter = ({
       <div className="space-y-4 bg-white p-4 border border-gray-200 rounded-lg">
         <div className="flex justify-between items-center">
           <h3 className="font-medium text-gray-900 text-lg">Bộ lọc</h3>
-          {hasActiveFilters && (
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={onClearFilters}
-              className="text-gray-500 hover:text-gray-700"
-            >
-              <X className="mr-1 w-4 h-4" />
-              Xóa tất cả
-            </Button>
-          )}
         </div>
 
         <div className="space-y-4">
@@ -110,13 +115,22 @@ export const PaymentFilter = ({
             </div>
           </div>
 
-          {/* Status and Method Filters */}
-          <div className="gap-4 grid xl:grid-cols-2">
+          {/* Status, Subscription and Date Filters */}
+          <div className="gap-4 grid xl:grid-cols-3">
             <div className="space-y-2">
               <Label className="font-medium text-sm">Trạng thái</Label>
               <StatusFilter
                 value={filters.status}
                 onChange={handleStatusChange}
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label className="font-medium text-sm">Gói đăng ký</Label>
+              <SubscriptionFilter
+                values={filters.subscriptionIds || []}
+                onChange={handleSubscriptionChange}
+                subscriptions={subscriptions}
               />
             </div>
 
@@ -131,6 +145,13 @@ export const PaymentFilter = ({
           </div>
         </div>
       </div>
+
+      <PaymentActiveFilters
+        filters={filters}
+        onFilterChange={onFilterChange}
+        onClearAll={onClearFilters}
+        onPageReset={onPageReset}
+      />
     </div>
   );
 };
@@ -147,10 +168,9 @@ const StatusFilter = ({
 }): React.JSX.Element => {
   const statusOptions = [
     { id: "all", name: "Tất cả trạng thái" },
-    { id: "completed", name: "Hoàn thành" },
-    { id: "pending", name: "Đang xử lý" },
-    { id: "failed", name: "Thất bại" },
-    { id: "cancelled", name: "Đã hủy" },
+    { id: PaymentStatus.SUCCESS, name: "Thành công" },
+    { id: PaymentStatus.PENDING, name: "Đang xử lý" },
+    { id: PaymentStatus.FAILED, name: "Thất bại" },
   ];
 
   return (
@@ -159,6 +179,37 @@ const StatusFilter = ({
       value={value}
       onValueChange={onChange}
       placeholder="Chọn trạng thái..."
+      className="w-full"
+    />
+  );
+};
+
+/**
+ * Subscription filter component with multiple selection
+ */
+const SubscriptionFilter = ({
+  values,
+  onChange,
+  subscriptions,
+}: {
+  values: string[];
+  onChange: (values: string[]) => void;
+  subscriptions: any[];
+}): React.JSX.Element => {
+  const subscriptionItems = subscriptions.map(sub => ({
+    id: sub.id.toString(),
+    name: sub.name,
+  }));
+
+  return (
+    <MultiSelect
+      options={subscriptionItems.map(item => ({
+        value: item.id,
+        label: item.name,
+      }))}
+      value={values}
+      onValueChange={onChange}
+      placeholder="Chọn gói đăng ký..."
       className="w-full"
     />
   );

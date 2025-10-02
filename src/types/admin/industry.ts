@@ -1,3 +1,5 @@
+import type { Category } from "@/types";
+
 /**
  * Industry filter state interface
  */
@@ -11,6 +13,7 @@ export interface IndustryFilterState {
  */
 export interface IndustryFilterProps {
   readonly filters: IndustryFilterState;
+  readonly categories: Category[];
   readonly onFilterChange: (filters: IndustryFilterState) => void;
   readonly onClearFilters: () => void;
   readonly onPageReset?: () => void;

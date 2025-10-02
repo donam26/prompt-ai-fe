@@ -6,8 +6,12 @@ import {
   DEFAULT_TOTAL,
   DEFAULT_TOTAL_PAGES,
 } from "@/constants";
+import type { ApiCallResult } from "@/types/services/common";
 import { paymentService } from "@/services/admin/payments/paymentService";
-import { applyNonEmptyFiltersToQuery } from "@/utils";
+import {
+  applyNonEmptyFiltersToQuery,
+  buildQueryString,
+} from "@/utils/common-helper";
 import type { PaginationParams } from "@/types/base";
 import { useDeepMemo } from "@/hooks/useDeepMemo";
 
@@ -18,7 +22,7 @@ interface Props {
   enabled?: boolean;
 }
 
-export function useAdminPaymentsQuery(options: Props = {}) {
+export function usePayments(options: Props = {}) {
   const {
     filters = {},
     pagination = DEFAULT_PAGINATION,
@@ -30,11 +34,9 @@ export function useAdminPaymentsQuery(options: Props = {}) {
   // Payments state
   const [payments, setPayments] = useState<Payment[]>([]);
   const [isFetching, setIsFetching] = useState(false);
-  const [paymentsWithPagination, setPaymentsWithPagination] = useState<{
-    data: Payment[];
-    total: number;
-    totalPages: number;
-  }>({
+  const [paymentsWithPagination, setPaymentsWithPagination] = useState<
+    ApiCallResult<Payment[]>
+  >({
     data: [],
     total: DEFAULT_TOTAL,
     totalPages: DEFAULT_TOTAL_PAGES,
@@ -63,18 +65,26 @@ export function useAdminPaymentsQuery(options: Props = {}) {
 
     try {
       const query: Record<string, unknown> = {
-        page: memoizedPageIndex + 1,
-        limit: memoizedPageSize,
+        pageIndex: memoizedPageIndex + 1,
+        pageSize: memoizedPageSize,
+        ...memoizedFilters,
       };
 
-      applyNonEmptyFiltersToQuery(memoizedFilters, query);
-      const response = await paymentService.getPaymentsPage(query);
+      // Build query string for API call with proper array handling
+      const queryString = buildQueryString(query);
+      applyNonEmptyFiltersToQuery(
+        memoizedFilters as Record<string, unknown>,
+        query
+      );
+
+      const response =
+        await paymentService.getPaymentsPageWithQueryString(queryString);
 
       // Extract data from the response structure
-      const responseData = response.data?.data || [];
-      const total = response.data.pagination?.total || DEFAULT_TOTAL;
+      const responseData = response.data.data || [];
+      const total = response.data.pagination.total || DEFAULT_TOTAL;
       const totalPages =
-        response.data.pagination?.totalPages || DEFAULT_TOTAL_PAGES;
+        response.data.pagination.totalPages || DEFAULT_TOTAL_PAGES;
 
       setPayments(responseData);
       setPaymentsWithPagination({

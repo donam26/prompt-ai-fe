@@ -2,6 +2,7 @@
 
 import React, { useCallback, useLayoutEffect, useMemo, useState } from "react";
 import { Search, X } from "lucide-react";
+import DatePicker from "react-multi-date-picker";
 
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -11,12 +12,6 @@ import { UserActiveFilters } from "./user-active-filters";
 import { debounce } from "@/lib/utils";
 import type { UserFilterProps, UserFilterState } from "@/types/admin/user";
 
-/**
- * User filter component with search, role, status, and date range filters
- *
- * @param props - The component props
- * @returns The user filter JSX
- */
 export const UserFilter = ({
   filters,
   onFilterChange,
@@ -70,10 +65,18 @@ export const UserFilter = ({
     onPageReset?.();
   };
 
-  const handleDateRangeChange = (range: { from: string; to: string }): void => {
+  const handleDateFromChange = (dateFrom: string): void => {
     onFilterChange({
       ...filters,
-      dateRange: range,
+      dateFrom,
+    });
+    onPageReset?.();
+  };
+
+  const handleDateToChange = (dateTo: string): void => {
+    onFilterChange({
+      ...filters,
+      dateTo,
     });
     onPageReset?.();
   };
@@ -115,12 +118,12 @@ export const UserFilter = ({
       });
     }
 
-    if (filters.dateRange.from || filters.dateRange.to) {
-      const fromDate = filters.dateRange.from
-        ? new Date(filters.dateRange.from).toLocaleDateString("vi-VN")
+    if (filters.dateFrom || filters.dateTo) {
+      const fromDate = filters.dateFrom
+        ? new Date(filters.dateFrom).toLocaleDateString("vi-VN")
         : "Từ đầu";
-      const toDate = filters.dateRange.to
-        ? new Date(filters.dateRange.to).toLocaleDateString("vi-VN")
+      const toDate = filters.dateTo
+        ? new Date(filters.dateTo).toLocaleDateString("vi-VN")
         : "Hiện tại";
       activeFilters.push({
         key: "dateRange",
@@ -131,27 +134,6 @@ export const UserFilter = ({
 
     return activeFilters;
   };
-
-  // const removeItemFromFilter = (key: keyof UserFilterState): void => {
-  //   switch (key) {
-  //     case "searchTerm":
-  //       onFilterChange({ ...filters, searchTerm: "" });
-  //       break;
-  //     case "role":
-  //       onFilterChange({ ...filters, role: "all" });
-  //       break;
-  //     case "status":
-  //       onFilterChange({ ...filters, status: "all" });
-  //       break;
-  //     case "dateRange":
-  //       onFilterChange({
-  //         ...filters,
-  //         dateRange: { from: "", to: "" },
-  //       });
-  //       break;
-  //   }
-  //   onPageReset?.();
-  // };
 
   const activeFilters = getActiveFilters();
   const hasActiveFilters = activeFilters.length > 0;
@@ -164,7 +146,8 @@ export const UserFilter = ({
         onSearchChange={handleSearchChange}
         onRoleChange={handleRoleChange}
         onStatusChange={handleStatusChange}
-        onDateRangeChange={handleDateRangeChange}
+        onDateFromChange={handleDateFromChange}
+        onDateToChange={handleDateToChange}
         onClearFilters={onClearFilters}
         hasActiveFilters={hasActiveFilters}
       />
@@ -181,19 +164,14 @@ export const UserFilter = ({
   );
 };
 
-/**
- * User filter card component
- *
- * @param props - The component props
- * @returns The user filter card JSX
- */
 const UserFilterCard = ({
   filters,
   searchValue,
   onSearchChange,
   onRoleChange,
   onStatusChange,
-  onDateRangeChange,
+  onDateFromChange,
+  onDateToChange,
   onClearFilters,
   hasActiveFilters,
 }: {
@@ -202,7 +180,8 @@ const UserFilterCard = ({
   onSearchChange: (value: string) => void;
   onRoleChange: (value: string) => void;
   onStatusChange: (value: string) => void;
-  onDateRangeChange: (range: { from: string; to: string }) => void;
+  onDateFromChange: (dateFrom: string) => void;
+  onDateToChange: (dateTo: string) => void;
   onClearFilters: () => void;
   hasActiveFilters: boolean;
 }): React.JSX.Element => (
@@ -255,8 +234,10 @@ const UserFilterCard = ({
       <div className="space-y-2">
         <Label className="font-medium text-sm">Khoảng thời gian</Label>
         <DateRangeFilter
-          value={filters.dateRange}
-          onChange={onDateRangeChange}
+          dateFrom={filters.dateFrom}
+          dateTo={filters.dateTo}
+          onDateFromChange={onDateFromChange}
+          onDateToChange={onDateToChange}
         />
       </div>
     </div>
@@ -280,7 +261,6 @@ const RoleFilter = ({
     { id: "all", name: "Tất cả vai trò" },
     { id: "admin", name: "Quản trị viên" },
     { id: "user", name: "Người dùng" },
-    { id: "moderator", name: "Điều hành viên" },
   ];
 
   return (
@@ -311,7 +291,6 @@ const StatusFilter = ({
     { id: "all", name: "Tất cả trạng thái" },
     { id: "active", name: "Hoạt động" },
     { id: "inactive", name: "Không hoạt động" },
-    { id: "suspended", name: "Bị đình chỉ" },
   ];
 
   return (
@@ -332,29 +311,51 @@ const StatusFilter = ({
  * @returns The date range filter JSX
  */
 const DateRangeFilter = ({
-  value,
-  onChange,
+  dateFrom,
+  dateTo,
+  onDateFromChange,
+  onDateToChange,
 }: {
-  value: { from: string; to: string };
-  onChange: (range: { from: string; to: string }) => void;
+  dateFrom: string;
+  dateTo: string;
+  onDateFromChange: (dateFrom: string) => void;
+  onDateToChange: (dateTo: string) => void;
 }): React.JSX.Element => (
   <div className="gap-2 grid grid-cols-2">
     <div>
-      <Input
-        type="date"
-        value={value.from}
-        onChange={e => onChange({ ...value, from: e.target.value })}
+      <DatePicker
+        value={dateFrom ? new Date(dateFrom) : null}
+        onChange={date => {
+          if (date) {
+            const formattedDate = date.toDate().toISOString().split("T")[0];
+            onDateFromChange(formattedDate);
+          } else {
+            onDateFromChange("");
+          }
+        }}
+        format="DD/MM/YYYY"
         placeholder="Từ ngày"
         className="w-full"
+        inputClass="w-full h-10 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+        containerStyle={{ width: "100%" }}
       />
     </div>
     <div>
-      <Input
-        type="date"
-        value={value.to}
-        onChange={e => onChange({ ...value, to: e.target.value })}
+      <DatePicker
+        value={dateTo ? new Date(dateTo) : null}
+        onChange={date => {
+          if (date) {
+            const formattedDate = date.toDate().toISOString().split("T")[0];
+            onDateToChange(formattedDate);
+          } else {
+            onDateToChange("");
+          }
+        }}
+        format="DD/MM/YYYY"
         placeholder="Đến ngày"
         className="w-full"
+        inputClass="w-full h-10 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+        containerStyle={{ width: "100%" }}
       />
     </div>
   </div>

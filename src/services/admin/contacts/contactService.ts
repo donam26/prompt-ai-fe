@@ -4,7 +4,7 @@ import type { Contact, PaginationParams } from "@/types";
 
 // Contact service parameters
 export interface ContactListParams extends PaginationParams {
-  status?: string;
+  status?: number;
   type?: number;
 }
 
@@ -68,7 +68,7 @@ export class ContactService extends BaseService {
    * Reply to contact
    */
   async replyContact(id: string | number, reply: string) {
-    return this.update(id, { reply });
+    return this.patch(`${id}/reply`, { reply });
   }
 
   /**

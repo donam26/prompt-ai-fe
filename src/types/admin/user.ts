@@ -11,10 +11,8 @@ export interface UserFilterState {
   readonly searchTerm: string;
   readonly role: string;
   readonly status: string;
-  readonly dateRange: {
-    readonly from: string;
-    readonly to: string;
-  };
+  readonly dateFrom: string;
+  readonly dateTo: string;
 }
 
 /**

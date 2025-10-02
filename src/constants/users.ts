@@ -1,15 +1,14 @@
 import type { UserFilterState } from "@/types/admin/user";
+import { UserRole } from "@/types/enums";
 
 export const USERS_CONSTANTS = {
   // Initial filter state
   INITIAL_FILTERS: {
     searchTerm: "",
-    status: "",
-    role: "",
-    dateRange: {
-      from: "",
-      to: "",
-    },
+    status: "all",
+    role: "all",
+    dateFrom: "",
+    dateTo: "",
   } as UserFilterState,
 
   // Pagination
@@ -26,18 +25,20 @@ export const USERS_CONSTANTS = {
     USER_VIEW: (id: string | number) => `/admin/users/${id}/view`,
   },
 
-  // Status values
+  // Status values (as numbers)
   STATUS: {
-    ACTIVE: "active",
-    INACTIVE: "inactive",
-    PENDING: "pending",
+    ACTIVE: 1,
+    INACTIVE: 0,
+    PENDING: 2,
   },
 
-  // Role values
+  // Role values (using enum)
   ROLE: {
-    ADMIN: "admin",
-    USER: "user",
-    MODERATOR: "moderator",
+    USER: UserRole.USER,
+    ADMIN: UserRole.ADMIN,
+    MARKETER: UserRole.MARKETER,
+    NV_A_HIEU: UserRole.NV_A_HIEU,
+    ANGELS: UserRole.ANGELS,
   },
 
   // Table columns

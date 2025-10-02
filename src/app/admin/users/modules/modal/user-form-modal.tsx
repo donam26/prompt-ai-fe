@@ -25,12 +25,6 @@ interface Props {
   isLoading: boolean;
 }
 
-/**
- * User form modal component
- *
- * @param props - The component props
- * @returns The user form modal JSX
- */
 export const UserFormModal = ({
   isOpen,
   onOpenChange,

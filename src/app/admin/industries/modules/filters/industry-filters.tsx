@@ -6,11 +6,14 @@ import { Search, X } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
+import { MultiSelect } from "@/components/ui/multi-select";
 import { debounce } from "@/lib/utils";
 import type { IndustryFilterProps } from "@/types/admin/industry";
+import type { Category } from "@/types";
 
 export const IndustryFilter = ({
   filters,
+  categories,
   onFilterChange,
   onClearFilters,
   onPageReset,
@@ -46,7 +49,20 @@ export const IndustryFilter = ({
     [debouncedSearchHandler]
   );
 
-  const hasActiveFilters = filters.searchTerm;
+  const handleCategoriesChange = useCallback(
+    (values: string[]) => {
+      onFilterChange({
+        ...filters,
+        categoryIds: values,
+      });
+      onPageReset?.();
+    },
+    [filters, onFilterChange, onPageReset]
+  );
+
+  const hasActiveFilters =
+    filters.searchTerm ||
+    (filters.categoryIds && filters.categoryIds.length > 0);
 
   return (
     <div className={`space-y-4 ${className || ""}`}>
@@ -81,8 +97,44 @@ export const IndustryFilter = ({
               />
             </div>
           </div>
+
+          {/* Categories Filter */}
+          <div className="space-y-2">
+            <Label className="font-medium text-sm">Danh mục</Label>
+            <CategoriesFilter
+              value={filters.categoryIds || []}
+              categories={categories}
+              onChange={handleCategoriesChange}
+            />
+          </div>
         </div>
       </div>
     </div>
+  );
+};
+
+const CategoriesFilter = ({
+  value,
+  categories,
+  onChange,
+}: {
+  value: string[];
+  categories: Category[];
+  onChange: (values: string[]) => void;
+}): React.JSX.Element => {
+  const categoryOptions = categories.map(category => ({
+    label: category.name,
+    value: category.id.toString(),
+  }));
+
+  return (
+    <MultiSelect
+      options={categoryOptions}
+      value={value}
+      onValueChange={onChange}
+      placeholder="Chọn danh mục..."
+      maxCount={3}
+      className="w-full"
+    />
   );
 };

@@ -17,6 +17,12 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: "https",
+        hostname: "prom.vn",
+        port: "",
+        pathname: "/api/prompts/upload/**",
+      },
+      {
+        protocol: "https",
         hostname: "images.unsplash.com",
         port: "",
         pathname: "/**",
@@ -43,6 +49,12 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: "localhost",
         port: "5000",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
+        hostname: "i.postimg.cc",
+        port: "",
         pathname: "/**",
       },
     ],

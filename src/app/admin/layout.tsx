@@ -10,13 +10,6 @@ import { LOADING_TYPE } from "@/constants/loading";
 import { ROUTES_URL } from "@/constants/routes-url";
 import type { AdminLayoutProps } from "@/types/admin";
 
-/**
- * Admin layout component that provides authentication and authorization checks
- * for admin pages. Redirects non-admin users to the home page.
- *
- * @param props - The component props
- * @returns The admin layout JSX or null if user is not authorized
- */
 export default function AdminLayout({
   children,
 }: AdminLayoutProps): React.JSX.Element | null {

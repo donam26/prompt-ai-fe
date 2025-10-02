@@ -5,14 +5,13 @@ import { useRouter } from "next/navigation";
 
 import { AdminContentCard } from "@/components/admin/common/admin-content-card";
 import {
-  PaymentFilter,
+  PaymentFilters,
   PaymentHeader,
   usePaymentColumns,
   adaptColumnsForDataTable,
 } from "./modules";
 import { PAYMENTS_CONSTANTS } from "@/constants/payments";
-import { useAdminPaymentsQuery } from "@/hooks";
-import { useDeletePayment } from "@/hooks/admin/usePayment/useDeletePayment";
+import { usePayments, useDeletePayment } from "@/hooks/admin/usePayment";
 import type { Payment } from "@/types";
 import type { PaymentFilterState } from "@/types/admin/payment";
 import type { PaginationParams as IPagination } from "@/types/base";
@@ -23,6 +22,7 @@ import {
   DEFAULT_TOTAL,
 } from "@/constants";
 import { DataTable } from "@/components/data-table";
+import { ActionModal } from "@/components/admin/action-modal";
 
 export default function PaymentManagementPage(): React.JSX.Element {
   const router = useRouter();
@@ -33,11 +33,18 @@ export default function PaymentManagementPage(): React.JSX.Element {
 
   const [pagination, setPagination] = useState<IPagination>(DEFAULT_PAGINATION);
 
-  const { paymentsWithPagination, isFetching: paymentsLoading } =
-    useAdminPaymentsQuery({
-      pagination,
-      filters,
-    });
+  // Modal states
+  const [selectedPayment, setSelectedPayment] = useState<Payment | null>(null);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+
+  const {
+    paymentsWithPagination,
+    isFetching: paymentsLoading,
+    refetch,
+  } = usePayments({
+    pagination,
+    filters,
+  });
 
   const { mutate: deletePayment, isLoading: isDeleting } = useDeletePayment();
 
@@ -49,16 +56,23 @@ export default function PaymentManagementPage(): React.JSX.Element {
 
   const isLoading = paymentsLoading || isDeleting;
 
-  // 🔗 Navigation handlers
   const handleViewPayment = (payment: Payment) => {
     router.push(PAYMENTS_CONSTANTS.ROUTES.PAYMENT_VIEW(payment.id));
   };
 
-  const handleDeletePayment = async (payment: Payment): Promise<void> => {
-    const success = await deletePayment(payment);
-    if (success) {
-      // Payment deleted successfully - could trigger refresh or other actions
-      // The hook already handles toast notifications
+  const handleDeletePaymentClick = (payment: Payment) => {
+    setSelectedPayment(payment);
+    setIsDeleteModalOpen(true);
+  };
+
+  const handleDeleteConfirm = async () => {
+    if (selectedPayment) {
+      const success = await deletePayment(selectedPayment);
+      if (success) {
+        setIsDeleteModalOpen(false);
+        setSelectedPayment(null);
+        refetch();
+      }
     }
   };
 
@@ -78,7 +92,7 @@ export default function PaymentManagementPage(): React.JSX.Element {
   // Create columns with handlers
   const tanstackColumns = usePaymentColumns({
     onViewAction: handleViewPayment,
-    onDeleteAction: handleDeletePayment,
+    onDeleteAction: handleDeletePaymentClick,
   });
   const columns = adaptColumnsForDataTable(tanstackColumns);
 
@@ -87,7 +101,7 @@ export default function PaymentManagementPage(): React.JSX.Element {
       <div className="space-y-6">
         <PaymentHeader />
 
-        <PaymentFilter
+        <PaymentFilters
           filters={filters}
           onFilterChange={handleFilterChange}
           onClearFilters={handleClearFilters}
@@ -105,6 +119,22 @@ export default function PaymentManagementPage(): React.JSX.Element {
           totalItems={paymentsWithPagination?.total || DEFAULT_TOTAL}
           onPaginationChangeAction={handlePaginationChange}
           loading={isLoading}
+        />
+
+        <ActionModal
+          isOpen={isDeleteModalOpen}
+          onClose={() => {
+            setIsDeleteModalOpen(false);
+            setSelectedPayment(null);
+          }}
+          onConfirm={handleDeleteConfirm}
+          title="Xóa giao dịch thanh toán"
+          description="Bạn có chắc chắn muốn xóa giao dịch thanh toán này không? Hành động này không thể hoàn tác."
+          confirmText="Xóa"
+          cancelText="Hủy"
+          isLoading={isDeleting}
+          variant="destructive"
+          itemName={`#${selectedPayment?.id}`}
         />
       </div>
     </AdminContentCard>

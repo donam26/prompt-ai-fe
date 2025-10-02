@@ -8,9 +8,9 @@ export * from "./coupons/couponService";
 export * from "./payments/paymentService";
 export * from "./roles/roleService";
 export * from "./industries/industryService";
+export * from "./products/productService";
 export * from "./gpt/gptService";
 export * from "./deviceLogs/deviceLogService";
 export * from "./sections";
 export * from "./payments";
 export * from "./categories";
-// UserService đã được export từ services/users/userService.ts

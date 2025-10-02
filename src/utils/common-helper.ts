@@ -70,9 +70,7 @@ export function buildQueryStringFromFilters(
 /**
  * Build query string for prompts with specific handling for arrays and date ranges
  */
-export function buildPromptsQueryString(
-  filters: Record<string, unknown>
-): string {
+export function buildQueryString(filters: Record<string, unknown>): string {
   const queryParams: string[] = [];
 
   for (const [key, value] of Object.entries(filters)) {
@@ -101,6 +99,49 @@ export function buildPromptsQueryString(
       if (dateRange.to) {
         queryParams.push(`dateTo=${encodeURIComponent(dateRange.to)}`);
       }
+      continue;
+    }
+
+    // Skip empty values and "all"
+    if (
+      isUndefined(value) ||
+      isNull(value) ||
+      value === "" ||
+      value === "all"
+    ) {
+      continue;
+    }
+
+    queryParams.push(
+      `${encodeURIComponent(key)}=${encodeURIComponent(String(value))}`
+    );
+  }
+
+  return queryParams.join("&");
+}
+
+/**
+ * Build query string for roles with specific handling for arrays and filters
+ */
+export function buildRolesQueryString(
+  filters: Record<string, unknown>
+): string {
+  const queryParams: string[] = [];
+
+  for (const [key, value] of Object.entries(filters)) {
+    // Handle array values - multiple params with same key
+    if (isArray(value)) {
+      if (isEmpty(value)) {
+        continue;
+      }
+      castArray(value).forEach(item => {
+        if (isUndefined(item) || isNull(item) || item === "") {
+          return;
+        }
+        queryParams.push(
+          `${encodeURIComponent(key)}=${encodeURIComponent(String(item))}`
+        );
+      });
       continue;
     }
 

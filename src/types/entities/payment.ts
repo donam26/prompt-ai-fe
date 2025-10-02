@@ -11,8 +11,9 @@ export interface Payment extends BaseEntity {
   subscriptionId: EntityId;
   amount: number;
   currency: string;
-  status: string;
+  paymentStatus: string;
   paymentMethod: string;
+  paymentDate: string;
   transactionId?: string;
   vnpResponseCode?: string;
   user?: User;
@@ -39,13 +40,17 @@ export interface Coupon extends BaseEntity {
   isActive: boolean;
 }
 
-// Product entity
-export interface Product extends BaseEntity {
+// PaymentProduct entity
+export interface PaymentProduct extends BaseEntity {
   name: string;
   description?: string;
-  price: number;
   image?: string;
   isActive: boolean;
+  section: {
+    id: EntityId;
+    name: string;
+    description?: string;
+  };
 }
 
 // Request types

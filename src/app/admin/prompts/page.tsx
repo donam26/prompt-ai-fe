@@ -13,7 +13,7 @@ import {
 import { PROMPTS_CONSTANTS } from "@/constants/prompts";
 import { usePrompts, useCategories } from "@/hooks";
 import { useDeletePrompt } from "@/hooks/admin/usePrompt/useDeletePrompt";
-import { DeletePromptModal } from "@/components/admin/delete-prompt-modal";
+import { ActionModal } from "@/components/admin/action-modal";
 import type { Prompt, PromptFilterState } from "@/types";
 import type { PaginationParams } from "@/types/base";
 import {
@@ -23,6 +23,7 @@ import {
   DEFAULT_TOTAL,
 } from "@/constants";
 import { DataTable } from "@/components/data-table";
+import { showToast } from "@/components/ui/toast";
 
 export default function PromptManagementPage(): React.JSX.Element {
   const router = useRouter();
@@ -142,12 +143,17 @@ export default function PromptManagementPage(): React.JSX.Element {
         />
 
         {/* Delete Modal */}
-        <DeletePromptModal
-          prompt={promptToDelete}
+        <ActionModal
           isOpen={deleteModalOpen}
           onClose={handleCloseDeleteModal}
           onConfirm={handleConfirmDelete}
+          title="Xác nhận xóa prompt"
+          description={"Bạn có chắc chắn muốn xóa prompt này không?"}
+          confirmText="Xóa"
+          cancelText="Hủy"
           isLoading={isDeleting}
+          variant="destructive"
+          itemName={promptToDelete?.title}
         />
       </div>
     </AdminContentCard>

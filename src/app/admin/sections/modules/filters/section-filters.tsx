@@ -1,25 +1,16 @@
 "use client";
 
 import React, { useCallback, useLayoutEffect, useMemo, useState } from "react";
-import { Search, X } from "lucide-react";
+import { Search } from "lucide-react";
 
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Button } from "@/components/ui/button";
-import { BaseSelect } from "@/components/ui/base-select";
 import { debounce } from "@/lib/utils";
 import type { SectionFilterProps } from "@/types/admin/section";
 
-/**
- * Section filter component with search and status filters
- *
- * @param props - The component props
- * @returns The section filter JSX
- */
 export const SectionFilter = ({
   filters,
   onFilterChange,
-  onClearFilters,
   onPageReset,
   className,
 }: SectionFilterProps): React.JSX.Element => {
@@ -53,87 +44,27 @@ export const SectionFilter = ({
     [debouncedSearchHandler]
   );
 
-  const handleStatusChange = (value: string): void => {
-    onFilterChange({
-      ...filters,
-      status: value,
-    });
-    onPageReset?.();
-  };
-
-  const hasActiveFilters = filters.searchTerm || filters.status !== "all";
-
   return (
     <div className={`space-y-4 ${className || ""}`}>
       <div className="space-y-4 bg-white p-4 border border-gray-200 rounded-lg">
         <div className="flex justify-between items-center">
           <h3 className="font-medium text-gray-900 text-lg">Bộ lọc</h3>
-          {hasActiveFilters && (
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={onClearFilters}
-              className="text-gray-500 hover:text-gray-700"
-            >
-              <X className="mr-1 w-4 h-4" />
-              Xóa tất cả
-            </Button>
-          )}
         </div>
 
-        <div className="space-y-4">
-          {/* Search Input */}
-          <div className="space-y-2">
-            <Label className="font-medium text-sm">Tìm kiếm</Label>
-            <div className="relative">
-              <Search className="top-1/2 left-3 absolute w-4 h-4 text-gray-400 -translate-y-1/2 transform" />
-              <Input
-                type="text"
-                placeholder="Tìm kiếm theo tên, mô tả..."
-                value={searchValue}
-                onChange={e => handleSearchChange(e.target.value)}
-                className="pl-10"
-              />
-            </div>
-          </div>
-
-          {/* Status Filter */}
-          <div className="space-y-2">
-            <Label className="font-medium text-sm">Trạng thái</Label>
-            <StatusFilter
-              value={filters.status}
-              onChange={handleStatusChange}
+        <div className="space-y-2">
+          <Label className="font-medium text-sm">Tìm kiếm</Label>
+          <div className="relative">
+            <Search className="top-1/2 left-3 absolute w-4 h-4 text-gray-400 -translate-y-1/2 transform" />
+            <Input
+              type="text"
+              placeholder="Tìm kiếm theo tên, mô tả..."
+              value={searchValue}
+              onChange={e => handleSearchChange(e.target.value)}
+              className="pl-10"
             />
           </div>
         </div>
       </div>
     </div>
-  );
-};
-
-/**
- * Status filter component
- */
-const StatusFilter = ({
-  value,
-  onChange,
-}: {
-  value: string;
-  onChange: (value: string) => void;
-}): React.JSX.Element => {
-  const statusOptions = [
-    { id: "all", name: "Tất cả trạng thái" },
-    { id: "active", name: "Hoạt động" },
-    { id: "inactive", name: "Không hoạt động" },
-  ];
-
-  return (
-    <BaseSelect
-      items={statusOptions}
-      value={value}
-      onValueChange={onChange}
-      placeholder="Chọn trạng thái..."
-      className="w-full"
-    />
   );
 };

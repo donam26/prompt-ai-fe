@@ -6,9 +6,11 @@ import { Filter, X } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import type { IndustryFilterState } from "@/types/admin/industry";
+import type { Category } from "@/types";
 
 interface IndustryActiveFiltersProps {
   filters: IndustryFilterState;
+  categories: Category[];
   onFilterChange: (filters: IndustryFilterState) => void;
   onClearAll: () => void;
   onPageReset?: () => void;
@@ -16,6 +18,7 @@ interface IndustryActiveFiltersProps {
 
 export const IndustryActiveFilters = ({
   filters,
+  categories,
   onFilterChange,
   onClearAll,
   onPageReset,
@@ -30,10 +33,20 @@ export const IndustryActiveFilters = ({
 
     if (key === "searchTerm") {
       newFilters.searchTerm = "";
-    } else if (key === "status") {
-      newFilters.status = "all";
+    } else if (key === "categoryIds") {
+      newFilters.categoryIds = [];
     }
 
+    onFilterChange(newFilters);
+    onPageReset?.();
+  };
+
+  // Helper to remove a specific category
+  const handleRemoveCategory = (categoryId: string) => {
+    const newFilters = { ...filters };
+    newFilters.categoryIds = (newFilters.categoryIds || []).filter(
+      id => id !== categoryId
+    );
     onFilterChange(newFilters);
     onPageReset?.();
   };
@@ -41,7 +54,7 @@ export const IndustryActiveFilters = ({
   // Calculate active filter count
   const activeTotal = [
     filters.searchTerm && filters.searchTerm !== "",
-    filters.status && filters.status !== "all",
+    filters.categoryIds && filters.categoryIds.length > 0,
   ].filter(Boolean).length;
 
   if (activeTotal === 0) {
@@ -68,25 +81,36 @@ export const IndustryActiveFilters = ({
         </Badge>
       )}
 
-      {/* Status filter */}
-      {filters.status && filters.status !== "all" && (
-        <Badge key="status" variant="secondary" className="gap-1">
-          <span className="text-xs">Trạng thái: {filters.status}</span>
-          <X
-            className="w-3 h-3 cursor-pointer"
-            onClick={() => handleRemoveFilter("status")}
-          />
-        </Badge>
+      {/* Category filters */}
+      {filters.categoryIds && filters.categoryIds.length > 0 && (
+        <>
+          {filters.categoryIds.map(categoryId => {
+            const category = categories.find(
+              cat => cat.id.toString() === categoryId
+            );
+            return (
+              <Badge
+                key={`category-${categoryId}`}
+                variant="secondary"
+                className="gap-1"
+              >
+                <span className="text-xs">
+                  Danh mục: {category?.name || categoryId}
+                </span>
+                <X
+                  className="w-3 h-3 cursor-pointer"
+                  onClick={() => handleRemoveCategory(categoryId)}
+                />
+              </Badge>
+            );
+          })}
+        </>
       )}
 
-      {/* Clear all button */}
       <Button
         variant="ghost"
         size="sm"
-        onClick={() => {
-          onClearAll();
-          onPageReset?.();
-        }}
+        onClick={onClearAll}
         className="hover:bg-gray-100 px-4 py-2 border border-gray-300 rounded-full text-xs"
       >
         Xóa tất cả ({activeTotal})

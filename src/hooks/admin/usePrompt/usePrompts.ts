@@ -6,7 +6,7 @@ import {
   DEFAULT_TOTAL_PAGES,
 } from "@/constants";
 import { promptService } from "@/services/admin/prompts/promptService";
-import { applyNonEmptyFiltersToQuery, buildPromptsQueryString } from "@/utils";
+import { applyNonEmptyFiltersToQuery, buildQueryString } from "@/utils";
 import type { PaginationParams } from "@/types/base";
 import { useDeepMemo } from "@/hooks/useDeepMemo";
 
@@ -62,13 +62,13 @@ export function usePrompts(options: Props = {}) {
 
     try {
       const query: Record<string, unknown> = {
-        page: memoizedPageIndex + 1,
-        limit: memoizedPageSize,
+        pageIndex: memoizedPageIndex + 1,
+        pageSize: memoizedPageSize,
         ...memoizedFilters,
       };
 
       // Build query string for API call with proper array handling
-      const queryString = buildPromptsQueryString(query);
+      const queryString = buildQueryString(query);
       applyNonEmptyFiltersToQuery(filters, query);
 
       const response =

@@ -6,6 +6,8 @@ import { Filter, X } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import type { PaymentFilterState } from "@/types/admin/payment";
+import { PAYMENT_STATUS_LABELS } from "@/constants/payment-status";
+import { useSubscriptions } from "@/hooks/admin/useSubscription";
 
 interface PaymentActiveFiltersProps {
   filters: PaymentFilterState;
@@ -20,6 +22,9 @@ export const PaymentActiveFilters = ({
   onClearAll,
   onPageReset,
 }: PaymentActiveFiltersProps): React.JSX.Element => {
+  // Fetch subscriptions data for display
+  const { subscriptions } = useSubscriptions({});
+
   if (!filters) {
     return <></>;
   }
@@ -34,6 +39,8 @@ export const PaymentActiveFilters = ({
       newFilters.status = "all";
     } else if (key === "paymentMethod") {
       newFilters.method = "all";
+    } else if (key === "subscriptionIds") {
+      newFilters.subscriptionIds = [];
     } else if (key === "dateRange") {
       newFilters.dateRange = { from: "", to: "" };
     }
@@ -47,6 +54,7 @@ export const PaymentActiveFilters = ({
     filters.searchTerm && filters.searchTerm !== "",
     filters.status && filters.status !== "all",
     filters.method && filters.method !== "all",
+    filters.subscriptionIds && filters.subscriptionIds.length > 0,
     filters.dateRange.from || filters.dateRange.to,
   ].filter(Boolean).length;
 
@@ -77,7 +85,12 @@ export const PaymentActiveFilters = ({
       {/* Status filter */}
       {filters.status && filters.status !== "all" && (
         <Badge key="status" variant="secondary" className="gap-1">
-          <span className="text-xs">Trạng thái: {filters.status}</span>
+          <span className="text-xs">
+            Trạng thái:{" "}
+            {PAYMENT_STATUS_LABELS[
+              filters.status as keyof typeof PAYMENT_STATUS_LABELS
+            ] || filters.status}
+          </span>
           <X
             className="w-3 h-3 cursor-pointer"
             onClick={() => handleRemoveFilter("status")}
@@ -92,6 +105,26 @@ export const PaymentActiveFilters = ({
           <X
             className="w-3 h-3 cursor-pointer"
             onClick={() => handleRemoveFilter("method")}
+          />
+        </Badge>
+      )}
+
+      {/* Subscription filter */}
+      {filters.subscriptionIds && filters.subscriptionIds.length > 0 && (
+        <Badge key="subscription" variant="secondary" className="gap-1">
+          <span className="text-xs">
+            Gói:{" "}
+            {filters.subscriptionIds
+              .map(
+                id =>
+                  subscriptions.find(sub => sub.id.toString() === id)?.name ||
+                  id
+              )
+              .join(", ")}
+          </span>
+          <X
+            className="w-3 h-3 cursor-pointer"
+            onClick={() => handleRemoveFilter("subscriptionIds")}
           />
         </Badge>
       )}

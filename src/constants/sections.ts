@@ -4,12 +4,33 @@ export const SECTIONS_CONSTANTS = {
   // Initial filter state
   INITIAL_FILTERS: {
     searchTerm: "",
-    status: "",
-    dateRange: {
-      from: "",
-      to: "",
-    },
   } as SectionFilterState,
+
+  // Messages
+  MESSAGES: {
+    DELETE_SUCCESS: "Section đã được xóa thành công",
+    DELETE_CONFIRM: "Bạn có chắc chắn muốn xóa section này không?",
+    CREATE_SUCCESS: "Section đã được tạo thành công",
+    UPDATE_SUCCESS: "Section đã được cập nhật thành công",
+  },
+
+  // Form fields
+  FORM: {
+    FIELDS: {
+      NAME: {
+        LABEL: "Tên Section",
+        PLACEHOLDER: "Nhập tên section",
+      },
+      DESCRIPTION: {
+        LABEL: "Mô tả",
+        PLACEHOLDER: "Nhập mô tả section",
+      },
+      STATUS: {
+        LABEL: "Trạng thái",
+        PLACEHOLDER: "Chọn trạng thái",
+      },
+    },
+  },
 
   // Pagination
   PAGINATION: {
@@ -29,6 +50,12 @@ export const SECTIONS_CONSTANTS = {
     ACTIVE: "active",
     INACTIVE: "inactive",
   },
+
+  // Status options
+  STATUS_OPTIONS: [
+    { id: "active", name: "Hoạt động" },
+    { id: "inactive", name: "Không hoạt động" },
+  ],
 
   // Table columns
   TABLE_COLUMNS: {

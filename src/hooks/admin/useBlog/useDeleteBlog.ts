@@ -1,7 +1,6 @@
 import type { Blog } from "@/types";
 import { useCallback, useState } from "react";
 import { blogService } from "@/services/admin/blogs/blogService";
-import { showToast } from "@/components/ui/toast";
 
 interface IResponse {
   isLoading: boolean;
@@ -19,13 +18,11 @@ export function useDeleteBlog(): IResponse {
 
     try {
       await blogService.deleteBlog(blog.id);
-      showToast.success("Blog deleted successfully!");
       return true;
     } catch (error: unknown) {
       const errorMessage =
         error instanceof Error ? error.message : "Failed to delete blog";
       setError(() => errorMessage);
-      showToast.error(errorMessage);
       return false;
     } finally {
       setIsLoading(() => false);

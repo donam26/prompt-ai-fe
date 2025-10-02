@@ -58,23 +58,6 @@ export class SubscriptionService extends BaseService {
   async deleteSubscription(id: string | number) {
     return this.delete<void>(id);
   }
-
-  /**
-   * Get subscription by duration
-   */
-  async getSubscriptionByDuration(duration: string) {
-    return this.list({ [QUERY_PARAMS.DURATION]: duration });
-  }
-
-  /**
-   * Get subscription by duration and type
-   */
-  async getSubscriptionByDurationAndType(duration: string, type: string) {
-    return this.list({
-      [QUERY_PARAMS.DURATION]: duration,
-      type,
-    });
-  }
 }
 
 // Export singleton instance

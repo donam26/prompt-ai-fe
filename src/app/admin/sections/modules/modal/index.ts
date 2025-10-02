@@ -1,2 +1,2 @@
 // Modal components
-// export * from "./section-form-modal";
+export * from "./section-form-modal";

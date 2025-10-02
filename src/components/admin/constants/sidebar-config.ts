@@ -26,9 +26,6 @@ import {
 } from "lucide-react";
 import type { SidebarItemType } from "@/components/admin/types/sidebar";
 
-/**
- * Sidebar navigation configuration with proper grouping
- */
 export const sidebarConfig: SidebarItemType[] = [
   // Dashboard
   {
@@ -41,7 +38,6 @@ export const sidebarConfig: SidebarItemType[] = [
   // Content Management
   {
     name: "Quản lý Nội dung",
-    href: "/admin/prompts",
     icon: FileText,
     permission: "content",
     children: [
@@ -59,13 +55,14 @@ export const sidebarConfig: SidebarItemType[] = [
       },
       {
         name: "Quản lý loại Blog",
-        href: "/admin/blogcategory",
+        href: "/admin/blog-category",
         icon: BookOpen,
         permission: "blog_category",
+        isDisabled: true,
       },
       {
         name: "Quản lý chủ đề",
-        href: "/admin/topic",
+        href: "/admin/topics",
         icon: Tag,
         permission: "topic",
       },
@@ -87,21 +84,35 @@ export const sidebarConfig: SidebarItemType[] = [
   // User Management
   {
     name: "Quản lý Người dùng",
-    href: "/admin/users",
     icon: Users,
     permission: "users",
     children: [
       {
         name: "Quản lý User",
-        href: "/admin/user",
+        href: "/admin/users",
         icon: Users,
-        permission: "user",
+        permission: "users",
       },
       {
         name: "Quản lý vai trò",
-        href: "/admin/role",
+        href: "/admin/roles",
         icon: Shield,
-        permission: "role",
+        permission: "roles",
+      },
+    ],
+  },
+
+  // Subscription Management
+  {
+    name: "Quản lý Gói đăng ký",
+    icon: CreditCard,
+    permission: "subscription",
+    children: [
+      {
+        name: "Danh sách gói đăng ký",
+        href: "/admin/subscriptions",
+        icon: CreditCard,
+        permission: "subscription",
       },
     ],
   },
@@ -109,9 +120,8 @@ export const sidebarConfig: SidebarItemType[] = [
   // Business Management
   {
     name: "Quản lý Kinh doanh",
-    href: "/admin/business",
     icon: Building,
-    permission: "business",
+    permission: "industry",
     children: [
       {
         name: "Quản lý ngành nghề",
@@ -126,14 +136,8 @@ export const sidebarConfig: SidebarItemType[] = [
         permission: "product",
       },
       {
-        name: "Quản lý gói đăng ký",
-        href: "/admin/sub",
-        icon: CreditCard,
-        permission: "subscription",
-      },
-      {
         name: "Quản lý Coupon",
-        href: "/admin/coupon",
+        href: "/admin/coupons",
         icon: Gift,
         permission: "coupon",
       },
@@ -149,13 +153,12 @@ export const sidebarConfig: SidebarItemType[] = [
   // Communication
   {
     name: "Giao tiếp",
-    href: "/admin/communication",
     icon: MessageSquare,
     permission: "communication",
     children: [
       {
         name: "Support",
-        href: "/admin/contact",
+        href: "/admin/contacts",
         icon: Mail,
         permission: "contact",
       },
@@ -290,6 +293,12 @@ export const quickActions = [
     href: "/admin/blog/create",
     icon: BookOpen,
     permission: "blog_create",
+  },
+  {
+    name: "Tạo gói đăng ký",
+    href: "/admin/subscriptions/new",
+    icon: CreditCard,
+    permission: "subscription_create",
   },
   {
     name: "Quản lý User",

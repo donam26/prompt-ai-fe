@@ -5,6 +5,7 @@ export interface PaymentFilterState {
   readonly searchTerm: string;
   readonly status: string;
   readonly method: string;
+  readonly subscriptionIds?: string[];
   readonly dateRange: {
     readonly from: string;
     readonly to: string;

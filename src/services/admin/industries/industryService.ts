@@ -17,11 +17,10 @@ export class IndustryService extends BaseService {
     return this.list(params);
   }
 
-  /**
-   * Get industries with pagination
-   */
-  async getIndustriesPage(params?: Record<string, unknown>) {
-    return this.list(params);
+  async getIndustriesPageWithQueryString(queryString: string) {
+    const { apiClient } = await import("../../base/apiClient");
+    const response = await apiClient.get(`${this.baseUrl}?${queryString}`);
+    return response;
   }
 
   /**

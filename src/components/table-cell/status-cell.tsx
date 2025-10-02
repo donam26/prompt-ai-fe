@@ -18,6 +18,13 @@ const STATUS_THEMES = {
     icon: Globe,
     label: "Hoạt động",
   },
+  inactive: {
+    bg: "bg-gray-50",
+    text: "text-gray-700",
+    border: "border-gray-200",
+    icon: Lock,
+    label: "Không hoạt động",
+  },
   comingSoon: {
     bg: "bg-amber-50",
     text: "text-amber-700",
@@ -36,11 +43,11 @@ const STATUS_THEMES = {
 
 export function StatusCell({
   isComingSoon = false,
-  // isActive = true,
+  isActive = true,
   isDeleted = false,
   className,
 }: StatusCellProps) {
-  let theme = STATUS_THEMES.active;
+  let theme = isActive ? STATUS_THEMES.active : STATUS_THEMES.inactive;
 
   if (isDeleted) {
     theme = STATUS_THEMES.deleted;

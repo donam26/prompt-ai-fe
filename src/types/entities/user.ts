@@ -13,6 +13,8 @@ export interface User extends BaseEntity {
   countPrompt?: number;
   userSub?: UserSubscription;
   avatar?: string;
+  accountStatus: number;
+  otpExpiresAt?: Timestamp;
 }
 
 // User subscription
@@ -37,6 +39,8 @@ export interface Subscription extends BaseEntity {
   price: number;
   features: string[];
   description?: string;
+  billingCycle: string;
+  imageDiscount?: string;
 }
 
 // Role entity

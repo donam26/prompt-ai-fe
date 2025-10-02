@@ -79,11 +79,7 @@ export function useCategoryColumns({
       cell: ({ row }) => (
         <div className="hidden md:block">
           <BadgeCell
-            label={
-              row.original.Section?.name ||
-              row.original.section?.name ||
-              "Chưa phân loại"
-            }
+            label={row.original.section?.name || "Chưa phân loại"}
             variant="section"
             maxWidth="max-w-[100px]"
           />

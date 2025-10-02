@@ -1,24 +1,17 @@
+import type { BaseEntity, EntityId } from "@/types/base";
+
 /**
- * Contact related entities và types
+ * Contact entity interface
  */
-
-import type { BaseEntity, EntityId } from "../base";
-
-// Contact entity
 export interface Contact extends BaseEntity {
   name: string;
   email: string;
-  phone?: string;
+  phoneNumber?: string | null;
   message: string;
-  type: number;
-  status: string;
-  reply?: string;
-}
-
-// Device log entity
-export interface DeviceLog extends BaseEntity {
-  userId: EntityId;
-  deviceInfo: string;
-  ipAddress: string;
-  userAgent: string;
+  status?: number | null;
+  reply?: string | null;
+  type?: number | null;
+  repliedAt?: string;
+  repliedBy?: EntityId;
+  repliedMessage?: string;
 }
