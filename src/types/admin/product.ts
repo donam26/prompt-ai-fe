@@ -1,4 +1,4 @@
-import type { Category, Section } from "@/types";
+import type { Section } from "@/types";
 
 /**
  * Product filter state interface

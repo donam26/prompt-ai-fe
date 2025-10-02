@@ -49,11 +49,11 @@ export function PromptAdvancedFields({ control, isDisabled }: Props) {
       {/* Optimization Guide */}
       <FormField
         control={control}
-        name="OptimationGuide"
+        name="optimizationGuide"
         render={({
           field,
         }: {
-          field: ControllerRenderProps<PromptFormValues, "OptimationGuide">;
+          field: ControllerRenderProps<PromptFormValues, "optimizationGuide">;
         }) => (
           <FormItem>
             <FormLabel>Optimization Guide</FormLabel>

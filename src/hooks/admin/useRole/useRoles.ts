@@ -96,7 +96,7 @@ export function useRoles(options: Props = {}) {
       isFetchingRef.current = false;
       setIsFetching(false);
     }
-  }, [memoizedPageIndex, memoizedPageSize, memoizedFilters, enabled]);
+  }, [memoizedPageIndex, memoizedPageSize, memoizedFilters, enabled, filters]);
 
   useEffect(() => {
     fetchRoles();

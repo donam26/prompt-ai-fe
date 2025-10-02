@@ -7,7 +7,6 @@ import {
   DEFAULT_TOTAL_PAGES,
 } from "@/constants";
 import { subscriptionService } from "@/services/admin/subscriptions/subscriptionService";
-import { applyNonEmptyFiltersToQuery } from "@/utils";
 import type { PaginationParams } from "@/types/base";
 import type { ApiCallResult } from "@/types/services/common";
 import { useDeepMemo } from "@/hooks/useDeepMemo";

@@ -39,11 +39,7 @@ export default function ProductManagementPage(): React.JSX.Element {
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
-  const {
-    productsWithPagination,
-    isFetching: productsLoading,
-    refetch,
-  } = useProducts({
+  const { productsWithPagination, isFetching: productsLoading } = useProducts({
     pagination,
     filters,
   });
@@ -66,9 +62,6 @@ export default function ProductManagementPage(): React.JSX.Element {
   const isLoading = productsLoading || isDeleting;
 
   // Modal handlers
-  const handleViewProduct = (product: Product) => {
-    router.push(PRODUCT_CONSTANTS.ROUTES.PRODUCT_DETAIL(product.id));
-  };
 
   const handleEditProduct = (product: Product) => {
     router.push(PRODUCT_CONSTANTS.ROUTES.PRODUCT_EDIT(product.id));

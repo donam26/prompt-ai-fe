@@ -12,8 +12,6 @@ import {
 import { AdminContentCard, AdminPageLayout } from "@/components/admin";
 import { Button } from "@/components/ui/button";
 import { BadgeCell } from "@/components/table-cell";
-import { Separator } from "@/components/ui/separator";
-import { PAYMENTS_CONSTANTS } from "@/constants/payments";
 import { getPaymentStatusConfig } from "@/constants/payment-status";
 
 export interface Props {

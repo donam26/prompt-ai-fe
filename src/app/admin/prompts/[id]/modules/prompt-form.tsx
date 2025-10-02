@@ -51,7 +51,7 @@ export const PromptForm = ({
     });
 
   // Fetch industries data with category filter - only when category is selected
-  const { industriesWithPagination, isLoading: industriesLoading } =
+  const { industriesWithPagination, isFetching: industriesLoading } =
     useIndustries({
       pagination: {
         pageIndex: 1,

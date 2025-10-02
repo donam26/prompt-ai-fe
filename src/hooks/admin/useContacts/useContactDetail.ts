@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { contactService } from "@/services/admin/contacts/contactService";
 import type { Contact } from "@/types/entities/contact";
 
@@ -14,7 +14,7 @@ export function useContactDetail(id?: string): IResponse {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string>("");
 
-  const fetchContact = async () => {
+  const fetchContact = useCallback(async () => {
     if (!id) {
       setContact(null);
       return;
@@ -37,11 +37,11 @@ export function useContactDetail(id?: string): IResponse {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [id]);
 
   useEffect(() => {
     fetchContact();
-  }, [id]);
+  }, [id, fetchContact]);
 
   return {
     contact,

@@ -28,7 +28,7 @@ export function useUpdateRole({ id }: UseUpdateRoleParams): IResponse {
           permissions: data.permissions,
         };
 
-        await roleService.updateRole(id, roleData);
+        await roleService.updateRole(id.toString(), roleData);
         return true;
       } catch (error: unknown) {
         const errorMessage =

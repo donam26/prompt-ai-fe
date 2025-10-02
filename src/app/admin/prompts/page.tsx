@@ -23,7 +23,6 @@ import {
   DEFAULT_TOTAL,
 } from "@/constants";
 import { DataTable } from "@/components/data-table";
-import { showToast } from "@/components/ui/toast";
 
 export default function PromptManagementPage(): React.JSX.Element {
   const router = useRouter();

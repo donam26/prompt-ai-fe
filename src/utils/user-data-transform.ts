@@ -13,6 +13,7 @@ interface ApiUser {
   profileImage?: string;
   avatar?: string;
   createdAt?: string;
+  accountStatus?: number;
 }
 
 /**
@@ -34,6 +35,7 @@ export const transformUserData = (apiUser: unknown): User => {
     userSub: user.userSub as User["userSub"],
     avatar: user.profileImage || user.avatar,
     createdAt: user.createdAt || "",
+    accountStatus: user.accountStatus || 1,
   };
 };
 

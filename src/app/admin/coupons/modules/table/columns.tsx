@@ -23,7 +23,7 @@ const CopyCodeButton = ({ code }: { code: string }) => {
       setTimeout(() => {
         setIsCopied(false);
       }, 2000);
-    } catch (error) {
+    } catch {
       showToast.error(COUPON_CONSTANTS.MESSAGES.COPY_ERROR);
     }
   };
@@ -226,7 +226,6 @@ export function useCouponColumns({
       meta: { title: "Ngày tạo" },
       header: () => <div className="font-medium">Ngày tạo</div>,
       cell: ({ row }) => {
-        console.log("CreatedAt data:", row.original.createdAt);
         return (
           <div>
             <span className="text-gray-600 text-sm">

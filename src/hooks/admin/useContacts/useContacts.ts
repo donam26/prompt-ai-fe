@@ -77,7 +77,7 @@ export function useContacts(options: Props = {}) {
       };
 
       // Build query string for API call with proper array handling
-      const queryString = buildQueryString(query);
+      buildQueryString(query);
       applyNonEmptyFiltersToQuery(
         memoizedFilters as Record<string, unknown>,
         query

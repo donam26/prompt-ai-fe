@@ -1,5 +1,3 @@
-import type { BaseFilterProps } from "../base";
-
 export interface BlogFormData {
   readonly id?: string | number;
   readonly title: string;

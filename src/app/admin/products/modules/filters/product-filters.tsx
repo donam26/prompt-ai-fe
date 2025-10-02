@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button";
 import { MultiSelect } from "@/components/ui/multi-select";
 import { debounce } from "@/lib/utils";
 import type { ProductFilterProps } from "@/types/admin/product";
-import type { Category, Section } from "@/types";
+import type { Section } from "@/types";
 import { ProductActiveFilters } from "./product-active-filters";
 
 export const ProductFilter = ({

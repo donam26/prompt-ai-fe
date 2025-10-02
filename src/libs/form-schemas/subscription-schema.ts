@@ -30,9 +30,7 @@ export const subscriptionFormSchema = z
         SUBSCRIPTIONS_CONSTANTS.VALIDATION.DURATION_MIN,
         "Số token phải lớn hơn 0"
       ),
-    billingCycle: z.nativeEnum(BillingCycle, {
-      errorMap: () => ({ message: "Chu kỳ thanh toán không hợp lệ" }),
-    }),
+    billingCycle: z.nativeEnum(BillingCycle),
     price: z.string().min(1, "Giá tiền là bắt buộc"),
     priceYear: z.string().optional(),
     isPopular: z.boolean().optional(),
@@ -44,7 +42,7 @@ export const subscriptionFormSchema = z
     contentSubscriptions: z.array(contentSubscriptionSchema).optional(),
   })
   .refine(
-    data => {
+    () => {
       // Additional validation if needed
       return true;
     },

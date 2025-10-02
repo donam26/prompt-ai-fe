@@ -6,16 +6,8 @@ import { Search, X } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { debounce } from "@/lib/utils";
 import type { SubscriptionFilterProps } from "@/types/admin/subscription";
-import { SUBSCRIPTIONS_CONSTANTS } from "@/constants/subscriptions";
 
 export const SubscriptionFilters = ({
   filters,
@@ -108,7 +100,6 @@ export const SubscriptionFilters = ({
 const SubscriptionActiveFilters = ({
   filters,
   onFilterChange,
-  onClearAll,
   onPageReset,
 }: {
   filters: any;

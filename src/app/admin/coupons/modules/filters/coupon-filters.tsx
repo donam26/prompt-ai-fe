@@ -39,16 +39,6 @@ export const CouponFilters = ({
     onPageReset?.();
   };
 
-  const handleDateFromChange = (date: string) => {
-    onFilterChange({ ...filters, dateFrom: date });
-    onPageReset?.();
-  };
-
-  const handleDateToChange = (date: string) => {
-    onFilterChange({ ...filters, dateTo: date });
-    onPageReset?.();
-  };
-
   const handleClearFilters = () => {
     onClearFilters();
     onPageReset?.();
@@ -59,12 +49,7 @@ export const CouponFilters = ({
     onPageReset?.();
   };
 
-  const hasActiveFilters =
-    filters.searchTerm ||
-    filters.type ||
-    filters.status ||
-    filters.dateFrom ||
-    filters.dateTo;
+  const hasActiveFilters = filters.searchTerm || filters.type || filters.status;
 
   return (
     <div className={`space-y-4 ${className}`}>

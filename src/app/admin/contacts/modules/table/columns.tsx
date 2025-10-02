@@ -2,7 +2,7 @@ import type { ColumnDef } from "@tanstack/react-table";
 import type { Contact } from "@/types";
 import { Column } from "@/components/data-table/data-table";
 import { BadgeCell, ActionsCell } from "@/components/table-cell";
-import { Mail, Phone, User, MessageSquare, Tag } from "lucide-react";
+import { Mail, Phone, User, MessageSquare } from "lucide-react";
 import {
   getContactStatusConfig,
   getContactTypeConfig,

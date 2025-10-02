@@ -2,8 +2,8 @@
 
 import type { Coupon } from "@/types/entities/coupon";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useCallback, useEffect, useMemo, useState } from "react";
-import { useForm, Controller } from "react-hook-form";
+import { useCallback, useMemo, useState } from "react";
+import { useForm } from "react-hook-form";
 import { AdminContentCard, AdminPageLayout } from "@/components/admin";
 import { FormActions } from "@/components/form-actions";
 import { FormSwitch } from "@/components/form-switch";
@@ -15,7 +15,6 @@ import {
   getCouponFormDefaultValues,
   type CouponFormData,
 } from "@/libs/form-schemas/coupon-schema";
-import { COUPON_CONSTANTS } from "@/constants/coupon";
 
 export interface Props {
   mode: FormMode;

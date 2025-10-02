@@ -82,7 +82,6 @@ export const UserForm = ({
     control,
     handleSubmit,
     setValue,
-    watch,
     formState: { errors, isDirty },
   } = form;
 
@@ -96,20 +95,12 @@ export const UserForm = ({
     }
   }, [user, setValue, getDefaultValues]);
 
-  const formData = watch();
   const isDisabled = useMemo(() => {
-    console.log("isDisabled calculation:", {
-      isSaving,
-      isDirty,
-      result: isSaving || !isDirty,
-    });
     return isSaving || !isDirty;
   }, [isSaving, isDirty]);
 
   const onSubmit = useCallback(
     async (data: UserFormSchema) => {
-      console.log("UserForm onSubmit called with data:", data);
-
       const userData: Partial<User> = {
         fullName: data.fullName,
         email: data.email,
@@ -139,7 +130,6 @@ export const UserForm = ({
         } as UserSubscription;
       }
 
-      console.log("UserForm calling onSave with userData:", userData);
       onSave(userData);
     },
     [onSave]
@@ -195,19 +185,7 @@ export const UserForm = ({
       <Form {...form}>
         <form
           id="user-form"
-          onSubmit={e => {
-            console.log("Form submit triggered");
-            e.preventDefault();
-            handleSubmit(
-              data => {
-                console.log("Form validation passed, calling onSubmit");
-                onSubmit(data);
-              },
-              errors => {
-                console.log("Form validation failed:", errors);
-              }
-            )(e);
-          }}
+          onSubmit={handleSubmit(onSubmit)}
           className="space-y-6"
         >
           {/* Basic Information */}

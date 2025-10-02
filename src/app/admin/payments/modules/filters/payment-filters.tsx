@@ -1,11 +1,10 @@
 "use client";
 
 import React, { useCallback, useLayoutEffect, useMemo, useState } from "react";
-import { Search, X } from "lucide-react";
+import { Search } from "lucide-react";
 
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Button } from "@/components/ui/button";
 import { BaseSelect } from "@/components/ui/base-select";
 import { MultiSelect } from "@/components/ui/multi-select";
 import { debounce } from "@/lib/utils";
@@ -83,14 +82,6 @@ export const PaymentFilters = ({
     });
     onPageReset?.();
   };
-
-  const hasActiveFilters =
-    filters.searchTerm ||
-    filters.status !== "all" ||
-    filters.method !== "all" ||
-    (filters.subscriptionIds && filters.subscriptionIds.length > 0) ||
-    filters.dateRange.from ||
-    filters.dateRange.to;
 
   return (
     <div className={`space-y-4 ${className || ""}`}>

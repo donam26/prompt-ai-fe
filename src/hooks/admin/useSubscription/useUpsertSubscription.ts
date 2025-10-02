@@ -1,6 +1,6 @@
 import { useState, useCallback } from "react";
 import { subscriptionService } from "@/services/admin/subscriptions/subscriptionService";
-import type { SubscriptionFormData } from "@/types/admin/subscription";
+import { Subscription } from "@/types/entities/user";
 
 export const useUpsertSubscription = () => {
   const [isUpserting, setIsUpserting] = useState(false);
@@ -8,7 +8,7 @@ export const useUpsertSubscription = () => {
 
   const mutate = useCallback(
     async (
-      subscriptionData: SubscriptionFormData,
+      subscriptionData: Partial<Subscription>,
       id?: string | number
     ): Promise<boolean> => {
       try {
@@ -16,7 +16,10 @@ export const useUpsertSubscription = () => {
         setError(null);
 
         if (id) {
-          await subscriptionService.updateSubscription(id, subscriptionData);
+          await subscriptionService.updateSubscription(
+            id.toString(),
+            subscriptionData
+          );
         } else {
           await subscriptionService.createSubscription(subscriptionData);
         }

@@ -2,7 +2,6 @@ import type { ColumnDef } from "@tanstack/react-table";
 import type { Product } from "@/types";
 import { Column } from "@/components/data-table/data-table";
 import { ImageCell, BadgeCell, ActionsCell } from "@/components/table-cell";
-import { PRODUCT_CONSTANTS } from "@/constants/product";
 import { Package, Copy, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
@@ -22,7 +21,7 @@ const CopyLinkButton = ({ link }: { link: string }) => {
       setTimeout(() => {
         setIsCopied(false);
       }, 2000);
-    } catch (error) {
+    } catch {
       showToast.error("Không thể copy link");
     }
   };

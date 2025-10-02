@@ -16,7 +16,6 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { AdminContentCard, AdminPageLayout } from "@/components/admin";
 import { FormActions } from "@/components/form-actions";
 import { FormMode, BUTTON_TEXT } from "@/constants/common";

@@ -2,7 +2,6 @@ import type { Contact } from "@/types/entities/contact";
 import { useCallback, useState } from "react";
 import { contactService } from "@/services/admin/contacts/contactService";
 import { showToast } from "@/components/ui/toast";
-import { CONTACTS_CONSTANTS } from "@/constants/contacts";
 
 interface IResponse {
   isUpserting: boolean;

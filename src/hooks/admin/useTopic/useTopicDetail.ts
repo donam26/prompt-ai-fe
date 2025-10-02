@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { topicService } from "@/services/admin/topics/topicService";
 import type { Topic } from "@/types";
 
@@ -20,7 +20,7 @@ export function useTopicDetail({
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string>("");
 
-  const fetchTopic = async (): Promise<void> => {
+  const fetchTopic = useCallback(async (): Promise<void> => {
     if (!id) return;
 
     setIsLoading(true);
@@ -28,7 +28,7 @@ export function useTopicDetail({
 
     try {
       const response = await topicService.getTopic(id);
-      setTopic(response.data);
+      setTopic(response.data || null);
     } catch (err: unknown) {
       const errorMessage =
         err instanceof Error ? err.message : "Failed to fetch topic";
@@ -37,11 +37,11 @@ export function useTopicDetail({
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [id]);
 
   useEffect(() => {
     fetchTopic();
-  }, [id]);
+  }, [id, fetchTopic]);
 
   return {
     topic,

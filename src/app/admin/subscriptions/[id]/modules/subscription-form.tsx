@@ -17,8 +17,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { AdminContentCard, AdminPageLayout } from "@/components/admin";
 import { FormImageSection } from "@/components/form-image-section";
 import { FormActions } from "@/components/form-actions";
-import { FormMode, BUTTON_TEXT } from "@/constants/common";
-import { BillingCycle, BILLING_CYCLE_OPTIONS } from "@/types/enums";
+import { BUTTON_TEXT } from "@/constants/common";
+import { BILLING_CYCLE_OPTIONS } from "@/types/enums";
 import { Plus, Trash2 } from "lucide-react";
 import type { SubscriptionFormProps } from "@/types/admin/subscription";
 import {
@@ -26,7 +26,6 @@ import {
   getSubscriptionFormDefaultValues,
   type SubscriptionFormSchema,
 } from "@/libs/form-schemas";
-import { SUBSCRIPTIONS_CONSTANTS } from "@/constants/subscriptions";
 import { Form } from "@/components/ui/form";
 
 export const SubscriptionForm = ({
@@ -70,7 +69,6 @@ export const SubscriptionForm = ({
     }
   }, [subscription, setValue, getDefaultValues]);
 
-  const formData = watch();
   const isDisabled = useMemo(() => {
     return isLoading || !isDirty || isUploading;
   }, [isLoading, isDirty, isUploading]);

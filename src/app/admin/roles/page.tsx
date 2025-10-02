@@ -22,7 +22,6 @@ import {
   DEFAULT_TOTAL,
 } from "@/constants";
 import { DataTable } from "@/components/data-table";
-import { showToast } from "@/components/ui/toast";
 import { ActionModal } from "@/components/admin/action-modal";
 
 export default function RoleManagementPage(): React.JSX.Element {

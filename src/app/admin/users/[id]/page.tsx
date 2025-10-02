@@ -41,11 +41,7 @@ export default function UserEditPage(): React.JSX.Element {
 
   const handleSave = useCallback(
     async (data: Partial<User>) => {
-      console.log("handleSave called with data:", data);
-      console.log("userIdToUpdate:", userIdToUpdate);
-
       const result = await upsertUser(data, userIdToUpdate);
-      console.log("upsertUser result:", result);
 
       if (result) {
         showToast.success(

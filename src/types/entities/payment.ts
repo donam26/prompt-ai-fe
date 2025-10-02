@@ -1,7 +1,3 @@
-/**
- * Payment related entities và types
- */
-
 import type { BaseEntity, EntityId } from "../base";
 import type { User } from "./user";
 
@@ -23,21 +19,6 @@ export interface Payment extends BaseEntity {
     type: number;
     price: number;
   };
-}
-
-// Coupon entity
-export interface Coupon extends BaseEntity {
-  code: string;
-  description?: string;
-  discountType: string; // 'percentage' | 'fixed'
-  discountValue: number;
-  minAmount?: number;
-  maxDiscount?: number;
-  usageLimit?: number;
-  usedCount: number;
-  startDate: string;
-  endDate: string;
-  isActive: boolean;
 }
 
 // PaymentProduct entity

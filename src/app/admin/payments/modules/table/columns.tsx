@@ -2,7 +2,7 @@ import type { ColumnDef } from "@tanstack/react-table";
 import type { Payment } from "@/types";
 import { Column } from "@/components/data-table/data-table";
 import { BadgeCell, ActionsCell } from "@/components/table-cell";
-import { CreditCard, DollarSign, User, Package } from "lucide-react";
+import { CreditCard, DollarSign, Package } from "lucide-react";
 import { useSubscriptions } from "@/hooks/admin/useSubscription";
 import { getPaymentStatusConfig } from "@/constants/payment-status";
 

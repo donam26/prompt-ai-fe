@@ -4,7 +4,7 @@ import { useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
 
 import { AdminContentCard } from "@/components/admin/common/admin-content-card";
-import { CouponHeader, CouponFilters, CouponActiveFilters } from "./modules";
+import { CouponHeader, CouponFilters } from "./modules";
 import { useCouponColumns, adaptColumnsForDataTable } from "./modules/table";
 import { COUPON_CONSTANTS } from "@/constants/coupon";
 import { useCoupons, useDeleteCoupon } from "@/hooks/admin/useCoupon";

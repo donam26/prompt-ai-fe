@@ -1,6 +1,5 @@
 import { useCallback, useState } from "react";
 import { roleService } from "@/services/admin/roles/roleService";
-import type { Role } from "@/types";
 import type { RoleFormData } from "@/types/admin/role";
 
 interface IResponse {

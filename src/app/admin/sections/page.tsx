@@ -23,7 +23,6 @@ import {
   DEFAULT_TOTAL,
 } from "@/constants";
 import { DataTable } from "@/components/data-table";
-import { showToast } from "@/components/ui/toast";
 import { ActionModal } from "@/components/admin/action-modal";
 
 export default function SectionManagementPage(): React.JSX.Element {
@@ -98,10 +97,6 @@ export default function SectionManagementPage(): React.JSX.Element {
   const handleCloseFormModal = (): void => {
     setFormModalOpen(false);
     setEditingSection(null);
-  };
-
-  const handleSuccess = (): void => {
-    // This can be used for additional success handling if needed
   };
 
   const handleFilterChange = useCallback(

@@ -45,7 +45,6 @@ export const IndustryEditModal = ({
     formState: { errors },
     reset,
     setValue,
-    watch,
   } = useForm<IndustryFormData>({
     resolver: zodResolver(industrySchema),
     defaultValues: {
@@ -81,8 +80,6 @@ export const IndustryEditModal = ({
     reset();
     onClose();
   };
-
-  const statusValue = watch("status");
 
   return (
     <Dialog open={isOpen} onOpenChange={handleClose}>

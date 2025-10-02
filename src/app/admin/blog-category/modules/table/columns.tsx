@@ -2,7 +2,6 @@
 
 import { ColumnDef } from "@tanstack/react-table";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { Edit, Trash2 } from "lucide-react";
 import type { BlogCategory } from "@/types";
 import type { BlogCategoryColumnHandlers } from "@/types/admin/blog-category";

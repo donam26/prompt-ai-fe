@@ -3,7 +3,7 @@
 import type { Role } from "@/types";
 import { useParams, useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo } from "react";
-import { useRole, useCreateRole, useUpdateRole, useDeleteRole } from "@/hooks";
+import { useRole, useCreateRole, useUpdateRole } from "@/hooks";
 import { FormSkeleton } from "@/components/ui/skeleton";
 import { showToast } from "@/components/ui/toast";
 import { ROLE_CONSTANTS } from "@/constants/roles";
@@ -28,7 +28,6 @@ export default function RoleDetailsPage() {
   const { mutate: updateRole, isLoading: isUpdating } = useUpdateRole({
     id: roleIdToUpdate || "",
   });
-  const { mutate: deleteRole, isLoading: isDeleting } = useDeleteRole();
 
   const handleSave = useCallback(
     async (data: Partial<Role>) => {
@@ -69,16 +68,6 @@ export default function RoleDetailsPage() {
   const handleCancel = useCallback(() => {
     router.push(ROLE_CONSTANTS.ROUTES.ROLES);
   }, [router]);
-
-  const handleDelete = useCallback(async () => {
-    if (!roleData) return;
-
-    const result = await deleteRole(roleData);
-    if (result) {
-      showToast.success(ROLE_CONSTANTS.MESSAGES.DELETE_SUCCESS);
-      router.push(ROLE_CONSTANTS.ROUTES.ROLES);
-    }
-  }, [deleteRole, roleData, router]);
 
   // Handle errors
   useEffect(() => {
