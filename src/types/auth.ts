@@ -13,6 +13,7 @@ export enum CredentialActionType {
 }
 
 export interface NextAuthUser extends User {
+  id: number;
   accessToken: string;
   refreshToken: string;
   expiresIn: number;

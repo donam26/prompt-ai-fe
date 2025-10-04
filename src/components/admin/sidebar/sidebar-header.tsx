@@ -43,7 +43,7 @@ export function SidebarHeader({
 
   return (
     <div
-      className={`p-6 flex items-center ${isCollapsed ? "justify-center" : "justify-between"} transition-all duration-200`}
+      className={`p-6 flex items-center mt-20 ${isCollapsed ? "justify-center" : "justify-between"} transition-all duration-200`}
     >
       {!isCollapsed && (
         <h1 className="font-bold text-gray-900 text-2xl truncate">

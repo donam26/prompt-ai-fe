@@ -2,7 +2,7 @@
 
 // Removed unused imports
 import { useRouter } from "next/navigation";
-import { User, Settings, LogOut, Heart } from "lucide-react";
+import { User, Settings, LogOut, Heart, Shield } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -16,12 +16,9 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 // Removed unused import
-import { LAYOUT_ROUTES, LAYOUT_LABELS, LAYOUT_PAGE } from "@/constants/layout";
+import { LAYOUT_ROUTES, LAYOUT_LABELS } from "@/constants/layout";
 
-/**
- * Props for the UserDropdown component
- */
-interface UserDropdownProps {
+interface Props {
   readonly user: {
     readonly id: number;
     readonly fullName?: string;
@@ -32,16 +29,7 @@ interface UserDropdownProps {
   readonly onLogout: () => void;
 }
 
-/**
- * User dropdown menu component
- *
- * @param props - The component props
- * @returns The user dropdown JSX
- */
-export function UserDropdown({
-  user,
-  onLogout,
-}: UserDropdownProps): React.JSX.Element {
+export function UserDropdown({ user, onLogout }: Props): React.JSX.Element {
   const router = useRouter();
 
   const handleProfileClick = (): void => {
@@ -52,10 +40,17 @@ export function UserDropdown({
     router.push(LAYOUT_ROUTES.settings);
   };
 
+  const handleAdminClick = (): void => {
+    router.push("/admin");
+  };
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" className={LAYOUT_PAGE.header.avatar}>
+        <Button
+          variant="ghost"
+          className="flex justify-center items-center hover:shadow-lg border-none rounded-full w-11 h-11 overflow-hidden transition-shadow duration-200"
+        >
           <Avatar>
             <AvatarImage
               src={user?.avatar || "/images/avatars/default_avatar.png"}
@@ -96,6 +91,15 @@ export function UserDropdown({
           <Settings className="mr-2 w-4 h-4" />
           <span>{LAYOUT_LABELS.user.settings}</span>
         </DropdownMenuItem>
+        {user?.roleId === 2 && (
+          <>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem onClick={handleAdminClick}>
+              <Shield className="mr-2 w-4 h-4" />
+              <span>Admin Panel</span>
+            </DropdownMenuItem>
+          </>
+        )}
         <DropdownMenuSeparator />
         <DropdownMenuItem onClick={onLogout}>
           <LogOut className="mr-2 w-4 h-4" />

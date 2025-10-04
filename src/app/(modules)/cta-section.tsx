@@ -19,7 +19,7 @@ export const CTASection = () => {
   };
 
   return (
-    <section className="px-4 py-20">
+    <section className="px-4 py-10">
       <div className="mx-auto container">
         <Card className="bg-gradient-to-r from-[#5700c6] to-[#e6b8ff] p-12 text-white text-center">
           <h2 className="mb-4 font-bold text-3xl md:text-4xl">

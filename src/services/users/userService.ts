@@ -108,6 +108,19 @@ export class UserService {
   async loginUser(email: string) {
     return await apiClient.post("/users/login", { email });
   }
+
+  /**
+   * Google login with credential
+   *
+   * @param credential - Google OAuth credential
+   * @returns Promise with user data and token
+   */
+  async googleLogin(credential: string) {
+    const response = await apiClient.post("/users/auth/google", {
+      credential,
+    });
+    return response.data;
+  }
 }
 
 export const userService = new UserService();

@@ -38,7 +38,7 @@ const timeSince = (dateString: string) => {
 
 export const BlogSection = ({ blogs }: BlogSectionProps) => {
   return (
-    <section className="bg-gray-50 px-4 py-20">
+    <section className="bg-gray-50 px-4 py-10">
       <div className="mx-auto container">
         <div className="mb-12 text-center">
           <h2 className="mb-4 font-bold text-gray-900 text-3xl md:text-4xl">

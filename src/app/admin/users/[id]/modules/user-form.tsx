@@ -14,6 +14,7 @@ import { USER_ROLE_OPTIONS } from "@/types/enums";
 import { Form } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { transformUserForAuthStore } from "@/utils/user-transform";
 
 export interface Props {
   readonly user?: User | null;
@@ -44,7 +45,7 @@ export const UserForm = ({
       return {
         fullName: user.fullName || "",
         email: user.email || "",
-        roleId: user.roleId ?? USERS_CONSTANTS.ROLE.USER,
+        role: user.role ?? USERS_CONSTANTS.ROLE.USER,
         accountStatus:
           (user as any).accountStatus ?? USERS_CONSTANTS.STATUS.ACTIVE,
         // Subscription fields
@@ -63,7 +64,7 @@ export const UserForm = ({
     return {
       fullName: "",
       email: "",
-      roleId: USERS_CONSTANTS.ROLE.USER,
+      role: USERS_CONSTANTS.ROLE.USER,
       accountStatus: USERS_CONSTANTS.STATUS.ACTIVE,
       // Subscription fields
       subscriptionId: undefined,
@@ -104,13 +105,9 @@ export const UserForm = ({
       const userData: Partial<User> = {
         fullName: data.fullName,
         email: data.email,
-        roleId: data.roleId,
+        role: data.role,
+        accountStatus: data.accountStatus,
       };
-
-      // Add accountStatus if it exists (extend the type)
-      if (data.accountStatus !== undefined) {
-        (userData as any).accountStatus = data.accountStatus;
-      }
 
       // Add subscription data if provided
       if (
@@ -236,7 +233,7 @@ export const UserForm = ({
               {/* Role and Status Row */}
               <div className="gap-4 grid grid-cols-1 md:grid-cols-2">
                 <Controller
-                  name="roleId"
+                  name="role"
                   control={control}
                   render={({ field }) => (
                     <div className="space-y-2">
@@ -256,9 +253,9 @@ export const UserForm = ({
                           </option>
                         ))}
                       </select>
-                      {errors.roleId && (
+                      {errors.role && (
                         <p className="text-red-500 text-sm">
-                          {errors.roleId.message}
+                          {errors.role.message}
                         </p>
                       )}
                     </div>

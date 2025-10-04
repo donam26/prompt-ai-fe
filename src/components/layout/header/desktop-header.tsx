@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import Image from "next/image";
-import { Heart } from "lucide-react";
+import { Heart, ArrowRight } from "lucide-react";
 
 import { useAuth } from "@/hooks/useAuth";
 import { UserDropdown } from "@/components/user/user-dropdown";
@@ -107,10 +107,11 @@ export const DesktopHeader = ({
               Login
             </Link>
             <Link
-              href={LAYOUT_ROUTES.register}
+              href={LAYOUT_ROUTES.login}
               className="flex items-center gap-2 bg-[#5700c6] hover:bg-[#4a00a8] px-6 py-3 rounded-full font-medium text-white text-base transition-all duration-200"
             >
               Signup
+              <ArrowRight className="w-4 h-4" />
             </Link>
           </>
         ) : (

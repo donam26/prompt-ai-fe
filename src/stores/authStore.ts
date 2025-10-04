@@ -1,6 +1,13 @@
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
 import { User } from "@/types";
+import {
+  ACCESS_TOKEN_COOKIE_NAME,
+  REFRESH_TOKEN_COOKIE_NAME,
+  DEFAULT_EXPIRE_TOKEN_SECONDS,
+  REFRESH_TOKEN_EXPIRE_SECONDS,
+} from "@/constants/auth";
+import { clearAllAuthData, forceClearAllCookies } from "@/utils/auth-cleanup";
 
 interface AuthState {
   user: User | null;
@@ -29,19 +36,24 @@ export const useAuthStore = create<AuthState>()(
 
         // Set cookies for NextAuth compatibility
         if (typeof window !== "undefined") {
-          document.cookie = `accessToken=${authToken}; path=/; max-age=${7 * 24 * 60 * 60}; SameSite=Lax`;
-          document.cookie = `refreshToken=${authToken}; path=/; max-age=${30 * 24 * 60 * 60}; SameSite=Lax`;
+          // Set both custom and NextAuth cookie names for compatibility
+          document.cookie = `accessToken=${authToken}; path=/; max-age=${DEFAULT_EXPIRE_TOKEN_SECONDS}; SameSite=Lax`;
+          document.cookie = `refreshToken=${authToken}; path=/; max-age=${REFRESH_TOKEN_EXPIRE_SECONDS}; SameSite=Lax`;
+          document.cookie = `${ACCESS_TOKEN_COOKIE_NAME}=${authToken}; path=/; max-age=${DEFAULT_EXPIRE_TOKEN_SECONDS}; SameSite=Lax`;
+          document.cookie = `${REFRESH_TOKEN_COOKIE_NAME}=${authToken}; path=/; max-age=${REFRESH_TOKEN_EXPIRE_SECONDS}; SameSite=Lax`;
         }
       },
 
       logout: () => {
         set({ user: null, token: null, isLoading: false });
 
-        // Clear cookies
-        if (typeof window !== "undefined") {
-          document.cookie = "accessToken=; path=/; max-age=0";
-          document.cookie = "refreshToken=; path=/; max-age=0";
-        }
+        // Clear all authentication data
+        clearAllAuthData();
+
+        // Force clear all cookies as backup
+        setTimeout(() => {
+          forceClearAllCookies();
+        }, 100);
       },
     }),
     {

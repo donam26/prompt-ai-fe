@@ -6,14 +6,15 @@ import type { BaseEntity, BaseAdminEntity, EntityId, Timestamp } from "../base";
 
 // User entity
 export interface User extends BaseEntity {
+  id: number;
   fullName: string;
   email: string;
-  roleId: number;
+  role: number;
   permissions?: string[] | string;
   countPrompt?: number;
   userSub?: UserSubscription;
   avatar?: string;
-  accountStatus: number;
+  accountStatus?: number;
   otpExpiresAt?: Timestamp;
 }
 

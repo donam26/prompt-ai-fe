@@ -1,5 +1,6 @@
 import NextAuth, { type AuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
+import GoogleProvider from "next-auth/providers/google";
 import { cookies } from "next/headers";
 import {
   ACCESS_TOKEN_COOKIE_NAME,
@@ -9,6 +10,11 @@ import {
 } from "@/constants/auth";
 import { CredentialActionType, NextAuthUser } from "@/types/auth";
 import { getUserInfoFromToken } from "@/utils/token-decoder";
+import { userService } from "@/services/users/userService";
+import {
+  transformBackendUserToAuth,
+  transformUserForSession,
+} from "@/utils/user-transform";
 
 const setCookieToken = async (name: string, value: string, maxAge: number) => {
   const cookieStore = await cookies();
@@ -23,6 +29,17 @@ const setCookieToken = async (name: string, value: string, maxAge: number) => {
 
 export const authOptions: AuthOptions = {
   providers: [
+    GoogleProvider({
+      clientId: process.env.GOOGLE_CLIENT_ID!,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+      authorization: {
+        params: {
+          prompt: "consent",
+          access_type: "offline",
+          response_type: "code",
+        },
+      },
+    }),
     CredentialsProvider({
       name: "Credentials",
       credentials: {
@@ -41,8 +58,6 @@ export const authOptions: AuthOptions = {
         try {
           switch (credentials.type) {
             case CredentialActionType.SetupPassword:
-              // Handle password setup if needed
-              // This would need to be implemented in your userService
               return null;
 
             case undefined:
@@ -87,6 +102,7 @@ export const authOptions: AuthOptions = {
     async session({ session, token }) {
       const updatedSession = {
         ...session,
+        user: token.user || session.user,
         accessToken: token.accessToken,
         refreshToken: token.refreshToken,
         expiresIn: token.expiresIn,
@@ -95,13 +111,53 @@ export const authOptions: AuthOptions = {
       return updatedSession;
     },
 
-    async jwt({ token, user }) {
-      if (user) {
-        token.accessToken = user.accessToken;
-        token.refreshToken = user.refreshToken;
-        token.expiresIn = user.expiresIn;
+    async jwt({ token, user, account }) {
+      if (user && account && account.provider === "google") {
+        try {
+          // For Google login, we need to get the credential from the account
+          // The account object should contain the access_token or id_token
+          const credential = account.id_token || account.access_token;
+
+          if (!credential) {
+            throw new Error("No credential available from Google");
+          }
+
+          // Call backend API to sync Google user data
+          const backendResponse = await userService.googleLogin(credential);
+
+          // Transform user data using helper
+          const transformedUser = transformBackendUserToAuth(
+            backendResponse,
+            user as any
+          );
+
+          // Set token properties
+          token.accessToken = transformedUser.accessToken;
+          token.refreshToken = transformedUser.refreshToken;
+          token.expiresIn = transformedUser.expiresIn;
+          token.user = transformUserForSession(transformedUser);
+        } catch (error) {
+          console.error("Backend Google login failed:", error);
+
+          // Fallback to local data if backend fails
+          const transformedUser = transformBackendUserToAuth({}, user as any);
+
+          // Set token properties
+          token.accessToken = transformedUser.accessToken;
+          token.refreshToken = transformedUser.refreshToken;
+          token.expiresIn = transformedUser.expiresIn;
+          token.user = transformUserForSession(transformedUser);
+        }
       }
       return token;
+    },
+
+    async redirect({ url, baseUrl }) {
+      // Allows relative callback URLs
+      if (url.startsWith("/")) return `${baseUrl}${url}`;
+      // Allows callback URLs on the same origin
+      else if (new URL(url).origin === baseUrl) return url;
+      return baseUrl;
     },
   },
 

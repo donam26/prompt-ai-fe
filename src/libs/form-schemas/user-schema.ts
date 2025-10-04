@@ -21,7 +21,7 @@ export const userFormSchema = z.object({
       USERS_CONSTANTS.VALIDATION.EMAIL_MAX_LENGTH,
       "Email không được quá 255 ký tự"
     ),
-  roleId: z.number().min(0, "Vai trò là bắt buộc"),
+  role: z.number().min(0, "Vai trò là bắt buộc"),
   accountStatus: z.number().min(0, "Trạng thái là bắt buộc").optional(),
   // Subscription fields
   subscriptionId: z.number().optional(),
@@ -35,7 +35,7 @@ export type UserFormSchema = z.infer<typeof userFormSchema>;
 export const getUserFormDefaultValues = (user?: any): UserFormSchema => ({
   fullName: user?.fullName || "",
   email: user?.email || "",
-  roleId: user?.role ?? USERS_CONSTANTS.ROLE.USER,
+  role: user?.role ?? USERS_CONSTANTS.ROLE.USER,
   accountStatus: user?.accountStatus ?? USERS_CONSTANTS.STATUS.ACTIVE,
   // Subscription fields
   subscriptionId: user?.userSub?.subscriptionId
