@@ -1,10 +1,16 @@
 "use client";
 
-import { useCallback, useState, useRef } from "react";
-import ReactQuill from "react-quill-new";
-import "react-quill-new/dist/quill.snow.css";
+import { useCallback, useState, useEffect } from "react";
+import dynamic from "next/dynamic";
 import { Eye, Code } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+
+const ReactQuill = dynamic(() => import("react-quill-new"), {
+  ssr: false,
+  loading: () => (
+    <div className="bg-gray-100 rounded-md h-[200px] animate-pulse" />
+  ),
+});
 
 interface Props {
   value: string;
@@ -25,10 +31,33 @@ export const QuillEditor = ({
   className = "",
 }: Props) => {
   const [activeTab, setActiveTab] = useState<"edit" | "preview">("edit");
-  const quillRef = useRef<ReactQuill>(null);
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
+  // Import CSS dynamically
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      // Kiểm tra xem CSS đã được load chưa
+      const existingLink = document.querySelector(
+        'link[href*="quill.snow.css"]'
+      );
+      if (!existingLink) {
+        const link = document.createElement("link");
+        link.rel = "stylesheet";
+        link.href = "https://cdn.quilljs.com/1.3.6/quill.snow.css";
+        document.head.appendChild(link);
+      }
+    }
+  }, []);
 
   // Custom image upload handler
   const handleImageUpload = useCallback(() => {
+    // Kiểm tra môi trường client-side
+    if (typeof window === "undefined") return;
+
     const input = document.createElement("input");
     input.setAttribute("type", "file");
     input.setAttribute("accept", "image/*");
@@ -56,17 +85,14 @@ export const QuillEditor = ({
         const reader = new FileReader();
         reader.onload = e => {
           const result = e.target?.result as string;
-          if (result && quillRef.current) {
-            // Get the Quill instance
-            const quill = quillRef.current.getEditor();
-            const range = quill.getSelection();
-            const index = range ? range.index : quill.getLength();
-
-            // Insert image into Quill editor
-            quill.insertEmbed(index, "image", result);
-
-            // Move cursor after the image
-            quill.setSelection(index + 1);
+          if (result) {
+            // For now, we'll just insert the image URL into the content
+            // In a real implementation, you might want to use a different approach
+            const currentValue = value || "";
+            const newValue =
+              currentValue +
+              `<img src="${result}" alt="Uploaded image" style="max-width: 100%; height: auto;" />`;
+            onChange(newValue);
           }
         };
         reader.readAsDataURL(file);
@@ -75,7 +101,7 @@ export const QuillEditor = ({
         alert("Có lỗi xảy ra khi upload hình ảnh");
       }
     };
-  }, []);
+  }, [value, onChange]);
 
   const modules = {
     toolbar: {
@@ -130,18 +156,26 @@ export const QuillEditor = ({
 
         <TabsContent value="edit" className="space-y-2">
           <div className="relative">
-            <ReactQuill
-              ref={quillRef}
-              theme="snow"
-              value={value || ""}
-              onChange={onChange}
-              readOnly={disabled}
-              placeholder={placeholder}
-              modules={modules}
-              formats={formats}
-              className="bg-white"
-              style={{ minHeight: `${minHeight}px` }}
-            />
+            {isMounted ? (
+              <ReactQuill
+                theme="snow"
+                value={value || ""}
+                onChange={onChange}
+                readOnly={disabled}
+                placeholder={placeholder}
+                modules={modules}
+                formats={formats}
+                className="bg-white"
+                style={{ minHeight: `${minHeight}px` }}
+              />
+            ) : (
+              <div
+                className="flex justify-center items-center bg-white border rounded-md text-gray-500"
+                style={{ minHeight: `${minHeight}px` }}
+              >
+                Đang tải editor...
+              </div>
+            )}
           </div>
         </TabsContent>
 

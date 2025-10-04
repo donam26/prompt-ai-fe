@@ -56,6 +56,17 @@ const config: Config = {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
+        // Custom colors for coaching section
+        coaching: {
+          primary: "#5700C6",
+          secondary: "#3F09A8",
+          light: "#F0E8FF",
+          medium: "#A779E9",
+          gradient: {
+            from: "#511CB2",
+            to: "#E3E3FE",
+          },
+        },
       },
       borderRadius: {
         lg: "var(--radius)",
@@ -79,12 +90,38 @@ const config: Config = {
           "0%": { transform: "rotate(0deg)" },
           "100%": { transform: "rotate(360deg)" },
         },
+        scroll: {
+          "0%": { transform: "translateX(0)" },
+          "100%": { transform: "translateX(-50%)" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
-        float: "float 3s ease-in-out infinite",
+        float: "float 1s ease-in-out infinite",
         spin: "spin 1s linear infinite",
+        scroll: "scroll 0.5s linear infinite",
+      },
+      backgroundImage: {
+        "coaching-gradient":
+          "linear-gradient(131.39deg, #511CB2 5.19%, #E3E3FE 94.53%)",
+        "button-gradient": "linear-gradient(90deg, #F0E8FF 0%, #A779E9 100%)",
+        "prompt-library-gradient":
+          "linear-gradient(333.14deg, rgba(244, 240, 255, 0.5) 11.99%, rgba(133, 27, 253, 0.15) 200.33%, rgba(158, 117, 211, 0) 285.94%)",
+        "ai-modules-gradient":
+          "linear-gradient(147.09deg, #010101 34.11%, #B685F4 95.95%)",
+        "secret-modules-gradient":
+          "linear-gradient(130.35deg, #000000 -38.01%, #5700C6 5.76%, #D4B2FF 100.98%)",
+        "livestream-gradient":
+          "linear-gradient(158.53deg, #F6D0D3 12.38%, #F6DBDA 29.18%, #FDF5F4 65.73%)",
+        "enterprise-gradient":
+          "linear-gradient(131.39deg, #511CB2 5.19%, #E3E3FE 94.53%)",
+        "trending-gradient":
+          "linear-gradient(86.67deg, #FFFFFF -27.61%, #484848 237.16%)",
+        "button-purple-gradient":
+          "linear-gradient(0deg, rgba(218, 205, 255, 0.9), rgba(218, 205, 255, 0.9))",
+        "cta-banner-gradient":
+          "linear-gradient(135deg, #8B5CF6 0%, #5700C6 50%, #3F09A8 100%)",
       },
     },
   },

@@ -154,7 +154,7 @@ export const SOLUTIONS_DATA: Record<string, SolutionData> = {
   },
 };
 
-export const PARTNERS = [
+export const HERO_SHOWCASE = [
   "ChatGPT",
   "Midjourney",
   "Grok",

@@ -14,9 +14,9 @@ export const LAYOUT_NAVIGATION = {
 } as const;
 
 export const LAYOUT_IMAGES = {
-  logo: "/images/logos/logo.png",
-  logoAlt: "logo",
-  logoWidth: 120,
+  logo: "/icons/ui/logo.svg",
+  logoAlt: "Prom logo",
+  logoWidth: 30,
   logoHeight: 40,
 } as const;
 
@@ -50,10 +50,13 @@ export const LAYOUT_LABELS = {
     settings: "Cài đặt",
   },
   footer: {
-    information: "Thông tin",
-    learnMore: "Tìm hiểu",
-    subscribe: "Đăng ký",
+    ctaTitle: "Bạn quan tâm đến PROM?",
+    ctaButton: "Liên hệ chúng tôi",
+    menu: "Menu",
+    company: "Công ty",
+    legal: "Legal Information",
     emailPlaceholder: "Địa chỉ email của bạn",
+    subscribe: "Đăng ký",
     copyright: "All rights reserved © by",
   },
 } as const;

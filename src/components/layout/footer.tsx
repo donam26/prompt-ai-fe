@@ -4,23 +4,15 @@ import { usePathname } from "next/navigation";
 import { FooterBrand } from "./footer/footer-brand";
 import { FooterLinks } from "./footer/footer-links";
 import { FooterCopyright } from "./footer/footer-copyright";
+import { FooterMobile } from "./footer/footer-mobile";
 import { cn } from "@/lib/utils";
-import { LAYOUT_PAGE, LAYOUT_CONFIG } from "@/constants/layout";
+import { LAYOUT_CONFIG } from "@/constants/layout";
 
-/**
- * Props for the Footer component
- */
-interface FooterProps {
+interface Props {
   readonly className?: string;
 }
 
-/**
- * Main footer component for the application
- *
- * @param props - The component props
- * @returns The footer JSX
- */
-export function Footer({ className }: FooterProps): React.JSX.Element | null {
+export function Footer({ className }: Props): React.JSX.Element | null {
   const pathname = usePathname();
 
   // Only show footer on home page
@@ -29,23 +21,37 @@ export function Footer({ className }: FooterProps): React.JSX.Element | null {
   }
 
   return (
-    <footer className={cn(LAYOUT_PAGE.footer.container, className)}>
-      <div className={LAYOUT_PAGE.footer.mainContainer}>
-        <div className={LAYOUT_PAGE.footer.gridContainer}>
-          {/* Left Section - Brand */}
-          <div className={LAYOUT_PAGE.footer.leftSection}>
-            <FooterBrand />
-          </div>
-
-          {/* Right Section - Links */}
-          <div className={LAYOUT_PAGE.footer.rightSection}>
-            <FooterLinks />
-          </div>
-        </div>
+    <>
+      {/* Mobile Footer */}
+      <div className="lg:hidden">
+        <FooterMobile />
       </div>
 
-      {/* Copyright */}
-      <FooterCopyright />
-    </footer>
+      {/* Desktop Footer */}
+      <footer className={cn("hidden lg:block bg-white", className)}>
+        {/* Upper Section - CTA + Navigation */}
+        <div className="mx-auto px-4 py-12 container">
+          <div className="flex lg:flex-row flex-col gap-8 lg:gap-12">
+            {/* Left Section - CTA */}
+            <div className="lg:w-1/3">
+              <FooterBrand />
+            </div>
+
+            {/* Right Section - Navigation Links */}
+            <div className="lg:w-2/3">
+              <FooterLinks />
+            </div>
+          </div>
+        </div>
+
+        {/* Separator Line */}
+        <div className="border-gray-200 border-t" />
+
+        {/* Lower Section - Logo + Copyright + Social */}
+        <div className="mx-auto px-4 container">
+          <FooterCopyright />
+        </div>
+      </footer>
+    </>
   );
 }
