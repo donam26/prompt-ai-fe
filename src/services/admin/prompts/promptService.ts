@@ -12,7 +12,7 @@ export class PromptService extends BaseService {
   }
 
   async getFavoritePrompts(userId: string | number) {
-    return await this.getById(`${ENDPOINTS.PROMPTS.BASE}/favorite/${userId}`);
+    return await this.get(`${ENDPOINTS.PROMPTS.FAVORITE}/${userId}`);
   }
 
   async getPromptsByCategoryId(params?: Record<string, unknown>) {

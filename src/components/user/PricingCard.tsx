@@ -1,0 +1,174 @@
+"use client";
+
+import { Button } from "@/components/ui/button";
+import { Check, X } from "lucide-react";
+import { cn } from "@/lib/utils";
+import Image from "next/image";
+import { SubscriptionFormData } from "@/types/admin/subscription";
+
+interface PricingCardProps {
+  readonly plan: SubscriptionFormData;
+  readonly isYearly: boolean;
+  readonly onSelectPlan: (planId: string) => void;
+  readonly className?: string;
+}
+
+export const PricingCard = ({
+  plan,
+  isYearly,
+  onSelectPlan,
+  className,
+}: PricingCardProps) => {
+  const currentPrice = isYearly ? Number(plan.price) : Number(plan.price);
+
+  const formatPrice = (price: number): string => {
+    if (price === 0) return "0đ";
+    return new Intl.NumberFormat("vi-VN", {
+      style: "currency",
+      currency: "VND",
+      minimumFractionDigits: 0,
+    }).format(price);
+  };
+
+  const handleSelectPlan = () => {
+    onSelectPlan(plan.id as string);
+  };
+
+  return (
+    <div
+      className={cn(
+        "relative hover:shadow-xl p-4 sm:p-5 rounded-[36px] w-full font-medium text-center transition-all duration-300",
+        "sm:min-w-[315px] min-w-0",
+        plan.isPopular
+          ? "popular-card bg-[#111116] text-white shadow-2xl sm:scale-105"
+          : "pricing-card bg-gradient-to-br from-white via-[#E2D0FF] to-[#E2D0FF] text-[#1D1E25] shadow-[0_4px_10px_rgba(0,0,0,0.1)]",
+        className
+      )}
+    >
+      {/* Badge */}
+      {plan.badge && (
+        <div
+          className="-top-[14px] left-1/2 absolute shadow-[0px_4px_10px_rgba(0,0,0,0.1)] mb-2.5 px-6 py-1.5 border-2 border-white rounded-[100px] font-medium text-white text-xs leading-4 tracking-[-1%] -translate-x-1/2 transform"
+          style={{
+            background:
+              "linear-gradient(0deg, #5700C6, #5700C6), linear-gradient(90deg, rgba(240, 232, 255, 0) 0%, #3F09A8 100%)",
+          }}
+        >
+          {plan.badge}
+        </div>
+      )}
+
+      {/* Header */}
+      <div className="flex flex-col justify-start h-auto sm:h-[120px]">
+        <h3
+          className={cn(
+            "m-0 mt-2.5 font-medium text-lg sm:text-xl leading-[100%] tracking-[0%]",
+            plan.isPopular ? "text-white" : "text-[#1D1E25]"
+          )}
+        >
+          {plan.name}
+        </h3>
+        <p
+          className={cn(
+            "mt-3 sm:mt-4 mb-0 font-bold lg:text-[46px] text-3xl sm:text-4xl tracking-[-3%]",
+            plan.isPopular ? "text-white" : "text-[#1D1E25]"
+          )}
+        >
+          {formatPrice(currentPrice)}
+          {currentPrice > 0 && (
+            <span
+              className={cn(
+                "font-medium text-xs sm:text-sm tracking-[0%]",
+                plan.isPopular ? "text-white" : "text-[#111116]"
+              )}
+            >
+              /{isYearly ? "năm" : "tháng"}
+            </span>
+          )}
+        </p>
+        <p
+          className={cn(
+            "mt-2 sm:mt-2.5 mb-0 font-medium text-sm sm:text-base leading-[100%] tracking-[0%]",
+            plan.isPopular ? "text-white" : "text-[#1D1E25]"
+          )}
+        >
+          {plan.description ? formatPrice(Number(plan.description)) : ""}
+        </p>
+      </div>
+
+      {/* Divider */}
+      <hr
+        className={cn(
+          "my-4 border-none h-px",
+          plan.isPopular ? "bg-white opacity-20" : "bg-[#1D1E25] opacity-10"
+        )}
+      />
+
+      {/* Features */}
+      <ul className="p-0 font-medium text-left list-none">
+        {plan.contentSubscriptions?.map((feature, index) => (
+          <li
+            key={index}
+            className={cn(
+              "flex justify-start items-start my-3 sm:my-4 text-xs sm:text-sm",
+              plan.isPopular ? "text-white" : "text-[#555]"
+            )}
+          >
+            <span
+              className={cn(
+                "flex flex-shrink-0 mt-0.5 mr-2 font-bold text-sm sm:text-base",
+                feature.included ? "text-[#00ff00]" : "text-[#ff4d4d]"
+              )}
+            >
+              {feature.included ? (
+                <Check className="w-3 sm:w-4 h-3 sm:h-4" />
+              ) : (
+                <X className="w-3 sm:w-4 h-3 sm:h-4" />
+              )}
+            </span>
+            <span className="flex-1">{feature.content}</span>
+          </li>
+        ))}
+      </ul>
+
+      {/* CTA */}
+      <div className="mt-3 sm:mt-4">
+        <Button
+          onClick={handleSelectPlan}
+          variant={plan.buttonVariant}
+          className={cn(
+            "py-2 sm:py-2.5 border-none rounded-[36px] w-full font-bold text-white text-sm sm:text-base leading-6 transition-all duration-200 cursor-pointer",
+            plan.buttonVariant === "outline"
+              ? "text-[#5700C6] bg-white hover:opacity-90"
+              : "bg-[#5700C6] hover:opacity-90"
+          )}
+        >
+          {plan.buttonText}
+        </Button>
+        {plan.ctaText && (
+          <p
+            className={cn(
+              "mt-2 text-xs sm:text-sm text-center",
+              plan.isPopular ? "text-white" : "text-[#1D1E25]"
+            )}
+          >
+            {plan.ctaText}
+          </p>
+        )}
+      </div>
+
+      {/* Eclipse decoration for popular card */}
+      {plan.isPopular && (
+        <div className="-right-2 sm:-right-5 bottom-[25%] z-0 absolute opacity-50 w-[150px] sm:w-[200px] h-auto rotate-[17deg] pointer-events-none">
+          <Image
+            src="/images/pricing/eclipse_pricing_card.png"
+            alt="Eclipse decoration"
+            width={200}
+            height={200}
+            className="w-full h-auto"
+          />
+        </div>
+      )}
+    </div>
+  );
+};

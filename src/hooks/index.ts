@@ -16,10 +16,14 @@ export * from "./admin/useCategory";
 export * from "./admin/useIndustry";
 export * from "./admin/useUser";
 export * from "./admin/usePrompt";
+export * from "./admin/useProduct";
 export * from "./admin/useBlog";
 export * from "./admin/usePayment";
 export * from "./admin/useRole";
 export * from "./admin/useCoupon";
 export * from "./useAdminPermissions";
+
+// User hooks
+export * from "./user/usePricingPlans";
 
 // Other hooks

@@ -124,6 +124,13 @@ export class BaseService {
     return response.data;
   }
 
+  async get<T = any>(endpoint: string): Promise<BaseApiResponse<T>> {
+    const response: AxiosResponse<BaseApiResponse<T>> = await apiClient.get(
+      `${endpoint}`
+    );
+    return response.data;
+  }
+
   /**
    * Generic DELETE request with custom endpoint
    */

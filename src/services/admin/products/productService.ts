@@ -1,6 +1,7 @@
 import { BaseService } from "../../base/baseService";
 import { ENDPOINTS } from "@/constants";
-import type { Product } from "@/types";
+import type { Product } from "@/types/entities/product";
+import type { BaseApiResponse } from "@/types/api/common";
 
 /**
  * ProductService extending BaseService
@@ -11,14 +12,14 @@ export class ProductService extends BaseService {
   }
 
   /**
-   * Get all products
+   * Get products with pagination and filters
    */
-  async getProducts(params?: Record<string, unknown>) {
+  async getProductsPage(params?: Record<string, unknown>) {
     return this.list(params);
   }
 
   /**
-   * Get products with pagination and query string
+   * Get products with query string for proper array handling
    */
   async getProductsPageWithQueryString(queryString: string) {
     const { apiClient } = await import("../../base/apiClient");
@@ -38,7 +39,7 @@ export class ProductService extends BaseService {
   }
 
   /**
-   * Create product
+   * Create new product
    */
   async createProduct(data: Partial<Product>) {
     return await this.create<Product, Partial<Product>>(data);
@@ -47,40 +48,26 @@ export class ProductService extends BaseService {
   /**
    * Update product
    */
-  async updateProduct(id: string | number, data: Partial<Product>) {
+  async updateProduct(id: string, data: Partial<Product>) {
     return await this.update<Product, Partial<Product>>(id, data);
   }
 
   /**
    * Delete product
    */
-  async deleteProduct(id: string | number) {
+  async deleteProduct(id: string): Promise<BaseApiResponse<void>> {
     return await this.delete<void>(id);
   }
 
   /**
-   * Get products by category
+   * Export products to Excel
    */
-  async getProductsByCategory(
-    categoryId: string | number,
-    params?: Record<string, unknown>
-  ) {
-    const queryParams = {
-      categoryId,
-      ...params,
-    };
-    return this.list(queryParams);
-  }
-
-  /**
-   * Search products
-   */
-  async searchProducts(searchTerm: string, params?: Record<string, unknown>) {
-    const queryParams = {
-      search: searchTerm,
-      ...params,
-    };
-    return this.list(queryParams);
+  async exportProductsExcel(filters: Record<string, unknown> = {}) {
+    const blob = await this.exportExcel("export-excel", filters);
+    const timestamp = new Date().toISOString().split("T")[0];
+    const filename = `products-export-${timestamp}.xlsx`;
+    this.downloadBlob(blob, filename);
+    return blob;
   }
 }
 

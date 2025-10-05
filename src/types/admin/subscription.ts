@@ -42,6 +42,13 @@ export interface SubscriptionFormData {
   readonly priceTotalYearly?: string | null;
   readonly imageDiscount?: string;
   readonly contentSubscriptions?: ContentSubscription[];
+  readonly currency?: string;
+  readonly period?: number;
+  readonly isEnterprise?: boolean;
+  readonly buttonText?: string;
+  readonly buttonVariant?: "default" | "outline" | "secondary";
+  readonly ctaText?: string;
+  readonly badge?: string;
 }
 
 export interface SubscriptionFormModalProps {

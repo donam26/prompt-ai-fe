@@ -8,6 +8,8 @@ export interface Product {
   readonly image: string;
   readonly createdAt: string;
   readonly updatedAt: string;
+  readonly description?: string;
+  readonly status?: ProductStatus;
 }
 
 export type ProductStatus = "active" | "inactive" | "draft" | "out_of_stock";

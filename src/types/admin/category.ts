@@ -64,6 +64,7 @@ export interface CategoryFilterState {
   sectionId: string; // "all" means no filter
   status: string; // "all" means no filter
   industryIds: string[]; // array of industry IDs
+  type?: string;
 }
 
 /**

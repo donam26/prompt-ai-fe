@@ -13,4 +13,6 @@ export * from "./command";
 export * from "./quill-editor";
 export * from "./markdown-editor";
 export * from "./masonry-card";
+export * from "./pagination";
+export * from "./badge";
 export { default as CTAButton } from "../cta-button";

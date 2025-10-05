@@ -52,7 +52,7 @@ export default function RootLayout({
             <NextAuthSyncWrapper>
               <div className="flex flex-col min-h-screen">
                 <Header />
-                <main className="flex flex-col flex-1 bg-white pt-0">
+                <main className="flex flex-col flex-1 bg-white mt-[96px] pt-0">
                   {children}
                 </main>
                 <Footer />
