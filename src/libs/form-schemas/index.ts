@@ -9,3 +9,4 @@ export * from "./user-schema";
 export * from "./subscription-schema";
 export * from "./industry-schema";
 export * from "./product-schema";
+export * from "./contact-schema";

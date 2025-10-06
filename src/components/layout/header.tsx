@@ -18,15 +18,13 @@ export function Header({ className }: HeaderProps): React.JSX.Element {
     <header
       className={cn(
         "top-0 z-50 absolute w-full font-medium transition-colors duration-200",
-        isHomePage
-          ? "bg-transparent py-0 sm:py-4"
-          : "bg-white shadow-sm py-0 sm:py-4",
+        isHomePage ? "bg-transparent" : "",
         className
       )}
     >
       <div className="mx-0 sm:mx-auto max-w-[1084px] sm:max-w-[1084px]">
         {/* Main Navigation Container */}
-        <nav className="items-center bg-white/95 mobile-header-shadow sm:shadow-lg backdrop-blur-sm mx-0 sm:mx-6 lg:mx-8 xl:mx-12 px-0 sm:px-6 rounded-full h-16">
+        <nav className="items-center bg-white mobile-header-shadow sm:shadow-lg backdrop-blur-sm m-4 sm:mx-6 lg:mx-8 xl:mx-12 px-0 sm:px-6 rounded-full h-16">
           <MobileHeader />
           <DesktopHeader />
         </nav>

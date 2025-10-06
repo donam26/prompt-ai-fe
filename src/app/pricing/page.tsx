@@ -1,79 +1,43 @@
 "use client";
 
-import { useRouter } from "next/navigation";
-import { PricingCard } from "@/components/user/PricingCard";
 import { PricingFAQ } from "@/components/user/PricingFAQ";
-import { PricingLoadingState } from "@/components/user/PricingLoadingState";
-import { usePricingPlans } from "@/hooks/user/usePricingPlans";
 import Image from "next/image";
 
 export default function PricingPage() {
-  const router = useRouter();
-
-  // Fetch pricing plans from API
-  const { plans, isLoading, error, refetch } = usePricingPlans();
-
-  const handleSelectPlan = (planId: string) => {
-    if (planId === "free") {
-      router.push("/login");
-    } else if (planId === "premium") {
-      router.push("/login?plan=premium");
-    } else if (planId === "basic") {
-      router.push("/login?plan=basic");
-    } else if (planId === "pro") {
-      router.push("/login?plan=pro");
-    }
-  };
-
   return (
-    <div className="bg-white min-h-screen">
+    <div className="bg-white py-8 lg:py-16 min-h-screen">
       <div className="mx-auto px-4 container">
         {/* Hero Section */}
-        <section className="relative">
+        <section className="relative mb-9">
           <div className="z-10 relative mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
             <div className="text-center">
               <h1 className="mb-4 sm:mb-6 font-bold text-[#1D1E25] text-3xl sm:text-4xl md:text-5xl lg:text-6xl">
-                Chọn gói dịch vụ phù hợp
+                Gấp đôi hiệu năng làm việc với gói PromptX phù hợp
               </h1>
-              <p className="mx-auto mb-6 sm:mb-8 max-w-3xl text-[#1D1E25] text-base sm:text-lg">
-                Từ miễn phí đến doanh nghiệp, chúng tôi có gói dịch vụ phù hợp
-                với mọi nhu cầu của bạn
-              </p>
+              <span className="text-[#1D1E25] text-base sm:text-lg">
+                Nâng cấp để truy cập KHÔNG GIỚI HẠN thư viện Prompt cao cấp
+              </span>
             </div>
           </div>
         </section>
-        {/* Pricing Cards */}
-        <section className="py-4 sm:py-6">
-          <div className=" ">
-            <PricingLoadingState
-              isLoading={isLoading}
-              error={error}
-              onRetry={refetch}
-            />
-
-            {!isLoading && !error && (
-              <div className="gap-4 sm:gap-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-                {plans.map(plan => (
-                  <PricingCard
-                    key={plan.id}
-                    plan={plan}
-                    isYearly={false}
-                    onSelectPlan={handleSelectPlan}
-                  />
-                ))}
-              </div>
-            )}
-          </div>
-        </section>
-
-        <div className="relative rounded-2xl w-full h-full overflow-hidden">
+        <div className="hidden sm:block max-w-[1400px] max-h-[570px]">
           <Image
-            src="/images/pricing/pricing-img.png"
-            alt="Pricing Background"
-            fill
-            className="h-[170px] object-contain"
+            src="/images/cta/cta-desktop-pricing.png"
+            alt="Pricing"
+            width={1400}
+            height={570}
+            className="object-cover"
           />
         </div>
+        <div className="sm:hidden block relative w-full aspect-[9/16]">
+          <Image
+            src="/images/cta/cta-mobile-pricing.png"
+            alt="Pricing"
+            fill
+            className="object-contain"
+          />
+        </div>
+
         {/* FAQ Section */}
         <PricingFAQ />
       </div>

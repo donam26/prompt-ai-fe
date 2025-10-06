@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { ProductCard } from "@/components/user/ProductCard";
 import { Pagination } from "@/components/ui/pagination";
 import { useProducts } from "@/hooks/admin/useProduct/useProducts";
@@ -13,7 +13,7 @@ const ProductPage = () => {
   const [pagination, setPagination] =
     useState<PaginationParams>(DEFAULT_PAGINATION);
 
-  const { productsWithPagination, isFetching } = useProducts({
+  const { productsWithPagination } = useProducts({
     pagination,
   });
 
@@ -38,8 +38,8 @@ const ProductPage = () => {
             Kho Tài Liệu AI
           </h1>
           <p className="mx-auto px-4 max-w-3xl text-gray-600 text-sm sm:text-base lg:text-lg">
-            Nhấp vào 'Truy cập trong Notion' bên dưới để truy cập các sản phẩm
-            về AI được tổng hợp bởi chúng tôi
+            Nhấp vào Truy cập trong Notion bên dưới để truy cập các sản phẩm về
+            AI được tổng hợp bởi chúng tôi
           </p>
         </div>
 

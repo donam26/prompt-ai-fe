@@ -1,9 +1,6 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import { useIndustries } from "./useIndustries";
-import { useSections } from "./useSections";
-import { useFavoritePrompts } from "./useFavoritePrompts";
 import { useCategories } from "@/hooks/admin/useCategory/useCategories";
 import { DEFAULT_PAGINATION } from "@/constants";
 

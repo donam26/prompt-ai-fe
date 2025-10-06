@@ -14,7 +14,6 @@ import { USER_ROLE_OPTIONS } from "@/types/enums";
 import { Form } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { transformUserForAuthStore } from "@/utils/user-transform";
 
 export interface Props {
   readonly user?: User | null;

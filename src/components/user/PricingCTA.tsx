@@ -2,7 +2,6 @@
 
 import { Button } from "@/components/ui/button";
 import { PRICING_CTA } from "@/constants/pricing";
-import Image from "next/image";
 
 export const PricingCTA = () => {
   return (

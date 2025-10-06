@@ -6,7 +6,7 @@ import { CHROME_EXTENSION_URL } from "@/constants";
 export const HeroSection = () => {
   return (
     <section
-      className="relative bg-cover bg-no-repeat bg-center px-4 lg:py-20 pt-20 lg:pt-40 pb-6 lg:pb-10"
+      className="relative bg-cover bg-no-repeat bg-center px-4 pt-24 md:pt-36 pb-8 lg:pb-10"
       style={{
         backgroundImage: "url('/images/home/background.png')",
       }}

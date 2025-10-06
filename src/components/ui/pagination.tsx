@@ -16,11 +16,8 @@ interface PaginationProps {
 export const Pagination = ({
   currentPage,
   totalPages,
-  pageSize,
   onPageChange,
-  showSizeChanger = false,
   size = "default",
-  responsive = true,
 }: PaginationProps) => {
   const getVisiblePages = () => {
     const delta = 2;

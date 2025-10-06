@@ -27,7 +27,7 @@ export function useUserColumns({
             >
               {row.original.fullName || "Unknown User"}
             </span>
-            {isAdminRole(row.original.roleId) && (
+            {isAdminRole(row.original.role) && (
               <BadgeCell label="Admin" variant="secondary" />
             )}
           </div>
@@ -47,7 +47,7 @@ export function useUserColumns({
       cell: ({ row }) => (
         <div className="hidden md:block">
           <BadgeCell
-            label={getUserRoleLabel(row.original.roleId)}
+            label={getUserRoleLabel(row.original.role)}
             variant="secondary"
             maxWidth="max-w-[100px]"
           />

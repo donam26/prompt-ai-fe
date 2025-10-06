@@ -2,7 +2,7 @@
 
 import type { Category } from "@/types";
 import type { CategoryFilterState } from "@/types/admin/category";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import {
   DEFAULT_PAGINATION,
   DEFAULT_TOTAL,
@@ -34,7 +34,7 @@ export function useCategoriesSimple(options: Props = {}) {
   const [error, setError] = useState<string>("");
 
   // Fetch categories function
-  const fetchCategories = async () => {
+  const fetchCategories = useCallback(async () => {
     setIsFetching(true);
 
     try {
@@ -65,12 +65,12 @@ export function useCategoriesSimple(options: Props = {}) {
     } finally {
       setIsFetching(false);
     }
-  };
+  }, [pagination.pageIndex, pagination.pageSize, filters]);
 
   // Only fetch when dependencies change
   useEffect(() => {
     fetchCategories();
-  }, [pagination.pageIndex, pagination.pageSize, JSON.stringify(filters)]);
+  }, [fetchCategories]);
 
   return {
     // Categories data

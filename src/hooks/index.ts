@@ -27,3 +27,4 @@ export * from "./useAdminPermissions";
 export * from "./user/usePricingPlans";
 
 // Other hooks
+export * from "./useContact";

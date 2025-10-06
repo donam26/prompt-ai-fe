@@ -23,7 +23,7 @@ export const PromptLibraryHome = ({ limit }: PromptLibraryHomeProps) => {
     [type]
   );
 
-  const { categories, isFetching, error } = useCategoriesSimple({
+  const { categories, isFetching } = useCategoriesSimple({
     pagination: {
       pageIndex: 0,
       pageSize: 100,
@@ -49,7 +49,7 @@ export const PromptLibraryHome = ({ limit }: PromptLibraryHomeProps) => {
   ];
 
   return (
-    <div className="bg-white min-h-screen">
+    <div className="bg-white py-8 lg:py-16 min-h-screen">
       <div className="mx-auto px-4 max-w-7xl">
         {/* Header */}
         <div className="mb-12 text-center">

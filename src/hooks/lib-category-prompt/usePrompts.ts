@@ -40,20 +40,8 @@ export const usePrompts = (options: UsePromptsOptions = {}) => {
   const [error, setError] = useState<string>("");
 
   // Memoized values
-  const memoizedFilters = useMemo(
-    () => filters,
-    [
-      filters.searchTerm,
-      filters.categoryId,
-      filters.industryId,
-      filters.isType,
-      filters.subType,
-    ]
-  );
-  const memoizedPagination = useMemo(
-    () => pagination,
-    [pagination.page, pagination.pageSize]
-  );
+  const memoizedFilters = useMemo(() => filters, [filters]);
+  const memoizedPagination = useMemo(() => pagination, [pagination]);
 
   // Fetch prompts
   const fetchPrompts = useCallback(async () => {

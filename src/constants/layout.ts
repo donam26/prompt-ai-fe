@@ -6,7 +6,7 @@ export const LAYOUT_NAVIGATION = {
   items: [
     { href: "/", label: "Trang chủ" },
     { href: "/thu-vien-prompt", label: "Prompt & Nâng Cấp" },
-    { href: "/product", label: "Tài Liệu AI" },
+    // { href: "/product", label: "Tài Liệu AI" },
     { href: "/blog", label: "Blog" },
     { href: "/pricing", label: "Gói Dịch Vụ" },
     { href: "/contact", label: "Liên Hệ" },

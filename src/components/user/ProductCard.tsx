@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { ArrowRight, ExternalLink, Star } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { FREE_SUBSCRIPTION_TYPES } from "@/constants/subscription";
 import { Product } from "@/types";

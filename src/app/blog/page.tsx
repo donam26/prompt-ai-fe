@@ -16,7 +16,7 @@ export default function BlogPage() {
   };
 
   return (
-    <div className="bg-gray-50 min-h-screen">
+    <div className="bg-white py-8 lg:py-16 min-h-screen">
       <div className="mx-auto px-4 max-w-7xl">
         <div className="mb-12 text-center">
           <h1 className="mb-4 font-bold text-gray-900 text-4xl">

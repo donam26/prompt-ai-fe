@@ -5,6 +5,7 @@ import { NextAuthProvider } from "@/providers/NextAuthProvider";
 import { QueryProvider } from "@/providers/QueryProvider";
 import { Toast } from "@/components/ui/toast";
 import { Header, Footer } from "@/components/layout";
+import { ConditionalMain } from "@/components/layout/conditional-main";
 import { NextAuthSyncWrapper } from "@/app/(modules)/next-auth-sync-wrapper";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -52,9 +53,7 @@ export default function RootLayout({
             <NextAuthSyncWrapper>
               <div className="flex flex-col min-h-screen">
                 <Header />
-                <main className="flex flex-col flex-1 bg-white mt-[96px] pt-0">
-                  {children}
-                </main>
+                <ConditionalMain>{children}</ConditionalMain>
                 <Footer />
               </div>
               <Toast />

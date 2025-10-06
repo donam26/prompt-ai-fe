@@ -1,6 +1,7 @@
 // Layout components
 export { Header } from "./header";
 export { Footer } from "./footer";
+export { ConditionalMain } from "./conditional-main";
 
 // Footer sub-components
 export { FooterBrand } from "./footer/footer-brand";
