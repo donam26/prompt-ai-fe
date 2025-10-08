@@ -67,7 +67,7 @@ export interface PermissionGroup {
  * Role assignment data
  */
 export interface RoleAssignmentData {
-  readonly roleId: string | number;
+  readonly role: string | number;
   readonly userIds: (string | number)[];
 }
 
@@ -75,7 +75,7 @@ export interface RoleAssignmentData {
  * Role user statistics
  */
 export interface RoleUserStats {
-  readonly roleId: string | number;
+  readonly role: string | number;
   readonly roleName: string;
   readonly usersCount: number;
   readonly lastAssignedAt?: string;

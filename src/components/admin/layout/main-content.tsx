@@ -27,7 +27,7 @@ export function MainContent({
   const contentClasses = cn(
     "flex-1 bg-white dark:bg-gray-800 md:rounded-none rounded-t-2xl overflow-x-hidden",
     {
-      "p-2 sm:p-4 md:p-8 lg:p-10 mt-16": shouldApplyPadding,
+      "p-2 sm:p-4 md:p-8 lg:p-10": shouldApplyPadding,
     }
   );
 

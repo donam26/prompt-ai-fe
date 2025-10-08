@@ -2,9 +2,9 @@ import { BaseService } from "@/services/base/baseService";
 import type { Blog } from "@/types";
 
 /**
- * Blog service extending BaseService
+ * Admin Blog service extending BaseService
  */
-export class BlogService extends BaseService {
+export class AdminBlogService extends BaseService {
   constructor() {
     super("/blog");
   }
@@ -53,4 +53,4 @@ export class BlogService extends BaseService {
 }
 
 // Export singleton instance
-export const blogService = new BlogService();
+export const adminBlogService = new AdminBlogService();

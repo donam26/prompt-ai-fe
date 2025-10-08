@@ -4,7 +4,7 @@ interface TokenPayload {
   sub?: string;
   email?: string;
   userId?: string | number;
-  roleId?: number;
+  role?: number;
   permissions?: string[] | string;
   [key: string]: unknown;
 }

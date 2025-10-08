@@ -57,24 +57,24 @@ export const USER_ROLE_OPTIONS = [
 ] as const;
 
 // User role utility functions
-export const getUserRoleLabel = (roleId: number): string => {
-  return USER_ROLE_LABELS[roleId as UserRole] || "Unknown";
+export const getUserRoleLabel = (role: number): string => {
+  return USER_ROLE_LABELS[role as UserRole] || "Unknown";
 };
 
-export const isAdminRole = (roleId: number): boolean => {
-  return roleId === UserRole.ADMIN;
+export const isAdminRole = (role: number): boolean => {
+  return role === UserRole.ADMIN;
 };
 
-export const isMarketerRole = (roleId: number): boolean => {
-  return roleId === UserRole.MARKETER;
+export const isMarketerRole = (role: number): boolean => {
+  return role === UserRole.MARKETER;
 };
 
-export const isNVAHieuRole = (roleId: number): boolean => {
-  return roleId === UserRole.NV_A_HIEU;
+export const isNVAHieuRole = (role: number): boolean => {
+  return role === UserRole.NV_A_HIEU;
 };
 
-export const isAngelsRole = (roleId: number): boolean => {
-  return roleId === UserRole.ANGELS;
+export const isAngelsRole = (role: number): boolean => {
+  return role === UserRole.ANGELS;
 };
 
 // User status enum

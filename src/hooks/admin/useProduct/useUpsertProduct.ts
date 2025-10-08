@@ -19,7 +19,7 @@ export function useUpsertProduct(): IResponse {
 
       try {
         if (id) {
-          await productService.updateProduct(id, data);
+          await productService.updateProduct(String(id), data);
         } else {
           await productService.createProduct(data);
         }

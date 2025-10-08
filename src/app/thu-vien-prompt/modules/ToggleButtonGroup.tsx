@@ -51,7 +51,9 @@ export const ToggleButtonGroup = ({
       {options.map((type, index) => (
         <button
           key={type.id}
-          ref={el => (buttonRefs.current[index] = el)}
+          ref={el => {
+            buttonRefs.current[index] = el;
+          }}
           onClick={() => setActive(type.value)}
           className={`relative z-10 px-6 py-2 rounded-full text-sm font-semibold transition-colors duration-300 ${
             active === type.value ? "text-white" : "text-gray-600"

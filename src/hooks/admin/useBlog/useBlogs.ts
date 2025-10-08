@@ -6,7 +6,7 @@ import {
   DEFAULT_TOTAL,
   DEFAULT_TOTAL_PAGES,
 } from "@/constants";
-import { blogService } from "@/services/admin/blogs/blogService";
+import { adminBlogService } from "@/services/admin/blogs/blogService";
 import { applyNonEmptyFiltersToQuery } from "@/utils";
 import type { PaginationParams } from "@/types/base";
 import type { ApiCallResult } from "@/types/services/common";
@@ -62,7 +62,7 @@ export function useBlogs(options: Props = {}) {
       };
 
       applyNonEmptyFiltersToQuery(memoizedFilters, query);
-      const response = await blogService.getBlogs(query);
+      const response = await adminBlogService.getBlogs(query);
 
       // Extract data from the response structure
       const responseData = response.data?.data || [];

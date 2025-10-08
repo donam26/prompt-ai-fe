@@ -23,7 +23,7 @@ interface Props {
     readonly id: number;
     readonly fullName?: string;
     readonly email?: string;
-    readonly roleId?: number;
+    readonly role?: number;
     readonly avatar?: string;
   };
   readonly onLogout: () => void;
@@ -71,7 +71,7 @@ export function UserDropdown({ user, onLogout }: Props): React.JSX.Element {
             <p className="text-muted-foreground text-xs leading-none">
               {user?.email || "user@example.com"}
             </p>
-            {user?.roleId === 2 && (
+            {user?.role === 2 && (
               <Badge variant="secondary" className="mt-1 w-fit">
                 Admin
               </Badge>
@@ -91,7 +91,7 @@ export function UserDropdown({ user, onLogout }: Props): React.JSX.Element {
           <Settings className="mr-2 w-4 h-4" />
           <span>{LAYOUT_LABELS.user.settings}</span>
         </DropdownMenuItem>
-        {user?.roleId === 2 && (
+        {user?.role === 2 && (
           <>
             <DropdownMenuSeparator />
             <DropdownMenuItem onClick={handleAdminClick}>

@@ -1,6 +1,6 @@
 import type { Blog } from "@/types";
 import { useCallback, useState } from "react";
-import { blogService } from "@/services/admin/blogs/blogService";
+import { adminBlogService } from "@/services/admin/blogs/blogService";
 
 interface IResponse {
   isLoading: boolean;
@@ -17,7 +17,7 @@ export function useDeleteBlog(): IResponse {
     setError(() => "");
 
     try {
-      await blogService.deleteBlog(blog.id);
+      await adminBlogService.deleteBlog(blog.id);
       return true;
     } catch (error: unknown) {
       const errorMessage =

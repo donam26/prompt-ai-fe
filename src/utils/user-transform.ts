@@ -68,9 +68,9 @@ export const transformBackendUserToAuth = (
       createdAt: backendResponse.user.created_at || new Date().toISOString(),
       updatedAt: backendResponse.user.updated_at || new Date().toISOString(),
       accessToken:
-        backendResponse.token.accessToken || backendResponse.token || "",
+        backendResponse.token.accessToken || backendResponse.token.token || "",
       refreshToken:
-        backendResponse.token.refreshToken || backendResponse.token || "",
+        backendResponse.token.refreshToken || backendResponse.token.token || "",
       expiresIn: backendResponse.token.expiresIn || 7 * 24 * 60 * 60,
     };
   }

@@ -146,8 +146,8 @@ export const SCREEN_DISPLAY_NAMES = {
 } as const;
 
 /**
- * Default permissions for roleId = 3 (limited admin)
- * Simple array of screen names that roleId = 3 can access
+ * Default permissions for role = 3 (limited admin)
+ * Simple array of screen names that role = 3 can access
  */
 export const DEFAULT_ROLE_3_PERMISSIONS = [
   ADMIN_SCREENS.PROMPT,
@@ -161,18 +161,18 @@ export const DEFAULT_ROLE_3_PERMISSIONS = [
 
 /**
  * Check if user has permission to access a specific screen
- * @param user - User object with roleId and permissions
+ * @param user - User object with role and permissions
  * @param screen - Screen to check access for
  * @returns Whether user has permission
  */
 export const hasPermission = (user: User | null, screen: string) => {
   if (!user) return false;
 
-  // Super admin (roleId = 2) has access to everything
-  if (user.roleId === 2) return true;
+  // Super admin (role = 2) has access to everything
+  if (user.role === 2) return true;
 
   // Tất cả role > 1 có permissions - check permissions
-  if (user.roleId > 1) {
+  if (user.role > 1) {
     let userPermissions = user.permissions || [];
 
     // Handle case where permissions might be a string
@@ -210,12 +210,12 @@ export const getAccessibleScreens = (user: User | null) => {
   if (!user) return [];
 
   // Super admin has access to all screens
-  if (user.roleId === 2) {
+  if (user.role === 2) {
     return Object.values(ADMIN_SCREENS);
   }
 
   // Tất cả role > 1 có permissions - check permissions
-  if (user.roleId > 1) {
+  if (user.role > 1) {
     let userPermissions = user.permissions || [];
 
     // Handle case where permissions might be a string
@@ -281,7 +281,7 @@ export const arrayToPermissions = (permissionArray: unknown) => {
 };
 
 /**
- * Get default permissions for roleId = 3
+ * Get default permissions for role = 3
  * @returns Default permissions array
  */
 export const getDefaultRole3Permissions = () => {

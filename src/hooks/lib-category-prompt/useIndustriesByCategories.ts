@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState, useMemo } from "react";
 import { industryService } from "@/services";
 import { Industry } from "@/types";
 
@@ -17,6 +17,9 @@ export const useIndustriesByCategories = (
   const [industries, setIndustries] = useState<Industry[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string>("");
+
+  // Memoize categoryIds string to avoid unnecessary re-renders
+  const categoryIdsString = useMemo(() => categoryIds.join(","), [categoryIds]);
 
   // Load industries by category IDs or all industries
   const loadIndustriesByCategories = useCallback(
@@ -66,7 +69,7 @@ export const useIndustriesByCategories = (
   // Load industries when categoryIds change
   useEffect(() => {
     loadIndustriesByCategories(categoryIds);
-  }, [categoryIds, loadIndustriesByCategories]);
+  }, [categoryIdsString, loadIndustriesByCategories, categoryIds]);
 
   return {
     industries,

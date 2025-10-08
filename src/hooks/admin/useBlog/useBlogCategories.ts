@@ -1,14 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { apiClient } from "@/lib/api-client";
-
-interface BlogCategory {
-  id: string | number;
-  name: string;
-  slug?: string;
-  description?: string;
-  createdAt?: string;
-  updatedAt?: string;
-}
+import type { BlogCategory } from "@/types/entities/blog";
 
 interface BlogCategoriesResponse {
   data: BlogCategory[];

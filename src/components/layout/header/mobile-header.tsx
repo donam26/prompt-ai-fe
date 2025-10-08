@@ -51,7 +51,7 @@ export const MobileHeader = ({
   return (
     <div
       className={cn(
-        "lg:hidden flex justify-between items-center h-16 min-h-[64px]",
+        "md:hidden flex justify-between items-center h-16 min-h-[64px]",
         className
       )}
     >

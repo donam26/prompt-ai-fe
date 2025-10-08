@@ -92,6 +92,24 @@ export class PromptService extends BaseService {
     this.downloadBlob(blob, filename);
     return blob;
   }
+
+  /**
+   * Get topics by category ID
+   */
+  async getTopicsByCategoryId(categoryId: string | number) {
+    return await this.get(
+      `${ENDPOINTS.PROMPTS.TOPICS_BY_CATEGORY}?categoryId=${categoryId}`
+    );
+  }
+
+  /**
+   * Get newest prompts by category ID
+   */
+  async getNewestPromptsByCategoryId(categoryId: string | number) {
+    return await this.get(
+      `${ENDPOINTS.PROMPTS.NEWEST}?categoryId=${categoryId}`
+    );
+  }
 }
 
 // Export singleton instance

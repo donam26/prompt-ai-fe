@@ -16,14 +16,14 @@ export class BlogService extends BaseService {
     if (filters.pageSize)
       params.append("pageSize", filters.pageSize.toString());
     if (filters.search) params.append("search", filters.search);
-    if (filters.category_id)
-      params.append("category_id", filters.category_id.toString());
+    if (filters.categoryId)
+      params.append("category_id", filters.categoryId.toString());
     if (filters.status) params.append("status", filters.status);
-    if (filters.author_id)
-      params.append("author_id", filters.author_id.toString());
+    if (filters.authorId)
+      params.append("author_id", filters.authorId.toString());
     if (filters.tags?.length) params.append("tags", filters.tags.join(","));
-    if (filters.sort_by) params.append("sort_by", filters.sort_by);
-    if (filters.sort_order) params.append("sort_order", filters.sort_order);
+    if (filters.sortBy) params.append("sort_by", filters.sortBy);
+    if (filters.sortOrder) params.append("sort_order", filters.sortOrder);
 
     const response = await this.get(`?${params.toString()}`);
     return response.data;
@@ -74,16 +74,14 @@ export class BlogService extends BaseService {
    * Increment blog view count
    */
   async incrementViewCount(id: number): Promise<void> {
-    await this.post(`/${id}/view`);
+    await this.post(`/${id}/view`, {});
   }
 
   /**
    * Like/Unlike blog
    */
-  async toggleLike(
-    id: number
-  ): Promise<{ liked: boolean; like_count: number }> {
-    const response = await this.post(`/${id}/like`);
+  async toggleLike(id: number): Promise<{ liked: boolean; likeCount: number }> {
+    const response = await this.post(`/${id}/like`, {});
     return response.data;
   }
 }

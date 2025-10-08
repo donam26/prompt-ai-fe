@@ -14,7 +14,7 @@ interface BlogDetailProps {
 
 export const BlogDetail = ({ blog }: BlogDetailProps) => {
   const [isLiked, setIsLiked] = useState(false);
-  const [likeCount, setLikeCount] = useState(blog.like_count || 0);
+  const [likeCount, setLikeCount] = useState(blog.likeCount || 0);
 
   const handleLike = async () => {
     try {
@@ -31,7 +31,7 @@ export const BlogDetail = ({ blog }: BlogDetailProps) => {
       try {
         await navigator.share({
           title: blog.title,
-          text: blog.meta_description,
+          text: blog.metaDescription,
           url: window.location.href,
         });
       } catch (error) {
@@ -66,10 +66,10 @@ export const BlogDetail = ({ blog }: BlogDetailProps) => {
       {/* Article Header */}
       <article className="bg-white shadow-lg rounded-2xl overflow-hidden">
         {/* Featured Image */}
-        {blog.featured_image && (
+        {blog.featuredImage && (
           <div className="relative h-64 md:h-96">
             <Image
-              src={blog.featured_image}
+              src={blog.featuredImage}
               alt={blog.title}
               fill
               className="object-cover"
@@ -93,16 +93,16 @@ export const BlogDetail = ({ blog }: BlogDetailProps) => {
                   <span>{blog.readTime}</span>
                 </div>
               )}
-              {blog.view_count && (
+              {blog.viewCount && (
                 <div className="flex items-center gap-1">
                   <Eye className="w-4 h-4" />
-                  <span>{blog.view_count} lượt xem</span>
+                  <span>{blog.viewCount} lượt xem</span>
                 </div>
               )}
-              {blog.published_at && (
+              {blog.publishedAt && (
                 <div className="flex items-center gap-1">
                   <Calendar className="w-4 h-4" />
-                  <span>{formatDate(blog.published_at)}</span>
+                  <span>{formatDate(blog.publishedAt)}</span>
                 </div>
               )}
             </div>
@@ -114,9 +114,9 @@ export const BlogDetail = ({ blog }: BlogDetailProps) => {
           </h1>
 
           {/* Meta Description */}
-          {blog.meta_description && (
+          {blog.metaDescription && (
             <p className="mb-8 text-gray-600 text-xl leading-relaxed">
-              {blog.meta_description}
+              {blog.metaDescription}
             </p>
           )}
 

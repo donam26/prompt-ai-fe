@@ -41,7 +41,7 @@ export const DesktopHeader = ({
   return (
     <div
       className={cn(
-        "hidden lg:flex justify-between items-center h-16",
+        "hidden md:flex justify-between items-center h-16",
         className
       )}
     >
@@ -65,7 +65,7 @@ export const DesktopHeader = ({
       </div>
 
       {/* Center Navigation */}
-      <nav className="flex items-center gap-8">
+      <nav className="flex items-center gap-4 lg:gap-8">
         {LAYOUT_NAVIGATION.items.map(item => (
           <Link
             key={item.href}

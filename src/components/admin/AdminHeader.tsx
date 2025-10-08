@@ -104,7 +104,7 @@ export function AdminHeader() {
                       {user?.email}
                     </p>
                     <Badge variant="secondary" className="mt-1 w-fit">
-                      {user?.roleId === 2 ? "Super Admin" : "Admin"}
+                      {user?.role === 2 ? "Super Admin" : "Admin"}
                     </Badge>
                   </div>
                 </DropdownMenuLabel>

@@ -1,4 +1,4 @@
-import type { BlogCategory } from "@/types";
+import type { BlogCategory } from "@/types/entities/blog";
 
 /**
  * Blog Category filter state interface

@@ -107,7 +107,7 @@ export const BlogForm = ({
         metaDescription: data.excerpt,
         categoryId: parseInt(data.category),
         featuredImage: featuredImageUrl,
-        publishedAt: data.publishedAt,
+        publishedAt: data.publishedAt || undefined,
       };
       onSave(blogData);
     },

@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import { blogService } from "@/services/admin/blogs/blogService";
+import { adminBlogService } from "@/services/admin/blogs/blogService";
 import type { Blog } from "@/types";
 
 interface IResponse {
@@ -19,7 +19,7 @@ export function useBlogDetail(id?: string | number): IResponse {
     setError("");
 
     try {
-      const response = await blogService.getBlog(blogId);
+      const response = await adminBlogService.getBlog(blogId);
       // Handle different response structures
       const blogData = response.data;
       setBlog(blogData || null);

@@ -1,19 +1,25 @@
 import { BaseEntity } from "@/types";
 
+export interface BlogCategory extends BaseEntity {
+  name: string;
+  slug?: string;
+  description?: string;
+}
+
 export interface Blog extends BaseEntity {
   title: string;
   slug: string;
   content: string;
-  meta_description?: string;
-  featured_image?: string;
+  metaDescription?: string;
+  featuredImage?: string;
   readTime?: string;
-  published_at?: string;
-  category_id?: number;
+  publishedAt?: string;
+  categoryId?: number;
   category?: {
     id: number;
     name: string;
   };
-  author_id?: number;
+  authorId?: number;
   author?: {
     id: number;
     name: string;
@@ -21,9 +27,10 @@ export interface Blog extends BaseEntity {
   };
   tags?: string[];
   status: "draft" | "published" | "archived";
-  view_count?: number;
-  like_count?: number;
-  comment_count?: number;
+  viewCount?: number;
+  likeCount?: number;
+  commentCount?: number;
+  blogCategory?: BlogCategory;
 }
 
 export interface BlogListResponse {
@@ -38,15 +45,15 @@ export interface BlogFilters {
   page?: number;
   pageSize?: number;
   search?: string;
-  category_id?: number;
+  categoryId?: number;
   status?: "draft" | "published" | "archived";
-  author_id?: number;
+  authorId?: number;
   tags?: string[];
-  sort_by?:
-    | "created_at"
-    | "updated_at"
-    | "published_at"
-    | "view_count"
-    | "like_count";
-  sort_order?: "asc" | "desc";
+  sortBy?:
+    | "createdAt"
+    | "updatedAt"
+    | "publishedAt"
+    | "viewCount"
+    | "likeCount";
+  sortOrder?: "asc" | "desc";
 }

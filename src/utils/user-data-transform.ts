@@ -5,7 +5,7 @@ interface ApiUser {
   id: string | number;
   fullName?: string;
   email: string;
-  roleId?: number;
+  role?: number;
   permissions?: string[] | string;
   countPrompt?: number;
   updatedAt?: string;
@@ -25,10 +25,10 @@ export const transformUserData = (apiUser: unknown): User => {
   const user = apiUser as ApiUser;
 
   return {
-    id: user.id,
+    id: typeof user.id === "string" ? parseInt(user.id, 10) : user.id,
     fullName: user.fullName || "",
     email: user.email,
-    roleId: user.roleId || 1,
+    role: user.role || 1,
     permissions: user.permissions || [],
     countPrompt: user.countPrompt || 0,
     updatedAt: user.updatedAt || "",
@@ -55,7 +55,7 @@ export const transformUserDataForNextAuth = (
     userId: user.id,
     email: user.email,
     fullName: user.fullName || "",
-    roleId: user.roleId || 1,
+    role: user.role || 1,
     accessToken: token,
     refreshToken: token,
     expiresIn: 0, // Will be calculated from token

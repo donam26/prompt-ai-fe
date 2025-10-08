@@ -38,7 +38,7 @@ export default function BlogEditPage(): React.JSX.Element {
           content: data.content || "",
           metaDescription: data.metaDescription || "",
           featuredImage: data.featuredImage || undefined,
-          publishedAt: data.publishedAt || null,
+          publishedAt: data.publishedAt || undefined,
         },
         blogIdToUpdate
       );
