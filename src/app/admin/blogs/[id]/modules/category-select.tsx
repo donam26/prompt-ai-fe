@@ -4,7 +4,6 @@ import React from "react";
 import { BaseSelectField } from "@/components/ui/base";
 import { useBlogCategories } from "@/hooks/admin/useBlog/useBlogCategories";
 import type { SelectOption } from "@/types/select.type";
-import { v4 as uuidv4 } from "uuid";
 
 export const CategorySelect = ({
   value,
@@ -26,7 +25,7 @@ export const CategorySelect = ({
   // Ensure error is always a string
   const safeError =
     typeof error === "string" ? error : (error as any)?.message || "";
-  const id = uuidv4();
+  const id = crypto.randomUUID();
   // Transform API data to SelectOption format
   const categoryOptions: SelectOption[] =
     (categoriesData as any)?.data?.map((category: any) => ({
