@@ -1,5 +1,7 @@
 "use client";
 import { CTAButton } from "@/components/ui";
+import { CHROME_EXTENSION_URL } from "@/constants/homepage";
+import { ArrowRightIcon } from "lucide-react";
 import Image from "next/image";
 
 interface Props {
@@ -7,11 +9,15 @@ interface Props {
 }
 
 export const CTABannerSection: React.FC<Props> = ({ className = "" }) => {
+  const handleClick = () => {
+    window.open(CHROME_EXTENSION_URL, "_blank");
+  };
+
   return (
-    <section
-      className={`py-16   max-w-[1400px] mx-auto rounded-[36px] bg-cta-banner-gradient ${className}`}
+    <div
+      className={`max-w-[1400px] mx-4 sm:mx-auto rounded-[36px] bg-cta-banner-gradient p-6 sm:p-8 lg:p-12 ${className}`}
     >
-      <div className="mx-auto px-4 container">
+      <div className="px-4">
         <div className="items-center gap-12 grid lg:grid-cols-2">
           {/* Left Column - Text and CTAs */}
           <div className="relative space-y-8">
@@ -39,7 +45,10 @@ export const CTABannerSection: React.FC<Props> = ({ className = "" }) => {
 
               {/* CTA Buttons */}
               <div className="flex sm:flex-row flex-col gap-4">
-                <CTAButton className="w-[240px]">Tải ngay</CTAButton>
+                <CTAButton className="w-[240px]" onClick={handleClick}>
+                  Tải ngay
+                  <ArrowRightIcon className="w-4 h-4" />
+                </CTAButton>
               </div>
 
               <div className="flex flex-end justify-center cta-notification-bubble">
@@ -58,7 +67,7 @@ export const CTABannerSection: React.FC<Props> = ({ className = "" }) => {
           <div className="relative flex justify-center lg:justify-end">
             <div className="relative cta-astronaut-container">
               {/* Astronaut SVG */}
-              <div className="z-10 relative cta-astronaut">
+              <div className="z-10 relative grid h-full cta-astronaut">
                 <Image
                   src="/images/home/cta-banner/cta-banner-section.png"
                   alt="Astronaut"
@@ -70,6 +79,6 @@ export const CTABannerSection: React.FC<Props> = ({ className = "" }) => {
           </div>
         </div>
       </div>
-    </section>
+    </div>
   );
 };

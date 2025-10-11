@@ -9,7 +9,7 @@ export default function PricingPage() {
       <div className="mx-auto px-4 container">
         {/* Hero Section */}
         <section className="relative mb-9">
-          <div className="z-10 relative mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
+          <div className="z-10 relative grid mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl h-full">
             <div className="text-center">
               <h1 className="mb-4 sm:mb-6 font-bold text-[#1D1E25] text-3xl sm:text-4xl md:text-5xl lg:text-6xl">
                 Gấp đôi hiệu năng làm việc với gói PromptX phù hợp

@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { ROUTES_URL } from "@/constants/routes-url";
 import { ArrowLeft, Clock, Eye, Heart, Share2, Calendar } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -55,7 +56,7 @@ export const BlogDetail = ({ blog }: BlogDetailProps) => {
     <div className="mx-auto px-4 py-8 max-w-4xl">
       {/* Back Button */}
       <div className="mb-8">
-        <Link href="/blog">
+        <Link href={ROUTES_URL.BLOG}>
           <Button variant="ghost" className="flex items-center gap-2">
             <ArrowLeft className="w-4 h-4" />
             Quay lại danh sách

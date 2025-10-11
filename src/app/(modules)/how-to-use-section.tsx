@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { ROUTES_URL } from "@/constants/routes-url";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { ArrowRight } from "lucide-react";
@@ -18,7 +19,7 @@ export const HowToUseSection = () => {
             Nâng cao hiệu quả và gia tăng năng suất công việc với hàng nghìn
             Prompt AI chuyên sâu
           </p>
-          <Link href="/thu-vien-prompt">
+          <Link href={ROUTES_URL.PROMPT_LIBRARY}>
             <Button
               variant="outline"
               className="hover:bg-[#5700C6]/10 border-[#5700C6] hover:border-[#4a00a8] text-[#5700C6] hover:text-[#4a00a8] transition-all duration-200"

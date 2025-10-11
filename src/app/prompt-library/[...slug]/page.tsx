@@ -5,6 +5,10 @@ import { useState, useEffect, useMemo } from "react";
 import { Search, Loader2 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { MultiSelect } from "@/components/ui/multi-select";
+import {
+  getPromptDetailUrlWithTab,
+  getMidjourneyPromptDetailUrlWithTab,
+} from "@/constants/routes-url";
 import { Pagination } from "@/components/ui/pagination";
 import { PromptCardV2 } from "../modules";
 import {
@@ -160,8 +164,8 @@ export default function ListPromptsPage() {
 
     const isMidjourney = category?.section?.name === "Midjourney";
     const baseUrl = isMidjourney
-      ? `/thu-vien-prompt/detail-prompts-midjourney/${prompts[0].id}?tab=prompt-optimizer`
-      : `/thu-vien-prompt/detail-prompts/${prompts[0].id}?tab=prompt-optimizer`;
+      ? getMidjourneyPromptDetailUrlWithTab(prompts[0].id, "prompt-optimizer")
+      : getPromptDetailUrlWithTab(prompts[0].id, "prompt-optimizer");
 
     router.push(baseUrl);
   };

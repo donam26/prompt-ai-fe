@@ -17,14 +17,6 @@ export const MENTORS = [
       "210K followers Tiktok Hiếu AI \n 14k sub Youtube Ăn Ngủ Cùng AI",
   },
   {
-    id: 3,
-    name: "Hưng AI Creator",
-    role: "Founder COLOR MIND",
-    achievement: "Tiktok: 100.000 người theo dõi",
-    image: "/images/home/teams/3.jpg",
-    description: "Fanpage: 20.000 người theo dõi",
-  },
-  {
     id: 4,
     name: "Hà Kiều Anh",
     role: "Founder HKA'STUDIO - 3D design",

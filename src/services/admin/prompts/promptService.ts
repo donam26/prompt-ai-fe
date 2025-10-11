@@ -110,6 +110,15 @@ export class PromptService extends BaseService {
       `${ENDPOINTS.PROMPTS.NEWEST}?categoryId=${categoryId}`
     );
   }
+
+  /**
+   * Get latest prompts with pagination and filters
+   * @param params - Query parameters (accepts both camelCase and snake_case)
+   */
+  async getLatestPrompts(params?: Record<string, unknown>) {
+    const { apiClient } = await import("../../base/apiClient");
+    return await apiClient.get(ENDPOINTS.PROMPTS.LATEST, { params });
+  }
 }
 
 // Export singleton instance

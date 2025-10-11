@@ -16,3 +16,4 @@ export * from "./masonry-card";
 export * from "./pagination";
 export * from "./badge";
 export { default as CTAButton } from "../cta-button";
+export * from "./back-to-top-button";

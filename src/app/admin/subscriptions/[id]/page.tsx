@@ -1,6 +1,7 @@
 "use client";
 
 import { useRouter, useParams } from "next/navigation";
+import { ROUTES_URL } from "@/constants/routes-url";
 import { useState, useEffect } from "react";
 import { SubscriptionForm } from "./modules/subscription-form";
 import { useSubscriptionDetail, useUpsertSubscription } from "@/hooks/admin";
@@ -56,7 +57,7 @@ export default function SubscriptionEditPage(): React.JSX.Element {
             ? SUBSCRIPTIONS_CONSTANTS.MESSAGES.UPDATE_SUCCESS
             : SUBSCRIPTIONS_CONSTANTS.MESSAGES.CREATE_SUCCESS
         );
-        router.push("/admin/subscriptions");
+        router.push(`${ROUTES_URL.ADMIN}/subscriptions`);
       }
     } catch (error) {
       console.error("Submit subscription error:", error);
@@ -66,7 +67,7 @@ export default function SubscriptionEditPage(): React.JSX.Element {
   };
 
   const handleCancel = (): void => {
-    router.push("/admin/subscriptions");
+    router.push(`${ROUTES_URL.ADMIN}/subscriptions`);
   };
 
   const isDataLoading = isEditMode ? isLoadingDetail : false;

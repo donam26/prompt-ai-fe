@@ -4,10 +4,10 @@ import Image from "next/image";
 
 const LivestreamCommunitySection = () => {
   return (
-    <div className="gap-6 grid grid-cols-1 lg:grid-cols-2 mb-8">
+    <div className="gap-6 grid grid-cols-1 lg:grid-cols-2">
       {/* Left Section - Livestream & Q&A */}
-      <div className="relative bg-ai-modules-gradient p-8 rounded-2xl overflow-hidden">
-        <div className="z-10 relative">
+      <div className="relative bg-ai-modules-gradient p-8 pb-0 rounded-2xl overflow-hidden">
+        <div className="z-10 relative grid h-full">
           <h2 className="mb-6 font-bold text-white text-3xl lg:text-4xl leading-tight">
             Livestream & Q/A Music Session Hàng Tuần!
           </h2>
@@ -30,8 +30,8 @@ const LivestreamCommunitySection = () => {
       </div>
 
       {/* Right Section - Community */}
-      <div className="relative bg-livestream-gradient p-8 rounded-2xl overflow-hidden">
-        <div className="z-10 relative">
+      <div className="relative bg-livestream-gradient p-8 pb-0 rounded-2xl overflow-hidden">
+        <div className="z-10 relative grid h-full">
           <h2 className="mb-6 font-bold text-gray-800 text-3xl lg:text-4xl leading-tight">
             Cộng Đồng Chất Lượng Dành Riêng Cho Gen-Z & AI-first Entrepreneur
           </h2>

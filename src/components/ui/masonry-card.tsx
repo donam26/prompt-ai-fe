@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import { ROUTES_URL } from "@/constants/routes-url";
 import { cn } from "@/lib/utils";
 
 interface MasonryCardData {
@@ -11,7 +12,8 @@ interface MasonryCardData {
     | "profile"
     | "project"
     | "post"
-    | "announcement";
+    | "announcement"
+    | "image";
   title?: string;
   subtitle?: string;
   author?: string;
@@ -21,6 +23,7 @@ interface MasonryCardData {
   date?: string;
   content?: string | any;
   image?: string;
+  alt?: string;
   stats?: {
     following?: string;
     followers?: string;
@@ -234,10 +237,16 @@ export const MasonryCard: React.FC<MasonryCardProps> = ({
 
       {/* Links */}
       <div className="space-y-2 mb-4">
-        <a href="#" className="block text-blue-600 hover:text-blue-700 text-sm">
+        <a
+          href={ROUTES_URL.HOME}
+          className="block text-blue-600 hover:text-blue-700 text-sm"
+        >
           Đơn hàng của bạn
         </a>
-        <a href="#" className="block text-blue-600 hover:text-blue-700 text-sm">
+        <a
+          href={ROUTES_URL.HOME}
+          className="block text-blue-600 hover:text-blue-700 text-sm"
+        >
           Nối gót
         </a>
       </div>
@@ -374,6 +383,22 @@ export const MasonryCard: React.FC<MasonryCardProps> = ({
     </div>
   );
 
+  const renderImageCard = () => (
+    <div className="group relative shadow-lg hover:shadow-xl rounded-xl overflow-hidden transition-all duration-300">
+      {data.image && (
+        <div className="relative w-full h-auto">
+          <Image
+            src={data.image}
+            alt={data.alt || "Masonry image"}
+            width={600}
+            height={400}
+            className="w-full h-auto object-cover group-hover:scale-105 transition-transform duration-300"
+          />
+        </div>
+      )}
+    </div>
+  );
+
   const renderCard = () => {
     switch (data.type) {
       case "group":
@@ -388,6 +413,8 @@ export const MasonryCard: React.FC<MasonryCardProps> = ({
         return renderPostCard();
       case "announcement":
         return renderAnnouncementCard();
+      case "image":
+        return renderImageCard();
       default:
         return null;
     }

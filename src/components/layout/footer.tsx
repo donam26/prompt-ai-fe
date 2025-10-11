@@ -30,7 +30,7 @@ export function Footer({ className }: Props): React.JSX.Element | null {
       {/* Desktop Footer */}
       <footer className={cn("hidden lg:block bg-white", className)}>
         {/* Upper Section - CTA + Navigation */}
-        <div className="mx-auto px-4 py-12 container">
+        <div className="mx-auto px-4 sm:px-6 lg:px-8 py-12 max-w-7xl">
           <div className="flex lg:flex-row flex-col gap-8 lg:gap-12">
             {/* Left Section - CTA */}
             <div className="lg:w-1/3">
@@ -48,7 +48,7 @@ export function Footer({ className }: Props): React.JSX.Element | null {
         <div className="border-gray-200 border-t" />
 
         {/* Lower Section - Logo + Copyright + Social */}
-        <div className="mx-auto px-4 container">
+        <div className="mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
           <FooterCopyright />
         </div>
       </footer>

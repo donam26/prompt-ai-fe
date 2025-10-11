@@ -2,6 +2,7 @@
 
 import { useState, useCallback, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { ROUTES_URL } from "@/constants/routes-url";
 
 import { AdminContentCard } from "@/components/admin/common/admin-content-card";
 import {
@@ -76,11 +77,11 @@ export default function SubscriptionManagementPage(): React.JSX.Element {
 
   // Modal handlers
   const handleAddSubscription = () => {
-    router.push("/admin/subscriptions/new");
+    router.push(`${ROUTES_URL.ADMIN}/subscriptions/new`);
   };
 
   const handleEditSubscription = (subscription: Subscription) => {
-    router.push(`/admin/subscriptions/${subscription.id}`);
+    router.push(`${ROUTES_URL.ADMIN}/subscriptions/${subscription.id}`);
   };
 
   const handleDeleteSubscription = (subscription: Subscription): void => {

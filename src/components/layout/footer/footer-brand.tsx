@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { ROUTES_URL } from "@/constants/routes-url";
 import Image from "next/image";
 import { LAYOUT_LABELS } from "@/constants/layout";
 import { cn } from "@/lib/utils";
@@ -20,7 +21,7 @@ export function FooterBrand({ className }: Props): React.JSX.Element {
 
         {/* CTA Button */}
         <Link
-          href="/contact"
+          href={ROUTES_URL.CONTACT}
           className="inline-block bg-[#5700C6] hover:bg-[#4a00a8] px-8 py-4 rounded-full font-medium text-white text-lg transition-colors duration-200"
         >
           {LAYOUT_LABELS.footer.ctaButton}

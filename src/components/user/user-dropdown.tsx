@@ -2,6 +2,7 @@
 
 // Removed unused imports
 import { useRouter } from "next/navigation";
+import { ROUTES_URL } from "@/constants/routes-url";
 import { User, Settings, LogOut, Heart, Shield } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -41,7 +42,7 @@ export function UserDropdown({ user, onLogout }: Props): React.JSX.Element {
   };
 
   const handleAdminClick = (): void => {
-    router.push("/admin");
+    router.push(ROUTES_URL.ADMIN);
   };
 
   return (

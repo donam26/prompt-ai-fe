@@ -12,11 +12,13 @@ export const AUTH_PAGES = [
   "/reset-password",
 ] as const;
 
+import { ROUTES_URL } from "./routes-url";
+
 export const PROTECTED_PATHS = [
-  "/admin",
-  "/thu-vien-prompt",
-  "/profile",
-  "/settings",
+  ROUTES_URL.ADMIN,
+  ROUTES_URL.PROMPT_LIBRARY,
+  ROUTES_URL.PROFILE,
+  ROUTES_URL.SETTINGS,
 ] as const;
 
 export const INIT_STATUS = {
@@ -25,7 +27,7 @@ export const INIT_STATUS = {
 } as const;
 
 export const ROUTES = {
-  SIGN_IN: "/login",
-  DASHBOARD: "/thu-vien-prompt",
-  HOME: "/",
+  SIGN_IN: ROUTES_URL.LOGIN,
+  DASHBOARD: ROUTES_URL.PROMPT_LIBRARY,
+  HOME: ROUTES_URL.HOME,
 } as const;

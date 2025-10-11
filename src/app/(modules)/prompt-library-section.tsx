@@ -1,14 +1,19 @@
 "use client";
 
 import { CTAButton } from "@/components/ui";
+import { CHROME_EXTENSION_URL } from "@/constants/homepage";
+import { ArrowRightIcon } from "lucide-react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
+import { ROUTES_URL } from "@/constants/routes-url";
 
 const PromptLibrarySection = () => {
+  const router = useRouter();
   return (
-    <div className="gap-6 grid grid-cols-1 lg:grid-cols-2 mb-8">
+    <div className="gap-6 grid grid-cols-1 lg:grid-cols-2">
       {/* Left Section - Prompt Library Discovery */}
-      <div className="relative bg-prompt-library-gradient p-8 rounded-2xl overflow-hidden">
-        <div className="z-10 relative">
+      <div className="relative bg-prompt-library-gradient p-8 pb-0 rounded-2xl overflow-hidden">
+        <div className="z-10 relative grid h-full">
           <h2 className="mb-6 font-bold text-3xl lg:text-4xl leading-tight">
             Khám phá Thư Viện 10,000 Prompts!
           </h2>
@@ -20,25 +25,13 @@ const PromptLibrarySection = () => {
             variant="gradient"
             size="lg"
             onClick={() => {
-              /* View prompt library */
+              router.push(ROUTES_URL.PROMPT_LIBRARY);
             }}
-            icon={
-              <svg
-                className="w-5 h-5 transition-transform group-hover:translate-x-1 duration-200"
-                fill="currentColor"
-                viewBox="0 0 20 20"
-              >
-                <path
-                  fillRule="evenodd"
-                  d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z"
-                  clipRule="evenodd"
-                />
-              </svg>
-            }
             iconPosition="right"
             className="mb-8 w-[275px]"
           >
             Thư Viện Prompt
+            <ArrowRightIcon className="w-5 h-5" />
           </CTAButton>
 
           {/* Astronaut Illustration */}
@@ -56,7 +49,7 @@ const PromptLibrarySection = () => {
 
       {/* Right Section - Upgrade Prompt */}
       <div
-        className="relative p-8 lg:p-12 border border-white/20 rounded-3xl overflow-hidden"
+        className="relative p-8 pb-0 border border-white/20 rounded-3xl overflow-hidden"
         style={{
           backgroundColor: "#D0E0F3",
           backgroundImage: `
@@ -69,7 +62,7 @@ const PromptLibrarySection = () => {
           `,
         }}
       >
-        <div className="z-10 relative">
+        <div className="z-10 relative grid h-full">
           <h2 className="mb-6 font-bold text-white text-3xl lg:text-4xl leading-tight">
             Nâng cấp prompt
           </h2>
@@ -80,7 +73,7 @@ const PromptLibrarySection = () => {
             variant="gradient"
             size="lg"
             onClick={() => {
-              /* Download now */
+              window.open(CHROME_EXTENSION_URL, "_blank");
             }}
             icon={
               <svg

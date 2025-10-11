@@ -40,7 +40,7 @@ export const contactFormSchema = z.object({
       CONTACTS_CONSTANTS.VALIDATION.MESSAGE_MAX_LENGTH,
       "Nội dung tin nhắn không được quá 1000 ký tự"
     ),
-  type: z.number().optional().default(CONTACTS_CONSTANTS.TYPE.SUPPORT),
+  type: z.literal(CONTACTS_CONSTANTS.TYPE.SUPPORT),
 });
 
 export type ContactFormSchema = z.infer<typeof contactFormSchema>;

@@ -1,5 +1,7 @@
 import Image from "next/image";
 import { MENTORS } from "@/constants/mentors";
+import { ArrowRightIcon } from "lucide-react";
+import { SKOOL_COMMUNITY_URL } from "@/constants/homepage";
 
 interface StatItemProps {
   icon: string;
@@ -31,11 +33,7 @@ export const TeamsSection = () => {
           <h2 className="mb-6 font-bold text-4xl lg:text-5xl">
             <span className="text-gray-900">Đồng hành cùng</span>{" "}
             <span className="bg-clip-text bg-gradient-to-r from-purple-600 to-blue-600 text-transparent">
-              Đại sứ{" "}
-            </span>
-            <span className="text-gray-900">Prom & Prom </span>
-            <span className="bg-clip-text bg-gradient-to-r from-purple-600 to-blue-600 text-transparent">
-              team{" "}
+              Prom team{" "}
             </span>
             <span className="text-gray-900">
               qua các buổi Q&A / livestream mỗi tuần
@@ -55,7 +53,7 @@ export const TeamsSection = () => {
           {/* Right gradient fade */}
           <div className="top-0 right-0 bottom-0 z-10 absolute bg-gradient-to-l from-white to-transparent w-20 pointer-events-none" />
 
-          {/* Slider wrapper - Continuous scroll */}
+          {/* Slider wrapper - Continuous scroll  */}
           <div className="flex animate-scroll">
             {[...MENTORS, ...MENTORS, ...MENTORS].map((mentor, index) => (
               <div
@@ -64,14 +62,13 @@ export const TeamsSection = () => {
               >
                 <div className="group relative">
                   {/* Mentor Card */}
-                  <div className="relative rounded-2xl w-56 md:w-64 h-72 md:h-80 overflow-hidden">
+                  <div className="relative rounded-2xl w-56 md:w-[370px] h-72 md:h-[509px] overflow-hidden">
                     {/* Background Image */}
                     <Image
                       src={mentor.image}
                       alt={mentor.name}
                       fill
                       className="object-cover transition-opacity duration-300"
-                      sizes="(max-width: 768px) 280px, 256px"
                       quality={90}
                     />
 
@@ -98,14 +95,13 @@ export const TeamsSection = () => {
         </div>
 
         {/* Market Value Statistics Section */}
-        <div className="mb-16">
-          <div className="mb-12 text-center">
-            <h2 className="mb-6 font-bold text-3xl lg:text-4xl">
-              <span className="text-gray-900">Giá trị</span>{" "}
-              <span className="text-[#5700C6]">thị trường</span>{" "}
-              <span className="text-gray-900">của cộng đồng</span>
-            </h2>
-          </div>
+
+        <div className="text-center">
+          <h2 className="mb-6 font-bold text-3xl lg:text-4xl">
+            <span className="text-gray-900">Giá trị</span>{" "}
+            <span className="text-[#5700C6]">thị trường</span>{" "}
+            <span className="text-gray-900">của cộng đồng</span>
+          </h2>
 
           {/* Statistics Grid */}
           <div className="gap-8 lg:gap-12 grid grid-cols-1 md:grid-cols-3 mb-12">
@@ -124,19 +120,23 @@ export const TeamsSection = () => {
             <StatItem
               icon="/images/home/mentors/money-bag.png"
               alt="Revenue"
-              value="2,000 TỈ"
+              value="200 TỶ"
               description="Doanh thu trong hợp đồng"
             />
           </div>
 
           {/* Call to Action Button */}
           <div className="text-center">
-            <button
+            <a
+              href={SKOOL_COMMUNITY_URL}
+              target="_blank"
+              rel="noopener noreferrer"
               className="inline-flex items-center shadow-lg hover:shadow-xl px-8 py-4 rounded-full font-semibold text-lg hover:scale-105 transition-all duration-300 transform"
               style={{
                 background: "linear-gradient(90deg, #5700C6 0%, #3F09A8 100%)",
                 color: "white",
                 border: "none",
+                textDecoration: "none",
               }}
               onMouseEnter={e => {
                 e.currentTarget.style.background =
@@ -148,20 +148,8 @@ export const TeamsSection = () => {
               }}
             >
               Đăng Ký Ngay!
-              <svg
-                className="ml-2 w-5 h-5"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M9 5l7 7-7 7"
-                />
-              </svg>
-            </button>
+              <ArrowRightIcon className="w-5 h-5" />
+            </a>
           </div>
         </div>
       </div>

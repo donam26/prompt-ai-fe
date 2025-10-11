@@ -5,10 +5,10 @@ import Image from "next/image";
 
 const EnterpriseTrainingSection = () => {
   return (
-    <div className="relative bg-enterprise-gradient mb-8 p-8 rounded-2xl overflow-hidden">
+    <div className="relative bg-enterprise-gradient p-6 sm:p-8 rounded-2xl overflow-hidden">
       <div className="items-center gap-8 grid grid-cols-1 lg:grid-cols-2">
         {/* Left Side - Content */}
-        <div className="z-10 relative">
+        <div className="z-10 relative grid h-full">
           <h2 className="mb-6 font-bold text-white text-2xl 2xl:text-4xl leading-tight">
             Prom Team cùng các Đại sứ AI không chỉ dừng ở cộng đồng học tập, mà
             còn mang đến chương trình đào tạo chuyên sâu, thiết kế riêng cho
@@ -74,13 +74,13 @@ const EnterpriseTrainingSection = () => {
         </div>
 
         {/* Right Side - AI Hands Illustration */}
-        <div className="z-10 relative flex justify-center">
+        <div className="z-10 relative flex justify-center rounded-2xl h-full">
           <Image
             src="/images/home/comprehensive/enterprise-training-section.png"
             alt="Enterprise Training Section"
             width={640}
             height={550}
-            className="object-cover"
+            className="rounded-2xl object-cover"
           />
         </div>
       </div>

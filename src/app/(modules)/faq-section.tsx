@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { ROUTES_URL } from "@/constants/routes-url";
 import { cn } from "@/lib/utils";
 
 interface FAQItem {
@@ -61,10 +62,8 @@ export const FAQSection: React.FC<Props> = ({ className = "" }) => {
   };
 
   return (
-    <section
-      className={`py-16 faq-section max-w-[1400px] mx-auto  ${className}`}
-    >
-      <div className="mx-auto px-4 container">
+    <div className={`faq-section max-w-[1400px] mx-auto ${className}`}>
+      <div className="px-4">
         <div className="items-start gap-12 grid lg:grid-cols-2">
           {/* Left Column - Questions Info */}
           <div className="space-y-6">
@@ -84,7 +83,7 @@ export const FAQSection: React.FC<Props> = ({ className = "" }) => {
                 More Questions
               </button>
               <a
-                href="#"
+                href={ROUTES_URL.CONTACT}
                 className="self-center text-gray-900 hover:text-purple-600 underline transition-colors"
               >
                 Contact Us
@@ -146,6 +145,6 @@ export const FAQSection: React.FC<Props> = ({ className = "" }) => {
           </div>
         </div>
       </div>
-    </section>
+    </div>
   );
 };

@@ -2,14 +2,16 @@
  * Footer constants and configuration
  */
 
+import { ROUTES_URL } from "./routes-url";
+
 export const FOOTER_NAVIGATION = {
   menu: [
-    { href: "/", label: "Prom" },
-    { href: "/thu-vien-prompt", label: "Công cụ" },
-    { href: "/product", label: "Sản phẩm" },
-    { href: "/blog", label: "Bài viết" },
-    { href: "/pricing", label: "Bảng giá" },
-    { href: "/contact", label: "Liên hệ" },
+    { href: ROUTES_URL.HOME, label: "Prom" },
+    { href: ROUTES_URL.PROMPT_LIBRARY, label: "Công cụ" },
+    { href: ROUTES_URL.PRODUCT, label: "Sản phẩm" },
+    { href: ROUTES_URL.BLOG, label: "Bài viết" },
+    { href: ROUTES_URL.PRICING, label: "Bảng giá" },
+    { href: ROUTES_URL.CONTACT, label: "Liên hệ" },
   ],
   company: [
     { href: "/customer-service", label: "Dịch vụ khách hàng" },
@@ -35,13 +37,13 @@ export const MOBILE_FOOTER_NAVIGATION = {
     { href: "/cookies", label: "Cookie Policy" },
   ],
   mainNav: [
-    { href: "/", label: "Home", isActive: true },
-    { href: "/thu-vien-prompt", label: "Prompt", isActive: false },
-    { href: "/tools", label: "Tools", isActive: false },
-    { href: "/products", label: "Products", isActive: false },
-    { href: "/blog", label: "Blog", isActive: false },
-    { href: "/pricing", label: "Pricing", isActive: false },
-    { href: "/contact", label: "Contact", isActive: false },
+    { href: ROUTES_URL.HOME, label: "Home", isActive: true },
+    { href: ROUTES_URL.PROMPT_LIBRARY, label: "Prompt", isActive: false },
+    { href: ROUTES_URL.TOOLS, label: "Tools", isActive: false },
+    { href: ROUTES_URL.PRODUCTS, label: "Products", isActive: false },
+    { href: ROUTES_URL.BLOG, label: "Blog", isActive: false },
+    { href: ROUTES_URL.PRICING, label: "Pricing", isActive: false },
+    { href: ROUTES_URL.CONTACT, label: "Contact", isActive: false },
   ],
 } as const;
 

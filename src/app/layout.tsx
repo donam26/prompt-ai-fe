@@ -7,6 +7,7 @@ import { Toast } from "@/components/ui/toast";
 import { Header, Footer } from "@/components/layout";
 import { ConditionalMain } from "@/components/layout/conditional-main";
 import { NextAuthSyncWrapper } from "@/app/(modules)/next-auth-sync-wrapper";
+import { BackToTopButton } from "@/components/ui/back-to-top-button";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -56,6 +57,7 @@ export default function RootLayout({
                 <ConditionalMain>{children}</ConditionalMain>
                 <Footer />
               </div>
+              <BackToTopButton />
               <Toast />
             </NextAuthSyncWrapper>
           </QueryProvider>

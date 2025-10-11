@@ -2,46 +2,40 @@
  * Layout constants and configuration
  */
 
-export const LAYOUT_NAVIGATION = {
-  items: [
-    { href: "/", label: "Trang chủ" },
-    { href: "/thu-vien-prompt", label: "Prompt & Nâng Cấp" },
-    // { href: "/product", label: "Tài Liệu AI" },
-    { href: "/blog", label: "Blog" },
-    { href: "/pricing", label: "Gói Dịch Vụ" },
-    { href: "/contact", label: "Liên Hệ" },
-  ],
-} as const;
-
-export const LAYOUT_IMAGES = {
-  logo: "/icons/ui/logo.svg",
-  logoAlt: "Prom logo",
-  logoWidth: 30,
-  logoHeight: 40,
-} as const;
+import { ROUTES_URL } from "./routes-url";
 
 export const LAYOUT_ROUTES = {
-  home: "/",
-  homeAlt: "/home",
-  login: "/login",
-  register: "/register",
-  userInfo: "/user-information",
-  userInfoFavorites: "/user-information?tab=favorites",
-  settings: "/settings",
+  home: ROUTES_URL.HOME,
+  homeAlt: ROUTES_URL.HOME_ALT,
+  login: ROUTES_URL.LOGIN,
+  register: ROUTES_URL.REGISTER,
+  userInfo: ROUTES_URL.USER_INFO,
+  userInfoFavorites: `${ROUTES_URL.USER_INFO}?tab=favorites`,
+  settings: ROUTES_URL.SETTINGS,
+  promptLibrary: ROUTES_URL.PROMPT_LIBRARY,
+  blog: ROUTES_URL.BLOG,
+  pricing: ROUTES_URL.PRICING,
+  contact: ROUTES_URL.CONTACT,
+} as const;
+
+export const LAYOUT_EXTERNAL_LINKS = {
+  chromeExtension:
+    "https://chromewebstore.google.com/detail/prom-n%C3%A2ng-c%E1%BA%A5p-prompt/gpcjhobhbnoifjkhgongdbggeljjpfif",
 } as const;
 
 export const LAYOUT_LABELS = {
   navigation: {
-    home: "Trang chủ",
-    prompt: "Prompt & Nâng Cấp",
+    home: "Home",
+    promptLibrary: "Thư viện",
+    chromeExtension: "Nâng Cấp prompt",
     product: "Tài Liệu AI",
     blog: "Blog",
     pricing: "Gói Dịch Vụ",
-    contact: "Liên Hệ",
+    contact: "Liên hệ",
   },
   auth: {
-    login: "Đăng Nhập",
-    register: "Đăng Ký",
+    login: "Login",
+    register: "Signup",
     logout: "Đăng xuất",
   },
   user: {
@@ -59,6 +53,48 @@ export const LAYOUT_LABELS = {
     subscribe: "Đăng ký",
     copyright: "All rights reserved © by",
   },
+} as const;
+
+export const LAYOUT_NAVIGATION = {
+  items: [
+    {
+      href: LAYOUT_ROUTES.home,
+      label: LAYOUT_LABELS.navigation.home,
+      isExternal: false,
+    },
+    {
+      href: LAYOUT_ROUTES.promptLibrary,
+      label: LAYOUT_LABELS.navigation.promptLibrary,
+      isExternal: false,
+    },
+    {
+      href: LAYOUT_EXTERNAL_LINKS.chromeExtension,
+      label: LAYOUT_LABELS.navigation.chromeExtension,
+      isExternal: true,
+    },
+    {
+      href: LAYOUT_ROUTES.blog,
+      label: LAYOUT_LABELS.navigation.blog,
+      isExternal: false,
+    },
+    {
+      href: LAYOUT_ROUTES.pricing,
+      label: LAYOUT_LABELS.navigation.pricing,
+      isExternal: false,
+    },
+    {
+      href: LAYOUT_ROUTES.contact,
+      label: LAYOUT_LABELS.navigation.contact,
+      isExternal: false,
+    },
+  ],
+} as const;
+
+export const LAYOUT_IMAGES = {
+  logo: "/icons/ui/logo.svg",
+  logoAlt: "Prom logo",
+  logoWidth: 30,
+  logoHeight: 40,
 } as const;
 
 export const LAYOUT_CONFIG = {

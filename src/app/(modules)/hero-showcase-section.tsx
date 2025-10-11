@@ -17,38 +17,39 @@ export const HeroShowcaseSection = () => {
             priority
             quality={90}
           />
-
-          {/* Gradient overlay */}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
-
-          {/* Hover effect overlay */}
-          <div className="absolute inset-0 bg-gradient-to-t from-purple-600/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
         </div>
       </div>
 
       {/* Bottom Partners Section */}
-      <div className="bg-gray-50 px-4 py-12 overflow-hidden">
-        <div className="mx-auto container">
+      <div className="bg-white px-4 pt-8 lg:pt-12 overflow-hidden">
+        <div className="mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
           {/* Partners Slider - Continuous Loop */}
           <div className="relative overflow-hidden">
             {/* Left gradient fade */}
-            <div className="top-0 bottom-0 left-0 z-10 absolute bg-gradient-to-r from-gray-50 to-transparent w-20 pointer-events-none" />
+            <div className="top-0 bottom-0 left-0 z-10 absolute bg-gradient-to-r from-white to-transparent w-20 pointer-events-none" />
 
             {/* Right gradient fade */}
-            <div className="top-0 right-0 bottom-0 z-10 absolute bg-gradient-to-l from-gray-50 to-transparent w-20 pointer-events-none" />
+            <div className="top-0 right-0 bottom-0 z-10 absolute bg-gradient-to-l from-white to-transparent w-20 pointer-events-none" />
 
             {/* Slider wrapper - Continuous scroll */}
             <div className="flex animate-scroll">
-              {[...HERO_SHOWCASE, ...HERO_SHOWCASE, ...HERO_SHOWCASE].map(
-                (partner, index) => (
-                  <div
-                    key={`${partner}-${index}`}
-                    className="flex-shrink-0 mx-6"
-                  >
-                    {partner}
+              {[...HERO_SHOWCASE, ...HERO_SHOWCASE].map((logo, index) => (
+                <div
+                  key={`${logo.alt}-${index}`}
+                  className="flex flex-shrink-0 justify-center items-center mx-6"
+                >
+                  <div className="flex justify-center items-center bg-white shadow-sm hover:shadow-md p-3 border border-gray-200 hover:border-purple-300 rounded-lg min-w-[132px] min-h-[72px] transition-all duration-300">
+                    <Image
+                      src={logo.src}
+                      alt={logo.alt}
+                      width={logo.width}
+                      height={logo.height}
+                      className="w-auto max-w-[120px] h-12 object-contain"
+                      style={{ width: "auto", height: "auto" }}
+                    />
                   </div>
-                )
-              )}
+                </div>
+              ))}
             </div>
           </div>
         </div>

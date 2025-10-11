@@ -8,3 +8,4 @@ export * from "./usePromptActions";
 export * from "./usePromptLibraryData";
 export * from "./useTopicsByCategory";
 export * from "./useNewestPrompts";
+export * from "./useLatestPrompts";

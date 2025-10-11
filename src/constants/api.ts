@@ -7,6 +7,7 @@ export const ENDPOINTS = {
     BY_CATEGORY: "/prompts/by-category",
     TOPICS_BY_CATEGORY: "/prompts/topics/by-category",
     NEWEST: "/prompts/newest",
+    LATEST: "/prompts/latest",
     RELATED: "/prompts/related",
     FAVORITE: "/promptfavorite",
     FAVORITE_BY_SECTION: "/promptfavorite/list/by-section",

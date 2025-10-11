@@ -8,6 +8,7 @@ import { useState } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { promptService } from "@/services";
 import { toast } from "sonner";
+import { getPromptDetailUrl } from "@/constants/routes-url";
 
 interface NavigationState {
   currentPage: number;
@@ -80,7 +81,7 @@ export const PromptCardV2 = ({
     }
   };
 
-  const detailUrl = `/thu-vien-prompt/detail-prompts/${prompt.id}`;
+  const detailUrl = getPromptDetailUrl(prompt.id);
 
   // Check if prompt is new (created within last 7 days)
   const isNew = (() => {
@@ -127,12 +128,14 @@ export const PromptCardV2 = ({
             <button
               onClick={handleToggleFavorite}
               disabled={isTogglingFavorite}
-              className="bg-white hover:bg-gray-50 disabled:opacity-50 shadow-sm p-2 rounded-full transition-colors"
+              className="group bg-white hover:bg-gray-50 disabled:opacity-50 shadow-sm p-2 rounded-full transition-colors"
               aria-label={isFavorited ? "Bỏ yêu thích" : "Thêm vào yêu thích"}
             >
               <Heart
-                className={`w-6 h-6 ${
-                  isFavorited ? "fill-red-500 text-red-500" : "text-gray-400"
+                className={`w-6 h-6 transition-all duration-200 ${
+                  isFavorited
+                    ? "fill-red-500 text-red-500"
+                    : "text-gray-400 group-hover:text-red-500 group-hover:fill-red-500"
                 }`}
               />
             </button>
@@ -156,7 +159,7 @@ export const PromptCardV2 = ({
 
           {/* Category tag */}
           {prompt.category?.name && (
-            <div className="items-center bg-white mt-auto px-3 py-2 rounded-lg text-center">
+            <div className="items-center bg-white mt-auto px-3 py-2 border-2 border-purple-200 hover:border-purple-400 rounded-lg text-center transition-colors duration-200">
               <span className="font-semibold text-gray-900 text-sm">
                 {prompt.category.name}
               </span>
@@ -170,7 +173,7 @@ export const PromptCardV2 = ({
             e.preventDefault();
             window.location.href = detailUrl;
           }}
-          className="bg-[#DACDFFE5] hover:bg-primary mt-auto px-4 py-3 rounded-xl w-full font-semibold text-purple-700 hover:text-white transition-colors"
+          className="bg-[#DACDFFE5] hover:bg-primary mt-auto px-4 py-3 rounded-full w-full font-semibold text-purple-700 hover:text-white transition-colors"
         >
           View Prom
         </button>

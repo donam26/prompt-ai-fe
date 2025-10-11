@@ -3,11 +3,11 @@
 import Image from "next/image";
 const AIModulesSection = () => {
   return (
-    <div className="gap-6 grid grid-cols-1 lg:grid-cols-2 mb-8">
+    <div className="gap-6 grid grid-cols-1 lg:grid-cols-2">
       {/* Left Section - AI Modules Learning */}
       <div>
         <div className="relative bg-ai-modules-gradient p-8 rounded-2xl rounded-b-none overflow-hidden">
-          <div className="z-10 relative">
+          <div className="z-10 relative grid">
             <h2 className="mb-6 font-bold text-white text-3xl lg:text-4xl leading-tight">
               Học Modules AI Từ Chính Những Chuyên Gia Thực Chiến
             </h2>
@@ -21,18 +21,18 @@ const AIModulesSection = () => {
         {/* Cat Illustrations */}
         <div className="rounded-2xl rounded-t-none overflow-hidden">
           <Image
-            src="/images/home/comprehensive/cat-Illustrations.png"
+            src="/images/home/comprehensive/cat-Illustrations.jpg"
             alt="AI Modules Section"
             width={640}
-            height={430}
-            className="w-full h-full object-cover"
+            height={250}
+            className="w-full h-full object-c"
           />
         </div>
       </div>
 
       {/* Right Section - Secret Modules */}
-      <div className="relative bg-secret-modules-gradient p-8 rounded-2xl overflow-hidden">
-        <div className="z-10 relative">
+      <div className="relative bg-secret-modules-gradient p-8 pb-0 rounded-2xl overflow-hidden">
+        <div className="z-10 relative grid h-full">
           <h2 className="mb-6 font-bold text-white text-3xl lg:text-4xl leading-tight">
             Các Modules bí mật ?
           </h2>

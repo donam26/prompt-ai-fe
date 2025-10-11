@@ -5,6 +5,7 @@ import { Loader2 } from "lucide-react";
 import { ToggleButtonGroup } from "./ToggleButtonGroup";
 import { CategoryCard } from "./CategoryCard";
 import { useCategoriesSimple } from "@/hooks/admin/useCategory/useCategoriesSimple";
+import { getCategoryUrl } from "@/constants/routes-url";
 
 interface PromptLibraryHomeProps {
   limit?: number;
@@ -89,7 +90,7 @@ export const PromptLibraryHome = ({ limit }: PromptLibraryHomeProps) => {
                   <CategoryCard
                     key={category.id}
                     category={category}
-                    link={`/thu-vien-prompt/${category.name}/${category.id}?type=${type}`}
+                    link={getCategoryUrl(category.name, category.id, type)}
                     isPremium={category.type === "premium"}
                   />
                 )

@@ -7,6 +7,7 @@ import { useProducts } from "@/hooks/admin/useProduct/useProducts";
 import { DEFAULT_PAGINATION } from "@/constants/common";
 import { PaginationParams } from "@/types/base";
 import { useRouter } from "next/navigation";
+import { ROUTES_URL } from "@/constants/routes-url";
 
 const ProductPage = () => {
   const router = useRouter();
@@ -22,11 +23,11 @@ const ProductPage = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
   const handleUpgradeClick = () => {
-    router.push("/pricing");
+    router.push(ROUTES_URL.PRICING);
   };
 
   const handleLoginClick = () => {
-    router.push("/login");
+    router.push(ROUTES_URL.LOGIN);
   };
 
   return (

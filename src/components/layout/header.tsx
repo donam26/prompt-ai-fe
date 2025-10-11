@@ -12,7 +12,8 @@ interface HeaderProps {
 
 export function Header({ className }: HeaderProps): React.JSX.Element {
   const pathname = usePathname();
-  const isHomePage = pathname === LAYOUT_ROUTES.home;
+  const isHomePage =
+    pathname === LAYOUT_ROUTES.home || pathname === LAYOUT_ROUTES.homeAlt;
 
   return (
     <header
@@ -24,7 +25,7 @@ export function Header({ className }: HeaderProps): React.JSX.Element {
     >
       <div className="mx-0 sm:mx-auto max-w-[1084px] sm:max-w-[1084px]">
         {/* Main Navigation Container */}
-        <nav className="items-center bg-white mobile-header-shadow sm:shadow-lg backdrop-blur-sm m-4 sm:mx-6 lg:mx-8 xl:mx-12 px-0 sm:px-6 rounded-full h-16">
+        <nav className="items-center bg-white mobile-header-shadow sm:shadow-lg backdrop-blur-sm m-0 sm:m-4 px-0 sm:px-6 rounded-none sm:rounded-full h-16">
           <MobileHeader />
           <DesktopHeader />
         </nav>

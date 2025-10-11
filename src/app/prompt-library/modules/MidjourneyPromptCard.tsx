@@ -2,6 +2,7 @@
 
 import { Prompt } from "@/types";
 import Link from "next/link";
+import { getMidjourneyPromptDetailUrl } from "@/constants/routes-url";
 import Image from "next/image";
 import { Heart } from "lucide-react";
 import { useState } from "react";
@@ -25,18 +26,18 @@ interface NavigationState {
   fromNewest?: boolean;
 }
 
-interface PromptCardProps {
+interface MidjourneyPromptCardProps {
   prompt: Prompt;
   favoriteList?: string[];
   navigationState?: NavigationState;
 }
 
-export const PromptCard = ({
+export const MidjourneyPromptCard = ({
   prompt,
   favoriteList = [],
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   navigationState: _navigationState,
-}: PromptCardProps) => {
+}: MidjourneyPromptCardProps) => {
   const { user } = useAuth();
   const [isFavorited, setIsFavorited] = useState(
     favoriteList.includes(String(prompt.id))
@@ -80,7 +81,7 @@ export const PromptCard = ({
     }
   };
 
-  const detailUrl = `/thu-vien-prompt/detail-prompts/${prompt.id}`;
+  const detailUrl = getMidjourneyPromptDetailUrl(prompt.id);
 
   return (
     <Link
@@ -88,8 +89,8 @@ export const PromptCard = ({
       className="block no-underline hover:scale-105 transition-transform"
     >
       <div className="relative flex flex-col bg-white shadow-md hover:shadow-xl rounded-xl h-full overflow-hidden transition-shadow">
-        {/* Image Section */}
-        <div className="relative bg-gradient-to-br from-purple-100 to-purple-200 w-full h-48">
+        {/* Image Section - Larger for Midjourney */}
+        <div className="relative bg-gradient-to-br from-indigo-100 to-purple-200 w-full h-64">
           {prompt.imageCard || prompt.image ? (
             <Image
               src={prompt.imageCard || prompt.image || ""}
@@ -100,7 +101,7 @@ export const PromptCard = ({
             />
           ) : (
             <div className="flex justify-center items-center w-full h-full">
-              <span className="text-purple-300 text-4xl">🤖</span>
+              <span className="text-purple-300 text-5xl">🎨</span>
             </div>
           )}
 
@@ -117,6 +118,11 @@ export const PromptCard = ({
               }`}
             />
           </button>
+
+          {/* Midjourney Badge */}
+          <div className="bottom-3 left-3 absolute bg-indigo-600 px-3 py-1 rounded-full">
+            <span className="font-semibold text-white text-xs">Midjourney</span>
+          </div>
         </div>
 
         {/* Content Section */}
@@ -135,7 +141,7 @@ export const PromptCard = ({
           <div className="flex justify-between items-center mt-auto pt-3 border-gray-100 border-t">
             <div className="flex items-center gap-2">
               {prompt.category?.name && (
-                <span className="bg-purple-100 px-2 py-1 rounded-full text-purple-700 text-xs">
+                <span className="bg-indigo-100 px-2 py-1 rounded-full text-indigo-700 text-xs">
                   {prompt.category.name}
                 </span>
               )}

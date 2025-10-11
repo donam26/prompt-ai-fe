@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import Image from "next/image";
-import { Heart, ArrowRight } from "lucide-react";
+import { Heart } from "lucide-react";
 
 import { useAuth } from "@/hooks/useAuth";
 import { UserDropdown } from "@/components/user/user-dropdown";
@@ -13,6 +13,7 @@ import {
   LAYOUT_NAVIGATION,
   LAYOUT_IMAGES,
   LAYOUT_ROUTES,
+  LAYOUT_LABELS,
   LAYOUT_CONFIG,
 } from "@/constants/layout";
 
@@ -66,20 +67,35 @@ export const DesktopHeader = ({
 
       {/* Center Navigation */}
       <nav className="flex items-center gap-4 lg:gap-8">
-        {LAYOUT_NAVIGATION.items.map(item => (
-          <Link
-            key={item.href}
-            href={item.href}
-            className={cn(
-              "flex items-center gap-1 font-medium text-base transition-all duration-200",
-              pathname === item.href
-                ? "text-[#5700c6]"
-                : "text-gray-700 hover:text-[#5700c6]"
-            )}
-          >
-            {item.label}
-          </Link>
-        ))}
+        {LAYOUT_NAVIGATION.items.map(item => {
+          if (item.isExternal) {
+            return (
+              <a
+                key={item.href}
+                href={item.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-1 font-bold text-gray-700 hover:text-[#5700c6] text-base transition-all duration-200"
+              >
+                {item.label}
+              </a>
+            );
+          }
+          return (
+            <Link
+              key={item.href}
+              href={item.href}
+              className={cn(
+                "flex items-center gap-1 font-bold text-base transition-all duration-200",
+                pathname === item.href
+                  ? "text-[#5700c6]"
+                  : "text-gray-700 hover:text-[#5700c6]"
+              )}
+            >
+              {item.label}
+            </Link>
+          );
+        })}
       </nav>
 
       {/* Right Actions */}
@@ -102,16 +118,28 @@ export const DesktopHeader = ({
           <>
             <Link
               href={LAYOUT_ROUTES.login}
-              className="font-medium text-[#5700c6] hover:text-[#4a00a8] text-base transition-colors duration-200"
+              className="font-bold text-[#5700c6] hover:text-[#4a00a8] text-base transition-colors duration-200"
             >
-              Login
+              {LAYOUT_LABELS.auth.login}
             </Link>
             <Link
               href={LAYOUT_ROUTES.login}
-              className="flex items-center gap-2 bg-[#5700c6] hover:bg-[#4a00a8] px-6 py-3 rounded-full font-medium text-white text-base transition-all duration-200"
+              className="flex items-center gap-2 bg-[#5700c6] hover:bg-[#4a00a8] px-6 py-3 rounded-full font-bold text-white text-base transition-all duration-200"
             >
-              Signup
-              <ArrowRight className="w-4 h-4" />
+              {LAYOUT_LABELS.auth.register}
+              <svg
+                className="w-4 h-4"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M9 5l7 7-7 7"
+                />
+              </svg>
             </Link>
           </>
         ) : (

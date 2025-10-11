@@ -14,6 +14,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Loader2, Mail } from "lucide-react";
 import { AUTH_LABELS } from "@/constants";
+import { ROUTES_URL } from "@/constants/routes-url";
 import { useLoginQuery } from "@/hooks/auth/useLoginQuery";
 import { useAuthRedirect } from "@/hooks/useAuthRedirect";
 import { AuthLoading } from "@/components/ui/auth-loading";
@@ -21,7 +22,7 @@ import { AuthLoading } from "@/components/ui/auth-loading";
 export default function LoginPage() {
   const { isLoading: isLoginLoading, mutate: loginUser } = useLoginQuery();
   const { isLoading, isLoggedIn } = useAuthRedirect({
-    redirectTo: "/",
+    redirectTo: ROUTES_URL.HOME,
     requireGuest: true,
   });
   const [email, setEmail] = useState("");
@@ -36,7 +37,7 @@ export default function LoginPage() {
     try {
       setIsGoogleLoading(true);
       await signIn("google", {
-        callbackUrl: "/",
+        callbackUrl: ROUTES_URL.HOME,
         redirect: true,
       });
     } catch (error) {

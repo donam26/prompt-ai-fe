@@ -154,16 +154,84 @@ export const SOLUTIONS_DATA: Record<string, SolutionData> = {
   },
 };
 
-export const HERO_SHOWCASE = [
-  "ChatGPT",
-  "Midjourney",
-  "Grok",
-  "AIHay",
-  "DeepSeek",
-  "Gemini",
-  "Claude",
-  "DALL-E",
+export interface BrandLogo {
+  src: string;
+  alt: string;
+  width: number;
+  height: number;
+}
+
+export const HERO_SHOWCASE: BrandLogo[] = [
+  {
+    src: "/images/home/brands/tg_vingroup_logo.png",
+    alt: "Vingroup",
+    width: 120,
+    height: 60,
+  },
+  {
+    src: "/images/home/brands/tg_vingroup_logo_1.png",
+    alt: "Vingroup",
+    width: 120,
+    height: 60,
+  },
+  {
+    src: "/images/home/brands/tg_tech_logo.png",
+    alt: "TechComBank",
+    width: 120,
+    height: 60,
+  },
+  {
+    src: "/images/home/brands/tg_vib_logo.png",
+    alt: "VIB",
+    width: 120,
+    height: 60,
+  },
+  {
+    src: "/images/home/brands/tg_mb_logo.png",
+    alt: "MB Bank",
+    width: 120,
+    height: 60,
+  },
+  {
+    src: "/images/home/brands/tg_msb_logo.png",
+    alt: "MSB",
+    width: 120,
+    height: 60,
+  },
+  {
+    src: "/images/home/brands/tg_mcredit_logo.png",
+    alt: "MCredit",
+    width: 120,
+    height: 60,
+  },
+  {
+    src: "/images/home/brands/tg_bank_logo.png",
+    alt: "TPBank",
+    width: 120,
+    height: 60,
+  },
+  {
+    src: "/images/home/brands/logo10.png",
+    alt: "Partner Logo 10",
+    width: 120,
+    height: 60,
+  },
+  {
+    src: "/images/home/brands/logo11.png",
+    alt: "Partner Logo 11",
+    width: 120,
+    height: 60,
+  },
+  {
+    src: "/images/home/brands/logo12.png",
+    alt: "Partner Logo 12",
+    width: 120,
+    height: 60,
+  },
 ];
 
 export const CHROME_EXTENSION_URL =
   "https://chromewebstore.google.com/detail/prom-nâng-cấp-prompt/gpcjhobhbnoifjkhgongdbggeljjpfif";
+
+export const SKOOL_COMMUNITY_URL =
+  "https://www.skool.com/prom-aihub/about?ref=1a6136e6caba48bcaf8d6a8120bc0cb8";

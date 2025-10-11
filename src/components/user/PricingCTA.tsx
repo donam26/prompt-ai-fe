@@ -10,7 +10,7 @@ export const PricingCTA = () => {
         {/* Background Image */}
 
         {/* Content */}
-        <div className="z-10 relative">
+        <div className="z-10 relative grid h-full">
           <h2 className="mb-4 font-bold text-white text-3xl sm:text-4xl lg:text-5xl">
             {PRICING_CTA.title}
           </h2>
