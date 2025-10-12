@@ -97,11 +97,9 @@ export function useCategoryColumns({
         <div className="flex justify-center items-center min-w-[120px]">
           <StatusCell
             isComingSoon={
-              row.original.isCommingSoon || row.original.isCommingSoon
+              row.original.isComingSoon || row.original.isComingSoon
             }
-            isActive={
-              !row.original.isCommingSoon && !row.original.isCommingSoon
-            }
+            isActive={!row.original.isComingSoon && !row.original.isComingSoon}
           />
         </div>
       ),

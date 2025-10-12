@@ -19,7 +19,7 @@ export const CategoryCard = ({
   link,
   isPremium = false,
 }: CategoryCardProps) => {
-  const isComingSoonStatus = category.isCommingSoon === true;
+  const isComingSoonStatus = category.isComingSoon === true;
 
   return (
     <div

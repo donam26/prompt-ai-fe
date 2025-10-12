@@ -8,7 +8,8 @@ import { toast } from "sonner";
 interface PromptFilters {
   searchTerm: string;
   categoryId: string;
-  industryId: string;
+  industryIds: string;
+  topicIds: string;
   isType?: string;
   subType?: number;
 }
@@ -55,10 +56,11 @@ export const usePrompts = (options: UsePromptsOptions = {}) => {
         page: memoizedPagination.page,
         pageSize: memoizedPagination.pageSize,
         categoryId: memoizedFilters.categoryId || "",
-        industryId: memoizedFilters.industryId || undefined,
+        industryIds: memoizedFilters.industryIds || undefined,
+        topicIds: memoizedFilters.topicIds || undefined,
         searchText: memoizedFilters.searchTerm || undefined,
         isType: memoizedFilters.isType ? Number(memoizedFilters.isType) : 1,
-        subType: memoizedFilters.subType || 2,
+        // subType: memoizedFilters.subType || 2,
       });
 
       setPrompts((response.data.data as Prompt[]) || []);

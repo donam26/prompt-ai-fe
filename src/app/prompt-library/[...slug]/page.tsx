@@ -74,8 +74,8 @@ export default function ListPromptsPage() {
     () => ({
       searchTerm: searchText,
       categoryId: categoryId,
-      industryId: industryIdsString || undefined,
-      topicId: topicIdsString || undefined,
+      industryIds: industryIdsString || undefined,
+      topicIds: topicIdsString || undefined,
       isType: "1",
       subType: subType,
     }),
@@ -168,6 +168,16 @@ export default function ListPromptsPage() {
       : getPromptDetailUrlWithTab(prompts[0].id, "prompt-optimizer");
 
     router.push(baseUrl);
+  };
+
+  // Handle prompt card click
+  const handlePromptClick = (promptId: string | number) => {
+    const isMidjourney = category?.section?.name === "Midjourney";
+    const detailUrl = isMidjourney
+      ? getMidjourneyPromptDetailUrlWithTab(promptId, "main")
+      : getPromptDetailUrlWithTab(promptId, "main");
+
+    router.push(detailUrl);
   };
 
   return (
@@ -267,26 +277,13 @@ export default function ListPromptsPage() {
               <p className="text-gray-500 text-lg">Không tìm thấy prompt nào</p>
             </div>
           ) : (
-            <div className="gap-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 2xl:grid-cols-4 xl:grid-cols-3">
+            <div className="gap-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 xl:grid-cols-4">
               {prompts.map(prompt => (
                 <PromptCardV2
                   key={prompt.id}
                   prompt={prompt}
                   favoriteList={favoritePrompts}
-                  navigationState={{
-                    currentPage,
-                    searchText,
-                    topicId:
-                      topicIds.length > 0 ? topicIds.join(",") : undefined,
-                    isType: 1,
-                    pageSize,
-                    category: category
-                      ? { id: category.id, name: category.name }
-                      : undefined,
-                    activeSection: category?.section
-                      ? { name: category.section.name }
-                      : undefined,
-                  }}
+                  onPromptClick={handlePromptClick}
                 />
               ))}
             </div>
@@ -314,26 +311,13 @@ export default function ListPromptsPage() {
             </div>
 
             <div className="relative">
-              <div className="gap-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 2xl:grid-cols-4 xl:grid-cols-3">
+              <div className="gap-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 xl:grid-cols-4">
                 {newestPrompts.map(prompt => (
                   <PromptCardV2
                     key={prompt.id}
                     prompt={prompt}
                     favoriteList={favoritePrompts}
-                    navigationState={{
-                      currentPage: 0,
-                      searchText: "",
-                      topicId: null,
-                      isType: 1,
-                      pageSize: 12,
-                      category: category
-                        ? { id: category.id, name: category.name }
-                        : undefined,
-                      activeSection: category?.section
-                        ? { name: category.section.name }
-                        : undefined,
-                      fromNewest: true,
-                    }}
+                    onPromptClick={handlePromptClick}
                   />
                 ))}
               </div>

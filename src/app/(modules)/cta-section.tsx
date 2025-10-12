@@ -12,7 +12,7 @@ export const CTASection = () => {
 
   const handleClick = () => {
     if (user) {
-      router.push(ROUTES_URL.THU_VIEN_PROMPT);
+      router.push(ROUTES_URL.PROMPT_LIBRARY);
     } else {
       router.push(ROUTES_URL.LOGIN);
     }

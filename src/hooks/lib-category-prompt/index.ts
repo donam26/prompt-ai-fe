@@ -1,5 +1,6 @@
 // Individual hooks
 export * from "./usePrompts";
+export * from "./usePromptDetail";
 export * from "./useIndustries";
 export * from "./useIndustriesByCategories";
 export * from "./useSections";

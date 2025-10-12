@@ -9,10 +9,9 @@ export const ROUTES_URL = {
   VERIFY_OTP: "/verify-otp",
 
   // Main pages
-  THU_VIEN_PROMPT: "/prompt-library",
   PROMPT_LIBRARY: "/prompt-library",
-  PROMPT_DETAIL: "/prompt-library/detail-prompts",
-  PROMPT_DETAIL_MIDJOURNEY: "/prompt-library/detail-prompts-midjourney",
+  PROMPT_DETAIL: "/prompt-library",
+  PROMPT_DETAIL_MIDJOURNEY: "/prompt-library",
   BLOG: "/blog",
   PRICING: "/pricing",
   CONTACT: "/contact",
@@ -73,7 +72,6 @@ export const isPublicRoute = (pathname: string): boolean => {
 
 export const isProtectedRoute = (pathname: string): boolean => {
   const protectedRoutes = [
-    ROUTES_URL.THU_VIEN_PROMPT,
     ROUTES_URL.PROMPT_LIBRARY,
     ROUTES_URL.ADMIN,
     ROUTES_URL.PROFILE,
@@ -86,15 +84,15 @@ export const isProtectedRoute = (pathname: string): boolean => {
 // Helper functions for dynamic routes
 export const getPromptLibraryUrl = (promptId?: string): string => {
   if (promptId) {
-    return `${ROUTES_URL.THU_VIEN_PROMPT}?promptId=${promptId}`;
+    return `${ROUTES_URL.PROMPT_LIBRARY}?promptId=${promptId}`;
   }
-  return ROUTES_URL.THU_VIEN_PROMPT;
+  return ROUTES_URL.PROMPT_LIBRARY;
 };
 
 export const getPromptLibraryUrlWithParams = (
   params: Record<string, string | number>
 ): string => {
-  return createUrlWithParams(ROUTES_URL.THU_VIEN_PROMPT, params);
+  return createUrlWithParams(ROUTES_URL.PROMPT_LIBRARY, params);
 };
 
 export const getPromptDetailUrl = (promptId: string | number): string => {

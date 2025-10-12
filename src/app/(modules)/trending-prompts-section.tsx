@@ -255,7 +255,7 @@ export const TrendingPromptsSection = ({}: TrendingPromptsSectionProps) => {
 
       {/* Footer CTA Section */}
       <div className="text-center">
-        <Link href={ROUTES_URL.THU_VIEN_PROMPT}>
+        <Link href={ROUTES_URL.PROMPT_LIBRARY}>
           <span className="inline-flex items-center gap-2 bg-[#F4F0FF] p-4 rounded-full font-medium text-purple-500 hover:text-purple-400 text-xl transition-colors cursor-pointer">
             Tìm Hiểu Thêm
             <ArrowRight className="w-5 h-5" />

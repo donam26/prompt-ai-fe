@@ -67,7 +67,7 @@ export default function LoginPage() {
         </div>
 
         <Card>
-          <CardHeader>
+          <CardHeader className="space-y-0 px-6">
             <CardTitle>{AUTH_LABELS.LOGIN.FORM_TITLE}</CardTitle>
             <CardDescription>
               {AUTH_LABELS.LOGIN.EMAIL_DESCRIPTION}
