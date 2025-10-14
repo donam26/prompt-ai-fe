@@ -1,6 +1,5 @@
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { useSession } from "next-auth/react";
 import { useAuth } from "./useAuth";
 
 interface UseAuthRedirectOptions {
@@ -14,12 +13,8 @@ export const useAuthRedirect = ({
   requireAuth = false,
   requireGuest = false,
 }: UseAuthRedirectOptions = {}) => {
-  const { user, isLoading: isAuthLoading } = useAuth();
-  const { data: session, status } = useSession();
+  const { user, isLoading, isLoggedIn } = useAuth();
   const router = useRouter();
-
-  const isLoggedIn = !!(user || session?.user);
-  const isLoading = isAuthLoading || status === "loading";
 
   useEffect(() => {
     if (isLoading) return;
@@ -40,6 +35,6 @@ export const useAuthRedirect = ({
   return {
     isLoggedIn,
     isLoading,
-    user: user || session?.user,
+    user,
   };
 };

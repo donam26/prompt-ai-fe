@@ -1,4 +1,5 @@
 import { useCallback, useState } from "react";
+import { useRouter } from "next/navigation";
 import { userService } from "@/services";
 import { showToast } from "@/components/ui/toast";
 import { transformUserData } from "@/utils/user-data-transform";
@@ -12,6 +13,7 @@ interface UseLoginQueryResult {
 }
 
 export const useLoginQuery = (): UseLoginQueryResult => {
+  const router = useRouter();
   const { login } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -34,9 +36,10 @@ export const useLoginQuery = (): UseLoginQueryResult => {
             }
           );
 
+          // Use Next.js router instead of window.location.href
           setTimeout(() => {
-            window.location.href = getVerifyOTPUrl(email);
-          }, 2000);
+            router.push(getVerifyOTPUrl(email));
+          }, 1500);
           return true;
         }
 
@@ -51,7 +54,8 @@ export const useLoginQuery = (): UseLoginQueryResult => {
             description: "Chào mừng bạn quay trở lại!",
           });
 
-          window.location.href = ROUTES_URL.HOME;
+          // Use Next.js router for smooth navigation
+          router.push(ROUTES_URL.HOME);
           return true;
         }
 
@@ -71,7 +75,7 @@ export const useLoginQuery = (): UseLoginQueryResult => {
         setIsLoading(false);
       }
     },
-    [login]
+    [login, router]
   );
 
   return {

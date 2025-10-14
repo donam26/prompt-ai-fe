@@ -1,0 +1,115 @@
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.animate-shimmer {
+  animation: shimmer 1.5s infinite;
+}
+
+/* Markdown content styles */
+.markdown-content h1 {
+  @apply mb-4 font-bold text-gray-900 text-2xl;
+}
+
+.markdown-content h2 {
+  @apply mb-3 font-bold text-gray-900 text-xl;
+}
+
+.markdown-content h3 {
+  @apply mb-2 font-semibold text-gray-900 text-lg;
+}
+
+.markdown-content p {
+  @apply mb-3 text-gray-700 leading-relaxed;
+}
+
+.markdown-content ul {
+  @apply mb-3 ml-4;
+}
+
+.markdown-content li {
+  @apply mb-1 text-gray-700;
+}
+
+.markdown-content code {
+  @apply bg-gray-100 px-1 py-0.5 rounded font-mono text-sm;
+}
+
+.markdown-content pre {
+  @apply bg-gray-100 mb-3 p-3 rounded-lg overflow-x-auto;
+}
+
+.markdown-content blockquote {
+  @apply mb-3 pl-4 border-gray-300 border-l-4 text-gray-600 italic;
+}
+
+.markdown-content table {
+  @apply mb-3 border border-gray-300 w-full border-collapse;
+}
+
+.markdown-content th,
+.markdown-content td {
+  @apply px-3 py-2 border border-gray-300 text-left;
+}
+
+.markdown-content th {
+  @apply bg-gray-100 font-semibold;
+}
+
+/* Highlighted text styles */
+.highlighted-text {
+  background-color: #e6f7ff !important;
+  color: #1890ff !important;
+  padding: 2px 4px !important;
+  border-radius: 4px !important;
+}
+
+/* Chat layout styles */
+.chat-layout {
+  @apply min-h-screen;
+}
+
+.chat-content-layout {
+  @apply relative min-h-[calc(100vh-250px)];
+}
+
+.chat-main-content {
+  @apply w-full max-w-full;
+}
+
+.chat-card {
+  @apply bg-white shadow-sm rounded-xl;
+}
+
+.chat-prompt-title {
+  @apply flex items-center;
+}
+
+.chat-section-title {
+  @apply font-bold text-gray-900 text-xl;
+}
+
+.chat-textarea {
+  @apply p-3 border border-gray-300 rounded-lg outline-none min-h-[400px] overflow-y-auto whitespace-pre-wrap;
+}
+
+.chat-controls {
+  @apply flex sm:flex-row flex-col justify-between gap-3 w-full;
+}
+
+.chat-select {
+  @apply bg-white px-3 py-2 border border-gray-300 rounded-lg text-sm;
+}
+
+.chat-run-button {
+  @apply flex items-center gap-2 bg-purple-600 hover:bg-purple-700 px-6 py-3 rounded-lg w-full sm:w-auto font-medium text-white;
+}
+
+.chat-result-body {
+  @apply border border-gray-300 rounded-lg min-h-[400px];
+}

@@ -107,6 +107,7 @@ export const ENDPOINTS = {
   // Chat endpoints
   CHAT: {
     GPT: "/chat/gpt",
+    GPT_STREAM: "/chat/gpt-stream",
   },
 
   // History endpoints

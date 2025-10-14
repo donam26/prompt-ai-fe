@@ -107,3 +107,18 @@ a {
   background: linear-gradient(90deg, #e1f6ff 0%, #e6b8ff 100%);
   width: 100%;
 }
+
+/* Chat layout styles */
+.chat-main-content {
+  @apply w-full max-w-full;
+}
+
+.chat-card {
+  @apply bg-white shadow-sm rounded-xl;
+  height: 100%;
+}
+
+.result-card {
+  @apply bg-white shadow-sm rounded-xl;
+  height: 100%;
+}

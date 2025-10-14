@@ -73,7 +73,7 @@ export default function LoginPage() {
               {AUTH_LABELS.LOGIN.EMAIL_DESCRIPTION}
             </CardDescription>
           </CardHeader>
-          <CardContent>
+          <CardContent className="px-6">
             <form onSubmit={handleEmailLogin} className="space-y-4">
               <div className="space-y-2">
                 <Label htmlFor="email">Email</Label>

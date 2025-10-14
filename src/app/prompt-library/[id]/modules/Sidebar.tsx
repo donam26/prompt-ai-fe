@@ -5,11 +5,17 @@ import { Button } from "@/components/ui/button";
 import { Prompt } from "@/types";
 import { cn } from "@/lib/utils";
 
+// Menu items enum
+export enum MenuItem {
+  MY_PROMPT = "my-prompt",
+  PROMPT_OPTIMIZER = "prompt-optimizer",
+}
+
 interface SidebarProps {
   isCollapsed: boolean;
   onToggle: () => void;
-  selectedMenuItem: string;
-  onMenuClick: (key: string) => void;
+  selectedMenuItem: MenuItem;
+  onMenuClick: (key: MenuItem) => void;
   prompt: Prompt;
 }
 
@@ -18,7 +24,6 @@ export const Sidebar = ({
   onToggle,
   selectedMenuItem,
   onMenuClick,
-  prompt,
 }: SidebarProps) => {
   return (
     <>
@@ -62,10 +67,10 @@ export const Sidebar = ({
           >
             <div className="flex items-center gap-2 p-4 border-gray-200 border-t">
               <button
-                onClick={() => onMenuClick("my-prompt")}
+                onClick={() => onMenuClick(MenuItem.MY_PROMPT)}
                 className={cn(
                   "flex flex-1 items-center gap-2 px-4 py-2 rounded-lg transition-colors",
-                  selectedMenuItem === "my-prompt"
+                  selectedMenuItem === MenuItem.MY_PROMPT
                     ? "bg-purple-600 text-white"
                     : "hover:bg-gray-100"
                 )}
@@ -73,7 +78,7 @@ export const Sidebar = ({
                 <div
                   className={cn(
                     "flex flex-shrink-0 justify-center items-center rounded-full w-6 h-6",
-                    selectedMenuItem === "my-prompt"
+                    selectedMenuItem === MenuItem.MY_PROMPT
                       ? "bg-white"
                       : "bg-purple-100"
                   )}
@@ -84,10 +89,10 @@ export const Sidebar = ({
               </button>
 
               <button
-                onClick={() => onMenuClick("prompt-optimizer")}
+                onClick={() => onMenuClick(MenuItem.PROMPT_OPTIMIZER)}
                 className={cn(
                   "flex flex-1 items-center gap-2 px-4 py-2 rounded-lg transition-colors",
-                  selectedMenuItem === "prompt-optimizer"
+                  selectedMenuItem === MenuItem.PROMPT_OPTIMIZER
                     ? "bg-purple-600 text-white"
                     : "hover:bg-gray-100"
                 )}
@@ -95,7 +100,7 @@ export const Sidebar = ({
                 <div
                   className={cn(
                     "flex flex-shrink-0 justify-center items-center rounded-full w-6 h-6",
-                    selectedMenuItem === "prompt-optimizer"
+                    selectedMenuItem === MenuItem.PROMPT_OPTIMIZER
                       ? "bg-white"
                       : "bg-gray-100"
                   )}
@@ -104,28 +109,6 @@ export const Sidebar = ({
                 </div>
                 <span className="font-medium text-sm">Prompt Optimizer</span>
               </button>
-            </div>
-
-            {/* Recent Tasks - Mobile */}
-            <div className="p-4 border-gray-200 border-t">
-              <h3 className="flex items-center gap-2 mb-3 font-semibold text-gray-900 text-sm">
-                <span className="text-gray-600">📋</span>
-                Recent Tasks
-              </h3>
-              <div className="space-y-2">
-                <div className="flex items-center gap-2 bg-purple-50 p-2 rounded-lg">
-                  <div className="bg-purple-600 rounded-full w-2 h-2"></div>
-                  <span className="font-medium text-purple-700 text-sm">
-                    {prompt.title}
-                  </span>
-                </div>
-                <div className="flex items-center gap-2 hover:bg-gray-50 p-2 rounded-lg cursor-pointer">
-                  <div className="bg-gray-300 rounded-full w-2 h-2"></div>
-                  <span className="text-gray-600 text-sm">
-                    Identity sentiment in social
-                  </span>
-                </div>
-              </div>
             </div>
           </div>
         </div>
@@ -136,14 +119,8 @@ export const Sidebar = ({
         className={cn(
           "hidden sm:block z-40 sm:z-auto relative bg-white shadow-md border-gray-200 border-r overflow-x-hidden overflow-y-auto transition-all duration-300 ease-in-out",
           isCollapsed ? "w-16 sm:w-[84px]" : "w-full sm:w-64 md:w-72 lg:w-80",
-          "h-full"
+          "h-screen min-h-screen"
         )}
-        style={{
-          height: "100vh",
-          background: "#fff",
-          borderRight: "1px solid #f0f0f0",
-          transition: "all 0.3s ease",
-        }}
       >
         <div className="flex flex-col h-full">
           {/* Sidebar Header */}
@@ -172,10 +149,10 @@ export const Sidebar = ({
           {/* Menu Items */}
           <div className="flex-1 space-y-2 p-4">
             <button
-              onClick={() => onMenuClick("my-prompt")}
+              onClick={() => onMenuClick(MenuItem.MY_PROMPT)}
               className={cn(
                 "flex items-center gap-3 p-3 rounded-lg w-full text-left transition-colors",
-                selectedMenuItem === "my-prompt"
+                selectedMenuItem === MenuItem.MY_PROMPT
                   ? "bg-purple-600 text-white"
                   : "hover:bg-gray-100"
               )}
@@ -184,7 +161,7 @@ export const Sidebar = ({
               <div
                 className={cn(
                   "flex flex-shrink-0 justify-center items-center rounded-full w-6 h-6",
-                  selectedMenuItem === "my-prompt"
+                  selectedMenuItem === MenuItem.MY_PROMPT
                     ? "bg-white"
                     : "bg-purple-100"
                 )}
@@ -192,7 +169,7 @@ export const Sidebar = ({
                 <span
                   className={cn(
                     "text-sm",
-                    selectedMenuItem === "my-prompt"
+                    selectedMenuItem === MenuItem.MY_PROMPT
                       ? "text-purple-600"
                       : "text-purple-600"
                   )}
@@ -204,10 +181,10 @@ export const Sidebar = ({
             </button>
 
             <button
-              onClick={() => onMenuClick("prompt-optimizer")}
+              onClick={() => onMenuClick(MenuItem.PROMPT_OPTIMIZER)}
               className={cn(
                 "flex items-center gap-3 p-3 rounded-lg w-full text-left transition-colors",
-                selectedMenuItem === "prompt-optimizer"
+                selectedMenuItem === MenuItem.PROMPT_OPTIMIZER
                   ? "bg-purple-600 text-white"
                   : "hover:bg-gray-100"
               )}
@@ -216,7 +193,7 @@ export const Sidebar = ({
               <div
                 className={cn(
                   "flex flex-shrink-0 justify-center items-center rounded-full w-6 h-6",
-                  selectedMenuItem === "prompt-optimizer"
+                  selectedMenuItem === MenuItem.PROMPT_OPTIMIZER
                     ? "bg-white"
                     : "bg-gray-100"
                 )}
@@ -224,7 +201,7 @@ export const Sidebar = ({
                 <span
                   className={cn(
                     "text-sm",
-                    selectedMenuItem === "prompt-optimizer"
+                    selectedMenuItem === MenuItem.PROMPT_OPTIMIZER
                       ? "text-purple-600"
                       : "text-gray-600"
                   )}
@@ -237,36 +214,6 @@ export const Sidebar = ({
               )}
             </button>
           </div>
-
-          {/* Recent Tasks Section */}
-          {!isCollapsed && (
-            <div className="p-4 border-gray-200 border-t">
-              <h3 className="flex items-center gap-2 mb-3 font-semibold text-gray-900 text-sm">
-                <span className="text-gray-600">📋</span>
-                Recent Tasks
-              </h3>
-              <div className="space-y-2">
-                <div className="flex items-center gap-2 bg-purple-50 p-2 rounded-lg">
-                  <div className="bg-purple-600 rounded-full w-2 h-2"></div>
-                  <span className="font-medium text-purple-700 text-sm">
-                    {prompt.title}
-                  </span>
-                </div>
-                <div className="flex items-center gap-2 hover:bg-gray-50 p-2 rounded-lg cursor-pointer">
-                  <div className="bg-gray-300 rounded-full w-2 h-2"></div>
-                  <span className="text-gray-600 text-sm">
-                    Identity sentiment in social
-                  </span>
-                </div>
-                <div className="flex items-center gap-2 hover:bg-gray-50 p-2 rounded-lg cursor-pointer">
-                  <div className="bg-gray-300 rounded-full w-2 h-2"></div>
-                  <span className="text-gray-600 text-sm">
-                    Draft product marketing
-                  </span>
-                </div>
-              </div>
-            </div>
-          )}
         </div>
       </aside>
     </>

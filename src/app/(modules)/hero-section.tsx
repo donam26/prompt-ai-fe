@@ -1,7 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { CHROME_EXTENSION_URL } from "@/constants";
+import { SKOOL_COMMUNITY_URL } from "@/constants";
 import { ArrowRightIcon } from "lucide-react";
 
 export const HeroSection = () => {
@@ -40,7 +40,7 @@ export const HeroSection = () => {
               <Button
                 className="flex justify-center items-center shadow-[inset_0px_0px_12px_rgba(255,255,255,0.6)] border rounded-full w-[330px] h-[53.5px] font-semibold text-white text-lg hover:scale-105 transition-all duration-300 hero-button-gradient"
                 style={{ padding: "16px" }}
-                onClick={() => window.open(CHROME_EXTENSION_URL, "_blank")}
+                onClick={() => window.open(SKOOL_COMMUNITY_URL, "_blank")}
               >
                 <span className="mr-2">Bắt đầu hành trình</span>
                 <ArrowRightIcon className="w-5 h-5 font-bold transition-transform group-hover:translate-x-1 duration-200" />

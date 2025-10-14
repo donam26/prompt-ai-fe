@@ -1,12 +1,13 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
+import "@/styles/skeleton.css";
 import { NextAuthProvider } from "@/providers/NextAuthProvider";
 import { QueryProvider } from "@/providers/QueryProvider";
 import { Toast } from "@/components/ui/toast";
 import { Header, Footer } from "@/components/layout";
 import { ConditionalMain } from "@/components/layout/conditional-main";
-import { NextAuthSyncWrapper } from "@/app/(modules)/next-auth-sync-wrapper";
+import { CustomAuthSyncWrapper } from "@/app/(modules)/custom-auth-sync-wrapper";
 import { BackToTopButton } from "@/components/ui/back-to-top-button";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -51,7 +52,7 @@ export default function RootLayout({
       <body className={inter.className}>
         <NextAuthProvider>
           <QueryProvider>
-            <NextAuthSyncWrapper>
+            <CustomAuthSyncWrapper>
               <div className="flex flex-col min-h-screen">
                 <Header />
                 <ConditionalMain>{children}</ConditionalMain>
@@ -59,7 +60,7 @@ export default function RootLayout({
               </div>
               <BackToTopButton />
               <Toast />
-            </NextAuthSyncWrapper>
+            </CustomAuthSyncWrapper>
           </QueryProvider>
         </NextAuthProvider>
       </body>

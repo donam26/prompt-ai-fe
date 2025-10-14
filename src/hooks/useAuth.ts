@@ -16,6 +16,7 @@ export const useAuth = () => {
     user,
     token,
     isLoading,
+    isLoggedIn: !!(user && token),
     setUser,
     setToken,
     setLoading,

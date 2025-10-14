@@ -21,11 +21,10 @@ export const PricingFAQ = () => {
           <div className="space-y-6">
             <div>
               <h2 className="mb-4 font-bold text-[#1D1E25] text-2xl sm:text-3xl lg:text-4xl">
-                Câu hỏi
+                Câu hỏi thường gặp
               </h2>
               <p className="text-[#1D1E25] text-base sm:text-lg leading-relaxed">
-                Hướng dẫn để thành thạo việc viết prompt. Khám phá các hướng dẫn
-                hoặc tạo prompt ngay bây giờ.
+                Tìm hiểu thêm về dịch vụ của chúng tôi và cách sử dụng hiệu quả.
               </p>
             </div>
             <div className="flex sm:flex-row flex-col gap-3">
@@ -33,13 +32,13 @@ export const PricingFAQ = () => {
                 variant="outline"
                 className="bg-[#F4F0FF] hover:bg-[#D4C0F0] px-6 py-2 border-[#E2D0FF] rounded-full font-medium text-[#1D1E25]"
               >
-                More Questions
+                Xem thêm câu hỏi
               </Button>
               <Button
                 variant="link"
                 className="p-0 h-auto font-medium text-[#1D1E25] underline"
               >
-                Contact Us
+                Liên hệ hỗ trợ
               </Button>
             </div>
           </div>
@@ -53,7 +52,7 @@ export const PricingFAQ = () => {
               >
                 <button
                   onClick={() => handleToggle(index)}
-                  className="group flex justify-between items-start w-full text-left"
+                  className="group flex justify-between items-start hover:bg-gray-50 -m-2 p-2 rounded-lg w-full text-left transition-colors"
                 >
                   <span className="pr-4 font-medium text-[#1D1E25] text-sm sm:text-base leading-relaxed">
                     {faq.question}
@@ -74,7 +73,7 @@ export const PricingFAQ = () => {
                       : "max-h-0 opacity-0"
                   )}
                 >
-                  <p className="text-[#1D1E25] text-sm sm:text-base leading-relaxed">
+                  <p className="pl-2 text-[#1D1E25] text-sm sm:text-base leading-relaxed">
                     {faq.answer}
                   </p>
                 </div>
@@ -84,11 +83,14 @@ export const PricingFAQ = () => {
         </div>
 
         {/* Contact Section */}
-        <div className="">
+        <div className="mt-12">
           <div className="mx-auto p-6 sm:p-8 border border-[#5700C6] rounded-2xl max-w-2xl">
             <h3 className="mb-6 font-bold text-[#1D1E25] text-xl sm:text-2xl text-center">
               Bạn có những thắc mắc?
             </h3>
+            <p className="mb-6 text-[#1D1E25] text-sm sm:text-base text-center">
+              Liên hệ với chúng tôi để được tư vấn và hỗ trợ tốt nhất
+            </p>
             <div className="flex sm:flex-row flex-col justify-center items-center gap-4 sm:gap-8">
               <div className="text-center">
                 <p className="mb-1 font-medium text-[#1D1E25] text-sm sm:text-base">

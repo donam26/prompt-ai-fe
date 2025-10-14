@@ -10,7 +10,8 @@ import {
   getMidjourneyPromptDetailUrlWithTab,
 } from "@/constants/routes-url";
 import { Pagination } from "@/components/ui/pagination";
-import { PromptCardV2 } from "../modules";
+import { PromptCardV2 } from "./modules";
+import { MenuItem } from "../[id]/modules/Sidebar";
 import {
   usePrompts,
   useTopicsByCategory,
@@ -164,8 +165,11 @@ export default function ListPromptsPage() {
 
     const isMidjourney = category?.section?.name === "Midjourney";
     const baseUrl = isMidjourney
-      ? getMidjourneyPromptDetailUrlWithTab(prompts[0].id, "prompt-optimizer")
-      : getPromptDetailUrlWithTab(prompts[0].id, "prompt-optimizer");
+      ? getMidjourneyPromptDetailUrlWithTab(
+          prompts[0].id,
+          MenuItem.PROMPT_OPTIMIZER
+        )
+      : getPromptDetailUrlWithTab(prompts[0].id, MenuItem.PROMPT_OPTIMIZER);
 
     router.push(baseUrl);
   };
@@ -174,8 +178,8 @@ export default function ListPromptsPage() {
   const handlePromptClick = (promptId: string | number) => {
     const isMidjourney = category?.section?.name === "Midjourney";
     const detailUrl = isMidjourney
-      ? getMidjourneyPromptDetailUrlWithTab(promptId, "main")
-      : getPromptDetailUrlWithTab(promptId, "main");
+      ? getMidjourneyPromptDetailUrlWithTab(promptId, MenuItem.MY_PROMPT)
+      : getPromptDetailUrlWithTab(promptId, MenuItem.MY_PROMPT);
 
     router.push(detailUrl);
   };

@@ -8,6 +8,29 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Toast animations */
+@keyframes toast-enter {
+  0% {
+    transform: translateY(-100%) scale(0.9);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes toast-exit {
+  0% {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-100%) scale(0.9);
+    opacity: 0;
+  }
+}
+
 /* Define SFU FranklinGothic font family */
 .font-sfu-franklin {
   font-family: "SFU FranklinGothic", "Inter", sans-serif;

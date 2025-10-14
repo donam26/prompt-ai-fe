@@ -218,19 +218,13 @@ export const TrendingPromptsSection = ({}: TrendingPromptsSectionProps) => {
                   </CardHeader>
 
                   <CardContent className="gap-4 grid p-0">
-                    <div className="bg-white p-4 rounded-lg">
+                    <div className="gap-4 bg-white p-4 rounded-lg">
                       {/* Title */}
                       <CardTitle className="font-bold text-black text-lg line-clamp-3 leading-tight">
                         {prompt.title}
                       </CardTitle>
-                      <div>
-                        <Image
-                          src={prompt.category?.image || ""}
-                          alt="gpt"
-                          width={282}
-                          height={154}
-                          className="object-cover"
-                        />
+                      <div className="mt-6 text-gray-500 text-sm line-clamp-3 leading-tight">
+                        {prompt.shortDescription}
                       </div>
                     </div>
                     <div className="bg-white p-4 rounded-lg">

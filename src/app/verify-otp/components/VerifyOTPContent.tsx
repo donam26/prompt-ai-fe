@@ -77,7 +77,7 @@ export function VerifyOTPContent(): React.JSX.Element {
         </div>
 
         {/* OTP Form Card */}
-        <Card>
+        <Card className="px-6">
           <CardHeader>
             <CardTitle>{VERIFY_OTP_TEXT.FORM_TITLE}</CardTitle>
             <CardDescription>

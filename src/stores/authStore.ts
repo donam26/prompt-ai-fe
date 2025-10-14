@@ -2,12 +2,9 @@ import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
 import { User } from "@/types";
 import {
-  ACCESS_TOKEN_COOKIE_NAME,
-  REFRESH_TOKEN_COOKIE_NAME,
   DEFAULT_EXPIRE_TOKEN_SECONDS,
   REFRESH_TOKEN_EXPIRE_SECONDS,
 } from "@/constants/auth";
-import { clearAllAuthData, forceClearAllCookies } from "@/utils/auth-cleanup";
 
 interface AuthState {
   user: User | null;
@@ -34,26 +31,29 @@ export const useAuthStore = create<AuthState>()(
       login: (userData, authToken) => {
         set({ user: userData, token: authToken, isLoading: false });
 
-        // Set cookies for NextAuth compatibility
+        // Set cookies for API requests only
         if (typeof window !== "undefined") {
-          // Set both custom and NextAuth cookie names for compatibility
+          // Set custom cookies for API client
           document.cookie = `accessToken=${authToken}; path=/; max-age=${DEFAULT_EXPIRE_TOKEN_SECONDS}; SameSite=Lax`;
           document.cookie = `refreshToken=${authToken}; path=/; max-age=${REFRESH_TOKEN_EXPIRE_SECONDS}; SameSite=Lax`;
-          document.cookie = `${ACCESS_TOKEN_COOKIE_NAME}=${authToken}; path=/; max-age=${DEFAULT_EXPIRE_TOKEN_SECONDS}; SameSite=Lax`;
-          document.cookie = `${REFRESH_TOKEN_COOKIE_NAME}=${authToken}; path=/; max-age=${REFRESH_TOKEN_EXPIRE_SECONDS}; SameSite=Lax`;
+
+          // Also set in localStorage for api-client.ts
+          localStorage.setItem("authToken", authToken);
         }
       },
 
       logout: () => {
         set({ user: null, token: null, isLoading: false });
 
-        // Clear all authentication data
-        clearAllAuthData();
+        // Clear custom auth data only (not NextAuth)
+        if (typeof window !== "undefined") {
+          localStorage.removeItem("auth-storage");
+          localStorage.removeItem("authToken");
 
-        // Force clear all cookies as backup
-        setTimeout(() => {
-          forceClearAllCookies();
-        }, 100);
+          // Clear custom cookies only
+          document.cookie = `accessToken=; path=/; max-age=0; expires=Thu, 01 Jan 1970 00:00:00 GMT`;
+          document.cookie = `refreshToken=; path=/; max-age=0; expires=Thu, 01 Jan 1970 00:00:00 GMT`;
+        }
       },
     }),
     {
@@ -67,6 +67,11 @@ export const useAuthStore = create<AuthState>()(
         // Set loading to false after rehydration
         if (state) {
           state.setLoading(false);
+
+          // Sync token with api-client after rehydration
+          if (typeof window !== "undefined" && state.token) {
+            localStorage.setItem("authToken", state.token);
+          }
         }
       },
     }

@@ -77,18 +77,31 @@ function showToast(message: string, options?: ShowToastOptions) {
     );
   };
 
-  // Use toast.custom with clean helper functions
-  return toast.custom(() => createToastContent(), {
-    duration: type === "loading" ? TOAST_DURATION.LOADING : duration,
-    style: {
-      background: "transparent",
-      border: "none",
-      padding: 0,
-      boxShadow: "none",
-    },
-    className: "!z-[99999]",
-    ...rest,
-  });
+  // Use toast.custom with animations
+  return toast.custom(
+    t => (
+      <div
+        style={{
+          animation: t.visible
+            ? "toast-enter 0.3s cubic-bezier(0.21, 1.02, 0.73, 1) forwards"
+            : "toast-exit 0.2s ease-out forwards",
+        }}
+      >
+        {createToastContent()}
+      </div>
+    ),
+    {
+      duration: type === "loading" ? TOAST_DURATION.LOADING : duration,
+      style: {
+        background: "transparent",
+        border: "none",
+        padding: 0,
+        boxShadow: "none",
+      },
+      className: "!z-[99999]",
+      ...rest,
+    }
+  );
 }
 
 // Convenience functions
