@@ -7,8 +7,8 @@ import Image from "next/image";
 import { Heart } from "lucide-react";
 import { useState } from "react";
 import { useAuth } from "@/hooks/useAuth";
-import { promptService } from "@/services";
-import { toast } from "sonner";
+import { usePromptFavorites } from "@/hooks";
+import { showToast } from "@/components/ui/toast";
 
 interface NavigationState {
   currentPage: number;
@@ -29,16 +29,19 @@ interface NavigationState {
 interface MidjourneyPromptCardProps {
   prompt: Prompt;
   favoriteList?: string[];
+  favoriteIdsMap?: { [promptId: string]: string };
   navigationState?: NavigationState;
 }
 
 export const MidjourneyPromptCard = ({
   prompt,
   favoriteList = [],
+  favoriteIdsMap = {},
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   navigationState: _navigationState,
 }: MidjourneyPromptCardProps) => {
   const { user } = useAuth();
+  const { addFavorite, removeFavorite } = usePromptFavorites();
   const [isFavorited, setIsFavorited] = useState(
     favoriteList.includes(String(prompt.id))
   );
@@ -49,7 +52,7 @@ export const MidjourneyPromptCard = ({
     e.stopPropagation();
 
     if (!user) {
-      toast.error("Vui lòng đăng nhập để thêm vào yêu thích");
+      showToast.error("Vui lòng đăng nhập để thêm vào yêu thích");
       return;
     }
 
@@ -59,23 +62,28 @@ export const MidjourneyPromptCard = ({
       setIsTogglingFavorite(true);
 
       if (isFavorited) {
-        await promptService.removeFavoritePrompt(String(prompt.id));
-        setIsFavorited(false);
-        toast.success("Đã xóa khỏi danh sách yêu thích");
+        const favoriteId = favoriteIdsMap[String(prompt.id)];
+        if (favoriteId) {
+          const success = await removeFavorite(favoriteId);
+          if (success) {
+            setIsFavorited(false);
+          }
+        }
       } else {
-        await promptService.addFavoritePrompt({
+        const success = await addFavorite({
           promptId: String(prompt.id),
           userId: String(user.id),
         });
-        setIsFavorited(true);
-        toast.success("Đã thêm vào danh sách yêu thích");
+        if (success) {
+          setIsFavorited(true);
+        }
       }
 
       // Dispatch event to refresh favorite list
       window.dispatchEvent(new Event("favoriteChanged"));
     } catch (error) {
       console.error("Error toggling favorite:", error);
-      toast.error("Có lỗi xảy ra khi cập nhật yêu thích");
+      showToast.error("Có lỗi xảy ra khi cập nhật yêu thích");
     } finally {
       setIsTogglingFavorite(false);
     }

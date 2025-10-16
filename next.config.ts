@@ -23,6 +23,24 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: "https",
+        hostname: "prom.vn",
+        port: "",
+        pathname: "/**",
+      },
+      {
+        protocol: "http",
+        hostname: "prom.vn",
+        port: "",
+        pathname: "/api/prompts/upload/**",
+      },
+      {
+        protocol: "http",
+        hostname: "prom.vn",
+        port: "",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
         hostname: "images.unsplash.com",
         port: "",
         pathname: "/**",

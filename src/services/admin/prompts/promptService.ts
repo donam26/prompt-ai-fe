@@ -11,10 +11,6 @@ export class PromptService extends BaseService {
     super(ENDPOINTS.PROMPTS.BASE);
   }
 
-  async getFavoritePrompts(userId: string | number) {
-    return await this.get(`${ENDPOINTS.PROMPTS.FAVORITE}/${userId}`);
-  }
-
   async getPromptsByCategoryId(params?: Record<string, unknown>) {
     return await this.list(params);
   }
@@ -74,14 +70,6 @@ export class PromptService extends BaseService {
     return await this.patch<Prompt>(id, { isPublic });
   }
 
-  async addFavoritePrompt(data: { promptId: string; userId: string }) {
-    return await this.post<Prompt>(`${ENDPOINTS.PROMPTS.BASE}/favorite`, data);
-  }
-
-  async removeFavoritePrompt(promptId: string) {
-    return await this.delete(`${ENDPOINTS.PROMPTS.BASE}/favorite/${promptId}`);
-  }
-
   /**
    * Export prompts to Excel
    */
@@ -118,6 +106,44 @@ export class PromptService extends BaseService {
   async getLatestPrompts(params?: Record<string, unknown>) {
     const { apiClient } = await import("../../base/apiClient");
     return await apiClient.get(ENDPOINTS.PROMPTS.LATEST, { params });
+  }
+
+  /**
+   * Export Excel template
+   */
+  async exportExcelTemplate() {
+    const { apiClient } = await import("../../base/apiClient");
+    return await apiClient.get(ENDPOINTS.PROMPTS.EXPORT_TEMPLATE, {
+      responseType: "blob",
+    });
+  }
+
+  /**
+   * Test export Excel (simple version)
+   */
+  async testExportExcel() {
+    const { apiClient } = await import("../../base/apiClient");
+    return await apiClient.get(ENDPOINTS.PROMPTS.EXPORT_EXCEL_TEST, {
+      responseType: "blob",
+    });
+  }
+
+  /**
+   * Test export with industries
+   */
+  async testIndustriesExport() {
+    const { apiClient } = await import("../../base/apiClient");
+    return await apiClient.get(ENDPOINTS.PROMPTS.TEST_INDUSTRIES_EXPORT, {
+      responseType: "blob",
+    });
+  }
+
+  /**
+   * Test CORS
+   */
+  async testCors() {
+    const { apiClient } = await import("../../base/apiClient");
+    return await apiClient.get(ENDPOINTS.PROMPTS.TEST_CORS);
   }
 }
 

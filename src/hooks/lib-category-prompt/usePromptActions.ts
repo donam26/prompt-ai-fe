@@ -2,8 +2,8 @@
 
 import { useCallback } from "react";
 import { useAuth } from "@/hooks/useAuth";
-import { promptService } from "@/services";
-import { toast } from "sonner";
+import { promptFavoritesService } from "@/services/prompt-favorites/promptFavoritesService";
+import { showToast } from "@/components/ui/toast";
 
 export const usePromptActions = () => {
   const { user } = useAuth();
@@ -15,27 +15,30 @@ export const usePromptActions = () => {
       setFavoritePrompts: (fn: (prev: string[]) => string[]) => void
     ) => {
       if (!user) {
-        toast.error("Vui lòng đăng nhập để thêm vào yêu thích");
+        showToast.error("Vui lòng đăng nhập để thêm vào yêu thích");
         return;
       }
 
       try {
         if (favoritePrompts.includes(promptId)) {
           // Remove from favorites
-          await promptService.removeFavoritePrompt(promptId);
+          await promptFavoritesService.removeFavoritePromptByPromptId(
+            promptId,
+            user.id
+          );
           setFavoritePrompts(prev => prev.filter(id => id !== promptId));
-          toast.success("Đã xóa khỏi yêu thích");
+          showToast.success("Đã xóa khỏi yêu thích");
         } else {
           // Add to favorites
-          await promptService.addFavoritePrompt({
+          await promptFavoritesService.addFavoritePrompt({
             promptId,
             userId: user.id.toString(),
           });
           setFavoritePrompts(prev => [...prev, promptId]);
-          toast.success("Đã thêm vào yêu thích");
+          showToast.success("Đã thêm vào yêu thích");
         }
       } catch {
-        toast.error("Có lỗi xảy ra");
+        showToast.error("Có lỗi xảy ra");
       }
     },
     [user]
@@ -43,7 +46,7 @@ export const usePromptActions = () => {
 
   const handleCopyPrompt = useCallback((content: string) => {
     navigator.clipboard.writeText(content);
-    toast.success("Đã sao chép prompt");
+    showToast.success("Đã sao chép prompt");
   }, []);
 
   return {

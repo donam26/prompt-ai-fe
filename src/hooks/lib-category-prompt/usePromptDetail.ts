@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { promptService } from "@/services";
 import { Prompt } from "@/types";
-import { toast } from "sonner";
+import { showToast } from "@/components/ui/toast";
 
 interface UsePromptDetailOptions {
   enabled?: boolean;
@@ -41,7 +41,7 @@ export const usePromptDetail = (
           ? err.message
           : "Có lỗi xảy ra khi tải chi tiết prompt";
       setError(errorMessage);
-      toast.error(errorMessage);
+      showToast.error(errorMessage);
     } finally {
       setIsLoading(false);
     }

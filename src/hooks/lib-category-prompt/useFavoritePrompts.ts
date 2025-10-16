@@ -2,12 +2,20 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { useAuth } from "@/hooks/useAuth";
-import { promptService } from "@/services";
-import { Prompt } from "@/types";
+import { promptFavoritesService } from "@/services";
+
+interface FavoriteItem {
+  id: number;
+  userId: number;
+  promptId: number;
+}
 
 export const useFavoritePrompts = () => {
   const { user } = useAuth();
   const [favoritePrompts, setFavoritePrompts] = useState<string[]>([]);
+  const [favoriteIdsMap, setFavoriteIdsMap] = useState<{
+    [promptId: string]: string;
+  }>({});
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string>("");
 
@@ -17,13 +25,20 @@ export const useFavoritePrompts = () => {
 
     try {
       setIsLoading(true);
-      const response = await promptService.getFavoritePrompts(user.id);
-      const favoriteIds = (
-        (response.data as unknown as Prompt[]) ||
-        (response.data as unknown as Prompt[]) ||
-        []
-      ).map((fav: Prompt) => fav.id);
-      setFavoritePrompts(favoriteIds as string[]);
+      const response = await promptFavoritesService.getFavoritePrompts(user.id);
+      const favoriteIds = (response.data || []).map((fav: FavoriteItem) =>
+        String(fav.promptId)
+      );
+      const favoriteIdsMap = (response.data || []).reduce(
+        (acc, fav: FavoriteItem) => {
+          acc[String(fav.promptId)] = String(fav.id);
+          return acc;
+        },
+        {} as { [promptId: string]: string }
+      );
+
+      setFavoritePrompts(favoriteIds);
+      setFavoriteIdsMap(favoriteIdsMap);
     } catch (err: unknown) {
       const errorMessage =
         err instanceof Error
@@ -43,6 +58,7 @@ export const useFavoritePrompts = () => {
 
   return {
     favoritePrompts,
+    favoriteIdsMap,
     setFavoritePrompts,
     isLoading,
     error,

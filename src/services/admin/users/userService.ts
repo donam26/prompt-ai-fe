@@ -57,6 +57,30 @@ export class UserService extends BaseService {
   async resetPassword(id: string) {
     return this.post("reset-password", { userId: id });
   }
+
+  /**
+   * Import users from CSV file
+   */
+  async importUsersFromCSV(file: File) {
+    const formData = new FormData();
+    formData.append("csvFile", file);
+
+    const baseURL =
+      process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000/api";
+    const response = await fetch(`${baseURL}/users/import-csv`, {
+      method: "POST",
+      body: formData,
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error("Failed to import users from CSV");
+    }
+
+    return response.json();
+  }
 }
 
 // Export singleton instance

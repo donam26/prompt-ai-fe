@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useMutation } from "@tanstack/react-query";
-import { toast } from "sonner";
+import { showToast } from "@/components/ui/toast";
 import { contactService } from "@/services/admin/contacts/contactService";
 import {
   getContactFormDefaultValues,
@@ -104,14 +104,14 @@ export const useContact = () => {
       });
     },
     onSuccess: () => {
-      toast.success(
+      showToast.success(
         "Gửi liên hệ thành công! Chúng tôi sẽ phản hồi sớm nhất có thể."
       );
       clearForm();
     },
     onError: (error: any) => {
       console.error("Contact submission error:", error);
-      toast.error("Có lỗi xảy ra khi gửi liên hệ. Vui lòng thử lại sau.");
+      showToast.error("Có lỗi xảy ra khi gửi liên hệ. Vui lòng thử lại sau.");
     },
   });
 
@@ -119,7 +119,7 @@ export const useContact = () => {
     e.preventDefault();
 
     if (!validateForm()) {
-      toast.error("Vui lòng kiểm tra lại thông tin đã nhập");
+      showToast.error("Vui lòng kiểm tra lại thông tin đã nhập");
       return;
     }
 

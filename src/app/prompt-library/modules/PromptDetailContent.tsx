@@ -5,7 +5,7 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Copy, Check } from "lucide-react";
 import { useState } from "react";
-import { toast } from "sonner";
+import { showToast } from "@/components/ui/toast";
 
 interface PromptDetailContentProps {
   prompt: Prompt;
@@ -18,7 +18,7 @@ export const PromptDetailContent = ({ prompt }: PromptDetailContentProps) => {
     try {
       await navigator.clipboard.writeText(text);
       setCopiedSections(prev => new Set(prev).add(section));
-      toast.success("Đã copy vào clipboard");
+      showToast.success("Đã copy vào clipboard");
 
       // Reset copied state after 2 seconds
       setTimeout(() => {
@@ -29,7 +29,7 @@ export const PromptDetailContent = ({ prompt }: PromptDetailContentProps) => {
         });
       }, 2000);
     } catch {
-      toast.error("Không thể copy vào clipboard");
+      showToast.error("Không thể copy vào clipboard");
     }
   };
 

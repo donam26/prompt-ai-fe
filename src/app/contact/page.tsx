@@ -6,7 +6,7 @@ import Image from "next/image";
 
 export default function ContactPage() {
   return (
-    <div className="bg-gradient-to-br from-purple-50 via-white to-blue-50 min-h-screen">
+    <div className="bg-white min-h-screen">
       <ContactHero />
       <div className="mx-auto px-4 container">
         <div className="items-start gap-6 grid grid-cols-1 lg:grid-cols-3">

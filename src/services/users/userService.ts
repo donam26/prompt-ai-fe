@@ -48,6 +48,56 @@ export class UserService {
   }
 
   /**
+   * Get user info
+   *
+   * @param id - User ID
+   * @returns Promise with user info data
+   */
+  async getUserInfo(): Promise<{ data: User }> {
+    const response = await apiClient.get(`users/me`);
+    return response.data;
+  }
+
+  /**
+   * Update user info
+   *
+   * @param id - User ID
+   * @param formData - Form data with user info
+   * @returns Promise with updated user data
+   */
+  async updateUserInfo(
+    id: string | number,
+    formData: FormData
+  ): Promise<{ user: User }> {
+    const response = await apiClient.put(`/users/info/${id}`, formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+    return response.data;
+  }
+
+  /**
+   * Change user password
+   *
+   * @param id - User ID
+   * @param currentPassword - Current password
+   * @param newPassword - New password
+   * @returns Promise with response data
+   */
+  async changePassword(
+    id: string | number,
+    currentPassword: string,
+    newPassword: string
+  ): Promise<any> {
+    const response = await apiClient.post(`/users/change-password/${id}`, {
+      currentPassword,
+      newPassword,
+    });
+    return response;
+  }
+
+  /**
    * Create new user
    *
    * @param userData - User data

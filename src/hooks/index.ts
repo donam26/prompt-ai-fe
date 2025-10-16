@@ -25,6 +25,12 @@ export * from "./useAdminPermissions";
 
 // User hooks
 export * from "./user/usePricingPlans";
+export * from "./user/useAccountInfo";
+export * from "./user/useChangePassword";
+export * from "./user/useFavoritePrompts";
 
 // Other hooks
 export * from "./useContact";
+
+// Prompt favorites hooks
+export * from "./prompt-favorites/usePromptFavorites";

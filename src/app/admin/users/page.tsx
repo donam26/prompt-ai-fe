@@ -13,6 +13,7 @@ import {
 import { USERS_CONSTANTS } from "@/constants/users";
 import { useAdminUsersQuery } from "@/hooks";
 import { useDeleteUser } from "@/hooks/admin/useUser/useDeleteUser";
+import { ConfirmationModal } from "@/components/admin/confirmation-modal";
 import type { User } from "@/types";
 import type { UserFilterState } from "@/types/admin/user";
 import type { PaginationParams } from "@/types/base";
@@ -34,7 +35,15 @@ export default function UserManagementPage(): React.JSX.Element {
   const [pagination, setPagination] =
     useState<PaginationParams>(DEFAULT_PAGINATION);
 
-  const { usersWithPagination, isFetching: usersLoading } = useAdminUsersQuery({
+  // Delete confirmation modal state
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [userToDelete, setUserToDelete] = useState<User | null>(null);
+
+  const {
+    usersWithPagination,
+    isFetching: usersLoading,
+    refetch: refetchUsers,
+  } = useAdminUsersQuery({
     pagination,
     filters,
   });
@@ -58,12 +67,26 @@ export default function UserManagementPage(): React.JSX.Element {
     router.push(USERS_CONSTANTS.ROUTES.USER_EDIT(user.id));
   };
 
-  const handleDeleteUser = async (user: User): Promise<void> => {
-    const success = await deleteUser(user);
+  const handleDeleteUser = (user: User): void => {
+    setUserToDelete(user);
+    setDeleteModalOpen(true);
+  };
+
+  const handleConfirmDelete = async (): Promise<void> => {
+    if (!userToDelete) return;
+
+    const success = await deleteUser(userToDelete);
     if (success) {
-      // User deleted successfully - could trigger refresh or other actions
-      // The hook already handles toast notifications
+      // User deleted successfully - refresh the user list
+      refetchUsers();
+      setDeleteModalOpen(false);
+      setUserToDelete(null);
     }
+  };
+
+  const handleCancelDelete = (): void => {
+    setDeleteModalOpen(false);
+    setUserToDelete(null);
   };
 
   const handleFilterChange = useCallback(
@@ -79,6 +102,11 @@ export default function UserManagementPage(): React.JSX.Element {
     setPagination(prev => ({ ...prev, pageIndex: DEFAULT_PAGE_INDEX }));
   }, []);
 
+  // Handle import success - refresh user list
+  const handleImportSuccess = useCallback((): void => {
+    refetchUsers();
+  }, [refetchUsers]);
+
   // Create columns with handlers
   const tanstackColumns = useUserColumns({
     onEditAction: handleEditUser,
@@ -89,7 +117,10 @@ export default function UserManagementPage(): React.JSX.Element {
   return (
     <AdminContentCard>
       <div className="space-y-6">
-        <UserHeader onAddUser={handleAddUser} />
+        <UserHeader
+          onAddUser={handleAddUser}
+          onImportSuccess={handleImportSuccess}
+        />
 
         <UserFilter
           filters={filters}
@@ -111,6 +142,23 @@ export default function UserManagementPage(): React.JSX.Element {
           loading={isLoading}
         />
       </div>
+
+      {/* Delete Confirmation Modal */}
+      <ConfirmationModal
+        isOpen={deleteModalOpen}
+        onClose={handleCancelDelete}
+        onConfirm={handleConfirmDelete}
+        title="Xác nhận xóa người dùng"
+        description={
+          userToDelete
+            ? `Bạn có chắc chắn muốn xóa người dùng "${userToDelete.fullName || userToDelete.email}"? Hành động này không thể hoàn tác.`
+            : "Bạn có chắc chắn muốn xóa người dùng này?"
+        }
+        confirmText="Xóa"
+        cancelText="Hủy"
+        isLoading={isDeleting}
+        variant="destructive"
+      />
     </AdminContentCard>
   );
 }

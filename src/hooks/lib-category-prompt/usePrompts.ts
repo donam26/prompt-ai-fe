@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { promptService } from "@/services";
 import { Prompt } from "@/types";
-import { toast } from "sonner";
+import { showToast } from "@/components/ui/toast";
 
 interface PromptFilters {
   searchTerm: string;
@@ -69,7 +69,7 @@ export const usePrompts = (options: UsePromptsOptions = {}) => {
       const errorMessage =
         err instanceof Error ? err.message : "Có lỗi xảy ra khi tải prompts";
       setError(errorMessage);
-      toast.error(errorMessage);
+      showToast.error(errorMessage);
     } finally {
       isFetchingRef.current = false;
       setIsLoading(false);

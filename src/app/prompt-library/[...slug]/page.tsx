@@ -1,7 +1,7 @@
 "use client";
 
 import { useParams, useSearchParams, useRouter } from "next/navigation";
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useCallback } from "react";
 import { Search, Loader2 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { MultiSelect } from "@/components/ui/multi-select";
@@ -121,13 +121,22 @@ export default function ListPromptsPage() {
   });
 
   // Fetch favorite prompts
-  const { favoritePrompts = [] } = useFavoritePrompts();
+  const {
+    favoritePrompts = [],
+    favoriteIdsMap = {},
+    refetch: refetchFavorites,
+  } = useFavoritePrompts();
 
   // Fetch newest prompts
   const { newestPrompts = [] } = useNewestPrompts({
     categoryId: categoryId,
     enabled: !!categoryId,
   });
+
+  // Handle favorite change
+  const handleFavoriteChange = useCallback(() => {
+    refetchFavorites();
+  }, [refetchFavorites]);
 
   // Handlers
   const handleSearch = (value: string) => {
@@ -287,7 +296,9 @@ export default function ListPromptsPage() {
                   key={prompt.id}
                   prompt={prompt}
                   favoriteList={favoritePrompts}
+                  favoriteIdsMap={favoriteIdsMap}
                   onPromptClick={handlePromptClick}
+                  onFavoriteChange={handleFavoriteChange}
                 />
               ))}
             </div>
@@ -321,7 +332,9 @@ export default function ListPromptsPage() {
                     key={prompt.id}
                     prompt={prompt}
                     favoriteList={favoritePrompts}
+                    favoriteIdsMap={favoriteIdsMap}
                     onPromptClick={handlePromptClick}
+                    onFavoriteChange={handleFavoriteChange}
                   />
                 ))}
               </div>

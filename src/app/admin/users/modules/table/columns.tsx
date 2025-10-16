@@ -79,7 +79,15 @@ export function useUserColumns({
         <div className="hidden lg:block">
           <span className="text-gray-600 text-sm">
             {row.original.createdAt
-              ? new Date(row.original.createdAt).toLocaleDateString("vi-VN")
+              ? new Date(row.original.createdAt).toLocaleString("vi-VN", {
+                  day: "2-digit",
+                  month: "2-digit",
+                  year: "numeric",
+                  hour: "2-digit",
+                  minute: "2-digit",
+                  second: "2-digit",
+                  hour12: false,
+                })
               : "N/A"}
           </span>
         </div>
@@ -96,7 +104,15 @@ export function useUserColumns({
         <div className="hidden lg:block">
           <span className="text-gray-600 text-sm">
             {row.original.otpExpiresAt
-              ? new Date(row.original.otpExpiresAt).toLocaleDateString("vi-VN")
+              ? new Date(row.original.otpExpiresAt).toLocaleString("vi-VN", {
+                  day: "2-digit",
+                  month: "2-digit",
+                  year: "numeric",
+                  hour: "2-digit",
+                  minute: "2-digit",
+                  second: "2-digit",
+                  hour12: false,
+                })
               : "N/A"}
           </span>
         </div>

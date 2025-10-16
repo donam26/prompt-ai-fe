@@ -3,8 +3,9 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { promptService, categoryService, industryService } from "@/services";
+import { promptFavoritesService } from "@/services/prompt-favorites/promptFavoritesService";
 import { Prompt, Category, Industry, Section } from "@/types";
-import { toast } from "sonner";
+import { showToast } from "@/components/ui/toast";
 
 interface PromptLibraryFilters {
   searchTerm: string;
@@ -68,7 +69,7 @@ export const usePromptLibrary = (options: UsePromptLibraryOptions = {}) => {
       const errorMessage =
         err instanceof Error ? err.message : "Có lỗi xảy ra khi tải prompts";
       setError(errorMessage);
-      toast.error(errorMessage);
+      showToast.error(errorMessage);
     } finally {
       isFetchingRef.current = false;
       setIsLoading(false);
@@ -160,7 +161,7 @@ export const usePromptLibraryData = () => {
     if (!user) return;
 
     try {
-      const response = await promptService.getFavoritePrompts(user.id);
+      const response = await promptFavoritesService.getFavoritePrompts(user.id);
       const favoriteIds = (
         (response.data as unknown as Prompt[]) ||
         (response.data as unknown as Prompt[]) ||
@@ -215,27 +216,30 @@ export const usePromptActions = () => {
       setFavoritePrompts: (fn: (prev: string[]) => string[]) => void
     ) => {
       if (!user) {
-        toast.error("Vui lòng đăng nhập để thêm vào yêu thích");
+        showToast.error("Vui lòng đăng nhập để thêm vào yêu thích");
         return;
       }
 
       try {
         if (favoritePrompts.includes(promptId)) {
           // Remove from favorites
-          await promptService.removeFavoritePrompt(promptId);
+          await promptFavoritesService.removeFavoritePromptByPromptId(
+            promptId,
+            user.id
+          );
           setFavoritePrompts(prev => prev.filter(id => id !== promptId));
-          toast.success("Đã xóa khỏi yêu thích");
+          showToast.success("Đã xóa khỏi yêu thích");
         } else {
           // Add to favorites
-          await promptService.addFavoritePrompt({
+          await promptFavoritesService.addFavoritePrompt({
             promptId,
             userId: user.id.toString(),
           });
           setFavoritePrompts(prev => [...prev, promptId]);
-          toast.success("Đã thêm vào yêu thích");
+          showToast.success("Đã thêm vào yêu thích");
         }
       } catch {
-        toast.error("Có lỗi xảy ra");
+        showToast.error("Có lỗi xảy ra");
       }
     },
     [user]
@@ -243,7 +247,7 @@ export const usePromptActions = () => {
 
   const handleCopyPrompt = useCallback((content: string) => {
     navigator.clipboard.writeText(content);
-    toast.success("Đã sao chép prompt");
+    showToast.success("Đã sao chép prompt");
   }, []);
 
   return {

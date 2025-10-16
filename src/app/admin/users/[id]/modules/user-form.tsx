@@ -336,7 +336,15 @@ export const UserForm = ({
                     <Input
                       value={
                         user.createdAt
-                          ? new Date(user.createdAt).toLocaleString("vi-VN")
+                          ? new Date(user.createdAt).toLocaleString("vi-VN", {
+                              day: "2-digit",
+                              month: "2-digit",
+                              year: "numeric",
+                              hour: "2-digit",
+                              minute: "2-digit",
+                              second: "2-digit",
+                              hour12: false,
+                            })
                           : ""
                       }
                       disabled
@@ -350,7 +358,15 @@ export const UserForm = ({
                     <Input
                       value={
                         user.updatedAt
-                          ? new Date(user.updatedAt).toLocaleString("vi-VN")
+                          ? new Date(user.updatedAt).toLocaleString("vi-VN", {
+                              day: "2-digit",
+                              month: "2-digit",
+                              year: "numeric",
+                              hour: "2-digit",
+                              minute: "2-digit",
+                              second: "2-digit",
+                              hour12: false,
+                            })
                           : ""
                       }
                       disabled
@@ -498,26 +514,8 @@ export const UserForm = ({
                               <Input
                                 {...field}
                                 type="date"
-                                className={`bg-white w-full text-sm ${!field.value ? "text-gray-400" : ""}`}
-                                onFocus={e => {
-                                  if (!field.value) {
-                                    e.target.type = "text";
-                                    e.target.placeholder = "Chọn ngày bắt đầu";
-                                  }
-                                }}
-                                onBlur={e => {
-                                  if (!field.value) {
-                                    e.target.type = "date";
-                                  }
-                                }}
+                                className="bg-white w-full text-sm"
                               />
-                              {!field.value && (
-                                <div className="absolute inset-0 flex items-center pl-3 pointer-events-none">
-                                  <span className="text-gray-400 text-xs">
-                                    Chọn ngày bắt đầu
-                                  </span>
-                                </div>
-                              )}
                             </div>
                           </div>
                         )}
@@ -534,26 +532,8 @@ export const UserForm = ({
                               <Input
                                 {...field}
                                 type="date"
-                                className={`bg-white w-full text-sm ${!field.value ? "text-gray-400" : ""}`}
-                                onFocus={e => {
-                                  if (!field.value) {
-                                    e.target.type = "text";
-                                    e.target.placeholder = "Chọn ngày kết thúc";
-                                  }
-                                }}
-                                onBlur={e => {
-                                  if (!field.value) {
-                                    e.target.type = "date";
-                                  }
-                                }}
+                                className="bg-white w-full text-sm"
                               />
-                              {!field.value && (
-                                <div className="absolute inset-0 flex items-center pl-3 pointer-events-none">
-                                  <span className="text-gray-400 text-xs">
-                                    Chọn ngày kết thúc
-                                  </span>
-                                </div>
-                              )}
                             </div>
                           </div>
                         )}

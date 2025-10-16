@@ -3,7 +3,7 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
-import { toast } from "sonner";
+import { showToast } from "@/components/ui/toast";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -43,14 +43,14 @@ export const ContactForm = () => {
       });
     },
     onSuccess: () => {
-      toast.success(
+      showToast.success(
         "Gửi liên hệ thành công! Chúng tôi sẽ phản hồi sớm nhất có thể."
       );
       reset();
     },
     onError: (error: any) => {
       console.error("Contact submission error:", error);
-      toast.error("Có lỗi xảy ra khi gửi liên hệ. Vui lòng thử lại sau.");
+      showToast.error("Có lỗi xảy ra khi gửi liên hệ. Vui lòng thử lại sau.");
     },
   });
 

@@ -1,5 +1,10 @@
 // API Endpoints Constants
 export const ENDPOINTS = {
+  // Prompt favorite endpoints
+  PROMPT_FAVORITES: {
+    BASE: "/prompt-favorite",
+  },
+
   // Prompt endpoints
   PROMPTS: {
     BASE: "/prompts",
@@ -9,10 +14,13 @@ export const ENDPOINTS = {
     NEWEST: "/prompts/newest",
     LATEST: "/prompts/latest",
     RELATED: "/prompts/related",
-    FAVORITE: "/promptfavorite",
-    FAVORITE_BY_SECTION: "/promptfavorite/list/by-section",
+    FAVORITE_BY_SECTION: "/prompt-favorite/list/by-section",
     IMPORT_EXCEL: "/prompts/import-excel",
     EXPORT_EXCEL: "/prompts/export-excel-enhanced",
+    EXPORT_TEMPLATE: "/prompts/export-template",
+    EXPORT_EXCEL_TEST: "/prompts/export-excel-test",
+    TEST_INDUSTRIES_EXPORT: "/prompts/test-industries-export",
+    TEST_CORS: "/prompts/test-cors",
   },
 
   // Category endpoints

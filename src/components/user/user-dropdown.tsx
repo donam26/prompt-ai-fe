@@ -3,7 +3,7 @@
 // Removed unused imports
 import { useRouter } from "next/navigation";
 import { ROUTES_URL } from "@/constants/routes-url";
-import { User, Settings, LogOut, Heart, Shield } from "lucide-react";
+import { User, LogOut, Heart, Shield } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -35,10 +35,6 @@ export function UserDropdown({ user, onLogout }: Props): React.JSX.Element {
 
   const handleProfileClick = (): void => {
     router.push(LAYOUT_ROUTES.userInfo);
-  };
-
-  const handleSettingsClick = (): void => {
-    router.push(LAYOUT_ROUTES.settings);
   };
 
   const handleAdminClick = (): void => {
@@ -88,10 +84,11 @@ export function UserDropdown({ user, onLogout }: Props): React.JSX.Element {
           <Heart className="mr-2 w-4 h-4" />
           <span>{LAYOUT_LABELS.user.favorites}</span>
         </DropdownMenuItem>
-        <DropdownMenuItem onClick={handleSettingsClick}>
+        {/* Temporarily hidden settings button */}
+        {/* <DropdownMenuItem onClick={handleSettingsClick}>
           <Settings className="mr-2 w-4 h-4" />
           <span>{LAYOUT_LABELS.user.settings}</span>
-        </DropdownMenuItem>
+        </DropdownMenuItem> */}
         {user?.role === 2 && (
           <>
             <DropdownMenuSeparator />

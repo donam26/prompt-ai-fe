@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Calendar, Clock, Eye, Heart, Share2 } from "lucide-react";
+import { Calendar, Clock, Heart, Share2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import ReactMarkdown from "react-markdown";
@@ -92,10 +92,10 @@ export const BlogDetail = ({ blog, onLike, onShare }: BlogDetailProps) => {
                 <span>{blog.readTime}</span>
               </div>
             )}
-            <div className="flex items-center gap-1">
+            {/* <div className="flex items-center gap-1">
               <Eye className="w-4 h-4" />
               <span>{blog.viewCount || 0} lượt xem</span>
-            </div>
+            </div> */}
           </div>
 
           <h1 className="mb-4 font-bold text-gray-900 text-3xl md:text-4xl">

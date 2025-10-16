@@ -13,7 +13,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Badge } from "@/components/ui/badge";
-import { Bell, User, Settings, LogOut, Menu } from "lucide-react";
+import { Bell, User, LogOut, Menu } from "lucide-react";
 
 export function AdminHeader() {
   const { user, logout } = useAuth();
@@ -113,10 +113,10 @@ export function AdminHeader() {
                   <User className="mr-2 w-4 h-4" />
                   <span>Thông tin cá nhân</span>
                 </DropdownMenuItem>
-                <DropdownMenuItem>
+                {/* <DropdownMenuItem>
                   <Settings className="mr-2 w-4 h-4" />
                   <span>Cài đặt</span>
-                </DropdownMenuItem>
+                </DropdownMenuItem> */}
                 <DropdownMenuSeparator />
                 <DropdownMenuItem onClick={handleLogout}>
                   <LogOut className="mr-2 w-4 h-4" />
