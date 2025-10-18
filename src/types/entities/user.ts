@@ -16,6 +16,7 @@ export interface User extends BaseEntity {
   avatar?: string;
   accountStatus?: number;
   otpExpiresAt?: Timestamp;
+  accessToken?: string;
 }
 
 // User subscription

@@ -133,11 +133,6 @@ export const authOptions: AuthOptions = {
             user as any
           );
 
-          console.log({
-            transformedUser,
-            backendResponse,
-          });
-
           // Set token properties
           token.accessToken = transformedUser.accessToken;
           token.refreshToken = transformedUser.refreshToken;

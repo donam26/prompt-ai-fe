@@ -24,7 +24,6 @@ export const Sidebar = ({
   onToggle,
   selectedMenuItem,
   onMenuClick,
-  prompt,
 }: SidebarProps) => {
   return (
     <>
