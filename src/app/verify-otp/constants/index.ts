@@ -28,8 +28,7 @@ export const VERIFY_OTP_TEXT = {
  * CSS classes for consistent styling
  */
 export const VERIFY_OTP_CLASSES = {
-  CONTAINER:
-    "flex justify-center items-center bg-gradient-to-br from-purple-50 via-blue-50 to-indigo-100 p-4 min-h-screen",
+  CONTAINER: "flex justify-center items-center bg-white p-4 min-h-screen",
   CARD_CONTAINER: "w-full max-w-md",
   HEADER_SECTION: "mb-8 text-center",
   BACK_LINK:

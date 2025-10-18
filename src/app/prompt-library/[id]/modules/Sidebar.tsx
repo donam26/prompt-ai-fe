@@ -24,6 +24,7 @@ export const Sidebar = ({
   onToggle,
   selectedMenuItem,
   onMenuClick,
+  prompt,
 }: SidebarProps) => {
   return (
     <>
@@ -60,10 +61,6 @@ export const Sidebar = ({
               "overflow-hidden transition-all duration-300 ease-in-out",
               isCollapsed ? "max-h-0 opacity-0" : "max-h-[200px] opacity-100"
             )}
-            style={{
-              transform: isCollapsed ? "translateY(-100%)" : "translateY(0)",
-              transition: "transform 300ms ease-in-out",
-            }}
           >
             <div className="flex items-center gap-2 p-4 border-gray-200 border-t">
               <button

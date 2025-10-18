@@ -29,7 +29,13 @@ export default function PromptDetailPage() {
   const [model, setModel] = useState("gpt-4o-mini");
   const [language, setLanguage] = useState("vi");
   const [promptType, setPromptType] = useState("standard"); // New state for prompt type
-  const [isCollapsed, setIsCollapsed] = useState(false); // Start expanded by default
+  const [isCollapsed, setIsCollapsed] = useState(() => {
+    // Start collapsed on mobile, expanded on desktop
+    if (typeof window !== "undefined") {
+      return window.innerWidth < 640;
+    }
+    return false;
+  });
   const contentEditableRef = useRef<HTMLElement | null>(null);
 
   // Fetch prompt detail
@@ -139,17 +145,16 @@ export default function PromptDetailPage() {
   // Set initial collapsed state based on screen size
   useEffect(() => {
     const handleResize = () => {
+      const isMobile = window.innerWidth < 640;
       // Only auto-collapse on mobile if sidebar is currently open
       // This prevents forcing collapse if user has manually opened it
-      if (window.innerWidth < 640 && !isCollapsed) {
+      if (isMobile && !isCollapsed) {
         setIsCollapsed(true);
+      } else if (!isMobile && isCollapsed) {
+        // Auto-expand on desktop
+        setIsCollapsed(false);
       }
     };
-
-    // Initial check - collapse on mobile on page load
-    if (window.innerWidth < 640) {
-      setIsCollapsed(true);
-    }
 
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);

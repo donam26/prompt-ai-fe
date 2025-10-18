@@ -8,6 +8,9 @@ interface BackendUserResponse {
   role?: number;
   created_at?: string;
   updated_at?: string;
+  permissions?: string[];
+  count_prompt?: number;
+  userSub?: any;
 }
 
 interface BackendTokenResponse {
@@ -19,7 +22,7 @@ interface BackendTokenResponse {
 
 interface BackendAuthResponse {
   user?: BackendUserResponse;
-  token?: BackendTokenResponse;
+  token?: string | BackendTokenResponse;
 }
 
 interface NextAuthUser {
@@ -54,6 +57,9 @@ export const transformBackendUserToAuth = (
     accessToken: "",
     refreshToken: "",
     expiresIn: 7 * 24 * 60 * 60,
+    permissions: [],
+    countPrompt: 0,
+    userSub: undefined,
   };
 
   if (backendResponse?.user && backendResponse?.token) {
@@ -68,10 +74,24 @@ export const transformBackendUserToAuth = (
       createdAt: backendResponse.user.created_at || new Date().toISOString(),
       updatedAt: backendResponse.user.updated_at || new Date().toISOString(),
       accessToken:
-        backendResponse.token.accessToken || backendResponse.token.token || "",
+        typeof backendResponse.token === "string"
+          ? backendResponse.token
+          : backendResponse.token?.accessToken ||
+            backendResponse.token?.token ||
+            "",
       refreshToken:
-        backendResponse.token.refreshToken || backendResponse.token.token || "",
-      expiresIn: backendResponse.token.expiresIn || 7 * 24 * 60 * 60,
+        typeof backendResponse.token === "string"
+          ? backendResponse.token
+          : backendResponse.token?.refreshToken ||
+            backendResponse.token?.token ||
+            "",
+      expiresIn:
+        typeof backendResponse.token === "object"
+          ? backendResponse.token?.expiresIn || 7 * 24 * 60 * 60
+          : 7 * 24 * 60 * 60,
+      permissions: backendResponse.user.permissions || [],
+      countPrompt: backendResponse.user.count_prompt || 0,
+      userSub: backendResponse.user.userSub || null,
     };
   }
 
@@ -90,6 +110,9 @@ export const transformBackendUserToAuth = (
       accessToken: googleToken,
       refreshToken: googleToken,
       expiresIn: 7 * 24 * 60 * 60,
+      permissions: [],
+      countPrompt: 0,
+      userSub: undefined,
     };
   }
 

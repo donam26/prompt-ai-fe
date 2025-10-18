@@ -220,7 +220,7 @@ export const TrendingPromptsSection = ({}: TrendingPromptsSectionProps) => {
                   <CardContent className="gap-4 grid p-0">
                     <div className="gap-4 bg-white p-4 rounded-lg">
                       {/* Title */}
-                      <CardTitle className="font-bold text-black text-lg line-clamp-3 leading-tight">
+                      <CardTitle className="mb-12 font-bold text-black text-lg line-clamp-3 leading-tight">
                         {prompt.title}
                       </CardTitle>
                       <div className="mt-6 text-gray-500 text-sm line-clamp-3 leading-tight">

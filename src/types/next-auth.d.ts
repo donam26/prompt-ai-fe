@@ -6,6 +6,11 @@ declare module "next-auth" {
     accessToken: string;
     refreshToken: string;
     expiresIn: number;
+    shouldSyncToStore?: boolean;
+    syncData?: {
+      user: NextAuthUser;
+      token: string;
+    };
   }
 
   interface User extends NextAuthUser {
@@ -25,5 +30,10 @@ declare module "next-auth/jwt" {
     refreshToken: string;
     expiresIn: number;
     user: NextAuthUser;
+    shouldSyncToStore?: boolean;
+    syncData?: {
+      user: NextAuthUser;
+      token: string;
+    };
   }
 }

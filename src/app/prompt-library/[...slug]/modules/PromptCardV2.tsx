@@ -99,7 +99,10 @@ export const PromptCardV2 = ({
   const sectionName = isMidjourney ? "Midjourney" : "Chat GPT";
 
   return (
-    <Link href={detailUrl} className="block h-full no-underline">
+    <Link
+      href={detailUrl}
+      className="flex justify-center h-full no-underline"
+    >
       <div className="relative flex flex-col gap-6 bg-gradient-to-br from-purple-50 to-purple-100 hover:shadow-lg p-4 rounded-2xl max-w-[320px] h-full max-h-[460px] transition-all hover:-translate-y-2 duration-300 ease-in-out">
         {/* Header with logo and badges */}
         <div className="flex justify-between items-center">

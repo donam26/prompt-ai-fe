@@ -30,27 +30,27 @@ export default function HomePage() {
         </section>
 
         {/* Comprehensive Layout Sections */}
-        <section className="pt-8 lg:pt-12">
+        <section className="pt-4 lg:pt-6">
           <CoachingMentorshipSection />
         </section>
 
-        <section className="pt-8 lg:pt-12">
+        <section className="pt-4 lg:pt-6">
           <PromptLibrarySection />
         </section>
 
-        <section className="pt-8 lg:pt-12">
+        <section className="pt-4 lg:pt-6">
           <AIModulesSection />
         </section>
 
-        <section className="pt-8 lg:pt-12">
+        <section className="pt-4 lg:pt-6">
           <LivestreamCommunitySection />
         </section>
 
-        <section className="pt-8 lg:pt-12">
+        <section className="pt-4 lg:pt-6">
           <EnterpriseTrainingSection />
         </section>
 
-        <section className="pt-8 lg:pt-12">
+        <section className="pt-4 lg:pt-6">
           <TrendingPromptsSection newestPrompts={[]} />
         </section>
       </div>

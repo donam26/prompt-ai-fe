@@ -106,6 +106,8 @@ export const authOptions: AuthOptions = {
         accessToken: token.accessToken,
         refreshToken: token.refreshToken,
         expiresIn: token.expiresIn,
+        shouldSyncToStore: token.shouldSyncToStore,
+        syncData: token.syncData,
       };
 
       return updatedSession;
@@ -131,11 +133,38 @@ export const authOptions: AuthOptions = {
             user as any
           );
 
+          console.log({
+            transformedUser,
+            backendResponse,
+          });
+
           // Set token properties
           token.accessToken = transformedUser.accessToken;
           token.refreshToken = transformedUser.refreshToken;
           token.expiresIn = transformedUser.expiresIn;
           token.user = transformUserForSession(transformedUser);
+
+          // Force client-side sync by setting a flag
+          token.shouldSyncToStore = true;
+          token.syncData = {
+            user: {
+              id: transformedUser.id,
+              fullName: transformedUser.fullName,
+              email: transformedUser.email,
+              avatar: transformedUser.avatar,
+              role: transformedUser.role,
+              accountStatus: transformedUser.accountStatus,
+              createdAt: transformedUser.createdAt,
+              updatedAt: transformedUser.updatedAt,
+              accessToken: transformedUser.accessToken,
+              refreshToken: transformedUser.refreshToken,
+              expiresIn: transformedUser.expiresIn,
+              userSub: transformedUser.userSub,
+              permissions: transformedUser.permissions,
+              countPrompt: transformedUser.countPrompt,
+            },
+            token: transformedUser.accessToken,
+          };
         } catch (error) {
           console.error("Backend Google login failed:", error);
 
@@ -147,6 +176,28 @@ export const authOptions: AuthOptions = {
           token.refreshToken = transformedUser.refreshToken;
           token.expiresIn = transformedUser.expiresIn;
           token.user = transformUserForSession(transformedUser);
+
+          // Force client-side sync by setting a flag
+          token.shouldSyncToStore = true;
+          token.syncData = {
+            user: {
+              id: transformedUser.id,
+              fullName: transformedUser.fullName,
+              email: transformedUser.email,
+              avatar: transformedUser.avatar,
+              role: transformedUser.role,
+              accountStatus: transformedUser.accountStatus,
+              createdAt: transformedUser.createdAt,
+              updatedAt: transformedUser.updatedAt,
+              accessToken: transformedUser.accessToken,
+              refreshToken: transformedUser.refreshToken,
+              expiresIn: transformedUser.expiresIn,
+              userSub: transformedUser.userSub,
+              permissions: transformedUser.permissions,
+              countPrompt: transformedUser.countPrompt,
+            },
+            token: transformedUser.accessToken,
+          };
         }
       }
       return token;

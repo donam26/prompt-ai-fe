@@ -16,6 +16,13 @@ export const useCustomNextAuthSync = () => {
       return;
     }
 
+    // Check if we need to sync data to store (from Google login)
+    if (session?.shouldSyncToStore && session?.syncData) {
+      login(session.syncData.user, session.syncData.token);
+      lastSessionUser.current = session.syncData.user.email;
+      return;
+    }
+
     // Only sync if session actually changed and we have a user
     const currentUserEmail = session?.user?.email || null;
 

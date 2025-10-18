@@ -29,7 +29,13 @@ export const useAuthStore = create<AuthState>()(
       setLoading: isLoading => set({ isLoading }),
 
       login: (userData, authToken) => {
-        set({ user: userData, token: authToken, isLoading: false });
+        // Add accessToken to user object for localStorage
+        const userWithAccessToken = {
+          ...userData,
+          accessToken: authToken,
+        };
+
+        set({ user: userWithAccessToken, token: authToken, isLoading: false });
 
         // Set cookies for API requests only
         if (typeof window !== "undefined") {
@@ -39,6 +45,9 @@ export const useAuthStore = create<AuthState>()(
 
           // Also set in localStorage for api-client.ts
           localStorage.setItem("authToken", authToken);
+
+          // Set user object with accessToken in localStorage
+          localStorage.setItem("user", JSON.stringify(userWithAccessToken));
         }
       },
 
@@ -49,6 +58,7 @@ export const useAuthStore = create<AuthState>()(
         if (typeof window !== "undefined") {
           localStorage.removeItem("auth-storage");
           localStorage.removeItem("authToken");
+          localStorage.removeItem("user");
 
           // Clear custom cookies only
           document.cookie = `accessToken=; path=/; max-age=0; expires=Thu, 01 Jan 1970 00:00:00 GMT`;
@@ -69,8 +79,17 @@ export const useAuthStore = create<AuthState>()(
           state.setLoading(false);
 
           // Sync token with api-client after rehydration
-          if (typeof window !== "undefined" && state.token) {
+          if (typeof window !== "undefined" && state.token && state.user) {
             localStorage.setItem("authToken", state.token);
+
+            // Update user object with accessToken if not already present
+            if (!state.user.accessToken) {
+              const userWithAccessToken = {
+                ...state.user,
+                accessToken: state.token,
+              };
+              localStorage.setItem("user", JSON.stringify(userWithAccessToken));
+            }
           }
         }
       },
