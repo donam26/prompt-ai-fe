@@ -1001,6 +1001,12 @@
   }
 }
 
+@media (max-width: 480px) {
+  .animate-scroll {
+    animation: scroll 9s linear infinite;
+  }
+}
+
 .animate-scroll::-webkit-scrollbar {
   display: none; /* WebKit */
 }

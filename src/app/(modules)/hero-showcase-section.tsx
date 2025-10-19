@@ -31,9 +31,14 @@ export const HeroShowcaseSection = () => {
             {/* Right gradient fade */}
             <div className="top-0 right-0 bottom-0 z-10 absolute bg-gradient-to-l from-white to-transparent w-20 pointer-events-none" />
 
-            {/* Slider wrapper - Continuous scroll */}
+            {/* Slider wrapper - Continuous scroll with more repetitions for mobile */}
             <div className="flex animate-scroll">
-              {[...HERO_SHOWCASE, ...HERO_SHOWCASE].map((logo, index) => (
+              {[
+                ...HERO_SHOWCASE,
+                ...HERO_SHOWCASE,
+                ...HERO_SHOWCASE,
+                ...HERO_SHOWCASE,
+              ].map((logo, index) => (
                 <div
                   key={`${logo.alt}-${index}`}
                   className="flex flex-shrink-0 justify-center items-center mx-6"

@@ -143,17 +143,11 @@ export const TrendingPromptsSection = ({}: TrendingPromptsSectionProps) => {
                         <CardContent className="gap-4 grid p-0">
                           <div className="bg-white p-4 rounded-lg">
                             {/* Title */}
-                            <CardTitle className="font-bold text-black text-lg line-clamp-3 leading-tight">
+                            <CardTitle className="mb-12 font-bold text-black text-lg line-clamp-3 leading-tight">
                               {prompt.title}
                             </CardTitle>
-                            <div>
-                              <Image
-                                src={prompt.category?.image || ""}
-                                alt="gpt"
-                                width={282}
-                                height={154}
-                                className="object-cover"
-                              />
+                            <div className="mt-6 text-gray-500 text-sm line-clamp-3 leading-tight">
+                              {prompt.shortDescription}
                             </div>
                           </div>
                           <div className="bg-white p-4 rounded-lg">
@@ -167,7 +161,7 @@ export const TrendingPromptsSection = ({}: TrendingPromptsSectionProps) => {
                             href={getPromptLibraryUrl(prompt.id.toString())}
                           >
                             <Button className="bg-[#DACDFF] hover:bg-[#5700C6] py-2 rounded-full w-full font-medium text-[#5700C6] hover:text-white">
-                              View Prom
+                              Xem Prompt*
                             </Button>
                           </Link>
                         </CardContent>
@@ -236,7 +230,7 @@ export const TrendingPromptsSection = ({}: TrendingPromptsSectionProps) => {
                     {/* View Prom Button */}
                     <Link href={getPromptLibraryUrl(prompt.id.toString())}>
                       <Button className="bg-[#DACDFF] hover:bg-[#5700C6] py-2 rounded-full w-full font-medium text-[#5700C6] hover:text-white">
-                        View Prom
+                        Xem Prompt*
                       </Button>
                     </Link>
                   </CardContent>

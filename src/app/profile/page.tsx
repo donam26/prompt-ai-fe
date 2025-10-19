@@ -1,20 +1,26 @@
 "use client";
 
-import { useState, useEffect, Suspense } from "react";
-import { useSearchParams } from "next/navigation";
-import { User, Heart, LogOut } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
+import { useState, useEffect, Suspense, useCallback } from "react";
+import { useSearchParams, useRouter } from "next/navigation";
 import { useAuth } from "@/hooks/useAuth";
 import AccountInfo from "./modules/AccountInfo";
 import FavoritePrompts from "@/app/profile/modules/FavoritePrompts";
+import { ProfileSidebar, ProfileMenuItem } from "./modules/ProfileSidebar";
 
 type TabType = "account" | "favorites";
 
 function ProfileContent() {
   const searchParams = useSearchParams();
+  const router = useRouter();
   const { user, logout } = useAuth();
   const [activeTab, setActiveTab] = useState<TabType>("account");
+  const [isCollapsed, setIsCollapsed] = useState(() => {
+    // Start collapsed on mobile, expanded on desktop
+    if (typeof window !== "undefined") {
+      return window.innerWidth < 640;
+    }
+    return false;
+  });
 
   useEffect(() => {
     const tabParam = searchParams.get("tab");
@@ -23,17 +29,45 @@ function ProfileContent() {
     }
   }, [searchParams]);
 
-  const handleTabChange = (tab: TabType) => {
-    setActiveTab(tab);
-    const url = new URL(window.location.href);
-    url.searchParams.set("tab", tab);
-    window.history.replaceState({}, "", url.toString());
-  };
+  // Set initial collapsed state based on screen size
+  useEffect(() => {
+    const handleResize = () => {
+      const isMobile = window.innerWidth < 640;
+      // Only auto-collapse on mobile if sidebar is currently open
+      // This prevents forcing collapse if user has manually opened it
+      if (isMobile && !isCollapsed) {
+        setIsCollapsed(true);
+      } else if (!isMobile && isCollapsed) {
+        // Auto-expand on desktop
+        setIsCollapsed(false);
+      }
+    };
 
-  const handleLogout = () => {
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, [isCollapsed]);
+
+  const handleLogout = useCallback(() => {
     logout();
     window.location.href = "/login";
-  };
+  }, [logout]);
+
+  const handleMenuClick = useCallback(
+    (key: ProfileMenuItem) => {
+      // Update URL with tab parameter
+      const currentUrl = new URL(window.location.href);
+      currentUrl.searchParams.set("tab", key);
+      router.replace(currentUrl.pathname + currentUrl.search, {
+        scroll: false,
+      });
+
+      // Close sidebar on mobile after selection
+      if (window.innerWidth < 640) {
+        setIsCollapsed(true);
+      }
+    },
+    [router]
+  );
 
   const renderContent = () => {
     switch (activeTab) {
@@ -69,65 +103,32 @@ function ProfileContent() {
       <div className="flex justify-center items-center min-h-screen">
         <div className="text-center">
           <h1 className="mb-4 font-bold text-2xl">Vui lòng đăng nhập</h1>
-          <Button onClick={() => (window.location.href = "/login")}>
+          <button
+            onClick={() => (window.location.href = "/login")}
+            className="bg-purple-600 hover:bg-purple-700 px-6 py-2 rounded-lg text-white transition-colors"
+          >
             Đăng nhập
-          </Button>
+          </button>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="bg-gray-50 py-8 min-h-screen">
-      <div className="mx-auto px-4 max-w-6xl">
-        <div className="gap-6 grid grid-cols-1 lg:grid-cols-4">
-          {/* Sidebar */}
-          <div className="lg:col-span-1">
-            <Card className="p-4">
-              <div className="space-y-2">
-                <Button
-                  variant={activeTab === "account" ? "default" : "ghost"}
-                  className="justify-start w-full"
-                  onClick={() => handleTabChange("account")}
-                >
-                  <User className="mr-2 w-4 h-4" />
-                  Thông tin tài khoản
-                </Button>
-                {/* Temporarily hidden - Change Password tab */}
-                {/* <Button
-                  variant={activeTab === "password" ? "default" : "ghost"}
-                  className="justify-start w-full"
-                  onClick={() => handleTabChange("password")}
-                >
-                  <Lock className="mr-2 w-4 h-4" />
-                  Đổi mật khẩu
-                </Button> */}
-                <Button
-                  variant={activeTab === "favorites" ? "default" : "ghost"}
-                  className="justify-start w-full"
-                  onClick={() => handleTabChange("favorites")}
-                >
-                  <Heart className="mr-2 w-4 h-4" />
-                  Prompt yêu thích
-                </Button>
-                <div className="pt-4 border-t">
-                  <Button
-                    variant="destructive"
-                    className="justify-start w-full"
-                    onClick={handleLogout}
-                  >
-                    <LogOut className="mr-2 w-4 h-4" />
-                    Thoát
-                  </Button>
-                </div>
-              </div>
-            </Card>
-          </div>
+    <div className="flex md:flex-row flex-col gap-2 md:gap-0 bg-white p-2 md:p-0 pt-4 md:pt-0 max-w-[100vw] min-h-screen overflow-x-hidden">
+      {/* Sidebar */}
+      <ProfileSidebar
+        isCollapsed={isCollapsed}
+        onToggle={() => setIsCollapsed(!isCollapsed)}
+        selectedMenuItem={activeTab as ProfileMenuItem}
+        onMenuClick={handleMenuClick}
+        onLogout={handleLogout}
+      />
 
-          {/* Content */}
-          <div className="lg:col-span-3">
-            <Card className="p-6">{renderContent()}</Card>
-          </div>
+      {/* Main Content */}
+      <div className="flex-1 p-4 max-w-full container">
+        <div className="bg-gray-50 p-6 rounded-lg min-h-[600px]">
+          {renderContent()}
         </div>
       </div>
     </div>

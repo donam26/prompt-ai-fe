@@ -185,7 +185,7 @@ export const PromptCardV2 = ({
           onClick={handlePromptCardClick}
           className="bg-[#DACDFFE5] hover:bg-primary mt-auto px-4 py-3 rounded-full w-full font-semibold text-purple-700 hover:text-white transition-colors"
         >
-          View Prom
+          Xem Prompt*
         </button>
       </div>
     </Link>

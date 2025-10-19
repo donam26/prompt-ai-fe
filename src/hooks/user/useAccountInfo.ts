@@ -29,7 +29,6 @@ export const useAccountInfo = (options: UseAccountInfoOptions) => {
 
     try {
       const response = await userService.getUserInfo();
-      console.warn({ response });
       if (response.data) {
         setUserInfo(response.data);
       }

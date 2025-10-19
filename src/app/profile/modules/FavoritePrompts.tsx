@@ -70,7 +70,7 @@ export default function FavoritePrompts({ user }: FavoritePromptsProps) {
     }
 
     return (
-      <div className="gap-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+      <div className="gap-6 grid grid-cols-1 sm:grid-cols-2 2xl:grid-cols-4 xl:grid-cols-3">
         {favoritePrompts.map(prompt => (
           <div key={prompt.id} className="relative">
             <PromptCardV2

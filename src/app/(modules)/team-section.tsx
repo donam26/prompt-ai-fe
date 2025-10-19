@@ -53,9 +53,16 @@ export const TeamsSection = () => {
           {/* Right gradient fade */}
           <div className="top-0 right-0 bottom-0 z-10 absolute bg-gradient-to-l from-white to-transparent w-20 pointer-events-none" />
 
-          {/* Slider wrapper - Continuous scroll  */}
+          {/* Slider wrapper - Continuous scroll with more repetitions for mobile */}
           <div className="flex animate-scroll">
-            {[...MENTORS, ...MENTORS, ...MENTORS].map((mentor, index) => (
+            {[
+              ...MENTORS,
+              ...MENTORS,
+              ...MENTORS,
+              ...MENTORS,
+              ...MENTORS,
+              ...MENTORS,
+            ].map((mentor, index) => (
               <div
                 key={`${mentor.id}-${index}`}
                 className="flex-shrink-0 mx-2 md:mx-3"

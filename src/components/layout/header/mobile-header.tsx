@@ -55,7 +55,7 @@ export const MobileHeader = ({
         className="flex flex-shrink-0 items-center gap-2 pl-4 text-inherit no-underline"
       >
         <Image
-          src={LAYOUT_IMAGES.logo}
+          src="/icons/logos/logo-final-1.png"
           alt={LAYOUT_IMAGES.logoAlt}
           width={LAYOUT_IMAGES.logoWidth}
           height={LAYOUT_IMAGES.logoHeight}

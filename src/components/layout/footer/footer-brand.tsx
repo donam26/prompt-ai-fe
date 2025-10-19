@@ -31,7 +31,7 @@ export function FooterBrand({ className }: Props): React.JSX.Element {
       {/* Logo */}
       <Link href="/" className="flex items-end">
         <Image
-          src="/icons/logos/logo-final-1.svg"
+          src="/icons/logos/logo-final-1.png"
           alt="Logo"
           width={120}
           height={120}

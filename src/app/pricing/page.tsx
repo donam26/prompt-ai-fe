@@ -1,139 +1,166 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import Image from "next/image";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { PricingFAQ } from "@/components/user/PricingFAQ";
 import { ContactModal } from "@/components/user/ContactModal";
-import { ArrowRightIcon } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { PaymentMethod } from "@/types/enums/payment-method";
+import { cn } from "@/lib/utils";
+import { SkoolCommunitySection } from "./modules/SkoolCommunitySection";
+import { VNPaySection } from "./modules/VNPaySection";
+import { usePricingSubscriptions } from "@/hooks/usePricingSubscriptions";
 
 const SKOOL_COMMUNITY_URL =
   "https://www.skool.com/prom-aihub/about?ref=1a6136e6caba48bcaf8d6a8120bc0cb8";
 
 export default function PricingPage() {
-  const [isMobile, setIsMobile] = useState(false);
+  const router = useRouter();
   const [isContactModalOpen, setIsContactModalOpen] = useState(false);
+  const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>(
+    PaymentMethod.SKOOL
+  );
 
-  useEffect(() => {
-    const handleResize = () => {
-      setIsMobile(window.innerWidth <= 768);
-    };
+  // Get subscriptions data for checkout
+  const { subscriptions } = usePricingSubscriptions();
 
-    // Set initial value
-    handleResize();
+  // Features data
+  const featuresData = [
+    {
+      id: 41,
+      content: "Truy cập Premium prompts",
+      included: true,
+      createdAt: "2025-03-03T15:00:40.000Z",
+      updatedAt: "2025-03-12T17:49:30.000Z",
+    },
+    {
+      id: 42,
+      content: "Truy cập tài liệu AI không giới hạn, cập nhật hàng tuần",
+      included: true,
+      createdAt: "2025-03-03T15:00:40.000Z",
+      updatedAt: "2025-03-12T17:50:45.000Z",
+    },
+    {
+      id: 43,
+      content: "Prompt tùy chỉnh cá nhân hóa không giới hạn",
+      included: true,
+      createdAt: "2025-03-03T15:00:40.000Z",
+      updatedAt: "2025-03-12T17:52:59.000Z",
+    },
+    {
+      id: 44,
+      content: "Sử dụng trình nâng cấp và cá nhân hoá prompt",
+      included: true,
+      createdAt: "2025-03-03T15:00:40.000Z",
+      updatedAt: "2025-03-03T15:00:40.000Z",
+    },
+    {
+      id: 45,
+      content: "Loại bỏ quảng cáo",
+      included: true,
+      createdAt: "2025-03-03T15:00:40.000Z",
+      updatedAt: "2025-03-12T17:57:16.000Z",
+    },
+    {
+      id: 46,
+      content: "x20 lần số lần nâng cấp prompt so với free",
+      included: true,
+      createdAt: "2025-03-03T15:00:40.000Z",
+      updatedAt: "2025-03-12T17:57:16.000Z",
+    },
+    {
+      id: 114,
+      content:
+        "Sử dụng Prom's Master Prompter để tạo system prompt cho cá nhân và doanh nghiệp",
+      included: true,
+      createdAt: "2025-03-03T15:00:40.000Z",
+      updatedAt: "2025-03-12T17:57:16.000Z",
+    },
+    {
+      id: 122,
+      content: "1 Module áp dụng AI vào Marketing từ Hiếu AI ",
+      included: false,
+      createdAt: "2025-03-03T15:00:40.000Z",
+      updatedAt: "2025-03-12T17:57:16.000Z",
+    },
+    {
+      id: 123,
+      content: "1 giờ tư vấn từ Hiếu AI ( trị giá 4 triệu )",
+      included: false,
+      createdAt: "2025-03-03T15:00:40.000Z",
+      updatedAt: "2025-03-12T17:57:16.000Z",
+    },
+    {
+      id: 126,
+      content: " 200 prompts cá nhân hóa theo yêu cầu doanh nghiệp",
+      included: false,
+      createdAt: "2025-03-03T15:00:40.000Z",
+      updatedAt: "2025-03-12T17:57:16.000Z",
+    },
+  ];
 
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
+  const handleSelectPlan = (planId: string, method: PaymentMethod) => {
+    if (method === PaymentMethod.SKOOL) {
+      // Redirect to Skool Community
+      window.open(SKOOL_COMMUNITY_URL, "_blank");
+    } else {
+      // Redirect to checkout page with plan data
+      const plan = subscriptions.find(p => p.id?.toString() === planId);
+      if (plan) {
+        const params = new URLSearchParams({
+          planId: plan.id?.toString() || "",
+          planName: plan.name || "",
+          planPrice: plan.price?.toString() || "0",
+          planType: plan.type?.toString() || "1",
+          features: plan.features?.join(",") || "",
+          paymentMethod: PaymentMethod.VNPAY,
+        });
+
+        router.push(`/checkout?${params.toString()}`);
+      }
+    }
+  };
 
   return (
     <div className="mx-auto p-4 min-h-screen container">
-      {/* Hero Section with Background */}
-      <div className="relative mb-8 rounded-xl overflow-hidden">
-        {/* Background Image for Desktop */}
-        <Image
-          src="/images/pricing/pricing-background.jpg"
-          alt="Pricing Background"
-          width={1270}
-          height={600}
-          className="hidden md:block absolute inset-0 w-full h-full object-cover"
-        />
-
-        {/* Background Image for Mobile */}
-        <Image
-          src="/images/pricing/pricing-background-mobile.jpg"
-          alt="Pricing Background Mobile"
-          fill
-          className="md:hidden block absolute inset-0 w-full h-full object-cover"
-        />
-
-        {/* Content Overlay */}
-        <div className="z-10 relative px-8 lg:px-16 py-16 lg:py-24 text-white md:text-left text-center">
-          <div className="mx-auto max-w-[1270px]">
-            <h1 className="mb-6 font-bold text-white text-2xl md:text-4xl lg:text-6xl leading-tight">
-              Prom AI Hub - Hub AI Hàng Đầu Việt Nam
-            </h1>
-            <p className="mb-8 max-w-2xl text-white/90 text-lg md:text-xl">
-              Cộng Đồng AI First dành cho các entrepreneurs,
-              <br /> Gen-Z, freelancers, và các chủ doanh nghiệp!
-            </p>
-
-            {/* Features List */}
-            <div className="space-y-3 mb-8">
-              <div className="flex items-center gap-3">
-                <span className="text-green-400 text-lg">✅</span>
-                <span className="text-white/90 text-base md:text-lg">
-                  Sử dụng Thư viện 10,000 prompts & Extension Nâng Cấp Prompt
-                </span>
-              </div>
-              <div className="flex items-center gap-3">
-                <span className="text-green-400 text-lg">✅</span>
-                <span className="text-white/90 text-base md:text-lg">
-                  Modules hướng dẫn trong nhiều lĩnh vực AI
-                </span>
-              </div>
-              <div className="flex items-center gap-3">
-                <span className="text-green-400 text-lg">✅</span>
-                <span className="text-white/90 text-base md:text-lg">
-                  6 chuyên gia AI cầm-tay-chỉ-việc
-                </span>
-              </div>
-              <div className="flex items-center gap-3">
-                <span className="text-green-400 text-lg">✅</span>
-                <span className="text-white/90 text-base md:text-lg">
-                  Livestream / Giveaway hàng tuần
-                </span>
-              </div>
-              <div className="flex items-center gap-3">
-                <span className="text-green-400 text-lg">✅</span>
-                <span className="text-white/90 text-base md:text-lg">
-                  Module 1-0-2: Deepfake, Jailbreak LLM, System Prompt và ??
-                </span>
-              </div>
-            </div>
-
-            <div>
-              <Button
-                className="flex justify-center items-center shadow-[inset_0px_0px_12px_rgba(255,255,255,0.6)] border rounded-full w-[330px] h-[53.5px] font-semibold text-white text-lg hover:scale-105 transition-all duration-300 hero-button-gradient"
-                style={{ padding: "16px" }}
-                onClick={() => window.open(SKOOL_COMMUNITY_URL, "_blank")}
-              >
-                Tham gia ngay
-                <ArrowRightIcon className="w-5 h-5" />
-              </Button>
-            </div>
-          </div>
+      {/* Payment Method Toggle */}
+      <div className="flex justify-center mb-6">
+        <div className="flex items-center gap-4 bg-white shadow-lg p-2 border rounded-full">
+          <button
+            onClick={() => setPaymentMethod(PaymentMethod.SKOOL)}
+            className={cn(
+              "px-6 py-3 rounded-full font-semibold transition-all duration-300",
+              paymentMethod === PaymentMethod.SKOOL
+                ? "bg-purple-600 text-white shadow-md"
+                : "text-gray-600 hover:text-purple-600"
+            )}
+          >
+            Skool Community
+          </button>
+          <button
+            onClick={() => setPaymentMethod(PaymentMethod.VNPAY)}
+            className={cn(
+              "px-6 py-3 rounded-full font-semibold transition-all duration-300",
+              paymentMethod === PaymentMethod.VNPAY
+                ? "bg-purple-600 text-white shadow-md"
+                : "text-gray-600 hover:text-purple-600"
+            )}
+          >
+            VNPay
+          </button>
         </div>
       </div>
 
-      {/* Pricing Tools Section */}
-      <div className="mb-8">
-        <div
-          onClick={() => window.open(SKOOL_COMMUNITY_URL, "_blank")}
-          className="hover:scale-105 transition-transform duration-300 cursor-pointer"
-          role="button"
-          tabIndex={0}
-          aria-label="Visit Skool Community"
-          onKeyDown={e => {
-            if (e.key === "Enter" || e.key === " ") {
-              e.preventDefault();
-              window.open(SKOOL_COMMUNITY_URL, "_blank");
-            }
-          }}
-        >
-          <Image
-            src={
-              isMobile
-                ? "/images/pricing/pricing-img-mobile.png"
-                : "/images/pricing/pricing-img.png"
-            }
-            alt="Pricing Tools"
-            width={1270}
-            height={400}
-            className="rounded-xl w-full h-auto"
-          />
-        </div>
-      </div>
+      {/* Skool Community Section */}
+      {paymentMethod === PaymentMethod.SKOOL && <SkoolCommunitySection />}
+
+      {/* VNPay Section */}
+      {paymentMethod === PaymentMethod.VNPAY && (
+        <VNPaySection
+          paymentMethod={paymentMethod}
+          onSelectPlan={handleSelectPlan}
+          featuresData={featuresData}
+        />
+      )}
 
       {/* FAQ Section */}
       <div className="mb-8">

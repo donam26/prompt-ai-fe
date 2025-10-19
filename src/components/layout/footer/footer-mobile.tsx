@@ -137,7 +137,7 @@ export function FooterMobile({ className }: Props): React.JSX.Element {
           {/* Logo */}
           <Link href={ROUTES_URL.HOME} className="flex items-center gap-2 mb-4">
             <Image
-              src="/icons/logos/logo-final-1.svg"
+              src="/icons/logos/logo-final-1.png"
               alt="Logo"
               width={120}
               height={120}

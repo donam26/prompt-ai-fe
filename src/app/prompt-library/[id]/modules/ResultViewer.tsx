@@ -61,7 +61,7 @@ export const ResultViewer = ({
 }: ResultViewerProps) => {
   return (
     <div className="flex flex-col col-span-1 xl:col-span-4 w-full h-full result-card">
-      <div className="flex flex-col flex-1 p-0 sm:p-6 pt-0">
+      <div className="flex flex-col flex-1 p-0 pt-0">
         <div className="flex justify-between items-start gap-3 pb-4">
           <h4 className="font-bold text-gray-900 text-xl">Kết quả</h4>
           <Button

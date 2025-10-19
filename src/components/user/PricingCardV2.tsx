@@ -1,24 +1,41 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Check, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
-import { SubscriptionFormData } from "@/types/admin/subscription";
+import { PaymentMethod } from "@/types/enums/payment-method";
+import { useUser } from "@/hooks/useUser";
 
-interface PricingCardProps {
-  readonly plan: SubscriptionFormData;
+interface PricingCardV2Props {
+  readonly plan: {
+    id: string;
+    name: string;
+    price: number;
+    description?: string;
+    isPopular?: boolean;
+    badge?: string;
+    buttonText?: string;
+    buttonVariant?: "default" | "outline";
+    ctaText?: string;
+    contentSubscriptions?: Array<{
+      content: string;
+      included: boolean;
+    }>;
+  };
   readonly isYearly: boolean;
-  readonly onSelectPlan: (planId: string) => void;
+  readonly onSelectPlan: (planId: string, paymentMethod: PaymentMethod) => void;
+  readonly paymentMethod: PaymentMethod;
   readonly className?: string;
 }
 
-export const PricingCard = ({
+export const PricingCardV2 = ({
   plan,
   isYearly,
   onSelectPlan,
+  paymentMethod,
   className,
-}: PricingCardProps) => {
+}: PricingCardV2Props) => {
+  const { user } = useUser();
   const currentPrice = isYearly ? Number(plan.price) : Number(plan.price);
 
   const formatPrice = (price: number): string => {
@@ -31,8 +48,32 @@ export const PricingCard = ({
   };
 
   const handleSelectPlan = () => {
-    onSelectPlan(plan.id as string);
+    onSelectPlan(plan.id as string, paymentMethod);
   };
+
+  const getButtonText = () => {
+    if (isButtonDisabled) {
+      return "Đã có gói đăng ký";
+    }
+    if (paymentMethod === PaymentMethod.SKOOL) {
+      return "Tham gia Skool";
+    }
+    return "Thanh toán VNPay";
+  };
+
+  const getButtonVariant = () => {
+    if (paymentMethod === PaymentMethod.VNPAY) {
+      return "default";
+    }
+    return plan.buttonVariant || "outline";
+  };
+
+  // Check if user has subscription type different from 1 (free)
+  const hasPaidSubscription = !!(
+    user?.userSub?.subscription?.type && user.userSub.subscription.type !== 1
+  );
+
+  const isButtonDisabled = hasPaidSubscription;
 
   return (
     <div
@@ -57,6 +98,8 @@ export const PricingCard = ({
           {plan.badge}
         </div>
       )}
+
+      {/* Payment Method Indicator */}
 
       {/* Header */}
       <div className="flex flex-col justify-start h-auto sm:h-[120px]">
@@ -114,16 +157,27 @@ export const PricingCard = ({
               plan.isPopular ? "text-white" : "text-[#555]"
             )}
           >
-            <span
-              className={cn(
-                "flex flex-shrink-0 mt-0.5 mr-2 font-bold text-sm sm:text-base",
-                feature.included ? "text-[#00ff00]" : "text-[#ff4d4d]"
-              )}
-            >
+            <span className="flex flex-shrink-0 justify-center items-center mr-2">
               {feature.included ? (
-                <Check className="w-3 sm:w-4 h-3 sm:h-4" />
+                <Image
+                  src={
+                    plan.isPopular
+                      ? "/icons/status/check_circle_popular.svg"
+                      : "/icons/status/check_circle.svg"
+                  }
+                  alt=""
+                  width={20}
+                  height={20}
+                  className="w-5 h-5"
+                />
               ) : (
-                <X className="w-3 sm:w-4 h-3 sm:h-4" />
+                <Image
+                  src="/icons/status/x_circle.svg"
+                  alt=""
+                  width={20}
+                  height={20}
+                  className="w-5 h-5"
+                />
               )}
             </span>
             <span className="flex-1">{feature.content}</span>
@@ -135,15 +189,20 @@ export const PricingCard = ({
       <div className="mt-3 sm:mt-4">
         <Button
           onClick={handleSelectPlan}
-          variant={plan.buttonVariant}
+          variant={getButtonVariant()}
+          disabled={isButtonDisabled}
           className={cn(
-            "py-2 sm:py-2.5 border-none rounded-[36px] w-full font-bold text-white text-sm sm:text-base leading-6 transition-all duration-200 cursor-pointer",
-            plan.buttonVariant === "outline"
-              ? "text-[#5700C6] bg-white hover:opacity-90"
-              : "bg-[#5700C6] hover:opacity-90"
+            "py-2 sm:py-2.5 border-none rounded-[36px] w-full font-bold text-white text-sm sm:text-base leading-6 transition-all duration-200",
+            isButtonDisabled
+              ? "bg-gray-400 cursor-not-allowed opacity-60"
+              : paymentMethod === PaymentMethod.VNPAY
+                ? "bg-[#5700C6] hover:opacity-90 cursor-pointer"
+                : getButtonVariant() === "outline"
+                  ? "text-[#5700C6] bg-white hover:opacity-90 cursor-pointer"
+                  : "bg-[#5700C6] hover:opacity-90 cursor-pointer"
           )}
         >
-          {plan.buttonText}
+          {getButtonText()}
         </Button>
         {plan.ctaText && (
           <p

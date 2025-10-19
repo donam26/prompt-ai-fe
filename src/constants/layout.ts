@@ -93,8 +93,8 @@ export const LAYOUT_NAVIGATION = {
 export const LAYOUT_IMAGES = {
   logo: "/icons/ui/logo.svg",
   logoAlt: "Prom logo",
-  logoWidth: 30,
-  logoHeight: 40,
+  logoWidth: 120,
+  logoHeight: 120,
 } as const;
 
 export const LAYOUT_CONFIG = {
