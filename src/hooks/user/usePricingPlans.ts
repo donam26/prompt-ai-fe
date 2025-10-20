@@ -38,12 +38,12 @@ export const usePricingPlans = (): UsePricingPlansReturn => {
           id: planId,
           name: subscription.name,
           type: subscription.type,
-          duration: parseInt(subscription.duration) || 1,
+          duration: parseInt(subscription.duration?.toString() || "1"),
           billingCycle: subscription.billingCycle,
           price: subscription.price.toString(),
           description: subscription.description || "",
           isPopular: subscription.type === 2,
-          imageDiscount: subscription.imageDiscount,
+          imageDiscount: subscription.imageDiscount || undefined,
           isEnterprise: subscription.type === 3,
           buttonText:
             subscription.type === 1

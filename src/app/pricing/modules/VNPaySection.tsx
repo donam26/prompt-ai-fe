@@ -62,7 +62,7 @@ export const VNPaySection = ({
                     plan={{
                       id: plan.id?.toString() || "",
                       name: plan.name,
-                      price: plan.price,
+                      price: Number(plan.price),
                       description: "", // Subscription interface doesn't have pricePerYear
                       isPopular: true, // Premium is always popular
                       badge: "Phổ biến", // Premium badge

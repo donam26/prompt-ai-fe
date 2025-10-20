@@ -19,8 +19,8 @@ export function useSubscriptionColumns({
       cell: ({ row }) => (
         <div className="hidden sm:flex justify-center">
           <ImageCell
-            src={row.original.imageDiscount}
-            alt={row.original.imageDiscount}
+            src={row.original.imageDiscount || undefined}
+            alt={row.original.imageDiscount || undefined}
             size="md"
           />
         </div>
@@ -80,7 +80,7 @@ export function useSubscriptionColumns({
           {new Intl.NumberFormat("vi-VN", {
             style: "currency",
             currency: "VND",
-          }).format(row.original.price)}
+          }).format(Number(row.original.price))}
         </div>
       ),
     },

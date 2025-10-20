@@ -68,19 +68,19 @@ export async function GET(request: NextRequest) {
         prompt =>
           prompt.title.toLowerCase().includes(search.toLowerCase()) ||
           prompt.content.toLowerCase().includes(search.toLowerCase()) ||
-          prompt.short_description.toLowerCase().includes(search.toLowerCase())
+          prompt.shortDescription.toLowerCase().includes(search.toLowerCase())
       );
     }
 
     if (categoryIds.length > 0) {
       filteredPrompts = filteredPrompts.filter(prompt =>
-        categoryIds.includes(prompt.category_name)
+        categoryIds.includes(prompt.categoryName)
       );
     }
 
     if (isType) {
       filteredPrompts = filteredPrompts.filter(
-        prompt => prompt.is_type.toLowerCase() === isType.toLowerCase()
+        prompt => prompt.isType.toLowerCase() === isType.toLowerCase()
       );
     }
 
