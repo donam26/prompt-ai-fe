@@ -57,12 +57,12 @@ export const useLatestPrompts = (options: UseLatestPromptsOptions = {}) => {
         pageSize,
       };
 
-      // Add optional filters - map camelCase to snake_case for API
-      if (categoryId) params.category_id = categoryId;
-      if (subType) params.sub_type = subType;
-      if (topicId) params.topic_id = topicId;
-      if (industryId) params.industry_id = industryId;
-      if (searchText) params.search_text = searchText;
+      // Add optional filters - use camelCase for API
+      if (categoryId) params.categoryId = categoryId;
+      if (subType) params.subType = subType;
+      if (topicId) params.topicId = topicId;
+      if (industryId) params.industryId = industryId;
+      if (searchText) params.searchText = searchText;
 
       const response = await promptService.getLatestPrompts(params);
 

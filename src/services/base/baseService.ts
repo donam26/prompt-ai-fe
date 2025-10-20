@@ -57,8 +57,6 @@ export class BaseService {
     id: string | number,
     data: D
   ): Promise<BaseApiResponse<T>> {
-    // Convert camelCase data to snake_case for API
-
     const response: AxiosResponse<BaseApiResponse<T>> = await apiClient.put(
       `${this.baseUrl}/${id}`,
       data
@@ -74,8 +72,6 @@ export class BaseService {
     id: string | number,
     data: D
   ): Promise<BaseApiResponse<T>> {
-    // Convert camelCase data to snake_case for API
-
     const response: AxiosResponse<BaseApiResponse<T>> = await apiClient.patch(
       `${this.baseUrl}/${id}`,
       data

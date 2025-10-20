@@ -9,26 +9,37 @@ export interface User extends BaseEntity {
   id: number;
   fullName: string;
   email: string;
+  passwordHash?: string | null;
   role: number;
+  roleId?: number | null;
   permissions?: string[] | string;
   countPrompt?: number;
+  googleId?: string;
+  profileImage?: string;
+  otpCode?: string | null;
+  otpExpiresAt?: Timestamp | null;
+  isVerified?: boolean;
+  referralId?: string | null;
+  accessToken?: string;
   userSub?: UserSubscription;
+  userSubs?: UserSubscription[];
   avatar?: string;
   accountStatus?: number;
-  otpExpiresAt?: Timestamp;
-  accessToken?: string;
+  deviceLog?: any;
 }
 
 // User subscription
 export interface UserSubscription {
   id: EntityId;
   userId: EntityId;
-  subscriptionId: EntityId;
+  subId: EntityId;
+  subscriptionId?: EntityId;
   status: number;
   startDate: Timestamp;
   endDate: Timestamp;
   token: number;
   subscription?: Subscription;
+  Subscription?: Subscription;
   createdAt: Timestamp;
   updatedAt: Timestamp;
 }
@@ -36,13 +47,20 @@ export interface UserSubscription {
 // Subscription plan
 export interface Subscription extends BaseEntity {
   name: string;
+  nameSub: string;
   type: number;
-  duration: string;
-  price: number;
-  features: string[];
+  duration: number;
+  durationString?: string;
+  price: string;
+  priceYear?: string | null;
+  pricePerMonthYear?: string | null;
+  priceTotalYearly?: string | null;
+  features?: string[];
   description?: string;
+  descriptionPerYear?: string;
   billingCycle: string;
-  imageDiscount?: string;
+  imageDiscount?: string | null;
+  isPopular?: boolean;
 }
 
 // Role entity

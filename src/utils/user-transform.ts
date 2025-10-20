@@ -4,12 +4,12 @@ interface BackendUserResponse {
   id?: number;
   fullName?: string;
   email?: string;
-  profile_image?: string;
+  profileImage?: string;
   role?: number;
-  created_at?: string;
-  updated_at?: string;
+  createdAt?: string;
+  updatedAt?: string;
   permissions?: string[];
-  count_prompt?: number;
+  countPrompt?: number;
   userSub?: any;
 }
 
@@ -68,11 +68,11 @@ export const transformBackendUserToAuth = (
       id: backendResponse.user.id || parseInt(fallbackUser?.id || "0") || 0,
       fullName: backendResponse.user.fullName || "",
       email: backendResponse.user.email || "",
-      avatar: backendResponse.user.profile_image || "",
+      avatar: backendResponse.user.profileImage || "",
       role: backendResponse.user.role || 1,
       accountStatus: 1, // Backend doesn't return accountStatus, default to active
-      createdAt: backendResponse.user.created_at || new Date().toISOString(),
-      updatedAt: backendResponse.user.updated_at || new Date().toISOString(),
+      createdAt: backendResponse.user.createdAt || new Date().toISOString(),
+      updatedAt: backendResponse.user.updatedAt || new Date().toISOString(),
       accessToken:
         typeof backendResponse.token === "string"
           ? backendResponse.token
@@ -90,7 +90,7 @@ export const transformBackendUserToAuth = (
           ? backendResponse.token?.expiresIn || 7 * 24 * 60 * 60
           : 7 * 24 * 60 * 60,
       permissions: backendResponse.user.permissions || [],
-      countPrompt: backendResponse.user.count_prompt || 0,
+      countPrompt: backendResponse.user.countPrompt || 0,
       userSub: backendResponse.user.userSub || null,
     };
   }

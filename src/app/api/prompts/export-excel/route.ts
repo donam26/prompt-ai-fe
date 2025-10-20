@@ -22,41 +22,41 @@ export async function GET(request: NextRequest) {
         id: 1,
         title: "AI Writing Assistant",
         content: "Help me write a professional email...",
-        short_description:
+        shortDescription:
           "AI-powered writing assistant for professional emails",
-        category_name: "Writing & Communication",
-        industry_names: "Technology, Business",
-        is_type: "Premium",
-        sub_type: "Advanced",
-        created_at: "2024-01-01",
-        updated_at: "2024-01-01",
-        is_coming_soon: false,
+        categoryName: "Writing & Communication",
+        industryNames: "Technology, Business",
+        isType: "Premium",
+        subType: "Advanced",
+        createdAt: "2024-01-01",
+        updatedAt: "2024-01-01",
+        isComingSoon: false,
       },
       {
         id: 2,
         title: "Code Review Helper",
         content: "Review this code for best practices...",
-        short_description: "Code review assistance for developers",
-        category_name: "Programming & Development",
-        industry_names: "Technology",
-        is_type: "Free",
-        sub_type: "Standard",
-        created_at: "2024-01-02",
-        updated_at: "2024-01-02",
-        is_coming_soon: false,
+        shortDescription: "Code review assistance for developers",
+        categoryName: "Programming & Development",
+        industryNames: "Technology",
+        isType: "Free",
+        subType: "Standard",
+        createdAt: "2024-01-02",
+        updatedAt: "2024-01-02",
+        isComingSoon: false,
       },
       {
         id: 3,
         title: "Marketing Copy Generator",
         content: "Create compelling marketing copy...",
-        short_description: "Marketing copy generation tool",
-        category_name: "Marketing & Sales",
-        industry_names: "Business, Marketing",
-        is_type: "Premium",
-        sub_type: "Advanced",
-        created_at: "2024-01-03",
-        updated_at: "2024-01-03",
-        is_coming_soon: true,
+        shortDescription: "Marketing copy generation tool",
+        categoryName: "Marketing & Sales",
+        industryNames: "Business, Marketing",
+        isType: "Premium",
+        subType: "Advanced",
+        createdAt: "2024-01-03",
+        updatedAt: "2024-01-03",
+        isComingSoon: true,
       },
     ];
 
@@ -87,20 +87,20 @@ export async function GET(request: NextRequest) {
     if (industryIds.length > 0) {
       filteredPrompts = filteredPrompts.filter(prompt =>
         industryIds.some(id =>
-          prompt.industry_names.toLowerCase().includes(id.toLowerCase())
+          prompt.industryNames.toLowerCase().includes(id.toLowerCase())
         )
       );
     }
 
     if (dateFrom) {
       filteredPrompts = filteredPrompts.filter(
-        prompt => new Date(prompt.created_at) >= new Date(dateFrom)
+        prompt => new Date(prompt.createdAt) >= new Date(dateFrom)
       );
     }
 
     if (dateTo) {
       filteredPrompts = filteredPrompts.filter(
-        prompt => new Date(prompt.created_at) <= new Date(dateTo)
+        prompt => new Date(prompt.createdAt) <= new Date(dateTo)
       );
     }
 
@@ -108,17 +108,17 @@ export async function GET(request: NextRequest) {
     const excelData = filteredPrompts.map(prompt => ({
       ID: prompt.id,
       "Tiêu đề": prompt.title,
-      "Mô tả ngắn": prompt.short_description,
+      "Mô tả ngắn": prompt.shortDescription,
       "Nội dung":
         prompt.content.substring(0, 200) +
         (prompt.content.length > 200 ? "..." : ""),
-      "Danh mục": prompt.category_name,
-      "Ngành nghề": prompt.industry_names,
-      Loại: prompt.is_type,
-      "Phân loại": prompt.sub_type,
-      "Trạng thái": prompt.is_coming_soon ? "Sắp ra mắt" : "Đang hoạt động",
-      "Ngày tạo": prompt.created_at,
-      "Ngày cập nhật": prompt.updated_at,
+      "Danh mục": prompt.categoryName,
+      "Ngành nghề": prompt.industryNames,
+      Loại: prompt.isType,
+      "Phân loại": prompt.subType,
+      "Trạng thái": prompt.isComingSoon ? "Sắp ra mắt" : "Đang hoạt động",
+      "Ngày tạo": prompt.createdAt,
+      "Ngày cập nhật": prompt.updatedAt,
     }));
 
     // Create workbook and worksheet

@@ -17,13 +17,13 @@ export class BlogService extends BaseService {
       params.append("pageSize", filters.pageSize.toString());
     if (filters.search) params.append("search", filters.search);
     if (filters.categoryId)
-      params.append("category_id", filters.categoryId.toString());
+      params.append("categoryId", filters.categoryId.toString());
     if (filters.status) params.append("status", filters.status);
     if (filters.authorId)
-      params.append("author_id", filters.authorId.toString());
+      params.append("authorId", filters.authorId.toString());
     if (filters.tags?.length) params.append("tags", filters.tags.join(","));
-    if (filters.sortBy) params.append("sort_by", filters.sortBy);
-    if (filters.sortOrder) params.append("sort_order", filters.sortOrder);
+    if (filters.sortBy) params.append("sortBy", filters.sortBy);
+    if (filters.sortOrder) params.append("sortOrder", filters.sortOrder);
 
     const response = await this.get(`?${params.toString()}`);
     return response.data;

@@ -10,10 +10,10 @@ export async function GET(request: NextRequest) {
     // Extract query parameters
     const page = parseInt(searchParams.get("page") || "1");
     const pageSize = parseInt(searchParams.get("pageSize") || "10");
-    const search = searchParams.get("search_text") || "";
-    const categoryId = searchParams.get("category_id") || "";
+    const search = searchParams.get("searchText") || "";
+    const categoryId = searchParams.get("categoryId") || "";
     const status = searchParams.get("status") || "";
-    const isType = searchParams.get("is_type") || "";
+    const isType = searchParams.get("isType") || "";
     const tags = searchParams.getAll("tags") || [];
 
     // Mock data for now - replace with actual database query
