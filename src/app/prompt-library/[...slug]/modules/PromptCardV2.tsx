@@ -23,7 +23,6 @@ export const PromptCardV2 = ({
   prompt,
   favoriteList = [],
   favoriteIdsMap = {},
-  onPromptClick,
   onFavoriteChange,
 }: PromptCardV2Props) => {
   const { user } = useAuth();
