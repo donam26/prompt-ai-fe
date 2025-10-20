@@ -41,14 +41,6 @@ export const MENTORS = [
     description: "Triển khai thành công nhiều chuỗi email automation hiệu quả",
   },
   {
-    id: 7,
-    name: "TaiOn",
-    role: "Founder AI-ker Community",
-    achievement: "",
-    image: "/images/home/teams/7.jpg",
-    description: "40k followers Tiktok and Instagram",
-  },
-  {
     id: 8,
     name: "Nguyễn Duy Anh",
     role: "Founder Viewer",

@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { ROUTES_URL, getPromptLibraryUrl } from "@/constants/routes-url";
+import { ROUTES_URL } from "@/constants/routes-url";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -158,10 +158,10 @@ export const TrendingPromptsSection = ({}: TrendingPromptsSectionProps) => {
 
                           {/* View Prom Button */}
                           <Link
-                            href={getPromptLibraryUrl(prompt.id.toString())}
+                            href={`${ROUTES_URL.PROMPT_LIBRARY}/${prompt.id}?tab=my-prompt`}
                           >
                             <Button className="bg-[#DACDFF] hover:bg-[#5700C6] py-2 rounded-full w-full font-medium text-[#5700C6] hover:text-white">
-                              Xem Prompt*
+                              Xem Prompt
                             </Button>
                           </Link>
                         </CardContent>
@@ -226,11 +226,12 @@ export const TrendingPromptsSection = ({}: TrendingPromptsSectionProps) => {
                         {prompt.category?.name}
                       </p>
                     </div>
-
                     {/* View Prom Button */}
-                    <Link href={getPromptLibraryUrl(prompt.id.toString())}>
+                    <Link
+                      href={`${ROUTES_URL.PROMPT_LIBRARY}/${prompt.id}?tab=my-prompt`}
+                    >
                       <Button className="bg-[#DACDFF] hover:bg-[#5700C6] py-2 rounded-full w-full font-medium text-[#5700C6] hover:text-white">
-                        Xem Prompt*
+                        Xem Prompt
                       </Button>
                     </Link>
                   </CardContent>

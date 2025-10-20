@@ -7,8 +7,9 @@ import { Heart, Star } from "lucide-react";
 import { useState } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { usePromptFavorites } from "@/hooks";
-import { getPromptDetailUrl } from "@/constants/routes-url";
+import { getPromptDetailUrl, ROUTES_URL } from "@/constants/routes-url";
 import { showToast } from "@/components/ui/toast";
+import { useRouter } from "next/navigation";
 
 interface PromptCardV2Props {
   prompt: Prompt;
@@ -31,7 +32,7 @@ export const PromptCardV2 = ({
     favoriteList.includes(String(prompt.id))
   );
   const [isTogglingFavorite, setIsTogglingFavorite] = useState(false);
-
+  const router = useRouter();
   const handleToggleFavorite = async (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
@@ -71,15 +72,6 @@ export const PromptCardV2 = ({
       showToast.error("Có lỗi xảy ra khi cập nhật yêu thích");
     } finally {
       setIsTogglingFavorite(false);
-    }
-  };
-
-  const handlePromptCardClick = (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-
-    if (onPromptClick) {
-      onPromptClick(prompt.id, prompt);
     }
   };
 
@@ -182,10 +174,16 @@ export const PromptCardV2 = ({
 
         {/* Action button */}
         <button
-          onClick={handlePromptCardClick}
+          onClick={e => {
+            e.preventDefault();
+            e.stopPropagation();
+            router.push(
+              `${ROUTES_URL.PROMPT_LIBRARY}/${prompt.id}?tab=my-prompt`
+            );
+          }}
           className="bg-[#DACDFFE5] hover:bg-primary mt-auto px-4 py-3 rounded-full w-full font-semibold text-purple-700 hover:text-white transition-colors"
         >
-          Xem Prompt*
+          Xem Prompt
         </button>
       </div>
     </Link>

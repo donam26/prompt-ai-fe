@@ -2,6 +2,7 @@ import Image from "next/image";
 import { MENTORS } from "@/constants/mentors";
 import { ArrowRightIcon } from "lucide-react";
 import { SKOOL_COMMUNITY_URL } from "@/constants/homepage";
+import { createInfiniteScrollArray } from "@/utils";
 
 interface StatItemProps {
   icon: string;
@@ -47,25 +48,12 @@ export const TeamsSection = () => {
 
         {/* Mentors Slider - Continuous Loop */}
         <div className="relative mb-16 overflow-hidden">
-          {/* Left gradient fade */}
-          <div className="top-0 bottom-0 left-0 z-10 absolute bg-gradient-to-r from-white to-transparent w-20 pointer-events-none" />
-
-          {/* Right gradient fade */}
-          <div className="top-0 right-0 bottom-0 z-10 absolute bg-gradient-to-l from-white to-transparent w-20 pointer-events-none" />
-
-          {/* Slider wrapper - Continuous scroll with more repetitions for mobile */}
-          <div className="flex animate-scroll">
-            {[
-              ...MENTORS,
-              ...MENTORS,
-              ...MENTORS,
-              ...MENTORS,
-              ...MENTORS,
-              ...MENTORS,
-            ].map((mentor, index) => (
+          {/* Slider wrapper - Continuous scroll */}
+          <div className="flex whitespace-nowrap animate-scroll-mentors">
+            {createInfiniteScrollArray(MENTORS).map((mentor, index) => (
               <div
                 key={`${mentor.id}-${index}`}
-                className="flex-shrink-0 mx-2 md:mx-3"
+                className="inline-block flex-shrink-0 mx-2 md:mx-3"
               >
                 <div className="group relative">
                   {/* Mentor Card */}
