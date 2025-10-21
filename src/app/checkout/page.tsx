@@ -8,7 +8,9 @@ import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { useCheckoutData } from "@/hooks/useCheckoutData";
 import { usePricingSubscriptions } from "@/hooks/usePricingSubscriptions";
+import { useDiscount } from "@/hooks/useDiscount";
 import { paymentApi } from "@/services/api";
+import { showToast } from "@/components/ui/toast";
 import { ArrowLeft, CreditCard, Shield, CheckCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -16,6 +18,7 @@ function CheckoutContent() {
   const router = useRouter();
   const { checkoutData, isLoading, error } = useCheckoutData();
   const { subscriptions } = usePricingSubscriptions();
+  const { applyDiscount, isApplying, error: discountError } = useDiscount();
   const [isProcessing, setIsProcessing] = useState(false);
   const [discountCode, setDiscountCode] = useState("");
   const [discountedPrice, setDiscountedPrice] = useState<number | null>(null);
@@ -27,19 +30,18 @@ function CheckoutContent() {
   const handleApplyDiscount = async () => {
     if (!discountCode || !checkoutData) return;
 
-    try {
-      const response = await paymentApi.getDiscountCode(discountCode);
-      if (response.success) {
-        const discount = response.discount;
-        const newPrice = (checkoutData.planPrice * (100 - discount)) / 100;
-        setDiscountedPrice(newPrice);
-        alert(`Áp dụng mã giảm giá thành công! Giảm ${discount}%`);
-      } else {
-        alert(response.message || "Mã giảm giá không hợp lệ");
-      }
-    } catch (error) {
-      console.error("Discount error:", error);
-      alert("Có lỗi xảy ra khi áp dụng mã giảm giá");
+    const response = await applyDiscount({
+      code: discountCode,
+      total: checkoutData.planPrice,
+    });
+
+    if (response.success) {
+      const discountAmount = response.data?.discountAmount || 0;
+      const newPrice = checkoutData.planPrice - discountAmount;
+      setDiscountedPrice(newPrice);
+      showToast.success("Áp dụng mã giảm giá thành công!");
+    } else {
+      showToast.error(response.message || "Mã giảm giá không hợp lệ");
     }
   };
 
@@ -59,7 +61,7 @@ function CheckoutContent() {
       );
 
       if (!plan) {
-        alert("Không tìm thấy thông tin gói đăng ký");
+        showToast.error("Không tìm thấy thông tin gói đăng ký");
         return;
       }
 
@@ -83,11 +85,13 @@ function CheckoutContent() {
         // Redirect to VNPay payment page
         window.location.href = response.data.paymentUrl;
       } else {
-        alert(response.message || "Có lỗi xảy ra khi tạo link thanh toán");
+        showToast.error(
+          response.message || "Có lỗi xảy ra khi tạo link thanh toán"
+        );
       }
     } catch (error) {
       console.error("Payment error:", error);
-      alert("Có lỗi xảy ra khi xử lý thanh toán");
+      showToast.error("Có lỗi xảy ra khi xử lý thanh toán");
     } finally {
       setIsProcessing(false);
     }
@@ -230,16 +234,21 @@ function CheckoutContent() {
                   <Button
                     onClick={handleApplyDiscount}
                     variant="outline"
-                    disabled={!discountCode}
+                    disabled={!discountCode || isApplying}
                     className="px-6 py-3 font-semibold"
                   >
-                    Áp dụng
+                    {isApplying ? "Đang xử lý..." : "Áp dụng"}
                   </Button>
                 </div>
                 {discountedPrice !== null && (
                   <p className="mt-3 font-medium text-green-600">
                     ✅ Đã áp dụng mã giảm giá! Tiết kiệm{" "}
                     {formatPrice(checkoutData.planPrice - discountedPrice)}
+                  </p>
+                )}
+                {discountError && (
+                  <p className="mt-3 font-medium text-red-600">
+                    ❌ {discountError}
                   </p>
                 )}
               </CardContent>

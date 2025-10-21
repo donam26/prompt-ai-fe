@@ -121,7 +121,7 @@ export default function AccountInfo({
             <div className="flex items-center space-x-2 mb-3">
               <Calendar className="w-5 h-5 text-blue-600" />
               <span className="font-semibold text-blue-900">
-                {userInfo.userSub.subscription?.name || "PREMIUM"}
+                {userInfo.userSub.subscription?.nameSub || "PREMIUM"}
               </span>
             </div>
 
@@ -158,7 +158,7 @@ export default function AccountInfo({
               </div>
             </div>
 
-            <div className="mt-3 pt-3 border-t border-blue-200">
+            <div className="mt-3 pt-3 border-blue-200 border-t">
               <div className="flex justify-between items-center">
                 <span className="text-gray-600 text-sm">Trạng thái</span>
                 <span

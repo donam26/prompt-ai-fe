@@ -58,6 +58,20 @@ export interface DiscountCodeResponse {
   message?: string;
 }
 
+export interface DiscountRequest {
+  code: string;
+  total: number;
+}
+
+export interface DiscountApplyResponse {
+  success: boolean;
+  message?: string;
+  data?: {
+    discountAmount: number;
+    discountPercentage?: number;
+  };
+}
+
 export const paymentApi = {
   // Create payment URL for VNPay
   createPaymentUrl: async (data: PaymentData): Promise<PaymentResponse> => {
@@ -71,6 +85,14 @@ export const paymentApi = {
   // Get discount code
   getDiscountCode: async (code: string): Promise<DiscountCodeResponse> => {
     const response = await axiosInstance.get(`/referral/get-discount/${code}`);
+    return response.data;
+  },
+
+  // Apply discount code
+  applyDiscount: async (
+    data: DiscountRequest
+  ): Promise<DiscountApplyResponse> => {
+    const response = await axiosInstance.post("/coupons/validate", data);
     return response.data;
   },
 };
