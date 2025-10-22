@@ -1,7 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { signIn } from "next-auth/react";
+import { useSearchParams, useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -19,7 +20,7 @@ import { useLoginQuery } from "@/hooks/auth/useLoginQuery";
 import { useAuthRedirect } from "@/hooks/useAuthRedirect";
 import { AuthLoading } from "@/components/ui/auth-loading";
 
-export default function LoginPage() {
+function LoginContent() {
   const { isLoading: isLoginLoading, mutate: loginUser } = useLoginQuery();
   const { isLoading, isLoggedIn } = useAuthRedirect({
     redirectTo: ROUTES_URL.HOME,
@@ -27,6 +28,23 @@ export default function LoginPage() {
   });
   const [email, setEmail] = useState("");
   const [isGoogleLoading, setIsGoogleLoading] = useState(false);
+  const searchParams = useSearchParams();
+  const router = useRouter();
+
+  // Check if this is an extension popup
+  const isExtensionPopup =
+    searchParams.get("from") === "extension" &&
+    searchParams.get("source") === "popup";
+
+  // Redirect to extension-login page if this is an extension popup
+  useEffect(() => {
+    if (isExtensionPopup) {
+      // Add a small delay to ensure smooth transition
+      setTimeout(() => {
+        router.replace("/extension-login?from=extension&source=popup");
+      }, 100);
+    }
+  }, [isExtensionPopup, router, searchParams]);
 
   const handleEmailLogin = (e: React.FormEvent) => {
     e.preventDefault();
@@ -153,5 +171,22 @@ export default function LoginPage() {
         </Card>
       </div>
     </div>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="flex justify-center items-center min-h-screen">
+          <div className="text-center">
+            <Loader2 className="mx-auto mb-4 w-8 h-8 animate-spin" />
+            <p>Loading...</p>
+          </div>
+        </div>
+      }
+    >
+      <LoginContent />
+    </Suspense>
   );
 }

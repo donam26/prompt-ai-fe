@@ -21,22 +21,32 @@ interface TokenMessage extends ExtensionMessage {
 /**
  * Sends token to browser extension via postMessage
  */
-export const sendTokenToExtension = (token: string): void => {
+export const sendTokenToExtension = (token: string, userData?: any): void => {
   if (typeof window === "undefined") return;
 
-  // Get user info from localStorage
-  const userInfoStr =
-    localStorage.getItem("user_info") || localStorage.getItem("userInfo");
+  // Use provided userData or get from localStorage
   let userInfo;
+  if (userData) {
+    userInfo = {
+      id: userData.id || "unknown",
+      name: userData.name || "User",
+      email: userData.email || "",
+      picture: userData.picture || "",
+    };
+  } else {
+    // Get user info from localStorage
+    const userInfoStr =
+      localStorage.getItem("user_info") || localStorage.getItem("userInfo");
 
-  if (userInfoStr) {
-    try {
-      userInfo = JSON.parse(userInfoStr);
-    } catch {
+    if (userInfoStr) {
+      try {
+        userInfo = JSON.parse(userInfoStr);
+      } catch {
+        userInfo = { id: "user_1", name: "Test User" };
+      }
+    } else {
       userInfo = { id: "user_1", name: "Test User" };
     }
-  } else {
-    userInfo = { id: "user_1", name: "Test User" };
   }
 
   const message: TokenMessage = {
@@ -159,4 +169,64 @@ export const checkExtensionAvailability = (): boolean => {
 
   window.postMessage(pingMessage, "*");
   return true;
+};
+
+/**
+ * Sends close popup message to extension
+ */
+export const sendClosePopup = (message: string, userId?: string): void => {
+  if (typeof window === "undefined") return;
+
+  const messageData = {
+    type: "CLOSE_POPUP",
+    data: {
+      message,
+      userId,
+      timestamp: Date.now(),
+    },
+  };
+
+  window.postMessage(messageData, "*");
+};
+
+/**
+ * Sends API status update to extension
+ */
+export const sendApiStatusUpdate = (
+  status: "success" | "error" | "loading",
+  message: string
+): void => {
+  if (typeof window === "undefined") return;
+
+  const messageData = {
+    type: "API_STATUS_UPDATE",
+    data: {
+      status,
+      message,
+      timestamp: Date.now(),
+    },
+  };
+
+  window.postMessage(messageData, "*");
+};
+
+/**
+ * Sends real-time message to extension
+ */
+export const sendRealTimeMessage = (
+  message: string,
+  type: "info" | "success" | "warning" | "error" = "info"
+): void => {
+  if (typeof window === "undefined") return;
+
+  const messageData = {
+    type: "REAL_TIME_MESSAGE",
+    data: {
+      message,
+      type,
+      timestamp: Date.now(),
+    },
+  };
+
+  window.postMessage(messageData, "*");
 };

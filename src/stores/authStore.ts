@@ -5,6 +5,7 @@ import {
   DEFAULT_EXPIRE_TOKEN_SECONDS,
   REFRESH_TOKEN_EXPIRE_SECONDS,
 } from "@/constants/auth";
+import { signOut } from "next-auth/react";
 
 interface AuthState {
   user: User | null;
@@ -51,8 +52,14 @@ export const useAuthStore = create<AuthState>()(
         }
       },
 
-      logout: () => {
+      logout: async () => {
         set({ user: null, token: null, isLoading: false });
+        await signOut({
+          callbackUrl: "/",
+          redirect: true,
+        });
+
+        sessionStorage.clear();
 
         // Clear custom auth data only (not NextAuth)
         if (typeof window !== "undefined") {

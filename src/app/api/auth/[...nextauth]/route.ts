@@ -1,31 +1,12 @@
 import NextAuth, { type AuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import GoogleProvider from "next-auth/providers/google";
-import { cookies } from "next/headers";
-import {
-  ACCESS_TOKEN_COOKIE_NAME,
-  DEFAULT_EXPIRE_TOKEN_SECONDS,
-  REFRESH_TOKEN_COOKIE_NAME,
-  REFRESH_TOKEN_EXPIRE_SECONDS,
-} from "@/constants/auth";
 import { CredentialActionType, NextAuthUser } from "@/types/auth";
-import { getUserInfoFromToken } from "@/utils/token-decoder";
 import { userService } from "@/services/users/userService";
 import {
   transformBackendUserToAuth,
   transformUserForSession,
 } from "@/utils/user-transform";
-
-const setCookieToken = async (name: string, value: string, maxAge: number) => {
-  const cookieStore = await cookies();
-  cookieStore.set(name, value, {
-    httpOnly: false,
-    secure: false,
-    sameSite: "lax",
-    path: "/",
-    maxAge,
-  });
-};
 
 export const authOptions: AuthOptions = {
   providers: [
@@ -69,26 +50,19 @@ export const authOptions: AuthOptions = {
             return null;
           }
 
-          const { accessToken, refreshToken } = user;
-          const userInfo = getUserInfoFromToken(accessToken);
-          const refreshTokenInfo = getUserInfoFromToken(refreshToken);
-          const refreshTokenMaxAge = refreshTokenInfo?.exp
-            ? refreshTokenInfo.exp * 1000
-            : REFRESH_TOKEN_EXPIRE_SECONDS;
-
-          const expiresInSec = userInfo?.exp
-            ? userInfo.exp * 1000
-            : DEFAULT_EXPIRE_TOKEN_SECONDS;
-          await setCookieToken(
-            ACCESS_TOKEN_COOKIE_NAME,
-            accessToken,
-            expiresInSec
-          );
-          await setCookieToken(
-            REFRESH_TOKEN_COOKIE_NAME,
-            refreshToken,
-            refreshTokenMaxAge
-          );
+          // const { accessToken, refreshToken } = user;
+          // const userInfo = getUserInfoFromToken(accessToken);
+          // const refreshTokenInfo = getUserInfoFromToken(refreshToken);
+          // await setCookieToken(
+          //   ACCESS_TOKEN_COOKIE_NAME,
+          //   accessToken,
+          //   expiresInSec
+          // );
+          // await setCookieToken(
+          //   REFRESH_TOKEN_COOKIE_NAME,
+          //   refreshToken,
+          //   refreshTokenMaxAge
+          // );
 
           return null;
         } catch {
