@@ -64,8 +64,8 @@ export default function PromptDetailPage() {
   }, []);
 
   const handleRefresh = useCallback(() => {
-    if (selectedMenuItem === MenuItem.MY_PROMPT && prompt?.content) {
-      const cleanPrompt = prompt.content.replace(/<[^>]*>/g, "");
+    if (selectedMenuItem === MenuItem.MY_PROMPT && prompt?.optimizationGuide) {
+      const cleanPrompt = prompt.optimizationGuide.replace(/<[^>]*>/g, "");
       setUserPrompt(cleanPrompt);
       setResponse("");
     } else if (selectedMenuItem === MenuItem.PROMPT_OPTIMIZER) {
@@ -73,7 +73,7 @@ export default function PromptDetailPage() {
       setUserPrompt("");
       setResponse("");
     }
-  }, [prompt?.content, selectedMenuItem, setResponse]);
+  }, [prompt?.optimizationGuide, selectedMenuItem, setResponse]);
 
   const handleCopy = useCallback(() => {
     if (userPrompt) {
@@ -115,20 +115,20 @@ export default function PromptDetailPage() {
     router.back();
   }, [router]);
 
-  // Initialize prompt content when data loads
+  // Initialize prompt optimizationGuide when data loads
   useEffect(() => {
     if (
-      prompt?.content &&
+      prompt?.optimizationGuide &&
       !userPrompt &&
       selectedMenuItem === MenuItem.MY_PROMPT
     ) {
-      const cleanPrompt = prompt.content.replace(/<[^>]*>/g, "");
+      const cleanPrompt = prompt.optimizationGuide.replace(/<[^>]*>/g, "");
       setUserPrompt(cleanPrompt);
     } else if (selectedMenuItem === MenuItem.PROMPT_OPTIMIZER) {
       // Clear prompt for optimizer tab
       setUserPrompt("");
     }
-  }, [prompt?.content, userPrompt, selectedMenuItem]);
+  }, [prompt?.optimizationGuide, userPrompt, selectedMenuItem]);
 
   // Sync selected tab with URL changes
   useEffect(() => {
