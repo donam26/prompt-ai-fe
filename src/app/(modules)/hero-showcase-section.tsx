@@ -8,12 +8,12 @@ export const HeroShowcaseSection = () => {
       {/* Single Large Image Section - Full Width */}
       <div className="w-full">
         {/* Single Large Image - Full Screen Width */}
-        <div className="group relative w-full h-[400px] sm:h-[500px] md:h-[600px] lg:h-[716px] overflow-hidden transition-all duration-500 transform">
+        <div className="group relative w-full h-[400px] sm:h-[500px] md:h-[600px] lg:h-[716px] transition-all duration-500 transform">
           <Image
             src="/images/home/slider-home.png"
             alt="AI Creative Content Showcase"
             fill
-            className="object-center object-cover transition-transform duration-700"
+            className="object-center object-contain transition-transform duration-700"
             sizes="100vw"
             priority
             quality={90}
@@ -23,7 +23,7 @@ export const HeroShowcaseSection = () => {
 
       {/* Bottom Partners Section */}
       <div className="bg-white px-4 pt-8 lg:pt-12 overflow-hidden">
-        <div className="mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
+        <div className="mx-auto px-4 sm:px-6 lg:px-8 max-w-full">
           {/* Partners Slider - Continuous Loop */}
           <div className="relative overflow-hidden">
             {/* Slider wrapper - Continuous scroll */}

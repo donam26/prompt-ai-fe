@@ -13,3 +13,4 @@ export * from "./gpt/gptService";
 export * from "./sections";
 export * from "./payments";
 export * from "./categories";
+export * from "./send-mails/sendMailService";

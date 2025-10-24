@@ -66,7 +66,7 @@ const PromptLibrarySection = () => {
           <h2 className="mb-6 font-bold text-white text-3xl lg:text-4xl leading-tight">
             Nâng cấp prompt
           </h2>
-          <p className="mb-8 text-gray-300 text-lg leading-relaxed">
+          <p className="mb-14 text-gray-300 text-lg leading-relaxed">
             Tạo prompt AI chuyên nghiệp, với các chế độ chuyên sâu, sáng tạo
           </p>
           <CTAButton

@@ -37,3 +37,6 @@ export * from "./useRole";
 
 // Contact hooks
 export * from "./useContacts";
+
+// Send Mail hooks
+export * from "./useSendMail";

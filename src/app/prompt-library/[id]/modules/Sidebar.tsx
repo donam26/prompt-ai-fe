@@ -1,9 +1,43 @@
 "use client";
 
+import React from "react";
 import { PanelLeft, ChevronDown, ChevronUp } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { Prompt } from "@/types";
 import { cn } from "@/lib/utils";
+
+// Helper component for truncated title with tooltip
+const TruncatedTitle = ({
+  title,
+  fallback,
+  className = "",
+  as: Component = "span",
+}: {
+  title?: string;
+  fallback: string;
+  className?: string;
+  as?: React.ElementType;
+}) => {
+  const displayTitle = title || fallback;
+
+  return (
+    <Tooltip>
+      <TooltipTrigger asChild>
+        <Component className={cn("truncate cursor-help", className)}>
+          {displayTitle}
+        </Component>
+      </TooltipTrigger>
+      <TooltipContent side="top" sideOffset={8}>
+        <p className="max-w-xs break-words">{displayTitle}</p>
+      </TooltipContent>
+    </Tooltip>
+  );
+};
 
 // Menu items enum
 export enum MenuItem {
@@ -16,7 +50,7 @@ interface SidebarProps {
   onToggle: () => void;
   selectedMenuItem: MenuItem;
   onMenuClick: (key: MenuItem) => void;
-  prompt: Prompt;
+  prompt: Prompt | null;
 }
 
 export const Sidebar = ({
@@ -24,6 +58,7 @@ export const Sidebar = ({
   onToggle,
   selectedMenuItem,
   onMenuClick,
+  prompt,
 }: SidebarProps) => {
   return (
     <>
@@ -37,9 +72,12 @@ export const Sidebar = ({
         >
           {/* Mobile Header */}
           <div className="flex justify-between items-center p-4">
-            <h1 className="font-bold text-gray-900 text-xl truncate">
-              Prompt AI
-            </h1>
+            <TruncatedTitle
+              title={prompt?.title}
+              fallback="Prompt AI"
+              className="font-bold text-gray-900 text-xl"
+              as="h1"
+            />
             <Button
               variant="outline"
               onClick={onToggle}
@@ -103,7 +141,7 @@ export const Sidebar = ({
                 >
                   <span className="text-gray-600 text-sm">⚡</span>
                 </div>
-                <span className="font-medium text-sm">Prompt Optimizer</span>
+                <span className="font-medium text-sm">Nâng Cấp Prompt</span>
               </button>
             </div>
           </div>
@@ -127,9 +165,12 @@ export const Sidebar = ({
             )}
           >
             {!isCollapsed && (
-              <h1 className="font-bold text-gray-900 text-xl truncate">
-                Prompt AI
-              </h1>
+              <TruncatedTitle
+                title={prompt?.title}
+                fallback="Prompt AI"
+                className="font-bold text-gray-900 text-xl"
+                as="h1"
+              />
             )}
 
             <Button
@@ -173,7 +214,13 @@ export const Sidebar = ({
                   📝
                 </span>
               </div>
-              {!isCollapsed && <span className="font-medium">My Prompt</span>}
+              {!isCollapsed && (
+                <TruncatedTitle
+                  title={prompt?.title}
+                  fallback="My Prompt"
+                  className="font-medium"
+                />
+              )}
             </button>
 
             <button
@@ -206,7 +253,7 @@ export const Sidebar = ({
                 </span>
               </div>
               {!isCollapsed && (
-                <span className="font-medium">Prompt Optimizer</span>
+                <span className="font-medium">Nâng Cấp Prompt</span>
               )}
             </button>
           </div>

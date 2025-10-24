@@ -28,6 +28,7 @@ export const userFormSchema = z.object({
   subscriptionStartDate: z.string().optional(),
   subscriptionEndDate: z.string().optional(),
   subscriptionTokens: z.number().min(0).optional(),
+  countPrompt: z.number().min(0).optional(),
 });
 
 export type UserFormSchema = z.infer<typeof userFormSchema>;
@@ -38,8 +39,8 @@ export const getUserFormDefaultValues = (user?: any): UserFormSchema => ({
   role: user?.role ?? USERS_CONSTANTS.ROLE.USER,
   accountStatus: user?.accountStatus ?? USERS_CONSTANTS.STATUS.ACTIVE,
   // Subscription fields
-  subscriptionId: user?.userSub?.subscriptionId
-    ? Number(user.userSub.subscriptionId)
+  subscriptionId: user?.userSub?.subscription?.id
+    ? Number(user.userSub.subscription.id)
     : undefined,
   subscriptionStartDate: user?.userSub?.startDate
     ? user.userSub.startDate.split("T")[0]
@@ -48,4 +49,5 @@ export const getUserFormDefaultValues = (user?: any): UserFormSchema => ({
     ? user.userSub.endDate.split("T")[0]
     : "",
   subscriptionTokens: user?.userSub?.token ?? 0,
+  countPrompt: user?.countPrompt ?? 0,
 });

@@ -58,6 +58,7 @@ export const UserForm = ({
           ? user.userSub.endDate.split("T")[0]
           : "",
         subscriptionTokens: user.userSub?.token ?? 0,
+        countPrompt: (user as any).countPrompt ?? 0,
       };
     }
     return {
@@ -70,6 +71,7 @@ export const UserForm = ({
       subscriptionStartDate: "",
       subscriptionEndDate: "",
       subscriptionTokens: 0,
+      countPrompt: 0,
     };
   }, [user]);
 
@@ -106,6 +108,7 @@ export const UserForm = ({
         email: data.email,
         role: data.role,
         accountStatus: data.accountStatus,
+        countPrompt: data.countPrompt,
       };
 
       // Add subscription data if provided
@@ -315,18 +318,6 @@ export const UserForm = ({
                       className="bg-gray-50 w-full"
                     />
                   </div>
-
-                  {/* Count Prompt */}
-                  <div className="space-y-2">
-                    <Label className="font-medium text-sm">
-                      Số lượng prompt
-                    </Label>
-                    <Input
-                      value={user.countPrompt || 0}
-                      disabled
-                      className="bg-gray-50 w-full"
-                    />
-                  </div>
                 </div>
 
                 <div className="gap-4 grid grid-cols-1 md:grid-cols-2">
@@ -482,12 +473,12 @@ export const UserForm = ({
                         )}
                       />
                       <Controller
-                        name="subscriptionTokens"
+                        name="countPrompt"
                         control={control}
                         render={({ field }) => (
                           <div className="space-y-2">
                             <Label className="font-medium text-xs">
-                              Token còn lại
+                              Số prompt đã tạo
                             </Label>
                             <Input
                               {...field}

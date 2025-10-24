@@ -27,8 +27,8 @@ const StatItem = ({ icon, alt, value, description }: StatItemProps) => (
 
 export const TeamsSection = () => {
   return (
-    <section className="bg-white mx-auto max-w-[1200px]">
-      <div className="mx-auto container">
+    <section className="bg-white mx-auto">
+      <div className="mx-auto max-w-full">
         {/* Header */}
         <div className="mb-16 text-center">
           <h2 className="mb-6 font-bold text-4xl lg:text-5xl">

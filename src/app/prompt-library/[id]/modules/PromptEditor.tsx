@@ -271,7 +271,7 @@ export const PromptEditor = ({
               disabled={gptLoading}
               className="flex items-center gap-2 bg-[#5700C6] hover:bg-[#5700C6]/80 px-6 py-3 rounded-lg w-full sm:w-auto font-medium text-white"
             >
-              Run Prompt
+              Chạy Prompt
               <ArrowRight className="w-4 h-4" />
             </Button>
           </div>

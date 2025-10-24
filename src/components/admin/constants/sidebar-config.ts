@@ -184,7 +184,7 @@ export const sidebarConfig: SidebarItemType[] = [
   // Tools & Utilities
   {
     name: "Công cụ & Tiện ích",
-    href: "/admin/tools",
+    // href: "/admin/tools",
     icon: Settings,
     permission: "tools",
     children: [
@@ -212,7 +212,7 @@ export const sidebarConfig: SidebarItemType[] = [
   // Reports & Analytics
   {
     name: "Báo cáo & Phân tích",
-    href: "/admin/analytics",
+    // href: "/admin/analytics",
     icon: FileBarChart,
     permission: "analytics",
     children: [
@@ -246,7 +246,7 @@ export const sidebarConfig: SidebarItemType[] = [
   // System Settings
   {
     name: "Cài đặt Hệ thống",
-    href: "/admin/settings",
+    // href: "/admin/settings",
     icon: Settings,
     permission: "settings",
     children: [

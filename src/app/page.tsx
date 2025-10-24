@@ -22,13 +22,13 @@ export default function HomePage() {
       <HeroSection />
       <HeroShowcaseSection />
 
+      {/* Teams Section */}
+      <section className="pt-12 lg:pt-12">
+        <TeamsSection />
+      </section>
+
       {/* Main Content Container */}
       <div className="mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
-        {/* Teams Section */}
-        <section className="pt-12 lg:pt-12">
-          <TeamsSection />
-        </section>
-
         {/* Comprehensive Layout Sections */}
         <section className="pt-4 lg:pt-6">
           <CoachingMentorshipSection />
