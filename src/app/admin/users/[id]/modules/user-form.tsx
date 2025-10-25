@@ -108,7 +108,7 @@ export const UserForm = ({
         email: data.email,
         role: data.role,
         accountStatus: data.accountStatus,
-        countPrompt: data.countPrompt,
+        countPromt: data.countPrompt,
       };
 
       // Add subscription data if provided

@@ -130,7 +130,7 @@ export const authOptions: AuthOptions = {
               expiresIn: transformedUser.expiresIn,
               userSub: transformedUser.userSub,
               permissions: transformedUser.permissions,
-              countPrompt: transformedUser.countPrompt,
+              countPromt: transformedUser.countPromt,
             },
             token: transformedUser.accessToken,
           };
@@ -163,7 +163,7 @@ export const authOptions: AuthOptions = {
               expiresIn: transformedUser.expiresIn,
               userSub: transformedUser.userSub,
               permissions: transformedUser.permissions,
-              countPrompt: transformedUser.countPrompt,
+              countPromt: transformedUser.countPromt,
             },
             token: transformedUser.accessToken,
           };

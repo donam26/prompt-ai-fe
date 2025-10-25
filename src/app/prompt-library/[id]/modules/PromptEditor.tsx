@@ -116,6 +116,9 @@ export const PromptEditor = ({
 }: Props) => {
   const [htmlContent, setHtmlContent] = useState("");
   const debounceRef = useRef<NodeJS.Timeout | null>(null);
+  const hasInitializedRef = useRef(false);
+  const previousUserPromptRef = useRef<string>("");
+  const isUserEditingRef = useRef(false);
 
   // Convert highlighted content to HTML string (optimized)
   const getHighlightedHtml = useCallback((text: string) => {
@@ -128,15 +131,31 @@ export const PromptEditor = ({
 
   // Initialize HTML content when userPrompt changes (only for MY_PROMPT tab)
   React.useEffect(() => {
-    if (selectedMenuItem === MenuItem.MY_PROMPT && userPrompt && !htmlContent) {
-      setHtmlContent(getHighlightedHtml(userPrompt));
+    if (selectedMenuItem === MenuItem.MY_PROMPT && userPrompt) {
+      // Check if this is a change from outside (refresh or external update)
+      const isExternalChange = previousUserPromptRef.current !== userPrompt;
+
+      // Only update if:
+      // 1. Not initialized yet, OR
+      // 2. External change detected (not from user editing)
+      if (
+        !hasInitializedRef.current ||
+        (isExternalChange && !isUserEditingRef.current)
+      ) {
+        setHtmlContent(getHighlightedHtml(userPrompt));
+        hasInitializedRef.current = true;
+        previousUserPromptRef.current = userPrompt;
+        isUserEditingRef.current = false;
+      }
     }
-  }, [userPrompt, getHighlightedHtml, selectedMenuItem, htmlContent]);
+  }, [userPrompt, getHighlightedHtml, selectedMenuItem]);
 
   // Clear content when switching to PROMPT_OPTIMIZER
   React.useEffect(() => {
     if (selectedMenuItem === MenuItem.PROMPT_OPTIMIZER) {
       setHtmlContent("");
+      hasInitializedRef.current = false;
+      isUserEditingRef.current = false;
     }
   }, [selectedMenuItem]);
 
@@ -154,12 +173,21 @@ export const PromptEditor = ({
       const newHtml = evt.target.value;
       setHtmlContent(newHtml);
 
+      // Mark that user is manually editing
+      isUserEditingRef.current = true;
+
+      // Extract plain text from HTML to sync with previousUserPromptRef
+      const tempDiv = document.createElement("div");
+      tempDiv.innerHTML = newHtml;
+      const plainText = tempDiv.textContent || "";
+
       // Debounce onInput call to avoid too many updates
       if (debounceRef.current) {
         clearTimeout(debounceRef.current);
       }
 
       debounceRef.current = setTimeout(() => {
+        previousUserPromptRef.current = plainText;
         onInput();
       }, 100); // 100ms debounce
     },

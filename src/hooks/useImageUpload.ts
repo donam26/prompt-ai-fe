@@ -39,9 +39,21 @@ export const useImageUpload = ({
         const formData = new FormData();
         formData.append("image", file);
 
+        // Get token from localStorage
+        const token =
+          typeof window !== "undefined"
+            ? localStorage.getItem("authToken")
+            : null;
+
+        const headers: HeadersInit = {};
+        if (token) {
+          headers.Authorization = `Bearer ${token}`;
+        }
+
         const response = await fetch(`${apiUrl}/upload/`, {
           method: "POST",
           body: formData,
+          headers,
         });
 
         if (!response.ok) {
@@ -84,9 +96,21 @@ export const useImageUpload = ({
         const formData = new FormData();
         files.forEach(file => formData.append("images", file));
 
+        // Get token from localStorage
+        const token =
+          typeof window !== "undefined"
+            ? localStorage.getItem("authToken")
+            : null;
+
+        const headers: HeadersInit = {};
+        if (token) {
+          headers.Authorization = `Bearer ${token}`;
+        }
+
         const response = await fetch(`${apiUrl}/upload/multiple`, {
           method: "POST",
           body: formData,
+          headers,
         });
 
         if (!response.ok) {

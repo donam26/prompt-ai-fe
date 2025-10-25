@@ -172,7 +172,7 @@ export const ContactForm = () => {
         <div className="pt-4">
           <Button
             type="submit"
-            className="flex justify-center items-center gap-3 bg-purple-600 hover:bg-purple-700 shadow-lg hover:shadow-xl px-8 py-4 rounded-full w-full md:w-auto font-semibold text-white text-lg hover:scale-105 transition-all duration-200"
+            className="flex justify-center items-center gap-3 bg-purple-600 hover:bg-purple-700 shadow-lg hover:shadow-xl p-6 rounded-full w-full md:w-auto font-semibold text-white text-lg hover:scale-105 transition-all duration-200"
             disabled={isSubmitting}
           >
             {isSubmitting ? (

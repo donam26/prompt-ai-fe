@@ -29,7 +29,15 @@ export const apiClient = axios.create({
 
 apiClient.interceptors.request.use(
   config => {
-    const token = getCookie("accessToken");
+    // Get token from localStorage first, fallback to cookies
+    let token: string | null = null;
+    if (typeof window !== "undefined") {
+      token = localStorage.getItem("authToken");
+      if (!token) {
+        token = getCookie("accessToken");
+      }
+    }
+
     if (token) {
       config.headers["Authorization"] = `Bearer ${token}`;
     }

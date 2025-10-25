@@ -95,28 +95,35 @@ export function useUserColumns({
       enableSorting: false,
     },
     {
-      accessorKey: "otpExpiresAt",
-      meta: { title: "OTP hết hạn" },
+      accessorKey: "subscription",
+      meta: { title: "Gói & Prompt" },
       header: () => (
-        <div className="hidden lg:block font-medium">OTP hết hạn</div>
+        <div className="hidden lg:block font-medium">Gói & Prompt</div>
       ),
-      cell: ({ row }) => (
-        <div className="hidden lg:block">
-          <span className="text-gray-600 text-sm">
-            {row.original.otpExpiresAt
-              ? new Date(row.original.otpExpiresAt).toLocaleString("vi-VN", {
-                  day: "2-digit",
-                  month: "2-digit",
-                  year: "numeric",
-                  hour: "2-digit",
-                  minute: "2-digit",
-                  second: "2-digit",
-                  hour12: false,
-                })
-              : "N/A"}
-          </span>
-        </div>
-      ),
+      cell: ({ row }) => {
+        const subscriptionName =
+          row.original.userSub?.subscription?.nameSub ||
+          row.original.userSub?.Subscription?.nameSub ||
+          "Chưa có gói";
+        const countPrompt = row.original.countPromt ?? 0;
+
+        return (
+          <div className="hidden lg:block">
+            <div className="flex flex-col space-y-2">
+              <BadgeCell
+                label={subscriptionName}
+                variant="secondary"
+                maxWidth="max-w-[150px]"
+              />
+              <BadgeCell
+                label={`${countPrompt} tokens`}
+                variant="custom"
+                maxWidth="max-w-[100px]"
+              />
+            </div>
+          </div>
+        );
+      },
       enableSorting: false,
     },
     {

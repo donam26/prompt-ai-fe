@@ -120,6 +120,7 @@ export default function UserManagementPage(): React.JSX.Element {
         <UserHeader
           onAddUser={handleAddUser}
           onImportSuccess={handleImportSuccess}
+          filters={filters}
         />
 
         <UserFilter

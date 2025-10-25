@@ -13,7 +13,7 @@ export interface User extends BaseEntity {
   role: number;
   roleId?: number | null;
   permissions?: string[] | string;
-  countPrompt?: number;
+  countPromt?: number;
   googleId?: string;
   profileImage?: string;
   otpCode?: string | null;

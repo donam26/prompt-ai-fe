@@ -102,11 +102,6 @@ export default function PromptDetailPage() {
       router.replace(currentUrl.pathname + currentUrl.search, {
         scroll: false,
       });
-
-      // Close sidebar on mobile after selection
-      if (window.innerWidth < 640) {
-        setIsCollapsed(true);
-      }
     },
     [router, selectedMenuItem, setResponse]
   );

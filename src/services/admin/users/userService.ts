@@ -81,6 +81,65 @@ export class UserService extends BaseService {
 
     return response.json();
   }
+
+  /**
+   * Export users to Excel file
+   */
+  async exportUsers(filters: Record<string, unknown>) {
+    const baseURL =
+      process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api";
+
+    // Get token from localStorage
+    const token =
+      typeof window !== "undefined" ? localStorage.getItem("authToken") : null;
+
+    const headers: HeadersInit = {
+      "Content-Type": "application/json",
+    };
+
+    if (token) {
+      headers.Authorization = `Bearer ${token}`;
+    }
+
+    const response = await fetch(`${baseURL}/users/export-excel`, {
+      method: "POST",
+      headers,
+      body: JSON.stringify(filters),
+    });
+
+    if (!response.ok) {
+      throw new Error("Failed to export users to Excel");
+    }
+
+    // Get the blob from response
+    const blob = await response.blob();
+
+    // Get filename from Content-Disposition header or use default
+    const contentDisposition = response.headers.get("Content-Disposition");
+    let fileName = "danh-sach-users.xlsx";
+
+    if (contentDisposition) {
+      const fileNameMatch = contentDisposition.match(/filename="?(.+)"?/);
+      if (fileNameMatch) {
+        fileName = fileNameMatch[1];
+      }
+    }
+
+    // Create download link and trigger download
+    const url = window.URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = fileName;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    window.URL.revokeObjectURL(url);
+
+    return {
+      success: true,
+      fileName,
+    };
+  }
 }
 
 // Export singleton instance

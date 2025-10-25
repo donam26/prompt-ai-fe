@@ -99,11 +99,11 @@ export const Sidebar = ({
               isCollapsed ? "max-h-0 opacity-0" : "max-h-[200px] opacity-100"
             )}
           >
-            <div className="flex items-center gap-2 p-4 border-gray-200 border-t">
+            <div className="gap-2 grid grid-cols-2 p-4 border-gray-200 border-t">
               <button
                 onClick={() => onMenuClick(MenuItem.MY_PROMPT)}
                 className={cn(
-                  "flex flex-1 items-center gap-2 px-4 py-2 rounded-lg transition-colors",
+                  "flex items-center gap-2 px-4 py-2 rounded-lg transition-colors",
                   selectedMenuItem === MenuItem.MY_PROMPT
                     ? "bg-purple-600 text-white"
                     : "hover:bg-gray-100"
@@ -119,13 +119,17 @@ export const Sidebar = ({
                 >
                   <span className="text-purple-600 text-sm">📝</span>
                 </div>
-                <span className="font-medium text-sm">My Prompt</span>
+                <TruncatedTitle
+                  title={prompt?.title}
+                  fallback="My Prompt"
+                  className="flex-1 font-medium text-sm"
+                />
               </button>
 
               <button
                 onClick={() => onMenuClick(MenuItem.PROMPT_OPTIMIZER)}
                 className={cn(
-                  "flex flex-1 items-center gap-2 px-4 py-2 rounded-lg transition-colors",
+                  "flex items-center gap-2 px-4 py-2 rounded-lg transition-colors",
                   selectedMenuItem === MenuItem.PROMPT_OPTIMIZER
                     ? "bg-purple-600 text-white"
                     : "hover:bg-gray-100"

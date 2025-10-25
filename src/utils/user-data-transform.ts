@@ -30,7 +30,7 @@ export const transformUserData = (apiUser: unknown): User => {
     email: user.email,
     role: user.role || 1,
     permissions: user.permissions || [],
-    countPrompt: user.countPrompt || 0,
+    countPromt: user.countPrompt || 0,
     updatedAt: user.updatedAt || "",
     userSub: user.userSub as User["userSub"],
     avatar: user.profileImage || user.avatar,

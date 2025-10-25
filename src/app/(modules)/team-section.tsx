@@ -91,7 +91,7 @@ export const TeamsSection = () => {
 
         {/* Market Value Statistics Section */}
 
-        <div className="text-center">
+        <div className="mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl text-center">
           <h2 className="mb-6 font-bold text-3xl lg:text-4xl">
             <span className="text-gray-900">Giá trị</span>{" "}
             <span className="text-[#5700C6]">thị trường</span>{" "}

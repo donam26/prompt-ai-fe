@@ -58,7 +58,7 @@ export const transformBackendUserToAuth = (
     refreshToken: "",
     expiresIn: 7 * 24 * 60 * 60,
     permissions: [],
-    countPrompt: 0,
+    countPromt: 0,
     userSub: undefined,
   };
 
@@ -90,7 +90,7 @@ export const transformBackendUserToAuth = (
           ? backendResponse.token?.expiresIn || 7 * 24 * 60 * 60
           : 7 * 24 * 60 * 60,
       permissions: backendResponse.user.permissions || [],
-      countPrompt: backendResponse.user.countPrompt || 0,
+      countPromt: backendResponse.user.countPrompt || 0,
       userSub: backendResponse.user.userSub || null,
     };
   }
@@ -111,7 +111,7 @@ export const transformBackendUserToAuth = (
       refreshToken: googleToken,
       expiresIn: 7 * 24 * 60 * 60,
       permissions: [],
-      countPrompt: 0,
+      countPromt: 0,
       userSub: undefined,
     };
   }
