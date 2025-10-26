@@ -46,10 +46,13 @@ export const usePromptStreaming = ({
           router.push(ROUTES_URL.LOGIN);
         }, 2000);
       } else if (isCredit) {
+        // Extract actual error message from CREDIT_ERROR: prefix
+        const actualMessage = errorMessage.replace(/^CREDIT_ERROR:\s*/, "");
+
         showToast.error("Không đủ credit", {
           title: "Tài khoản của bạn đã hết credit",
           description:
-            errorMessage || "Vui lòng nâng cấp gói để tiếp tục sử dụng.",
+            actualMessage || "Vui lòng nâng cấp gói để tiếp tục sử dụng.",
           duration: 5000,
         });
         setTimeout(() => {

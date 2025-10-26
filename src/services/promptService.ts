@@ -45,6 +45,20 @@ export class PromptService {
 
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
+
+        // Handle specific error formats from backend
+        if (errorData.success === false && errorData.error) {
+          const errorCode = errorData.error.code;
+          const errorMessage = errorData.error.message;
+
+          // Create error with specific format for credit errors
+          if (errorCode === "INSUFFICIENT_CREDIT") {
+            throw new Error(`CREDIT_ERROR: ${errorMessage}`);
+          }
+
+          throw new Error(`${response.status}: ${errorMessage}`);
+        }
+
         const errorMessage =
           errorData.error || errorData.message || "Có lỗi xảy ra khi gọi API";
 
@@ -103,6 +117,8 @@ export class PromptService {
         }
       }
     } catch (error) {
+      console.log({ error });
+
       onError(error as Error);
     }
   }
@@ -139,8 +155,10 @@ export class PromptService {
 
   static isCreditError(errorMessage: string): boolean {
     return (
+      errorMessage.includes("CREDIT_ERROR:") ||
       errorMessage.includes("credit") ||
-      errorMessage.includes("Không đủ credit")
+      errorMessage.includes("Không đủ credit") ||
+      errorMessage.includes("INSUFFICIENT_CREDIT")
     );
   }
 }
