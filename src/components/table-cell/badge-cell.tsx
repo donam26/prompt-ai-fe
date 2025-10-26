@@ -199,7 +199,7 @@ export function BadgeCell({
   variant = "custom",
   icon,
   className,
-  maxWidth = "max-w-[100px]",
+  maxWidth = "max-w-[200px]",
 }: BadgeCellProps) {
   const badgeVariant = BADGE_VARIANTS[variant] || BADGE_VARIANTS.custom;
   const displayIcon = icon || badgeVariant?.icon;
@@ -209,7 +209,7 @@ export function BadgeCell({
     <div className="flex justify-start items-center">
       <div
         className={cn(
-          "inline-flex items-center gap-1.5 shadow-sm hover:shadow-lg px-2.5 py-1.5 border rounded-full w-fit max-w-full font-bold text-xs hover:scale-105 transition-all hover:-translate-y-0.5 duration-300",
+          "inline-flex items-center gap-1.5 shadow-sm hover:shadow-lg px-2.5 py-1.5 border rounded-full w-full max-w-full font-bold text-xs hover:scale-105 transition-all hover:-translate-y-0.5 duration-300",
           badgeVariant.bg,
           badgeVariant.text,
           variant === "industry" &&

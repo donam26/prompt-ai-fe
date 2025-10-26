@@ -1,19 +1,64 @@
+import * as React from "react";
 import type { ColumnDef } from "@tanstack/react-table";
 import type { Industry, Prompt } from "@/types";
 import { Column } from "@/components/data-table/data-table";
 import { BadgeCell, BadgeList, ActionsCell } from "@/components/table-cell";
-import { getBadgeVariantByIndustry, BADGE_CONSTANTS } from "@/constants/badges";
+import { getBadgeVariantByIndustry } from "@/constants/badges";
+import { Checkbox } from "@/components/ui/checkbox";
 
 interface Props {
   onEditAction: (prompt: Prompt) => void;
   onDeleteAction: (prompt: Prompt) => void;
+  selectedRows?: Set<string>;
+  onSelectRow?: (rowId: string, checked: boolean) => void;
+  onSelectAll?: (checked: boolean) => void;
 }
 
 export function usePromptColumns({
   onEditAction,
   onDeleteAction,
-}: Props): ColumnDef<Prompt>[] {
+  selectedRows = new Set(),
+  onSelectRow,
+  onSelectAll,
+  allRowIds = [],
+}: Props & { allRowIds?: string[] }): ColumnDef<Prompt>[] {
+  const visibleRowIds = allRowIds;
+  const allVisibleSelected =
+    visibleRowIds.length > 0 && visibleRowIds.every(id => selectedRows.has(id));
+  const someVisibleSelected = visibleRowIds.some(id => selectedRows.has(id));
+
   return [
+    // Selection column
+    {
+      id: "select",
+      meta: { title: "" },
+      header: () => (
+        <div className="flex justify-center items-center pr-4">
+          <Checkbox
+            checked={
+              someVisibleSelected && !allVisibleSelected
+                ? "indeterminate"
+                : allVisibleSelected
+            }
+            aria-label="Select all"
+            onCheckedChange={checked => onSelectAll?.(checked === true)}
+          />
+        </div>
+      ),
+      cell: ({ row }) => (
+        <div className="flex justify-center items-center pr-4">
+          <Checkbox
+            checked={selectedRows.has(row.original.id)}
+            onCheckedChange={checked =>
+              onSelectRow?.(row.original.id, checked === true)
+            }
+            aria-label={`Select row ${row.original.id}`}
+          />
+        </div>
+      ),
+      enableSorting: false,
+      size: 60,
+    },
     {
       accessorKey: "title",
       meta: { title: "Tiêu đề" },
@@ -27,9 +72,9 @@ export function usePromptColumns({
             >
               {row.original.title}
             </span>
-            {row.original.isType == "2" ? (
+            {row.original.subType === 2 ? (
               <BadgeCell label="Premium" variant="premium" />
-            ) : row.original.isType == "1" ? (
+            ) : row.original.subType === 1 ? (
               <BadgeCell label="Free" variant="secondary" />
             ) : null}
           </div>
@@ -94,8 +139,7 @@ export function usePromptColumns({
                   variant: getBadgeVariantByIndustry(industry.name),
                 })
               )}
-              maxVisible={BADGE_CONSTANTS.LIST_CONFIG.TABLE_MAX_VISIBLE}
-              badgeClassName="max-w-[80px]"
+              maxVisible={999}
             />
           ) : (
             <span className="text-gray-400 text-sm">Chưa có</span>
@@ -141,9 +185,11 @@ export function usePromptColumns({
  * Legacy function for backward compatibility
  * @deprecated Use usePromptColumns instead
  */
-export const createPromptColumns = (handlers: Props): ColumnDef<Prompt>[] => {
+export const createPromptColumns = (
+  handlers: Partial<Props>
+): ColumnDef<Prompt>[] => {
   // eslint-disable-next-line react-hooks/rules-of-hooks
-  return usePromptColumns(handlers);
+  return usePromptColumns(handlers as Props);
 };
 
 /**
@@ -156,10 +202,29 @@ export const adaptColumnsForDataTable = (
     const accessorKey = "accessorKey" in col ? col.accessorKey : "";
     const id = "id" in col ? col.id : "";
     const title = (col.meta as any)?.title || "";
+    const size = (col as any)?.size;
+    const isSelectColumn = id === "select";
+
+    // Render header for select column
+    let headerContent = title;
+    if (col.header && typeof col.header === "function") {
+      try {
+        const headerResult = (col.header as any)({
+          column: col,
+          header: col.header,
+          table: {},
+        });
+        if (React.isValidElement(headerResult)) {
+          headerContent = headerResult;
+        }
+      } catch {
+        // Fallback to title
+      }
+    }
 
     return {
       key: accessorKey || id || "",
-      title,
+      title: headerContent,
       render: (_: unknown, record: Prompt, index: number) => {
         if (col.cell && typeof col.cell === "function") {
           try {
@@ -179,8 +244,8 @@ export const adaptColumnsForDataTable = (
         }
         return accessorKey ? record[accessorKey as keyof Prompt] : "";
       },
-      width: 200,
-      align: "left" as const,
+      width: size || 200,
+      align: isSelectColumn ? ("center" as const) : ("left" as const),
       className: "",
     };
   });

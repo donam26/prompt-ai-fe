@@ -3,3 +3,4 @@ export * from "./useDeletePrompt";
 export * from "./usePromptDetail";
 export * from "./useUpsertPrompt";
 export * from "./useExportPromptsExcel";
+export * from "./useBulkUpdateSubType";

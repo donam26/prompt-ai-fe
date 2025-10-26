@@ -105,22 +105,28 @@ export function useIndustries(options: Props = {}) {
     }
   }, [memoizedPageIndex, memoizedPageSize, memoizedFilters, enabled]);
 
+  // Fetch industries on mount and when dependencies change
   useEffect(() => {
-    fetchIndustries();
-  }, [fetchIndustries]);
-
-  // Handle filters changes - only after initial render
-  useEffect(() => {
-    if (isInitialRender.current) {
-      isInitialRender.current = false;
+    if (!enabled) {
       return;
     }
 
-    // Only fetch when filters are provided and not empty
-    if (Object.keys(filters).length > 0 && enabled) {
+    if (isInitialRender.current) {
+      isInitialRender.current = false;
       fetchIndustries();
     }
-  }, [filters, fetchIndustries, enabled]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // Handle filters and pagination changes
+  useEffect(() => {
+    if (!enabled || isInitialRender.current) {
+      return;
+    }
+
+    fetchIndustries();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [memoizedFilters, memoizedPageIndex, memoizedPageSize, enabled]);
 
   return {
     // Industries data

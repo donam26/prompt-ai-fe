@@ -1,8 +1,8 @@
 "use client";
 
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation } from "@tanstack/react-query";
 import { showToast } from "@/components/ui/toast";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -18,10 +18,12 @@ import { contactService } from "@/services/admin/contacts/contactService";
 import { CONTACTS_CONSTANTS } from "@/constants/contacts";
 
 export const ContactForm = () => {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   const {
     register,
     handleSubmit,
-    formState: { errors, isSubmitting },
+    formState: { errors },
     reset,
     watch,
   } = useForm<ContactFormSchema>({
@@ -31,9 +33,11 @@ export const ContactForm = () => {
 
   const messageLength = watch("message")?.length || 0;
 
-  const createContactMutation = useMutation({
-    mutationFn: async (data: ContactFormSchema) => {
-      return contactService.createContact({
+  const onSubmit = async (data: ContactFormSchema) => {
+    setIsSubmitting(true);
+
+    try {
+      await contactService.createContact({
         name: data.name.trim(),
         email: data.email.trim(),
         phoneNumber: data.phoneNumber?.trim() || null,
@@ -41,21 +45,17 @@ export const ContactForm = () => {
         type: data.type || CONTACTS_CONSTANTS.TYPE.SUPPORT,
         status: CONTACTS_CONSTANTS.STATUS.UNREPLIED,
       });
-    },
-    onSuccess: () => {
+
       showToast.success(
         "Gửi liên hệ thành công! Chúng tôi sẽ phản hồi sớm nhất có thể."
       );
       reset();
-    },
-    onError: (error: any) => {
+    } catch (error: any) {
       console.error("Contact submission error:", error);
       showToast.error("Có lỗi xảy ra khi gửi liên hệ. Vui lòng thử lại sau.");
-    },
-  });
-
-  const onSubmit = async (data: ContactFormSchema) => {
-    createContactMutation.mutate(data);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (

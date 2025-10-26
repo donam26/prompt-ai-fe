@@ -124,7 +124,7 @@ export const RoleForm = ({
             <div className="gap-6 grid grid-cols-1 lg:grid-cols-2">
               {/* Basic Information */}
               <Card>
-                <CardHeader>
+                <CardHeader className="px-6">
                   <CardTitle>Thông tin cơ bản</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
@@ -165,7 +165,7 @@ export const RoleForm = ({
               {/* Permissions */}
               <Card>
                 <CardHeader>
-                  <CardTitle>Quyền hạn truy cập</CardTitle>
+                  <CardTitle className="px-6">Quyền hạn truy cập</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <div className="space-y-3 max-h-[400px] overflow-y-auto">

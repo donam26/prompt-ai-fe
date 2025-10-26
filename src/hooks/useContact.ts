@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { useMutation } from "@tanstack/react-query";
 import { showToast } from "@/components/ui/toast";
 import { contactService } from "@/services/admin/contacts/contactService";
 import {
@@ -15,6 +14,7 @@ export const useContact = () => {
   const [errors, setErrors] = useState<
     Partial<Record<keyof ContactFormSchema, string>>
   >({});
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleFieldChange = (
     field: keyof ContactFormSchema,
@@ -92,29 +92,6 @@ export const useContact = () => {
     return Object.keys(newErrors).length === 0;
   };
 
-  const createContactMutation = useMutation({
-    mutationFn: async (data: ContactFormSchema) => {
-      return contactService.createContact({
-        name: data.name.trim(),
-        email: data.email.trim(),
-        phoneNumber: data.phoneNumber?.trim() || null,
-        message: data.message.trim(),
-        type: data.type || CONTACTS_CONSTANTS.TYPE.SUPPORT,
-        status: CONTACTS_CONSTANTS.STATUS.UNREPLIED,
-      });
-    },
-    onSuccess: () => {
-      showToast.success(
-        "Gửi liên hệ thành công! Chúng tôi sẽ phản hồi sớm nhất có thể."
-      );
-      clearForm();
-    },
-    onError: (error: any) => {
-      console.error("Contact submission error:", error);
-      showToast.error("Có lỗi xảy ra khi gửi liên hệ. Vui lòng thử lại sau.");
-    },
-  });
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -123,13 +100,33 @@ export const useContact = () => {
       return;
     }
 
-    createContactMutation.mutate(formData);
+    setIsLoading(true);
+    try {
+      await contactService.createContact({
+        name: formData.name.trim(),
+        email: formData.email.trim(),
+        phoneNumber: formData.phoneNumber?.trim() || null,
+        message: formData.message.trim(),
+        type: formData.type || CONTACTS_CONSTANTS.TYPE.SUPPORT,
+        status: CONTACTS_CONSTANTS.STATUS.UNREPLIED,
+      });
+
+      showToast.success(
+        "Gửi liên hệ thành công! Chúng tôi sẽ phản hồi sớm nhất có thể."
+      );
+      clearForm();
+    } catch (error: any) {
+      console.error("Contact submission error:", error);
+      showToast.error("Có lỗi xảy ra khi gửi liên hệ. Vui lòng thử lại sau.");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return {
     formData,
     errors,
-    isLoading: createContactMutation.isPending,
+    isLoading,
     handleFieldChange,
     handleSubmit,
     clearForm,

@@ -991,7 +991,7 @@
   perspective: 1000px;
   scrollbar-width: none; /* Firefox */
   -ms-overflow-style: none; /* Internet Explorer 10+ */
-  animation: scroll 5s linear infinite;
+  animation: scroll 15s linear infinite;
 }
 
 .animate-scroll-mentors {
@@ -1006,7 +1006,7 @@
 /* Mobile responsive animation */
 @media (max-width: 768px) {
   .animate-scroll {
-    animation: scroll 10 linear infinite;
+    animation: scroll 10s linear infinite;
   }
 
   .animate-scroll-mentors {

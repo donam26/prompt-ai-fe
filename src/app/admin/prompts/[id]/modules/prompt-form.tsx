@@ -50,6 +50,15 @@ export const PromptForm = ({
       },
     });
 
+  // Memoize filters to prevent unnecessary re-fetches
+  const industryFilters = useMemo(() => {
+    return selectedCategoryId
+      ? {
+          categoryIds: [selectedCategoryId],
+        }
+      : undefined;
+  }, [selectedCategoryId]);
+
   // Fetch industries data with category filter - only when category is selected
   const { industriesWithPagination, isFetching: industriesLoading } =
     useIndustries({
@@ -57,11 +66,7 @@ export const PromptForm = ({
         pageIndex: 1,
         pageSize: 100,
       },
-      filters: selectedCategoryId
-        ? {
-            categoryIds: [selectedCategoryId],
-          }
-        : undefined,
+      filters: industryFilters,
     });
 
   const categories = Array.isArray(categoriesWithPagination?.data)

@@ -34,8 +34,8 @@ export const LAYOUT_LABELS = {
     contact: "Liên hệ",
   },
   auth: {
-    login: "Login",
-    register: "Signup",
+    login: "Đăng nhập",
+    register: "Đăng ký",
     logout: "Đăng xuất",
   },
   user: {

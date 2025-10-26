@@ -146,7 +146,7 @@ export const TrendingPromptsSection = ({}: TrendingPromptsSectionProps) => {
                             <CardTitle className="mb-12 font-bold text-black text-lg line-clamp-3 leading-tight">
                               {prompt.title}
                             </CardTitle>
-                            <div className="mt-6 text-gray-500 text-sm line-clamp-3 leading-tight">
+                            <div className="text-gray-500 text-sm leading-tight">
                               {prompt.shortDescription}
                             </div>
                           </div>
@@ -217,7 +217,7 @@ export const TrendingPromptsSection = ({}: TrendingPromptsSectionProps) => {
                       <CardTitle className="mb-12 font-bold text-black text-lg line-clamp-3 leading-tight">
                         {prompt.title}
                       </CardTitle>
-                      <div className="mt-6 text-gray-500 text-sm line-clamp-3 leading-tight">
+                      <div className="text-gray-500 text-sm leading-tight">
                         {prompt.shortDescription}
                       </div>
                     </div>

@@ -13,9 +13,6 @@ export * from "./admin";
 // Notification types
 export * from "./notification";
 
-// Shared types
-export * from "./shared";
-
 // Service types
 export * from "./services";
 

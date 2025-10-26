@@ -73,7 +73,7 @@ const IndustryTag = ({
       )}
     >
       <span className="text-xs">{colorScheme.icon}</span>
-      <span className="max-w-[80px] truncate" title={industry.name}>
+      <span className="max-w-[160px] truncate" title={industry.name}>
         {industry.name}
       </span>
     </span>

@@ -17,3 +17,4 @@ export * from "./pagination";
 export * from "./badge";
 export { default as CTAButton } from "../cta-button";
 export * from "./back-to-top-button";
+export * from "./chat-support-button";

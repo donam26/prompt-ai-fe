@@ -109,41 +109,21 @@ export class PromptService extends BaseService {
   }
 
   /**
-   * Export Excel template
+   * Bulk update subType for prompts
    */
-  async exportExcelTemplate() {
+  async bulkUpdateSubType(
+    promptIds: number[],
+    subType: number
+  ): Promise<BaseApiResponse<void>> {
     const { apiClient } = await import("../../base/apiClient");
-    return await apiClient.get(ENDPOINTS.PROMPTS.EXPORT_TEMPLATE, {
-      responseType: "blob",
+    const response = await apiClient.put(`${this.baseUrl}/bulk-subType`, {
+      promptIds,
+      subType,
     });
-  }
-
-  /**
-   * Test export Excel (simple version)
-   */
-  async testExportExcel() {
-    const { apiClient } = await import("../../base/apiClient");
-    return await apiClient.get(ENDPOINTS.PROMPTS.EXPORT_EXCEL_TEST, {
-      responseType: "blob",
-    });
-  }
-
-  /**
-   * Test export with industries
-   */
-  async testIndustriesExport() {
-    const { apiClient } = await import("../../base/apiClient");
-    return await apiClient.get(ENDPOINTS.PROMPTS.TEST_INDUSTRIES_EXPORT, {
-      responseType: "blob",
-    });
-  }
-
-  /**
-   * Test CORS
-   */
-  async testCors() {
-    const { apiClient } = await import("../../base/apiClient");
-    return await apiClient.get(ENDPOINTS.PROMPTS.TEST_CORS);
+    return {
+      success: true,
+      data: response.data,
+    };
   }
 }
 

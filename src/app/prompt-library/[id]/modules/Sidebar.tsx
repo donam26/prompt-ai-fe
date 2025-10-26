@@ -28,7 +28,7 @@ const TruncatedTitle = ({
   return (
     <Tooltip>
       <TooltipTrigger asChild>
-        <Component className={cn("truncate cursor-help", className)}>
+        <Component className={cn("line-clamp-2 cursor-help", className)}>
           {displayTitle}
         </Component>
       </TooltipTrigger>
@@ -155,7 +155,7 @@ export const Sidebar = ({
       {/* Desktop Sidebar - Vertical on left */}
       <aside
         className={cn(
-          "hidden sm:block z-40 sm:z-auto relative bg-white shadow-md border-gray-200 border-r overflow-x-hidden overflow-y-auto transition-all duration-300 ease-in-out",
+          "hidden sm:block z-40 sm:z-auto relative bg-white shadow-md border-gray-200 border-t border-r overflow-x-hidden overflow-y-auto transition-all duration-300 ease-in-out",
           isCollapsed ? "w-16 sm:w-[84px]" : "w-full sm:w-64 md:w-72 lg:w-80",
           "h-screen min-h-screen"
         )}
@@ -164,19 +164,9 @@ export const Sidebar = ({
           {/* Sidebar Header */}
           <div
             className={cn(
-              "flex items-center p-6 border-gray-200 border-b transition-all duration-200",
-              isCollapsed ? "justify-center" : "justify-between"
+              "flex justify-end items-center p-6 border-gray-200 border-b transition-all duration-200"
             )}
           >
-            {!isCollapsed && (
-              <TruncatedTitle
-                title={prompt?.title}
-                fallback="Prompt AI"
-                className="font-bold text-gray-900 text-xl"
-                as="h1"
-              />
-            )}
-
             <Button
               variant="outline"
               onClick={onToggle}
@@ -188,7 +178,7 @@ export const Sidebar = ({
           </div>
 
           {/* Menu Items */}
-          <div className="flex-1 space-y-2 p-4">
+          <div className="flex-1 space-y-2 p-4 border-gray-200 border-t">
             <button
               onClick={() => onMenuClick(MenuItem.MY_PROMPT)}
               className={cn(

@@ -195,7 +195,7 @@ export const PromptEditor = ({
   );
 
   return (
-    <div className="flex flex-col col-span-1 xl:col-span-3 w-full h-full chat-card prompt-card">
+    <div className="flex flex-col col-span-1 xl:col-span-3 w-full h-full prompt-card">
       <div className="flex flex-col flex-1">
         <div className="flex justify-between items-start sm:items-center gap-3 mb-4">
           <div className="flex items-center chat-prompt-title">

@@ -39,7 +39,7 @@ export function SidebarItem({
       className={cn(
         "group flex items-center px-3 py-2 rounded-lg font-medium text-sm transition-all duration-200 cursor-pointer",
         isActive
-          ? "bg-primary-100 text-primary-700 shadow-sm"
+          ? "bg-primary text-white shadow-md"
           : "text-gray-600 hover:bg-gray-100 hover:text-gray-900",
         isCollapsed && "justify-center px-2"
       )}
@@ -49,9 +49,7 @@ export function SidebarItem({
       <div
         className={cn(
           "flex-shrink-0 w-5 h-5",
-          isActive
-            ? "text-primary-600"
-            : "text-gray-500 group-hover:text-gray-700",
+          isActive ? "text-white" : "text-gray-500 group-hover:text-gray-700",
           isCollapsed && "mx-auto"
         )}
       >
@@ -72,7 +70,7 @@ export function SidebarItem({
 
           {/* Expand/Collapse Icon */}
           {hasChildren && (
-            <div className="flex-shrink-0 ml-2">
+            <div className={cn("flex-shrink-0 ml-2", isActive && "text-white")}>
               {isExpanded ? (
                 <ChevronDown className="w-4 h-4" />
               ) : (
@@ -107,9 +105,9 @@ export function SidebarItem({
                   key={child.name}
                   href={child.href || "#"}
                   className={cn(
-                    "group flex items-center px-3 py-2 rounded-md text-sm transition-all duration-200",
+                    "group flex items-center px-3 py-2 rounded-md font-semibold text-sm transition-all duration-200",
                     isChildActive
-                      ? "bg-primary-50 text-primary-700 font-medium"
+                      ? "bg-primary/10 text-primary border-l-4 border-primary pl-4"
                       : "text-gray-500 hover:bg-gray-50 hover:text-gray-700"
                   )}
                 >
@@ -117,7 +115,7 @@ export function SidebarItem({
                     className={cn(
                       "flex-shrink-0 mr-3 w-4 h-4",
                       isChildActive
-                        ? "text-primary-600"
+                        ? "text-primary"
                         : "text-gray-400 group-hover:text-gray-600"
                     )}
                   >

@@ -115,13 +115,15 @@ export const PromptCardV2 = ({
             {/* Premium/Free badge */}
             <span
               className={`px-3 py-1 font-semibold text-xs flex items-center gap-1 ${
-                prompt.isType === 2
+                prompt.subType === 2
                   ? "bg-gradient-to-b from-gray-300 to-gray-400 text-gray-700 rounded-full shadow-sm"
                   : "bg-green-500 text-white rounded-full"
               }`}
             >
-              {prompt.isType === 2 && <Star className="fill-current w-3 h-3" />}
-              {prompt.isType === 2 ? "Premium" : "Free"}
+              {prompt.subType === 2 && (
+                <Star className="fill-current w-3 h-3" />
+              )}
+              {prompt.subType === 2 ? "Premium" : "Free"}
             </span>
             {isNew && (
               <span className="bg-red-500 px-2 py-1 rounded-full font-semibold text-white text-xs">

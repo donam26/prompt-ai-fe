@@ -5,6 +5,11 @@ export const ENDPOINTS = {
     BASE: "/prompt-favorite",
   },
 
+  // Feedback endpoints
+  FEEDBACK: {
+    BASE: "/feedback",
+  },
+
   // Prompt endpoints
   PROMPTS: {
     BASE: "/prompts",

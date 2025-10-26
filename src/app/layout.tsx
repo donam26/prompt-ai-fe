@@ -3,12 +3,12 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import "@/styles/skeleton.css";
 import { NextAuthProvider } from "@/providers/NextAuthProvider";
-import { QueryProvider } from "@/providers/QueryProvider";
 import { Toast } from "@/components/ui/toast";
 import { Header, Footer } from "@/components/layout";
 import { ConditionalMain } from "@/components/layout/conditional-main";
 import { CustomAuthSyncWrapper } from "@/app/(modules)/custom-auth-sync-wrapper";
 import { BackToTopButton } from "@/components/ui/back-to-top-button";
+import { ChatSupportButton } from "@/components/ui/chat-support-button";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -17,6 +17,9 @@ export const metadata: Metadata = {
   description: "Hơn 8,000+ prompts tạo ra từ các chuyên gia về AI",
   keywords: "prompt, AI, ChatGPT, Midjourney, prompt library, AI tools",
   authors: [{ name: "Prom Team" }],
+  icons: {
+    icon: "/icons/ui/logo.svg",
+  },
   openGraph: {
     title: "Prom - Thư Viện & Nâng Cấp Prompt!",
     description: "Hơn 8,000+ prompts tạo ra từ các chuyên gia về AI",
@@ -51,17 +54,16 @@ export default function RootLayout({
       </head>
       <body className={inter.className}>
         <NextAuthProvider>
-          <QueryProvider>
-            <CustomAuthSyncWrapper>
-              <div className="flex flex-col min-h-screen">
-                <Header />
-                <ConditionalMain>{children}</ConditionalMain>
-                <Footer />
-              </div>
-              <BackToTopButton />
-              <Toast />
-            </CustomAuthSyncWrapper>
-          </QueryProvider>
+          <CustomAuthSyncWrapper>
+            <div className="flex flex-col min-h-screen">
+              <Header />
+              <ConditionalMain>{children}</ConditionalMain>
+              <Footer />
+            </div>
+            <BackToTopButton />
+            <ChatSupportButton />
+            <Toast />
+          </CustomAuthSyncWrapper>
         </NextAuthProvider>
       </body>
     </html>
