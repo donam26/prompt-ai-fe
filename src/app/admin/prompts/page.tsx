@@ -64,7 +64,12 @@ export default function PromptManagementPage(): React.JSX.Element {
   const {
     categoriesWithPagination: categoriesData,
     isFetching: categoriesLoading,
-  } = useCategories();
+  } = useCategories({
+    pagination: {
+      pageIndex: 0,
+      pageSize: 100,
+    },
+  });
 
   const { mutate: deletePrompt, isLoading: isDeleting } = useDeletePrompt();
   const { updateSubType, isUpdating } = useBulkUpdateSubType();

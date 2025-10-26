@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, Suspense } from "react";
+import { useState, Suspense, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -22,6 +22,9 @@ function CheckoutContent() {
   const [isProcessing, setIsProcessing] = useState(false);
   const [discountCode, setDiscountCode] = useState("");
   const [discountedPrice, setDiscountedPrice] = useState<number | null>(null);
+  const [discountErrorMessage, setDiscountErrorMessage] = useState<
+    string | null
+  >(null);
 
   const handleBackToPricing = () => {
     router.push("/pricing");
@@ -29,6 +32,9 @@ function CheckoutContent() {
 
   const handleApplyDiscount = async () => {
     if (!discountCode || !checkoutData) return;
+
+    // Clear previous error messages
+    setDiscountErrorMessage(null);
 
     const response = await applyDiscount({
       code: discountCode,
@@ -39,9 +45,8 @@ function CheckoutContent() {
       const discountAmount = response.data?.discountAmount || 0;
       const newPrice = checkoutData.planPrice - discountAmount;
       setDiscountedPrice(newPrice);
+      setDiscountErrorMessage(null); // Clear any previous errors
       showToast.success("Áp dụng mã giảm giá thành công!");
-    } else {
-      showToast.error(response.message || "Mã giảm giá không hợp lệ");
     }
   };
 
@@ -105,6 +110,12 @@ function CheckoutContent() {
       minimumFractionDigits: 0,
     }).format(price);
   };
+
+  useEffect(() => {
+    if (discountError) {
+      setDiscountErrorMessage(discountError);
+    }
+  }, [discountError]);
 
   if (isLoading) {
     return (
@@ -227,7 +238,11 @@ function CheckoutContent() {
                   <input
                     type="text"
                     value={discountCode}
-                    onChange={e => setDiscountCode(e.target.value)}
+                    onChange={e => {
+                      setDiscountCode(e.target.value);
+                      // Clear error when user starts typing
+                      setDiscountErrorMessage(null);
+                    }}
                     placeholder="Nhập mã giảm giá"
                     className="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 text-base"
                   />
@@ -246,10 +261,12 @@ function CheckoutContent() {
                     {formatPrice(checkoutData.planPrice - discountedPrice)}
                   </p>
                 )}
-                {discountError && (
-                  <p className="mt-3 font-medium text-red-600">
-                    ❌ {discountError}
-                  </p>
+                {discountErrorMessage && (
+                  <div className="bg-red-50 mt-3 p-3 border border-red-200 rounded-lg">
+                    <p className="font-medium text-red-600 text-sm">
+                      ❌ {discountErrorMessage}
+                    </p>
+                  </div>
                 )}
               </CardContent>
             </Card>

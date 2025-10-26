@@ -18,10 +18,10 @@ export const useDiscount = () => {
     try {
       const response = await paymentApi.applyDiscount(request);
       return response;
-    } catch (err) {
+    } catch (err: any) {
       const errorMessage =
-        err instanceof Error
-          ? err.message
+        err.response && err.response.data && err.response.data.error?.message
+          ? err.response.data.error?.message
           : "Có lỗi xảy ra khi áp dụng mã giảm giá";
       setError(errorMessage);
       return {

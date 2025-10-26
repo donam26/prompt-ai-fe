@@ -70,6 +70,10 @@ export interface DiscountApplyResponse {
     discountAmount: number;
     discountPercentage?: number;
   };
+  error?: {
+    code: string;
+    message: string;
+  };
 }
 
 export const paymentApi = {

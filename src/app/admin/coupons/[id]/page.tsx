@@ -32,11 +32,6 @@ export default function CouponDetailsPage() {
     async (data: any) => {
       const result = await upsertCoupon(data, couponIdToUpdate);
       if (result) {
-        showToast.success(
-          couponIdToUpdate
-            ? "Mã giảm giá đã được cập nhật thành công"
-            : "Mã giảm giá đã được tạo thành công"
-        );
         router.push(COUPON_CONSTANTS.ROUTES.COUPONS);
       }
     },
