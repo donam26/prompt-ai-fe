@@ -1,7 +1,6 @@
 import { useCallback, useState } from "react";
 import { PromptFilterState } from "@/types";
 import { promptService } from "@/services/admin/prompts/promptService";
-import { applyNonEmptyFiltersToQuery } from "@/utils";
 
 interface IResponse {
   isExporting: boolean;
@@ -19,17 +18,43 @@ export function useExportPromptsExcel(filters: PromptFilterState): IResponse {
     setError(null);
 
     try {
-      // Transform filters to match service expectations
-      const exportFilters: Record<string, unknown> = {
-        search: filters.searchTerm,
-        categoryIds: filters.categoryIds,
-        industryIds: filters.industryIds,
-        isType: filters.isType,
-        dateFrom: filters.dateFrom,
-        dateTo: filters.dateTo,
-      };
-      applyNonEmptyFiltersToQuery(exportFilters, exportFilters);
-      // Call the service method
+      // Transform filters to match backend expectations
+      const exportFilters: Record<string, unknown> = {};
+
+      // Handle search - support multiple parameter names
+      if (filters.searchTerm) {
+        exportFilters.search = filters.searchTerm;
+      }
+
+      // Handle categoryIds - support array format
+      if (filters.categoryIds && filters.categoryIds.length > 0) {
+        exportFilters.categoryIds = filters.categoryIds;
+      }
+
+      // Handle industryIds - support array format
+      if (filters.industryIds && filters.industryIds.length > 0) {
+        exportFilters.industryIds = filters.industryIds;
+      }
+
+      // Handle isType filtering - support multiple values
+      if (filters.isType !== undefined && filters.isType !== null) {
+        exportFilters.isType = filters.isType;
+      }
+
+      // Handle subType filtering
+      if (filters.subType !== undefined && filters.subType !== null) {
+        exportFilters.subType = filters.subType;
+      }
+
+      // Handle date range
+      if (filters.dateFrom) {
+        exportFilters.dateFrom = filters.dateFrom;
+      }
+      if (filters.dateTo) {
+        exportFilters.dateTo = filters.dateTo;
+      }
+
+      // Call the service method with GET request and query parameters
       await promptService.exportPromptsExcel(exportFilters);
     } catch (err) {
       const errorMessage =

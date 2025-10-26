@@ -4,6 +4,7 @@ import { useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
 
 import { AdminContentCard } from "@/components/admin/common/admin-content-card";
+import { BulkActions } from "@/components/admin/bulk-actions";
 import {
   PromptFilter,
   PromptHeader,
@@ -14,13 +15,6 @@ import { PROMPTS_CONSTANTS } from "@/constants/prompts";
 import { usePrompts, useCategories } from "@/hooks";
 import { useDeletePrompt, useBulkUpdateSubType } from "@/hooks/admin/usePrompt";
 import { ActionModal } from "@/components/admin/action-modal";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import type { Prompt, PromptFilterState } from "@/types";
 import type { PaginationParams } from "@/types/base";
 import {
@@ -200,50 +194,20 @@ export default function PromptManagementPage(): React.JSX.Element {
           onAddPrompt={handleAddPrompt}
           filters={filters}
           disabled={!promptsWithPagination?.data.length}
+          onImportSuccess={refetch}
         />
 
-        <div className="flex justify-between items-center bg-blue-50 dark:bg-blue-900/20 px-4 py-2 border border-blue-200 dark:border-blue-800 rounded-lg">
-          <span className="font-medium text-blue-900 dark:text-blue-100 text-sm">
-            {selectedRows.size > 0
-              ? `Đã chọn: ${selectedRows.size} dòng`
-              : "Chưa có dòng nào được chọn"}
-          </span>
-          <div className="flex items-center gap-3">
-            <Select
-              value={selectedSubType}
-              onValueChange={handleSubTypeSelect}
-              disabled={selectedRows.size === 0 || isUpdating}
-            >
-              <SelectTrigger className="w-32">
-                <SelectValue placeholder="Chọn loại" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="free">Free</SelectItem>
-                <SelectItem value="premium">Premium</SelectItem>
-              </SelectContent>
-            </Select>
-            <button
-              onClick={() => setSubTypeModalOpen(true)}
-              disabled={
-                selectedRows.size === 0 || !selectedSubType || isUpdating
-              }
-              className="bg-blue-600 hover:bg-blue-700 disabled:opacity-50 px-3 py-1.5 rounded-md font-medium text-white text-sm transition-colors disabled:cursor-not-allowed"
-            >
-              Áp dụng
-            </button>
-            {selectedRows.size > 0 && (
-              <button
-                onClick={() => {
-                  setSelectedRows(new Set());
-                  setSelectedSubType("");
-                }}
-                className="text-blue-600 hover:text-blue-700 dark:hover:text-blue-300 dark:text-blue-400 text-sm underline"
-              >
-                Bỏ chọn tất cả
-              </button>
-            )}
-          </div>
-        </div>
+        <BulkActions
+          selectedCount={selectedRows.size}
+          selectedSubType={selectedSubType}
+          onSubTypeChange={handleSubTypeSelect}
+          onApplySubType={() => setSubTypeModalOpen(true)}
+          onClearSelection={() => {
+            setSelectedRows(new Set());
+            setSelectedSubType("");
+          }}
+          isLoading={isUpdating}
+        />
 
         <PromptFilter
           filters={filters}

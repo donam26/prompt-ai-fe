@@ -33,6 +33,11 @@ export const promptFormSchema = z.object({
 export type PromptFormValues = z.infer<typeof promptFormSchema>;
 
 export const getPromptFormDefaultValues = (prompt?: any): PromptFormValues => {
+  const industryIds =
+    prompt?.promptIndustries?.map((i: any) => i.id.toString()) ||
+    prompt?.industryIds ||
+    [];
+
   return {
     title: prompt?.title || "",
     content: prompt?.content || "",
@@ -56,9 +61,6 @@ export const getPromptFormDefaultValues = (prompt?: any): PromptFormValues => {
     image: prompt?.image || "",
     imageCard: prompt?.imageCard || "",
     isComingSoon: prompt?.isComingSoon || false,
-    industryIds:
-      prompt?.category?.industries?.map((i: any) => i.id.toString()) ||
-      prompt?.industryIds ||
-      [],
+    industryIds: industryIds,
   };
 };

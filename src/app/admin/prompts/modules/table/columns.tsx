@@ -60,6 +60,18 @@ export function usePromptColumns({
       size: 60,
     },
     {
+      accessorKey: "id",
+      meta: { title: "ID" },
+      header: () => <div className="font-medium">ID</div>,
+      cell: ({ row }) => (
+        <div className="font-mono text-gray-600 text-sm">
+          #{row.original.id}
+        </div>
+      ),
+      enableSorting: false,
+      size: 80,
+    },
+    {
       accessorKey: "title",
       meta: { title: "Tiêu đề" },
       header: () => <div className="font-medium">Tiêu đề</div>,
@@ -139,7 +151,7 @@ export function usePromptColumns({
                   variant: getBadgeVariantByIndustry(industry.name),
                 })
               )}
-              maxVisible={999}
+              maxVisible={3}
             />
           ) : (
             <span className="text-gray-400 text-sm">Chưa có</span>

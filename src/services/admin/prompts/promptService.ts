@@ -43,6 +43,20 @@ export class PromptService extends BaseService {
   }
 
   /**
+   * Get prompt by ID with industries included
+   */
+  async getPromptByIdWithIndustries(id: string | number) {
+    const { apiClient } = await import("../../base/apiClient");
+    const response = await apiClient.get(
+      `${this.baseUrl}/${id}?include=industries`
+    );
+    return {
+      success: true,
+      data: response.data,
+    };
+  }
+
+  /**
    * Create new prompt
    */
   async createPrompt(data: Partial<Prompt>) {
@@ -74,11 +88,40 @@ export class PromptService extends BaseService {
    * Export prompts to Excel
    */
   async exportPromptsExcel(filters: Record<string, unknown> = {}) {
-    const blob = await this.exportExcel("export-excel", filters);
+    const { apiClient } = await import("../../base/apiClient");
+
+    // Build query string from filters
+    const queryParams = new URLSearchParams();
+
+    // Add filters to query parameters
+    Object.entries(filters).forEach(([key, value]) => {
+      if (value !== undefined && value !== null && value !== "") {
+        if (Array.isArray(value)) {
+          // Handle array values - add each item separately
+          value.forEach(item => {
+            queryParams.append(key, item.toString());
+          });
+        } else {
+          queryParams.append(key, value.toString());
+        }
+      }
+    });
+
+    const queryString = queryParams.toString();
+    const url = `${this.baseUrl}/export-excel${queryString ? `?${queryString}` : ""}`;
+
+    const response = await apiClient.get(url, {
+      responseType: "blob",
+    });
+
+    // Generate filename with timestamp
     const timestamp = new Date().toISOString().split("T")[0];
     const filename = `prompts-export-${timestamp}.xlsx`;
-    this.downloadBlob(blob, filename);
-    return blob;
+
+    // Download the blob
+    this.downloadBlob(response.data, filename);
+
+    return response.data;
   }
 
   /**
@@ -124,6 +167,30 @@ export class PromptService extends BaseService {
       success: true,
       data: response.data,
     };
+  }
+
+  /**
+   * Import prompts from Excel file
+   */
+  async importPromptsFromExcel(file: File) {
+    const formData = new FormData();
+    formData.append("excelFile", file);
+
+    const baseURL =
+      process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000/api";
+    const response = await fetch(`${baseURL}/prompts/import-excel`, {
+      method: "POST",
+      body: formData,
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error("Failed to import prompts from Excel");
+    }
+
+    return response.json();
   }
 }
 

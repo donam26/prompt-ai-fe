@@ -11,7 +11,6 @@ import { FormMode, BUTTON_TEXT } from "@/constants/common";
 import { PromptBasicFields } from "./prompt-basic-fields";
 import { PromptAdvancedFields } from "./prompt-advanced-fields";
 import { useCategories } from "@/hooks/admin/useCategory/useCategories";
-import { useIndustries } from "@/hooks/admin/useIndustry";
 import {
   promptFormSchema,
   getPromptFormDefaultValues,
@@ -50,32 +49,22 @@ export const PromptForm = ({
       },
     });
 
-  // Memoize filters to prevent unnecessary re-fetches
-  const industryFilters = useMemo(() => {
-    return selectedCategoryId
-      ? {
-          categoryIds: [selectedCategoryId],
-        }
-      : undefined;
-  }, [selectedCategoryId]);
+  const categories = useMemo(() => {
+    return Array.isArray(categoriesWithPagination?.data)
+      ? categoriesWithPagination.data
+      : [];
+  }, [categoriesWithPagination?.data]);
 
-  // Fetch industries data with category filter - only when category is selected
-  const { industriesWithPagination, isFetching: industriesLoading } =
-    useIndustries({
-      pagination: {
-        pageIndex: 1,
-        pageSize: 100,
-      },
-      filters: industryFilters,
-    });
+  // Get industries from selected category's industries (not from API)
+  const industries = useMemo(() => {
+    if (!selectedCategoryId) return [];
 
-  const categories = Array.isArray(categoriesWithPagination?.data)
-    ? categoriesWithPagination.data
-    : [];
+    const selectedCategory = categories.find(
+      cat => cat.id.toString() === selectedCategoryId
+    );
 
-  const industries = Array.isArray(industriesWithPagination?.data)
-    ? industriesWithPagination.data
-    : [];
+    return selectedCategory?.industries || [];
+  }, [selectedCategoryId, categories]);
 
   const form = useForm<PromptFormValues>({
     resolver: zodResolver(promptFormSchema),
@@ -86,6 +75,7 @@ export const PromptForm = ({
     control,
     handleSubmit,
     setValue,
+    reset,
     formState: { isDirty },
   } = form;
 
@@ -103,19 +93,19 @@ export const PromptForm = ({
   useEffect(() => {
     if (prompt) {
       const defaultValues = getPromptFormDefaultValues(prompt);
-      Object.entries(defaultValues).forEach(([key, value]) => {
-        setValue(key as keyof PromptFormValues, value);
-      });
-      // Set the selected category ID for industry filtering
+
+      // Set the selected category ID for industry filtering FIRST
       if (defaultValues.categoryId) {
         setSelectedCategoryId(defaultValues.categoryId);
       }
+
+      reset(defaultValues);
     }
-  }, [prompt, setValue]);
+  }, [prompt, reset]);
 
   const isDisabled = useMemo(() => {
-    return isSaving || !isDirty || categoriesLoading || industriesLoading;
-  }, [isSaving, isDirty, categoriesLoading, industriesLoading]);
+    return isSaving || !isDirty || categoriesLoading;
+  }, [isSaving, isDirty, categoriesLoading]);
 
   const onSubmit = useCallback(
     (data: PromptFormValues) => {
@@ -132,7 +122,7 @@ export const PromptForm = ({
       ? BUTTON_TEXT.CREATE
       : BUTTON_TEXT.EDIT;
 
-  if (isLoading || categoriesLoading || industriesLoading) {
+  if (isLoading || categoriesLoading) {
     return (
       <AdminPageLayout
         title={isCreateMode ? "Create New Prompt" : "Edit Prompt"}

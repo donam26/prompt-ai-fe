@@ -25,8 +25,9 @@ export function usePromptDetail({
     setError("");
 
     try {
-      const response = await promptService.getPromptById(promptId);
-      setPrompt(response.data || null);
+      const response =
+        await promptService.getPromptByIdWithIndustries(promptId);
+      setPrompt(response.data.data || null);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Có lỗi xảy ra");
       setPrompt(null);
