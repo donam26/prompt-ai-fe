@@ -117,8 +117,6 @@ export class PromptService {
         }
       }
     } catch (error) {
-      console.log({ error });
-
       onError(error as Error);
     }
   }

@@ -69,7 +69,13 @@ export const PromptDetailHeader = ({
   };
 
   const handleGoBack = () => {
-    router.back();
+    // Try to go back in browser history
+    if (window.history.length > 1) {
+      router.back();
+    } else {
+      // Fallback to prompt library home if no history
+      router.push("/prompt-library");
+    }
   };
 
   // Check if prompt is new (created within last 7 days)

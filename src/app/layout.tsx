@@ -25,11 +25,20 @@ export const metadata: Metadata = {
     description: "Hơn 8,000+ prompts tạo ra từ các chuyên gia về AI",
     type: "website",
     locale: "vi_VN",
+    images: [
+      {
+        url: "/images/logos/promp-preview.png",
+        width: 1200,
+        height: 630,
+        alt: "Prom AI Hub - AI-First Community",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
     title: "Prom - Thư Viện & Nâng Cấp Prompt!",
     description: "Hơn 8,000+ prompts tạo ra từ các chuyên gia về AI",
+    images: ["/images/logos/promp-preview.png"],
   },
   robots: {
     index: true,

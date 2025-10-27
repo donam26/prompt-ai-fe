@@ -24,7 +24,12 @@ const PageHeader = ({ title, description, onBack }: PageHeaderProps) => {
 
       <div className="flex-1">
         <h1 className="mb-2 font-bold text-gray-900 text-2xl">{title}</h1>
-        {description && <p className="text-gray-600 text-sm">{description}</p>}
+        {description && (
+          <p
+            className="text-gray-600 text-sm"
+            dangerouslySetInnerHTML={{ __html: description }}
+          />
+        )}
       </div>
     </div>
   );

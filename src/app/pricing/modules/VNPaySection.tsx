@@ -8,19 +8,11 @@ import { usePricingSubscriptions } from "@/hooks/usePricingSubscriptions";
 interface VNPaySectionProps {
   paymentMethod: PaymentMethod;
   onSelectPlan: (planId: string, paymentMethod: PaymentMethod) => void;
-  featuresData: Array<{
-    id: number;
-    content: string;
-    included: boolean;
-    createdAt: string;
-    updatedAt: string;
-  }>;
 }
 
 export const VNPaySection = ({
-  paymentMethod,
+  paymentMethod = PaymentMethod.VNPAY,
   onSelectPlan,
-  featuresData,
 }: VNPaySectionProps) => {
   const {
     subscriptions,
@@ -28,6 +20,10 @@ export const VNPaySection = ({
     error: subscriptionsError,
     refetch,
   } = usePricingSubscriptions();
+
+  const filteredSubscriptions = subscriptions
+    .filter(plan => [9, 12].includes(plan.id))
+    .reverse();
 
   return (
     <>
@@ -51,34 +47,34 @@ export const VNPaySection = ({
               Thử lại
             </Button>
           </div>
-        ) : subscriptions.length > 0 ? (
-          <div className="flex justify-center items-center">
-            <div className="w-full max-w-md">
-              {subscriptions
-                .filter(plan => plan.name?.toLowerCase().includes("premium"))
-                .map(plan => (
-                  <PricingCardV2
-                    key={plan.id}
-                    plan={{
-                      id: plan.id?.toString() || "",
-                      name: plan.name,
-                      price: Number(plan.price),
-                      description: "", // Subscription interface doesn't have pricePerYear
-                      isPopular: true, // Premium is always popular
-                      badge: "Phổ biến", // Premium badge
-                      buttonText: "Nâng cấp",
-                      buttonVariant: "default",
-                      contentSubscriptions: featuresData.map(feature => ({
+        ) : filteredSubscriptions.length > 0 ? (
+          <div className="flex justify-center items-start mx-auto w-full max-w-6xl">
+            <div className="gap-10 grid grid-cols-1 sm:grid-cols-2 w-full">
+              {filteredSubscriptions.map(plan => (
+                <PricingCardV2
+                  key={plan.id}
+                  plan={{
+                    id: plan.id?.toString() || "",
+                    name: plan.name,
+                    price: Number(plan.price),
+                    description: "",
+                    isPopular: plan.isPopular, // Premium is always popular
+                    badge: plan.isPopular ? "Bán chạy" : "", // Premium badge
+                    buttonText: "Nâng cấp",
+                    buttonVariant: "default",
+                    contentSubscriptions: plan.contentSubscriptions?.map(
+                      feature => ({
                         content: feature.content,
                         included: feature.included,
-                      })),
-                    }}
-                    isYearly={false}
-                    onSelectPlan={onSelectPlan}
-                    paymentMethod={paymentMethod}
-                    className="w-full"
-                  />
-                ))}
+                      })
+                    ),
+                  }}
+                  isYearly={false}
+                  onSelectPlan={onSelectPlan}
+                  paymentMethod={paymentMethod}
+                  className="w-full"
+                />
+              ))}
             </div>
           </div>
         ) : (

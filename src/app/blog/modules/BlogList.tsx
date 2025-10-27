@@ -16,7 +16,7 @@ export const BlogList = ({ pagination, onPageChange }: BlogListProps) => {
   });
 
   const handlePageChange = (page: number) => {
-    onPageChange(page);
+    onPageChange(page + 1);
     // Scroll to top when page changes
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
@@ -38,7 +38,7 @@ export const BlogList = ({ pagination, onPageChange }: BlogListProps) => {
       {blogsWithPagination.totalPages > 1 && (
         <div className="flex justify-center mt-10">
           <Pagination
-            currentPage={pagination.pageIndex + 1}
+            currentPage={pagination.pageIndex}
             totalPages={blogsWithPagination.totalPages}
             onPageChange={handlePageChange}
             pageSize={pagination.pageSize}

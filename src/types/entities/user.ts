@@ -61,6 +61,10 @@ export interface Subscription extends BaseEntity {
   billingCycle: string;
   imageDiscount?: string | null;
   isPopular?: boolean;
+  contentSubscriptions?: Array<{
+    content: string;
+    included: boolean;
+  }>;
 }
 
 // Role entity

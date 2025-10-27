@@ -51,12 +51,31 @@ export const PricingCardV2 = ({
     onSelectPlan(plan.id as string, paymentMethod);
   };
 
+  // Get current user's subscription plan ID
+  const currentUserPlanId = user?.userSub?.subscription?.id
+    ? Number(user.userSub?.subscription?.id)
+    : 0;
+
+  // Get plan ID from current card
+  const currentPlanId = Number(plan.id);
+
+  // Determine button state based on plan comparison
+  const isCurrentPlan = currentUserPlanId === currentPlanId;
+  const hasHigherOrEqualPlan =
+    currentUserPlanId >= currentPlanId && !isCurrentPlan;
+
+  // Show "Tham gia Skool" if plan ID is 12
+  const isSkoolPlan = currentPlanId === 12;
+
   const getButtonText = () => {
-    if (isButtonDisabled) {
-      return "Đã có gói đăng ký";
+    if (isCurrentPlan) {
+      return "Gói hiện tại";
     }
-    if (paymentMethod === PaymentMethod.SKOOL) {
+    if (isSkoolPlan) {
       return "Tham gia Skool";
+    }
+    if (hasHigherOrEqualPlan) {
+      return "Bạn đã có gói cao hơn";
     }
     return "Thanh toán VNPay";
   };
@@ -68,12 +87,10 @@ export const PricingCardV2 = ({
     return plan.buttonVariant || "outline";
   };
 
-  // Check if user has subscription type different from 1 (free)
-  const hasPaidSubscription = !!(
-    user?.userSub?.subscription?.type && user.userSub.subscription.type !== 1
-  );
-
-  const isButtonDisabled = hasPaidSubscription;
+  // Button is disabled if:
+  // 1. User already has this plan (current plan)
+  // 2. User has a higher or equal plan
+  const isButtonDisabled = isCurrentPlan || hasHigherOrEqualPlan;
 
   return (
     <div
@@ -193,13 +210,17 @@ export const PricingCardV2 = ({
           disabled={isButtonDisabled}
           className={cn(
             "py-2 sm:py-2.5 border-none rounded-[36px] w-full font-bold text-white text-sm sm:text-base leading-6 transition-all duration-200",
-            isButtonDisabled
-              ? "bg-gray-400 cursor-not-allowed opacity-60"
-              : paymentMethod === PaymentMethod.VNPAY
-                ? "bg-[#5700C6] hover:opacity-90 cursor-pointer"
-                : getButtonVariant() === "outline"
-                  ? "text-[#5700C6] bg-white hover:opacity-90 cursor-pointer"
-                  : "bg-[#5700C6] hover:opacity-90 cursor-pointer"
+            isCurrentPlan
+              ? "bg-green-500 cursor-not-allowed"
+              : hasHigherOrEqualPlan
+                ? "bg-gray-400 cursor-not-allowed opacity-60"
+                : isSkoolPlan && !isButtonDisabled
+                  ? "bg-primary hover:opacity-90 cursor-pointer"
+                  : paymentMethod === PaymentMethod.VNPAY
+                    ? "bg-[#5700C6] hover:opacity-90 cursor-pointer"
+                    : getButtonVariant() === "outline"
+                      ? "text-[#5700C6] bg-white hover:opacity-90 cursor-pointer"
+                      : "bg-[#5700C6] hover:opacity-90 cursor-pointer"
           )}
         >
           {getButtonText()}

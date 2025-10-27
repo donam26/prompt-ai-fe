@@ -57,7 +57,7 @@ export function useBlogs(options: Props = {}) {
 
     try {
       const query: Record<string, unknown> = {
-        pageIndex: memoizedPageIndex + 1,
+        pageIndex: memoizedPageIndex + 1, // Backend expects 1-based, we send 0-based
         pageSize: memoizedPageSize,
       };
 

@@ -26,6 +26,8 @@ export const TrendingPromptsSection = ({}: TrendingPromptsSectionProps) => {
   const { latestPrompts, isLoading, error } = useLatestPrompts({
     pageSize: 4,
     enabled: true,
+    // Category ID for Sales
+    categoryId: 8,
   });
 
   useEffect(() => {

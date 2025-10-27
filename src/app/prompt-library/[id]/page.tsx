@@ -107,7 +107,13 @@ export default function PromptDetailPage() {
   );
 
   const handleBack = useCallback(() => {
-    router.back();
+    // Try to go back in browser history
+    if (window.history.length > 1) {
+      router.back();
+    } else {
+      // Fallback to prompt library home if no history
+      router.push("/prompt-library");
+    }
   }, [router]);
 
   // Initialize prompt optimizationGuide when data loads
