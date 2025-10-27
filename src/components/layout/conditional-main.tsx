@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect } from "react";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 
@@ -14,6 +15,11 @@ export const ConditionalMain = ({
 }: ConditionalMainProps) => {
   const pathname = usePathname();
   const isHomePage = pathname === "/";
+
+  // Scroll to top when pathname changes
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "instant" });
+  }, [pathname]);
 
   return (
     <main
