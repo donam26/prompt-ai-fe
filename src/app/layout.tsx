@@ -27,7 +27,7 @@ export const metadata: Metadata = {
     locale: "vi_VN",
     images: [
       {
-        url: "/images/logos/promp-preview.png",
+        url: "/images/logos/prompt-preview.png",
         width: 1200,
         height: 630,
         alt: "Prom AI Hub - AI-First Community",
@@ -38,7 +38,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Prom - Thư Viện & Nâng Cấp Prompt!",
     description: "Hơn 8,000+ prompts tạo ra từ các chuyên gia về AI",
-    images: ["/images/logos/promp-preview.png"],
+    images: ["/images/logos/prompt-preview.png"],
   },
   robots: {
     index: true,
