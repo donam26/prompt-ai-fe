@@ -64,15 +64,9 @@ export const PricingCardV2 = ({
   const hasHigherOrEqualPlan =
     currentUserPlanId >= currentPlanId && !isCurrentPlan;
 
-  // Show "Tham gia Skool" if plan ID is 12
-  const isSkoolPlan = currentPlanId === 12;
-
   const getButtonText = () => {
     if (isCurrentPlan) {
-      return "Gói hiện tại";
-    }
-    if (isSkoolPlan) {
-      return "Tham gia Skool";
+      return "Gói đang sử dụng";
     }
     if (hasHigherOrEqualPlan) {
       return "Bạn đã có gói cao hơn";
@@ -214,13 +208,7 @@ export const PricingCardV2 = ({
               ? "bg-green-500 cursor-not-allowed"
               : hasHigherOrEqualPlan
                 ? "bg-gray-400 cursor-not-allowed opacity-60"
-                : isSkoolPlan && !isButtonDisabled
-                  ? "bg-primary hover:opacity-90 cursor-pointer"
-                  : paymentMethod === PaymentMethod.VNPAY
-                    ? "bg-[#5700C6] hover:opacity-90 cursor-pointer"
-                    : getButtonVariant() === "outline"
-                      ? "text-[#5700C6] bg-white hover:opacity-90 cursor-pointer"
-                      : "bg-[#5700C6] hover:opacity-90 cursor-pointer"
+                : "bg-[#5700C6] hover:opacity-90 cursor-pointer"
           )}
         >
           {getButtonText()}

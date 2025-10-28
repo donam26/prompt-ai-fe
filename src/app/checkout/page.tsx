@@ -13,6 +13,7 @@ import { paymentApi } from "@/services/api";
 import { showToast } from "@/components/ui/toast";
 import { ArrowLeft, CreditCard, Shield, CheckCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { SKOOL_COMMUNITY_URL } from "@/constants/homepage";
 
 function CheckoutContent() {
   const router = useRouter();
@@ -28,6 +29,10 @@ function CheckoutContent() {
 
   const handleBackToPricing = () => {
     router.push("/pricing");
+  };
+
+  const handleSkoolPayment = () => {
+    window.open(SKOOL_COMMUNITY_URL, "_blank");
   };
 
   const handleApplyDiscount = async () => {
@@ -277,7 +282,9 @@ function CheckoutContent() {
                 <h4 className="mb-4 font-semibold text-gray-900 text-lg">
                   Phương thức thanh toán
                 </h4>
-                <div className="flex items-center gap-4">
+
+                {/* VNPay Payment Method */}
+                <div className="flex items-center gap-4 mb-4">
                   <div className="flex justify-center items-center bg-blue-600 rounded-xl w-12 h-12">
                     <span className="font-bold text-white text-lg">V</span>
                   </div>
@@ -288,6 +295,38 @@ function CheckoutContent() {
                     </p>
                   </div>
                 </div>
+
+                {/* Skool Payment Method - Only show when subscription.id == 12 */}
+                {checkoutData.planId === "12" && (
+                  <>
+                    <div className="my-4 border-gray-200 border-t"></div>
+                    <div
+                      className="flex items-center gap-4 hover:bg-gray-50 p-3 rounded-lg transition-colors duration-200 cursor-pointer"
+                      onClick={handleSkoolPayment}
+                      role="button"
+                      tabIndex={0}
+                      onKeyDown={e => {
+                        if (e.key === "Enter" || e.key === " ") {
+                          e.preventDefault();
+                          handleSkoolPayment();
+                        }
+                      }}
+                      aria-label="Thanh toán qua Skool Community"
+                    >
+                      <div className="flex justify-center items-center bg-green-600 rounded-xl w-12 h-12">
+                        <span className="font-bold text-white text-lg">S</span>
+                      </div>
+                      <div>
+                        <p className="font-semibold text-gray-900 text-lg">
+                          Skool
+                        </p>
+                        <p className="text-gray-600">
+                          Thanh toán qua Skool Community
+                        </p>
+                      </div>
+                    </div>
+                  </>
+                )}
               </CardContent>
             </Card>
           </div>

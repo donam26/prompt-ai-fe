@@ -398,7 +398,7 @@ export const UserForm = ({
                       <div className="gap-4 grid grid-cols-1 md:grid-cols-2">
                         <div className="space-y-2">
                           <Label className="font-medium text-xs">
-                            Gói hiện tại
+                            Gói đang sử dụng
                           </Label>
                           <Input
                             value={

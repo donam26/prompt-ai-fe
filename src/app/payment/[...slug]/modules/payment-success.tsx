@@ -15,6 +15,7 @@ export function PaymentSuccess() {
   const transactionNo = searchParams.get("transactionNo");
   const bankCode = searchParams.get("bankCode");
   const payDate = searchParams.get("payDate");
+  const subscriptionId = searchParams.get("subscriptionId");
   const subscriptionName = searchParams.get("subscriptionName");
 
   const formattedAmount = amount
@@ -111,6 +112,59 @@ export function PaymentSuccess() {
                 </span>
               </div>
             </div>
+
+            {/* Skool Registration Instructions for subscriptionId=12 */}
+            {subscriptionId === "12" && (
+              <div className="bg-gradient-to-r from-purple-50 to-pink-50 mb-6 p-6 border border-purple-200 rounded-lg">
+                <div className="flex items-center mb-4">
+                  <div className="bg-purple-100 mr-3 p-2 rounded-full">
+                    <svg
+                      className="w-5 h-5 text-purple-600"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                      />
+                    </svg>
+                  </div>
+                  <h3 className="font-semibold text-purple-800 text-lg">
+                    Hướng dẫn tham gia Skool
+                  </h3>
+                </div>
+                <div className="space-y-3">
+                  <div className="flex items-start">
+                    <span className="flex flex-shrink-0 justify-center items-center bg-purple-600 mt-0.5 mr-3 rounded-full w-6 h-6 font-bold text-white text-xs">
+                      1
+                    </span>
+                    <p className="font-medium text-purple-700">
+                      Sau khi bạn mua thì hãy đăng kí nick bên Skool
+                    </p>
+                  </div>
+                  <div className="flex items-start">
+                    <span className="flex flex-shrink-0 justify-center items-center bg-purple-600 mt-0.5 mr-3 rounded-full w-6 h-6 font-bold text-white text-xs">
+                      2
+                    </span>
+                    <p className="font-medium text-purple-700">
+                      Bạn sẽ nhận được lời mời qua email bạn đang đăng kí sử
+                      dụng prom.vn sau 5 phút
+                    </p>
+                  </div>
+                  <div className="flex items-start">
+                    <span className="flex flex-shrink-0 justify-center items-center bg-purple-600 mt-0.5 mr-3 rounded-full w-6 h-6 font-bold text-white text-xs">
+                      3
+                    </span>
+                    <p className="font-medium text-purple-700">
+                      Hãy đồng ý lời mời để được tham gia Prom AI Hub trên Skool
+                    </p>
+                  </div>
+                </div>
+              </div>
+            )}
 
             {/* Notification Message */}
             <div className="bg-blue-50 mb-6 p-4 border border-blue-200 rounded-lg">
