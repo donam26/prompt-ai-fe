@@ -12,7 +12,15 @@ import { ChatSupportButton } from "@/components/ui/chat-support-button";
 
 const inter = Inter({ subsets: ["latin"] });
 
+// Get base URL from environment variable or use default
+const baseUrl =
+  process.env.NEXT_PUBLIC_BASE_URL ||
+  (process.env.VERCEL_URL
+    ? `https://${process.env.VERCEL_URL}`
+    : "https://prom.vn");
+
 export const metadata: Metadata = {
+  metadataBase: new URL(baseUrl),
   title: "Prom - Thư Viện & Nâng Cấp Prompt!",
   description: "Hơn 8,000+ prompts tạo ra từ các chuyên gia về AI",
   keywords: "prompt, AI, ChatGPT, Midjourney, prompt library, AI tools",
