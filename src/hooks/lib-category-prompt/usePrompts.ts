@@ -64,7 +64,7 @@ export const usePrompts = (options: UsePromptsOptions = {}) => {
       });
 
       setPrompts((response.data.data as Prompt[]) || []);
-      setTotalPages(response.data.pagination?.total || 1);
+      setTotalPages(response.data.pagination?.totalPages || 1);
     } catch (err: unknown) {
       const errorMessage =
         err instanceof Error ? err.message : "Có lỗi xảy ra khi tải prompts";

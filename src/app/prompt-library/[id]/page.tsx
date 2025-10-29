@@ -11,12 +11,20 @@ import { PageHeader } from "./modules/PageHeader";
 import { Sidebar, MenuItem } from "./modules/Sidebar";
 import { PromptEditor } from "./modules/PromptEditor";
 import { ResultViewer } from "./modules/ResultViewer";
+import { useAuth } from "@/hooks/useAuth";
+import { ROUTES_URL } from "@/constants/routes-url";
 
 export default function PromptDetailPage() {
   const params = useParams();
   const router = useRouter();
   const searchParams = useSearchParams();
   const promptId = params.id as string;
+  const { user } = useAuth();
+
+  // Check if user has Free subscription
+  const isFreeUser =
+    user?.userSub?.subscription?.nameSub === "Free" ||
+    !user?.userSub?.subscription?.nameSub;
 
   // State management
   const [selectedMenuItem, setSelectedMenuItem] = useState<MenuItem>(() => {
@@ -45,6 +53,16 @@ export default function PromptDetailPage() {
     error: promptError,
     refetch: refetchPrompt,
   } = usePromptDetail(promptId);
+
+  // Redirect to pricing if Free user tries to access premium prompt
+  useEffect(() => {
+    if (prompt && prompt.subType === 2 && isFreeUser) {
+      showToast.error("Bạn cần nâng cấp gói để xem prompt này.");
+      setTimeout(() => {
+        router.push(ROUTES_URL.PRICING);
+      }, 500);
+    }
+  }, [prompt, isFreeUser, router]);
 
   // Use custom hook for prompt streaming
   const { gptLoading, response, setResponse, handleSubmit } =

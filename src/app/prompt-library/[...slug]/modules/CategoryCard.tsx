@@ -4,6 +4,10 @@ import { Category } from "@/types";
 import Link from "next/link";
 import Image from "next/image";
 import { ChevronRight } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useAuth } from "@/hooks/useAuth";
+import { ROUTES_URL } from "@/constants/routes-url";
+import { showToast } from "@/components/ui/toast";
 
 // Constants
 const PREMIUM_BACKGROUND_IMAGE = "/images/backgrounds/bg-over-black.png";
@@ -19,7 +23,27 @@ export const CategoryCard = ({
   link,
   isPremium = false,
 }: CategoryCardProps) => {
+  const router = useRouter();
+  const { user } = useAuth();
   const isComingSoonStatus = category.isComingSoon === true;
+
+  // Check if user has Free subscription
+  const isFreeUser =
+    user?.userSub?.subscription?.nameSub === "Free" ||
+    !user?.userSub?.subscription?.nameSub;
+
+  const handleCardClick = (e: React.MouseEvent) => {
+    // Check if category is premium and user is Free
+    if (isPremium && isFreeUser && !isComingSoonStatus) {
+      e.preventDefault();
+      showToast.error(
+        "Bạn cần nâng cấp gói Premium để truy cập danh mục này. Đang chuyển đến trang giá..."
+      );
+      setTimeout(() => {
+        router.push(ROUTES_URL.PRICING);
+      }, 500);
+    }
+  };
 
   return (
     <div
@@ -40,6 +64,7 @@ export const CategoryCard = ({
     >
       <Link
         href={isComingSoonStatus ? "#" : link}
+        onClick={handleCardClick}
         className={`flex flex-col h-full text-decoration-none ${
           isPremium ? "text-white" : "text-gray-900"
         }`}

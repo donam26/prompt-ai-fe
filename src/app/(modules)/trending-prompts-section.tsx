@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { ROUTES_URL } from "@/constants/routes-url";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -12,6 +13,8 @@ import Image from "next/image";
 import { useLatestPrompts } from "@/hooks/lib-category-prompt";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Pagination, Autoplay } from "swiper/modules";
+import { useAuth } from "@/hooks/useAuth";
+import { showToast } from "@/components/ui/toast";
 
 import "swiper/css";
 import "swiper/css/pagination";
@@ -21,6 +24,8 @@ interface TrendingPromptsSectionProps {
 }
 
 export const TrendingPromptsSection = ({}: TrendingPromptsSectionProps) => {
+  const router = useRouter();
+  const { user } = useAuth();
   const [isMobile, setIsMobile] = useState(false);
 
   const { latestPrompts, isLoading, error } = useLatestPrompts({
@@ -29,6 +34,32 @@ export const TrendingPromptsSection = ({}: TrendingPromptsSectionProps) => {
     // Category ID for Sales
     categoryId: 8,
   });
+
+  // Check if user has Free subscription
+  const isFreeUser =
+    user?.userSub?.subscription?.nameSub === "Free" ||
+    !user?.userSub?.subscription?.nameSub;
+
+  // Handle prompt click with subscription check
+  const handlePromptClick = (prompt: Prompt, e?: React.MouseEvent) => {
+    if (e) {
+      e.preventDefault();
+    }
+
+    // Check if prompt is premium and user is Free
+    if (prompt.subType === 2 && isFreeUser) {
+      showToast.error(
+        "Bạn cần nâng cấp gói Premium để xem prompt này. Đang chuyển đến trang giá..."
+      );
+      setTimeout(() => {
+        router.push(ROUTES_URL.PRICING);
+      }, 500);
+      return;
+    }
+
+    // Navigate to prompt detail if allowed
+    router.push(`${ROUTES_URL.PROMPT_LIBRARY}/${prompt.id}?tab=my-prompt`);
+  };
 
   useEffect(() => {
     const checkMobile = () => {
@@ -148,7 +179,7 @@ export const TrendingPromptsSection = ({}: TrendingPromptsSectionProps) => {
                             <CardTitle className="mb-12 font-bold text-black text-lg line-clamp-3 leading-tight">
                               {prompt.title}
                             </CardTitle>
-                            <div className="text-gray-500 text-sm leading-tight">
+                            <div className="text-gray-500 text-sm line-clamp-5 leading-tight">
                               {prompt.shortDescription}
                             </div>
                           </div>
@@ -159,13 +190,12 @@ export const TrendingPromptsSection = ({}: TrendingPromptsSectionProps) => {
                           </div>
 
                           {/* View Prom Button */}
-                          <Link
-                            href={`${ROUTES_URL.PROMPT_LIBRARY}/${prompt.id}?tab=my-prompt`}
+                          <Button
+                            onClick={e => handlePromptClick(prompt, e)}
+                            className="bg-[#DACDFF] hover:bg-[#5700C6] py-2 rounded-full w-full font-medium text-[#5700C6] hover:text-white"
                           >
-                            <Button className="bg-[#DACDFF] hover:bg-[#5700C6] py-2 rounded-full w-full font-medium text-[#5700C6] hover:text-white">
-                              Xem Prompt
-                            </Button>
-                          </Link>
+                            Xem Prompt
+                          </Button>
                         </CardContent>
                       </Card>
                     </div>
@@ -216,10 +246,10 @@ export const TrendingPromptsSection = ({}: TrendingPromptsSectionProps) => {
                   <CardContent className="gap-4 grid p-0">
                     <div className="gap-4 bg-white p-4 rounded-lg">
                       {/* Title */}
-                      <CardTitle className="mb-12 font-bold text-black text-lg line-clamp-3 leading-tight">
+                      <CardTitle className="mb-12 h-20 font-bold text-black text-lg line-clamp-3 leading-tight">
                         {prompt.title}
                       </CardTitle>
-                      <div className="text-gray-500 text-sm leading-tight">
+                      <div className="text-gray-500 text-sm line-clamp-5 leading-tight">
                         {prompt.shortDescription}
                       </div>
                     </div>
@@ -229,13 +259,12 @@ export const TrendingPromptsSection = ({}: TrendingPromptsSectionProps) => {
                       </p>
                     </div>
                     {/* View Prom Button */}
-                    <Link
-                      href={`${ROUTES_URL.PROMPT_LIBRARY}/${prompt.id}?tab=my-prompt`}
+                    <Button
+                      onClick={e => handlePromptClick(prompt, e)}
+                      className="bg-[#DACDFF] hover:bg-[#5700C6] py-2 rounded-full w-full font-medium text-[#5700C6] hover:text-white"
                     >
-                      <Button className="bg-[#DACDFF] hover:bg-[#5700C6] py-2 rounded-full w-full font-medium text-[#5700C6] hover:text-white">
-                        Xem Prompt
-                      </Button>
-                    </Link>
+                      Xem Prompt
+                    </Button>
                   </CardContent>
                 </Card>
               ))}

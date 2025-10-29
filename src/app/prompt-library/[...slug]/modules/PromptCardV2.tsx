@@ -15,7 +15,7 @@ interface PromptCardV2Props {
   prompt: Prompt;
   favoriteList?: string[];
   favoriteIdsMap?: { [promptId: string]: string };
-  onPromptClick?: (promptId: string | number, prompt: Prompt) => void;
+  onPromptClick?: (promptId: string | number, prompt?: Prompt) => void;
   onFavoriteChange?: () => void;
 }
 
@@ -23,6 +23,7 @@ export const PromptCardV2 = ({
   prompt,
   favoriteList = [],
   favoriteIdsMap = {},
+  onPromptClick,
   onFavoriteChange,
 }: PromptCardV2Props) => {
   const { user } = useAuth();
@@ -32,6 +33,12 @@ export const PromptCardV2 = ({
   );
   const [isTogglingFavorite, setIsTogglingFavorite] = useState(false);
   const router = useRouter();
+
+  // Check if user has Free subscription
+  const isFreeUser =
+    user?.userSub?.subscription?.nameSub === "Free" ||
+    !user?.userSub?.subscription?.nameSub;
+
   const handleToggleFavorite = async (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
@@ -89,8 +96,32 @@ export const PromptCardV2 = ({
   const isMidjourney = prompt.category?.section?.name === "Midjourney";
   const sectionName = isMidjourney ? "Midjourney" : "Chat GPT";
 
+  const handleCardClick = (e: React.MouseEvent) => {
+    // Check if prompt is premium and user is Free
+    if (prompt.subType === 2 && isFreeUser) {
+      e.preventDefault();
+      showToast.error(
+        "Bạn cần nâng cấp gói Premium để xem prompt này. Đang chuyển đến trang giá..."
+      );
+      setTimeout(() => {
+        router.push(ROUTES_URL.PRICING);
+      }, 500);
+      return;
+    }
+
+    // Call parent callback if provided
+    if (onPromptClick) {
+      e.preventDefault();
+      onPromptClick(prompt.id, prompt);
+    }
+  };
+
   return (
-    <Link href={detailUrl} className="flex justify-center h-full no-underline">
+    <Link
+      href={detailUrl}
+      onClick={handleCardClick}
+      className="flex justify-center h-full no-underline"
+    >
       <div className="relative flex flex-col gap-6 bg-gradient-to-br from-purple-50 to-purple-100 hover:shadow-lg p-4 rounded-2xl max-w-[320px] h-full max-h-[460px] transition-all hover:-translate-y-2 duration-300 ease-in-out">
         {/* Header with logo and badges */}
         <div className="flex justify-between items-center">
@@ -178,9 +209,26 @@ export const PromptCardV2 = ({
           onClick={e => {
             e.preventDefault();
             e.stopPropagation();
-            router.push(
-              `${ROUTES_URL.PROMPT_LIBRARY}/${prompt.id}?tab=my-prompt`
-            );
+
+            // Check if prompt is premium and user is Free
+            if (prompt.subType === 2 && isFreeUser) {
+              showToast.error(
+                "Bạn cần nâng cấp gói Premium để xem prompt này. Đang chuyển đến trang giá..."
+              );
+              setTimeout(() => {
+                router.push(ROUTES_URL.PRICING);
+              }, 500);
+              return;
+            }
+
+            // Call parent callback if provided, otherwise use default navigation
+            if (onPromptClick) {
+              onPromptClick(prompt.id, prompt);
+            } else {
+              router.push(
+                `${ROUTES_URL.PROMPT_LIBRARY}/${prompt.id}?tab=my-prompt`
+              );
+            }
           }}
           className="bg-[#DACDFFE5] hover:bg-primary mt-auto px-4 py-3 rounded-full w-full font-semibold text-purple-700 hover:text-white transition-colors"
         >

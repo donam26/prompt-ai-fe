@@ -2,13 +2,14 @@
 
 import { Prompt } from "@/types";
 import Link from "next/link";
-import { getPromptDetailUrl } from "@/constants/routes-url";
+import { getPromptDetailUrl, ROUTES_URL } from "@/constants/routes-url";
 import Image from "next/image";
 import { Heart } from "lucide-react";
 import { useState } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { usePromptFavorites } from "@/hooks";
 import { showToast } from "@/components/ui/toast";
+import { useRouter } from "next/navigation";
 
 interface NavigationState {
   currentPage: number;
@@ -41,11 +42,17 @@ export const PromptCard = ({
   navigationState: _navigationState,
 }: PromptCardProps) => {
   const { user } = useAuth();
+  const router = useRouter();
   const { addFavorite, removeFavorite } = usePromptFavorites();
   const [isFavorited, setIsFavorited] = useState(
     favoriteList.includes(String(prompt.id))
   );
   const [isTogglingFavorite, setIsTogglingFavorite] = useState(false);
+
+  // Check if user has Free subscription
+  const isFreeUser =
+    user?.userSub?.subscription?.nameSub === "Free" ||
+    !user?.userSub?.subscription?.nameSub;
 
   const handleToggleFavorite = async (e: React.MouseEvent) => {
     e.preventDefault();
@@ -91,9 +98,23 @@ export const PromptCard = ({
 
   const detailUrl = getPromptDetailUrl(prompt.id);
 
+  const handleCardClick = (e: React.MouseEvent) => {
+    // Check if prompt is premium and user is Free
+    if (prompt.subType === 2 && isFreeUser) {
+      e.preventDefault();
+      showToast.error(
+        "Bạn cần nâng cấp gói Premium để xem prompt này. Đang chuyển đến trang giá..."
+      );
+      setTimeout(() => {
+        router.push(ROUTES_URL.PRICING);
+      }, 500);
+    }
+  };
+
   return (
     <Link
       href={detailUrl}
+      onClick={handleCardClick}
       className="block no-underline hover:scale-105 transition-transform"
     >
       <div className="relative flex flex-col bg-white shadow-md hover:shadow-xl rounded-xl h-full overflow-hidden transition-shadow">

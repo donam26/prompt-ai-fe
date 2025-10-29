@@ -8,6 +8,7 @@ import { MultiSelect } from "@/components/ui/multi-select";
 import {
   getPromptDetailUrlWithTab,
   getMidjourneyPromptDetailUrlWithTab,
+  ROUTES_URL,
 } from "@/constants/routes-url";
 import { Pagination } from "@/components/ui/pagination";
 import { PromptCardV2 } from "./modules";
@@ -21,11 +22,14 @@ import {
 } from "@/hooks/lib-category-prompt";
 import { categoryService } from "@/services/admin/categories";
 import { Category } from "@/types";
+import { useAuth } from "@/hooks/useAuth";
+import { showToast } from "@/components/ui/toast";
 
 export default function ListPromptsPage() {
   const params = useParams();
   const searchParams = useSearchParams();
   const router = useRouter();
+  const { user } = useAuth();
 
   // Extract slug and ID from params
   const slug = params.slug as string[];
@@ -47,6 +51,11 @@ export default function ListPromptsPage() {
   const [currentPage, setCurrentPage] = useState(0);
   const [pageSize] = useState(12);
 
+  // Check if user has Free subscription
+  const isFreeUser =
+    user?.userSub?.subscription?.nameSub === "Free" ||
+    !user?.userSub?.subscription?.nameSub;
+
   // Fetch category
   useEffect(() => {
     const fetchCategory = async () => {
@@ -55,7 +64,18 @@ export default function ListPromptsPage() {
       try {
         setIsLoadingCategory(true);
         const response = await categoryService.getCategory(categoryId);
-        setCategory(response.data as Category);
+        const categoryData = response.data as Category;
+        setCategory(categoryData);
+
+        // Redirect to pricing if Free user tries to access premium category
+        if (categoryData.type === "premium" && isFreeUser) {
+          showToast.error(
+            "Bạn cần nâng cấp gói Premium để truy cập danh mục này. Đang chuyển đến trang giá..."
+          );
+          setTimeout(() => {
+            router.push(ROUTES_URL.PRICING);
+          }, 500);
+        }
       } catch (error) {
         console.error("Error fetching category:", error);
       } finally {
@@ -64,7 +84,7 @@ export default function ListPromptsPage() {
     };
 
     fetchCategory();
-  }, [categoryId]);
+  }, [categoryId, isFreeUser, router]);
 
   // Memoized industry and topic strings
   const industryIdsString = useMemo(() => industryIds.join(","), [industryIds]);
@@ -184,7 +204,18 @@ export default function ListPromptsPage() {
   };
 
   // Handle prompt card click
-  const handlePromptClick = (promptId: string | number) => {
+  const handlePromptClick = (promptId: string | number, prompt?: any) => {
+    // Check if prompt is premium and user is Free
+    if (prompt?.subType === 2 && isFreeUser) {
+      showToast.error(
+        "Bạn cần nâng cấp gói Premium để xem prompt này. Đang chuyển đến trang giá..."
+      );
+      setTimeout(() => {
+        router.push(ROUTES_URL.PRICING);
+      }, 500);
+      return;
+    }
+
     const isMidjourney = category?.section?.name === "Midjourney";
     const detailUrl = isMidjourney
       ? getMidjourneyPromptDetailUrlWithTab(promptId, MenuItem.MY_PROMPT)
@@ -297,7 +328,9 @@ export default function ListPromptsPage() {
                   prompt={prompt}
                   favoriteList={favoritePrompts}
                   favoriteIdsMap={favoriteIdsMap}
-                  onPromptClick={handlePromptClick}
+                  onPromptClick={(promptId, promptData) =>
+                    handlePromptClick(promptId, promptData || prompt)
+                  }
                   onFavoriteChange={handleFavoriteChange}
                 />
               ))}
@@ -333,7 +366,9 @@ export default function ListPromptsPage() {
                     prompt={prompt}
                     favoriteList={favoritePrompts}
                     favoriteIdsMap={favoriteIdsMap}
-                    onPromptClick={handlePromptClick}
+                    onPromptClick={(promptId, promptData) =>
+                      handlePromptClick(promptId, promptData || prompt)
+                    }
                     onFavoriteChange={handleFavoriteChange}
                   />
                 ))}
