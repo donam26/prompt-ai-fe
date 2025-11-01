@@ -207,9 +207,7 @@ export default function ListPromptsPage() {
   const handlePromptClick = (promptId: string | number, prompt?: any) => {
     // Check if prompt is premium and user is Free
     if (prompt?.subType === 2 && isFreeUser) {
-      showToast.error(
-        "Bạn cần nâng cấp gói Premium để xem prompt này. Đang chuyển đến trang giá..."
-      );
+      showToast.error("Bạn cần nâng cấp gói Premium để xem prompt này");
       setTimeout(() => {
         router.push(ROUTES_URL.PRICING);
       }, 500);

@@ -155,7 +155,7 @@ export const Sidebar = ({
       {/* Desktop Sidebar - Vertical on left */}
       <aside
         className={cn(
-          "hidden sm:block z-40 sm:z-auto relative bg-white shadow-md border-gray-200 border-t border-r overflow-x-hidden overflow-y-auto transition-all duration-300 ease-in-out",
+          "hidden sm:block z-40 sm:z-auto relative bg-white shadow-md border-gray-200 border-t border-r rounded-2xl overflow-x-hidden overflow-y-auto transition-all duration-300 ease-in-out",
           isCollapsed ? "w-16 sm:w-[84px]" : "w-full sm:w-64 md:w-72 lg:w-80",
           "h-screen min-h-screen"
         )}
@@ -164,7 +164,7 @@ export const Sidebar = ({
           {/* Sidebar Header */}
           <div
             className={cn(
-              "flex justify-end items-center p-6 border-gray-200 border-b transition-all duration-200"
+              "flex justify-end items-center p-6 border-gray-200 border-b rounded-t-2xl transition-all duration-200"
             )}
           >
             <Button

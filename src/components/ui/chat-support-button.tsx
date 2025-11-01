@@ -16,7 +16,7 @@ import { Button } from "./button";
 import { showToast } from "./toast";
 import { useAuth } from "@/hooks/useAuth";
 import { ROUTES_URL } from "@/constants/routes-url";
-import { feedbackService } from "@/services";
+import { useFeedbackMutation } from "@/hooks/useFeedbackMutation";
 
 export const ChatSupportButton = () => {
   const router = useRouter();
@@ -26,7 +26,12 @@ export const ChatSupportButton = () => {
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [message, setMessage] = useState("");
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const {
+    submitFeedback,
+    isSubmitting,
+    errorMessage: submitErrorMessage,
+    resetFeedbackState,
+  } = useFeedbackMutation();
 
   useEffect(() => {
     const toggleVisibility = () => {
@@ -43,12 +48,19 @@ export const ChatSupportButton = () => {
   }, []);
 
   const handleOpenDialog = () => {
+    resetFeedbackState();
+
     if (!isLoggedIn) {
       showToast.error("Vui lòng đăng nhập để sử dụng chức năng này");
       router.push(ROUTES_URL.LOGIN);
       return;
     }
     setIsOpen(true);
+  };
+
+  const handleCloseDialog = () => {
+    setIsOpen(false);
+    resetFeedbackState();
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -64,10 +76,8 @@ export const ChatSupportButton = () => {
       return;
     }
 
-    setIsSubmitting(true);
-
     try {
-      await feedbackService.submitFeedback({
+      await submitFeedback({
         name: name.trim(),
         phone: phone.trim(),
         email: user?.email || "",
@@ -78,16 +88,16 @@ export const ChatSupportButton = () => {
         "Gửi phản hồi thành công! Chúng tôi sẽ liên hệ lại sớm nhất có thể."
       );
 
-      // Close dialog and reset form
-      setIsOpen(false);
+      handleCloseDialog();
       setName("");
       setPhone("");
       setMessage("");
-    } catch (error: any) {
+    } catch (error) {
       console.error("Feedback submission error:", error);
-      showToast.error("Có lỗi xảy ra khi gửi phản hồi. Vui lòng thử lại sau.");
-    } finally {
-      setIsSubmitting(false);
+      showToast.error(
+        submitErrorMessage ||
+          "Có lỗi xảy ra khi gửi phản hồi. Vui lòng thử lại sau."
+      );
     }
   };
 
@@ -95,37 +105,16 @@ export const ChatSupportButton = () => {
     <>
       <button
         onClick={handleOpenDialog}
-        className={`fixed right-6 z-50 flex items-center justify-center bg-gradient-to-r from-purple-600 to-purple-800 hover:from-purple-700 hover:to-purple-900 shadow-2xl backdrop-blur-sm p-4 border-2 border-white/20 rounded-full text-white hover:scale-105 transition-all duration-300 transform disabled:pointer-events-none disabled:opacity-50 ${
+        className={`fixed right-6 z-50 flex items-center justify-center bg-gradient-to-r from-purple-600 to-purple-800 hover:from-purple-700 hover:to-purple-900 backdrop-blur-sm border-2 border-white/20 rounded-full text-white hover:scale-105 transition-all duration-300 transform disabled:pointer-events-none disabled:opacity-50 min-w-[56px] min-h-[56px] w-14 h-14 shadow-[0_8px_32px_rgba(139,92,246,0.4),0_0_0_1px_rgba(255,255,255,0.1)] ${
           isAtBottom ? "bottom-24" : "bottom-6"
         }`}
         aria-label="Liên hệ hỗ trợ"
-        style={{
-          minWidth: "56px",
-          minHeight: "56px",
-          width: "56px",
-          height: "56px",
-          boxShadow:
-            "0 8px 32px rgba(139, 92, 246, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.1)",
-        }}
       >
-        <Mail
-          className="drop-shadow-sm w-6 h-6"
-          style={{ pointerEvents: "none" }}
-        />
+        <Mail className="drop-shadow-sm w-6 h-6 pointer-events-none" />
       </button>
 
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
-        <DialogContent
-          className="sm:max-w-md"
-          style={{
-            position: "fixed",
-            top: "auto",
-            bottom: "24px",
-            right: "24px",
-            left: "auto",
-            transform: "none",
-          }}
-        >
+        <DialogContent className="top-auto right-6 bottom-6 left-auto fixed w-[calc(100%-3rem)] sm:w-auto sm:max-w-md transform-none">
           <DialogHeader>
             <DialogTitle>Liên hệ hỗ trợ</DialogTitle>
             <DialogDescription>
@@ -184,7 +173,7 @@ export const ChatSupportButton = () => {
               <Button
                 type="button"
                 variant="outline"
-                onClick={() => setIsOpen(false)}
+                onClick={handleCloseDialog}
                 disabled={isSubmitting}
               >
                 Hủy

@@ -31,6 +31,7 @@ export * from "./user/useFavoritePrompts";
 
 // Other hooks
 export * from "./useContact";
+export * from "./useFeedbackMutation";
 
 // Prompt favorites hooks
 export * from "./prompt-favorites/usePromptFavorites";

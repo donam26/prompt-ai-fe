@@ -1,18 +1,15 @@
-/**
- * Subscription Types Constants
- * Centralized constants for subscription types used across the application
- */
-
 import type { User } from "@/types";
+import {
+  ESubscriptionType,
+  SUBSCRIPTION_PLAN_IDS,
+  VNPAY_SUBSCRIPTION_PLAN_IDS,
+} from "./subscription-core";
 
-export const ESubscriptionType = {
-  FREE: 1,
-  PREMIUM: 2,
-  TOKEN_PRO: 3,
-  LEGACY: 4,
-  PRO: 5,
-  BUSINESS: 11, // Gói Doanh Nghiệp
-} as const;
+export {
+  ESubscriptionType,
+  SUBSCRIPTION_PLAN_IDS,
+  VNPAY_SUBSCRIPTION_PLAN_IDS,
+};
 
 export const SUBSCRIPTION_NAMES = {
   [ESubscriptionType.FREE]: "Free",

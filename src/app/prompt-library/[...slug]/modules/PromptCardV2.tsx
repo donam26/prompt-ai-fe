@@ -83,6 +83,11 @@ export const PromptCardV2 = ({
 
   const detailUrl = getPromptDetailUrl(prompt.id);
 
+  const hasOptimizationGuide = Boolean(
+    typeof prompt.optimizationGuide === "string" &&
+      prompt.optimizationGuide.trim().length > 0
+  );
+
   // Check if prompt is new (created within last 7 days)
   const isNew = (() => {
     const createdAt = new Date(prompt.createdAt || "");
@@ -97,12 +102,15 @@ export const PromptCardV2 = ({
   const sectionName = isMidjourney ? "Midjourney" : "Chat GPT";
 
   const handleCardClick = (e: React.MouseEvent) => {
+    if (!hasOptimizationGuide) {
+      e.preventDefault();
+      return;
+    }
+
     // Check if prompt is premium and user is Free
     if (prompt.subType === 2 && isFreeUser) {
       e.preventDefault();
-      showToast.error(
-        "Bạn cần nâng cấp gói Premium để xem prompt này. Đang chuyển đến trang giá..."
-      );
+      showToast.error("Bạn cần nâng cấp gói Premium để xem prompt này");
       setTimeout(() => {
         router.push(ROUTES_URL.PRICING);
       }, 500);
@@ -122,7 +130,7 @@ export const PromptCardV2 = ({
       onClick={handleCardClick}
       className="flex justify-center h-full no-underline"
     >
-      <div className="relative flex flex-col gap-6 bg-gradient-to-br from-purple-50 to-purple-100 hover:shadow-lg p-4 rounded-2xl max-w-[320px] h-full max-h-[460px] transition-all hover:-translate-y-2 duration-300 ease-in-out">
+      <div className="relative flex flex-col gap-6 bg-gradient-to-br from-purple-50 to-purple-100 hover:shadow-lg p-4 rounded-2xl max-w-[320px] h-full transition-all hover:-translate-y-2 duration-300 ease-in-out">
         {/* Header with logo and badges */}
         <div className="flex justify-between items-center">
           {/* Logo */}
@@ -185,12 +193,12 @@ export const PromptCardV2 = ({
           <p className="mb-2 text-gray-500 text-sm">{sectionName}</p>
 
           {/* Title */}
-          <h3 className="mb-3 font-bold text-gray-900 text-lg line-clamp-2">
+          <h3 className="mb-8 font-bold text-gray-900 text-lg line-clamp-5">
             {prompt.title}
           </h3>
 
           {/* Description */}
-          <p className="flex-1 mb-4 text-gray-700 text-sm line-clamp-3">
+          <p className="flex-1 mb-4 text-gray-700 text-sm line-clamp-5">
             {prompt.shortDescription || prompt.content}
           </p>
         </div>
@@ -206,15 +214,19 @@ export const PromptCardV2 = ({
 
         {/* Action button */}
         <button
+          disabled={!hasOptimizationGuide}
           onClick={e => {
             e.preventDefault();
             e.stopPropagation();
 
+            if (!hasOptimizationGuide) {
+              return;
+            }
+
             // Check if prompt is premium and user is Free
             if (prompt.subType === 2 && isFreeUser) {
-              showToast.error(
-                "Bạn cần nâng cấp gói Premium để xem prompt này. Đang chuyển đến trang giá..."
-              );
+              e.preventDefault();
+              showToast.error("Bạn cần nâng cấp gói Premium để xem prompt này");
               setTimeout(() => {
                 router.push(ROUTES_URL.PRICING);
               }, 500);
@@ -230,7 +242,11 @@ export const PromptCardV2 = ({
               );
             }
           }}
-          className="bg-[#DACDFFE5] hover:bg-primary mt-auto px-4 py-3 rounded-full w-full font-semibold text-purple-700 hover:text-white transition-colors"
+          className={`bg-[#DACDFFE5] mt-auto px-4 py-3 rounded-full w-full font-semibold text-purple-700 transition-colors ${
+            hasOptimizationGuide
+              ? "hover:bg-primary hover:text-white"
+              : "opacity-60 cursor-not-allowed"
+          }`}
         >
           Xem Prompt
         </button>
