@@ -90,7 +90,7 @@ export const PricingCardV2 = ({
     <div
       className={cn(
         "relative hover:shadow-xl p-4 sm:p-5 rounded-[36px] w-full font-medium text-center transition-all duration-300",
-        "sm:min-w-[315px] min-w-0 max-w-[350px]",
+        "sm:min-w-[315px] min-w-0 max-w-[500px]",
         plan.isPopular
           ? "popular-card bg-[#111116] text-white shadow-2xl sm:scale-105"
           : "pricing-card bg-gradient-to-br from-white via-[#E2D0FF] to-[#E2D0FF] text-[#1D1E25] shadow-[0_4px_10px_rgba(0,0,0,0.1)]",
