@@ -7,6 +7,7 @@ import { ContactModal } from "@/components/user/ContactModal";
 import { PaymentMethod } from "@/types/enums/payment-method";
 import { VNPaySection } from "./modules/VNPaySection";
 import { usePricingSubscriptions } from "@/hooks/usePricingSubscriptions";
+import { PaymentTutorialSection } from "./modules/payment-tutorial-section";
 
 const SKOOL_COMMUNITY_URL =
   "https://www.skool.com/prom-aihub/about?ref=1a6136e6caba48bcaf8d6a8120bc0cb8";
@@ -42,6 +43,7 @@ export default function PricingPage() {
 
   return (
     <div className="mx-auto p-4 min-h-screen container">
+      <PaymentTutorialSection />
       <VNPaySection
         paymentMethod={PaymentMethod.VNPAY}
         onSelectPlan={handleSelectPlan}
