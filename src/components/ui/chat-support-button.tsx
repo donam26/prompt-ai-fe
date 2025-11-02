@@ -34,20 +34,28 @@ export const ChatSupportButton = () => {
   } = useFeedbackMutation();
 
   useEffect(() => {
-    const toggleVisibility = () => {
-      const scrollTop = window.pageYOffset;
-      const windowHeight = window.innerHeight;
-      const documentHeight = document.documentElement.scrollHeight;
+    let ticking = false;
 
-      // Check if user is near bottom (within 100px of bottom)
-      setIsAtBottom(documentHeight - scrollTop - windowHeight < 100);
+    const toggleVisibility = (): void => {
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          const scrollTop = window.pageYOffset || window.scrollY;
+          const windowHeight = window.innerHeight;
+          const documentHeight = document.documentElement.scrollHeight;
+
+          // Check if user is near bottom (within 100px of bottom)
+          setIsAtBottom(documentHeight - scrollTop - windowHeight < 100);
+          ticking = false;
+        });
+        ticking = true;
+      }
     };
 
-    window.addEventListener("scroll", toggleVisibility);
+    window.addEventListener("scroll", toggleVisibility, { passive: true });
     return () => window.removeEventListener("scroll", toggleVisibility);
   }, []);
 
-  const handleOpenDialog = () => {
+  const handleOpenDialog = (): void => {
     resetFeedbackState();
 
     if (!isLoggedIn) {
@@ -55,15 +63,16 @@ export const ChatSupportButton = () => {
       router.push(ROUTES_URL.LOGIN);
       return;
     }
+
     setIsOpen(true);
   };
 
-  const handleCloseDialog = () => {
+  const handleCloseDialog = (): void => {
     setIsOpen(false);
     resetFeedbackState();
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent): Promise<void> => {
     e.preventDefault();
 
     if (!name.trim()) {

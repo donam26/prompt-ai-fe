@@ -9,8 +9,13 @@ import { ConditionalMain } from "@/components/layout/conditional-main";
 import { CustomAuthSyncWrapper } from "@/app/(modules)/custom-auth-sync-wrapper";
 import { BackToTopButton } from "@/components/ui/back-to-top-button";
 import { ChatSupportButton } from "@/components/ui/chat-support-button";
+import { ErrorBoundary } from "@/components/ui/error-boundary";
 
-const inter = Inter({ subsets: ["latin"] });
+const inter = Inter({
+  subsets: ["latin"],
+  display: "swap",
+  preload: true,
+});
 
 // Get base URL from environment variable or use default
 const baseUrl =
@@ -68,20 +73,34 @@ export default function RootLayout({
     <html lang="vi">
       <head>
         <meta name="google-adsense-account" content="ca-pub-2351800777200822" />
+        <link
+          rel="preload"
+          href="/images/home/background.png"
+          as="image"
+          type="image/png"
+        />
+        <link
+          rel="preload"
+          href="/images/home/slider-home.png"
+          as="image"
+          type="image/png"
+        />
       </head>
       <body className={inter.className}>
-        <NextAuthProvider>
-          <CustomAuthSyncWrapper>
-            <div className="flex flex-col min-h-screen">
-              <Header />
-              <ConditionalMain>{children}</ConditionalMain>
-              <Footer />
-            </div>
-            <BackToTopButton />
-            <ChatSupportButton />
-            <Toast />
-          </CustomAuthSyncWrapper>
-        </NextAuthProvider>
+        <ErrorBoundary>
+          <NextAuthProvider>
+            <CustomAuthSyncWrapper>
+              <div className="flex flex-col min-h-screen">
+                <Header />
+                <ConditionalMain>{children}</ConditionalMain>
+                <Footer />
+              </div>
+              <BackToTopButton />
+              <ChatSupportButton />
+              <Toast />
+            </CustomAuthSyncWrapper>
+          </NextAuthProvider>
+        </ErrorBoundary>
       </body>
     </html>
   );

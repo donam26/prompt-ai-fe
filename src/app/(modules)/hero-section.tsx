@@ -7,7 +7,7 @@ import { ArrowRightIcon } from "lucide-react";
 export const HeroSection = () => {
   return (
     <section
-      className="relative bg-cover bg-no-repeat bg-center px-4 pt-24 md:pt-36 pb-8 lg:pb-10"
+      className="relative bg-cover bg-no-repeat bg-center px-4 pt-24 md:pt-36 pb-8 lg:pb-10 min-h-[400px] sm:min-h-[500px] md:min-h-[600px]"
       style={{
         backgroundImage: "url('/images/home/background.png')",
       }}

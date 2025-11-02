@@ -15,13 +15,25 @@ export function MainContent({
   const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
-    const checkScreenSize = () => {
+    const checkScreenSize = (): void => {
       setIsMobile(window.innerWidth < 1024);
     };
 
     checkScreenSize();
-    window.addEventListener("resize", checkScreenSize);
-    return () => window.removeEventListener("resize", checkScreenSize);
+
+    let ticking = false;
+    const handleResize = (): void => {
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          checkScreenSize();
+          ticking = false;
+        });
+        ticking = true;
+      }
+    };
+
+    window.addEventListener("resize", handleResize, { passive: true });
+    return () => window.removeEventListener("resize", handleResize);
   }, []);
 
   const contentClasses = cn(

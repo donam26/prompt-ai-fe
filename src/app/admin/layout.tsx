@@ -23,6 +23,7 @@ export default function AdminLayout({
     }
   }, [isLoading, isAdmin, router]);
 
+  // Early returns for better readability
   if (isLoading) {
     return <Loading type={LOADING_TYPE.PAGE} text="Đang tải..." />;
   }
