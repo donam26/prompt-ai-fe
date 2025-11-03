@@ -16,6 +16,7 @@ import {
   LAYOUT_LABELS,
   LAYOUT_CONFIG,
 } from "@/constants/layout";
+import { trackInstallExtension } from "@/lib/ga";
 
 interface DesktopHeaderProps {
   readonly className?: string;
@@ -69,12 +70,26 @@ export const DesktopHeader = ({
       <nav className="flex items-center gap-4 lg:gap-8">
         {LAYOUT_NAVIGATION.items.map(item => {
           if (item.isExternal) {
+            const handleExternalClick = () => {
+              // Track extension install if it's a Chrome extension link
+              if (item.href.includes("chromewebstore")) {
+                const browser = navigator.userAgent.includes("Chrome")
+                  ? "chrome"
+                  : "other";
+                trackInstallExtension({
+                  who: user?.email || "guest",
+                  browser,
+                });
+              }
+            };
+
             return (
               <a
                 key={item.href}
                 href={item.href}
                 target="_blank"
                 rel="noopener noreferrer"
+                onClick={handleExternalClick}
                 className="flex items-center gap-1 font-bold text-gray-700 hover:text-[#5700c6] text-base transition-all duration-200"
               >
                 {item.label}

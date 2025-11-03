@@ -33,7 +33,7 @@ export function AdminPageLayout({
       {/* Page Header */}
       <div className="admin-page-header">
         <div className="flex justify-between items-center">
-          <div className="space-y-1">
+          <div className="space-y-1 py-4">
             <h1 className="mb-2 font-bold text-gray-900 dark:text-gray-100 text-3xl">
               {title}
             </h1>

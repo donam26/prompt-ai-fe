@@ -3,13 +3,25 @@ import { CTAButton } from "@/components/ui";
 import { CHROME_EXTENSION_URL } from "@/constants/homepage";
 import { ArrowRightIcon } from "lucide-react";
 import Image from "next/image";
+import { useAuth } from "@/hooks/useAuth";
+import { trackInstallExtension } from "@/lib/ga";
 
 interface Props {
   className?: string;
 }
 
 export const CTABannerSection: React.FC<Props> = ({ className = "" }) => {
+  const { user } = useAuth();
+
   const handleClick = () => {
+    // Track extension install event
+    const browser = navigator.userAgent.includes("Chrome") ? "chrome" : "other";
+    trackInstallExtension({
+      who: user?.email || "guest",
+      browser,
+    });
+
+    // Open extension install page
     window.open(CHROME_EXTENSION_URL, "_blank");
   };
 

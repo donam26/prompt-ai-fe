@@ -6,9 +6,12 @@ import { ArrowRightIcon } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { ROUTES_URL } from "@/constants/routes-url";
+import { useAuth } from "@/hooks/useAuth";
+import { trackInstallExtension } from "@/lib/ga";
 
 const PromptLibrarySection = () => {
   const router = useRouter();
+  const { user } = useAuth();
   return (
     <div className="gap-6 grid grid-cols-1 lg:grid-cols-2">
       {/* Left Section - Prompt Library Discovery */}
@@ -73,6 +76,16 @@ const PromptLibrarySection = () => {
             variant="gradient"
             size="lg"
             onClick={() => {
+              // Track extension install event
+              const browser = navigator.userAgent.includes("Chrome")
+                ? "chrome"
+                : "other";
+              trackInstallExtension({
+                who: user?.email || "guest",
+                browser,
+              });
+
+              // Open extension install page
               window.open(CHROME_EXTENSION_URL, "_blank");
             }}
             icon={

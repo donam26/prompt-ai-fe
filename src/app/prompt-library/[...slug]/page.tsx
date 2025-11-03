@@ -70,7 +70,7 @@ export default function ListPromptsPage() {
         // Redirect to pricing if Free user tries to access premium category
         if (categoryData.type === "premium" && isFreeUser) {
           showToast.error(
-            "Bạn cần nâng cấp gói Premium để truy cập danh mục này. Đang chuyển đến trang giá..."
+            "Bạn cần nâng cấp gói Premium để truy cập danh mục này"
           );
           setTimeout(() => {
             router.push(ROUTES_URL.PRICING);

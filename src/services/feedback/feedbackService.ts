@@ -12,9 +12,9 @@ export interface FeedbackData {
 }
 
 /**
- * FeedbackService extending BaseService
+ * UserFeedbackService extending BaseService (for user-facing feedback submission)
  */
-export class FeedbackService extends BaseService {
+export class UserFeedbackService extends BaseService {
   constructor() {
     super(ENDPOINTS.FEEDBACK.BASE);
   }
@@ -28,4 +28,4 @@ export class FeedbackService extends BaseService {
 }
 
 // Export singleton instance
-export const feedbackService = new FeedbackService();
+export const userFeedbackService = new UserFeedbackService();

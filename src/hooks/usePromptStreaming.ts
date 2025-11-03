@@ -6,6 +6,7 @@ import { ROUTES_URL } from "@/constants/routes-url";
 import { MenuItem } from "@/app/prompt-library/[id]/modules/Sidebar";
 import { Prompt } from "@/types";
 import { PromptService } from "@/services/promptService";
+import { trackRunPrompt } from "@/lib/ga";
 
 interface UsePromptStreamingProps {
   prompt: Prompt | null;
@@ -131,6 +132,14 @@ export const usePromptStreaming = ({
         selectedMenuItem,
         prompt
       );
+
+      // Track prompt run event for analytics
+      if (user?.email) {
+        trackRunPrompt({
+          who: user.email,
+          prompt_type: promptType,
+        });
+      }
 
       await PromptService.streamPrompt(
         request,

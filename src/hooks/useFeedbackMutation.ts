@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useState } from "react";
-import { feedbackService } from "@/services";
+import { userFeedbackService } from "@/services/feedback/feedbackService";
 
 interface SubmitFeedbackInput {
   name: string;
@@ -26,7 +26,7 @@ export const useFeedbackMutation = (): SubmitFeedbackResult => {
       setIsSubmitting(true);
       setErrorMessage("");
 
-      await feedbackService.submitFeedback(input);
+      await userFeedbackService.submitFeedback(input);
     } catch (error) {
       const message =
         error instanceof Error

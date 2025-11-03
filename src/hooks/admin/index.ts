@@ -40,3 +40,6 @@ export * from "./useContacts";
 
 // Send Mail hooks
 export * from "./useSendMail";
+
+// Feedback hooks
+export * from "./useFeedback";

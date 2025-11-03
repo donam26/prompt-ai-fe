@@ -19,6 +19,7 @@ import { ROUTES_URL } from "@/constants/routes-url";
 import { useLoginQuery } from "@/hooks/auth/useLoginQuery";
 import { useAuthRedirect } from "@/hooks/useAuthRedirect";
 import { AuthLoading } from "@/components/ui/auth-loading";
+import { trackLogin } from "@/lib/ga";
 
 function LoginContent() {
   const { isLoading: isLoginLoading, mutate: loginUser } = useLoginQuery();
@@ -51,9 +52,13 @@ function LoginContent() {
     loginUser(email);
   };
 
-  const handleGoogleLogin = async () => {
+  const handleGoogleLogin = async (): Promise<void> => {
     try {
       setIsGoogleLoading(true);
+
+      // Track Google login attempt
+      trackLogin("google");
+
       await signIn("google", {
         callbackUrl: ROUTES_URL.HOME,
         redirect: true,

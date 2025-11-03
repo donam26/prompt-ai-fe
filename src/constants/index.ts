@@ -18,5 +18,6 @@ export * from "./payment-status";
 export * from "./coupon-status";
 export * from "./contacts";
 export * from "./contact-status";
+export * from "./feedbacks";
 export * from "./mentors";
 export * from "./subscription-core";

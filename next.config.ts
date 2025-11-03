@@ -18,6 +18,7 @@ const nextConfig: NextConfig = {
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
     minimumCacheTTL: 86400,
     unoptimized: false,
+    qualities: [75, 85, 90, 100],
   },
 };
 

@@ -20,6 +20,9 @@ export * from "./payment";
 // Contact entity
 export * from "./contact";
 
+// Feedback entity
+export * from "./feedback";
+
 // GPT entity
 export * from "./gpt";
 

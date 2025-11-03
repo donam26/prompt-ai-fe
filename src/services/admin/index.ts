@@ -14,3 +14,4 @@ export * from "./sections";
 export * from "./payments";
 export * from "./categories";
 export * from "./send-mails/sendMailService";
+export * from "./feedbacks";

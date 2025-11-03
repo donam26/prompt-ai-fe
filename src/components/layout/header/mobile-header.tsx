@@ -18,6 +18,7 @@ import {
   LAYOUT_LABELS,
   LAYOUT_CONFIG,
 } from "@/constants/layout";
+import { trackInstallExtension } from "@/lib/ga";
 
 interface MobileHeaderProps {
   readonly className?: string;
@@ -139,6 +140,20 @@ export const MobileHeader = ({
                 <nav className="space-y-2">
                   {LAYOUT_NAVIGATION.items.map(item => {
                     if (item.isExternal) {
+                      const handleExternalClick = () => {
+                        setIsMobileMenuOpen(false);
+                        // Track extension install if it's a Chrome extension link
+                        if (item.href.includes("chromewebstore")) {
+                          const browser = navigator.userAgent.includes("Chrome")
+                            ? "chrome"
+                            : "other";
+                          trackInstallExtension({
+                            who: user?.email || "guest",
+                            browser,
+                          });
+                        }
+                      };
+
                       return (
                         <a
                           key={item.href}
@@ -146,7 +161,7 @@ export const MobileHeader = ({
                           target="_blank"
                           rel="noopener noreferrer"
                           className="flex justify-center items-center hover:bg-gray-50 px-4 py-3 rounded-lg w-full font-bold text-gray-700 hover:text-[#5700c6] text-base hover:scale-105 transition-all duration-300 transform"
-                          onClick={() => setIsMobileMenuOpen(false)}
+                          onClick={handleExternalClick}
                         >
                           {item.label}
                         </a>

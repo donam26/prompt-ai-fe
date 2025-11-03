@@ -5,6 +5,7 @@ import { showToast } from "@/components/ui/toast";
 import { transformUserData } from "@/utils/user-data-transform";
 import { useAuth } from "@/hooks/useAuth";
 import { ROUTES_URL, getVerifyOTPUrl } from "@/constants";
+import { trackLogin } from "@/lib/ga";
 
 interface UseLoginQueryResult {
   isLoading: boolean;
@@ -48,6 +49,9 @@ export const useLoginQuery = (): UseLoginQueryResult => {
           const userData = transformUserData(user);
 
           await login(userData, token);
+
+          // Track login event
+          trackLogin("email");
 
           showToast.success(data.message || "Đăng nhập thành công!", {
             title: "Đăng nhập thành công",

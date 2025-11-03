@@ -46,3 +46,6 @@ export * from "./coupon";
 
 // Contact types
 export * from "./contact";
+
+// Feedback types
+export * from "./feedback";

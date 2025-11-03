@@ -9,6 +9,21 @@ interface SendMailResponse {
   failedEmails?: string[];
 }
 
+interface MailLog {
+  readonly id: string;
+  readonly email: string;
+  readonly subject: string;
+  readonly status: "success" | "failed";
+  readonly timestamp: string;
+  readonly createdAt?: string;
+}
+
+interface MailLogsResponse {
+  readonly data: MailLog[];
+  readonly total: number;
+  readonly totalPages: number;
+}
+
 export const sendMailService = {
   sendMail: async (data: SendMailRequest): Promise<SendMailResponse> => {
     const response = await apiClient.post("/contact/survey", data);
@@ -29,6 +44,24 @@ export const sendMailService = {
         "Content-Type": "multipart/form-data",
       },
     });
+    return response.data;
+  },
+
+  getMailLogs: async (params?: {
+    pageIndex?: number;
+    pageSize?: number;
+  }): Promise<MailLogsResponse> => {
+    const queryParams = new URLSearchParams();
+    if (params?.pageIndex) {
+      queryParams.append("pageIndex", String(params.pageIndex));
+    }
+    if (params?.pageSize) {
+      queryParams.append("pageSize", String(params.pageSize));
+    }
+
+    const response = await apiClient.get(
+      `/admin/mail-logs?${queryParams.toString()}`
+    );
     return response.data;
   },
 };
