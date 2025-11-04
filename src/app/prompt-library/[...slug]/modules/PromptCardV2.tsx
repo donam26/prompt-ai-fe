@@ -193,12 +193,12 @@ export const PromptCardV2 = ({
           <p className="mb-2 text-gray-500 text-sm">{sectionName}</p>
 
           {/* Title */}
-          <h3 className="mb-8 font-bold text-gray-900 text-lg line-clamp-5">
+          <h3 className="mb-3 font-bold text-gray-900 text-lg line-clamp-5">
             {prompt.title}
           </h3>
 
           {/* Description */}
-          <p className="flex-1 mb-4 text-gray-700 text-sm line-clamp-5">
+          <p className="flex-1 max-h-[6rem] overflow-y-auto text-gray-700 text-sm">
             {prompt.shortDescription || prompt.content}
           </p>
         </div>
