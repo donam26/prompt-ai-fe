@@ -15,7 +15,7 @@ import { ArrowLeft, CreditCard, Shield, CheckCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { SKOOL_COMMUNITY_URL } from "@/constants/homepage";
 
-function CheckoutContent() {
+function CheckoutContentInner() {
   const router = useRouter();
   const { checkoutData, isLoading, error } = useCheckoutData();
   const { subscriptions } = usePricingSubscriptions();
@@ -434,7 +434,7 @@ function CheckoutContent() {
   );
 }
 
-export default function CheckoutPage() {
+function CheckoutContent() {
   return (
     <Suspense
       fallback={
@@ -446,7 +446,11 @@ export default function CheckoutPage() {
         </div>
       }
     >
-      <CheckoutContent />
+      <CheckoutContentInner />
     </Suspense>
   );
+}
+
+export default function CheckoutPage() {
+  return <CheckoutContent />;
 }

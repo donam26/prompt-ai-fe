@@ -7,10 +7,12 @@ import { NextAuthProvider } from "@/providers/NextAuthProvider";
 import { Toast } from "@/components/ui/toast";
 import { Header, Footer } from "@/components/layout";
 import { ConditionalMain } from "@/components/layout/conditional-main";
+import { Suspense } from "react";
 import { CustomAuthSyncWrapper } from "@/app/(modules)/custom-auth-sync-wrapper";
 import { BackToTopButton } from "@/components/ui/back-to-top-button";
 import { ChatSupportButton } from "@/components/ui/chat-support-button";
 import { ErrorBoundary } from "@/components/ui/error-boundary";
+import { PageViewTracker } from "@/components/analytics/page-view-tracker";
 import { GA_TRACKING_ID } from "@/lib/ga";
 
 const inter = Inter({
@@ -109,6 +111,9 @@ export default function RootLayout({
         <ErrorBoundary>
           <NextAuthProvider>
             <CustomAuthSyncWrapper>
+              <Suspense fallback={null}>
+                <PageViewTracker />
+              </Suspense>
               <div className="flex flex-col min-h-screen">
                 <Header />
                 <ConditionalMain>{children}</ConditionalMain>

@@ -1,7 +1,8 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, Suspense } from "react";
 import { useRouter } from "next/navigation";
+import dynamic from "next/dynamic";
 
 import { AdminContentCard } from "@/components/admin/common/admin-content-card";
 import {
@@ -22,7 +23,7 @@ import {
 } from "@/constants";
 import { DataTable } from "@/components/data-table";
 
-export default function ContactManagementPage(): React.JSX.Element {
+function ContactManagementContent(): React.JSX.Element {
   const router = useRouter();
 
   const [filters, setFilters] = useState<ContactFilterState>(
@@ -93,5 +94,42 @@ export default function ContactManagementPage(): React.JSX.Element {
         />
       </div>
     </AdminContentCard>
+  );
+}
+
+// Dynamically import to avoid SSR issues with useSearchParams
+const ContactManagementContentDynamic = dynamic(
+  () => Promise.resolve(ContactManagementContent),
+  {
+    ssr: false,
+    loading: () => (
+      <AdminContentCard>
+        <div className="flex justify-center items-center min-h-[400px]">
+          <div className="text-center">
+            <div className="mx-auto mb-4 border-purple-600 border-b-2 rounded-full w-12 h-12 animate-spin"></div>
+            <p className="text-gray-600">Đang tải trang quản lý liên hệ...</p>
+          </div>
+        </div>
+      </AdminContentCard>
+    ),
+  }
+);
+
+export default function ContactManagementPage(): React.JSX.Element {
+  return (
+    <Suspense
+      fallback={
+        <AdminContentCard>
+          <div className="flex justify-center items-center min-h-[400px]">
+            <div className="text-center">
+              <div className="mx-auto mb-4 border-purple-600 border-b-2 rounded-full w-12 h-12 animate-spin"></div>
+              <p className="text-gray-600">Đang tải trang quản lý liên hệ...</p>
+            </div>
+          </div>
+        </AdminContentCard>
+      }
+    >
+      <ContactManagementContentDynamic />
+    </Suspense>
   );
 }

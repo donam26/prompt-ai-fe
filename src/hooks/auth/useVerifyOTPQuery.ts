@@ -5,6 +5,7 @@ import { transformUserData } from "@/utils/user-data-transform";
 import { useAuth } from "@/hooks/useAuth";
 import { ROUTES_URL } from "@/constants";
 import { useRouter } from "next/navigation";
+import { trackLogin, trackSignup } from "@/lib/ga";
 
 interface UseVerifyOTPQueryResult {
   isLoading: boolean;
@@ -36,11 +37,28 @@ export const useVerifyOTPQuery = (): UseVerifyOTPQueryResult => {
           const { user, token } = data.data;
           const userData = transformUserData(user);
 
+          // Check if this is a new user (signup) by comparing createdAt with current time
+          // If createdAt is within the last 5 seconds, it's likely a new user
+          const isNewUser =
+            user.createdAt &&
+            user.createdAt !== "" &&
+            !isNaN(new Date(user.createdAt).getTime()) &&
+            new Date().getTime() - new Date(user.createdAt).getTime() < 5000;
+
+          // Track signup or login event
+          if (isNewUser) {
+            trackSignup("email");
+          } else {
+            trackLogin("email");
+          }
+
           login(userData, token);
 
           showToast.success(data.message || "Xác thực thành công!", {
-            title: "Đăng nhập thành công",
-            description: "Chào mừng bạn quay trở lại!",
+            title: isNewUser ? "Đăng ký thành công" : "Đăng nhập thành công",
+            description: isNewUser
+              ? "Chào mừng bạn đến với Prom!"
+              : "Chào mừng bạn quay trở lại!",
           });
 
           router.push(ROUTES_URL.HOME);
