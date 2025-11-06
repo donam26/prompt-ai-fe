@@ -94,21 +94,27 @@ export function useAdminUsersQuery(options: Props = {}) {
   }, [memoizedPageIndex, memoizedPageSize, memoizedFilters, enabled]);
 
   useEffect(() => {
-    fetchUsers();
-  }, [fetchUsers]);
-
-  // Handle filters changes - only after initial render
-  useEffect(() => {
     if (isInitialRender.current) {
       isInitialRender.current = false;
+      fetchUsers();
       return;
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // Only run once on mount
 
-    // Only fetch when filters are provided and not empty
-    if (Object.keys(filters).length > 0 && enabled) {
+  useEffect(() => {
+    if (!isInitialRender.current && enabled) {
       fetchUsers();
     }
-  }, [filters, fetchUsers, enabled]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [memoizedPageIndex, memoizedPageSize, enabled]); // Only refetch when pagination changes
+
+  useEffect(() => {
+    if (!isInitialRender.current && enabled) {
+      fetchUsers();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [memoizedFilters, enabled]); // Only refetch when filters change
 
   return {
     // Users data

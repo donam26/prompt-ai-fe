@@ -50,7 +50,11 @@ const MailLogItem = ({
 
   return (
     <div
-      className="group flex justify-between items-center hover:bg-gray-50 dark:hover:bg-gray-800 p-4 border border-gray-200 dark:border-gray-700 rounded-lg transition-colors cursor-pointer"
+      className={`group flex justify-between items-center p-4 rounded-lg transition-all cursor-pointer ${
+        isReplied
+          ? "hover:bg-gray-50 dark:hover:bg-gray-800 border border-gray-200 dark:border-gray-700"
+          : "bg-primary-50 dark:bg-primary-900/20 border-l-4 border-primary-500 dark:border-primary-400 hover:bg-primary-100 dark:hover:bg-primary-900/30"
+      }`}
       onClick={() => onView(contact)}
       onKeyDown={e => {
         if (e.key === "Enter" || e.key === " ") {
@@ -67,13 +71,13 @@ const MailLogItem = ({
           className={`flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center ${
             isReplied
               ? "bg-green-50 dark:bg-green-900/20"
-              : "bg-yellow-50 dark:bg-yellow-900/20"
+              : "bg-primary-100 dark:bg-primary-900/30"
           }`}
         >
           {isReplied ? (
             <CheckCircle2 className="w-5 h-5 text-green-600 dark:text-green-400" />
           ) : (
-            <Clock className="w-5 h-5 text-yellow-600 dark:text-yellow-400" />
+            <Clock className="w-5 h-5 text-primary-600 dark:text-primary-400" />
           )}
         </div>
         <div className="flex-1 min-w-0">
@@ -82,7 +86,7 @@ const MailLogItem = ({
               {contact.message?.substring(0, 50) || "Không có nội dung"}...
             </p>
             <Badge
-              variant={isReplied ? "default" : "secondary"}
+              variant={isReplied ? "secondary" : "default"}
               className="text-xs"
             >
               {isReplied ? "Đã trả lời" : "Chưa trả lời"}

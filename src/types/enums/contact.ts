@@ -25,18 +25,18 @@ export const CONTACT_STATUS_CONFIG = {
     color: "orange",
   },
   [ContactStatus.REPLIED]: {
-    variant: "default" as const,
+    variant: "business" as const,
     label: "Đã trả lời",
     color: "green",
   },
   // Handle null/undefined case
   null: {
-    variant: "business" as const,
+    variant: "default" as const,
     label: "Chưa trả lời",
     color: "orange",
   },
   undefined: {
-    variant: "business" as const,
+    variant: "default" as const,
     label: "Chưa trả lời",
     color: "orange",
   },

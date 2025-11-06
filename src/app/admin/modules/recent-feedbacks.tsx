@@ -54,7 +54,11 @@ const FeedbackItem = ({
 
   return (
     <div
-      className="group flex justify-between items-center hover:bg-gray-50 dark:hover:bg-gray-800 p-4 border border-gray-200 dark:border-gray-700 rounded-lg transition-colors cursor-pointer"
+      className={`group flex justify-between items-center p-4 rounded-lg transition-all cursor-pointer ${
+        isProcessed
+          ? "hover:bg-gray-50 dark:hover:bg-gray-800 border border-gray-200 dark:border-gray-700"
+          : "bg-primary-50 dark:bg-primary-900/20 border-l-4 border-primary-500 dark:border-primary-400 hover:bg-primary-100 dark:hover:bg-primary-900/30"
+      }`}
       onClick={() => onView(feedback)}
       onKeyDown={e => {
         if (e.key === "Enter" || e.key === " ") {
@@ -71,13 +75,13 @@ const FeedbackItem = ({
           className={`flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center ${
             isProcessed
               ? "bg-green-50 dark:bg-green-900/20"
-              : "bg-yellow-50 dark:bg-yellow-900/20"
+              : "bg-primary-100 dark:bg-primary-900/30"
           }`}
         >
           {isProcessed ? (
             <CheckCircle2 className="w-5 h-5 text-green-600 dark:text-green-400" />
           ) : (
-            <AlertCircle className="w-5 h-5 text-yellow-600 dark:text-yellow-400" />
+            <AlertCircle className="w-5 h-5 text-primary-600 dark:text-primary-400" />
           )}
         </div>
         <div className="flex-1 min-w-0">
@@ -86,7 +90,7 @@ const FeedbackItem = ({
               {feedback.feedbackName || feedback.fullName || "Không có tên"}
             </p>
             <Badge
-              variant={isProcessed ? "default" : "secondary"}
+              variant={isProcessed ? "secondary" : "default"}
               className="text-xs"
             >
               {isProcessed ? "Đã xử lý" : "Chưa xử lý"}
@@ -94,7 +98,7 @@ const FeedbackItem = ({
           </div>
           <div className="flex items-center gap-4 text-gray-500 dark:text-gray-400 text-xs">
             {feedback.message && (
-              <span className="flex items-center gap-1 truncate max-w-[200px]">
+              <span className="flex items-center gap-1 max-w-[200px] truncate">
                 <MessageSquare className="flex-shrink-0 w-3 h-3" />
                 <span className="truncate">
                   {feedback.message.substring(0, 30)}...

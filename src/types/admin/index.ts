@@ -49,3 +49,7 @@ export * from "./contact";
 
 // Feedback types
 export * from "./feedback";
+
+// Expiring subscription types
+export * from "./expiring-subscription";
+export * from "./expiring-subscriptions";

@@ -7,6 +7,7 @@ import {
   NewUsers,
   MailLogs,
   RecentFeedbacks,
+  ExpiringSubscriptions,
 } from "./modules";
 
 export default function AdminDashboard(): React.JSX.Element {
@@ -16,21 +17,17 @@ export default function AdminDashboard(): React.JSX.Element {
       description={ADMIN_LABELS.DASHBOARD.SUBTITLE}
     >
       <div className="space-y-4 sm:space-y-6">
-        <div className="gap-4 sm:gap-6 grid grid-cols-1 md:grid-cols-2">
-          <div>
-            <RecentTransactions />
-          </div>
-          <div>
-            <NewUsers />
-          </div>
+        {/* Top Row - Three cards */}
+        <div className="gap-4 sm:gap-6 grid grid-cols-1 md:grid-cols-3">
+          <RecentTransactions />
+          <NewUsers />
+          <ExpiringSubscriptions />
         </div>
+
+        {/* Bottom Row - Two cards */}
         <div className="gap-4 sm:gap-6 grid grid-cols-1 md:grid-cols-2">
-          <div>
-            <MailLogs />
-          </div>
-          <div>
-            <RecentFeedbacks />
-          </div>
+          <MailLogs />
+          <RecentFeedbacks />
         </div>
       </div>
     </AdminPageLayout>

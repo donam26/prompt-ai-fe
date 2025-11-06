@@ -198,7 +198,7 @@ export const PromptCardV2 = ({
           </h3>
 
           {/* Description */}
-          <p className="flex-1 max-h-[6rem] overflow-y-auto text-gray-700 text-sm">
+          <p className="flex-1 max-h-[6rem] overflow-y-auto text-gray-700 text-sm scrollbar-show-on-hover">
             {prompt.shortDescription || prompt.content}
           </p>
         </div>
