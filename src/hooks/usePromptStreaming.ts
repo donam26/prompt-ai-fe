@@ -138,6 +138,8 @@ export const usePromptStreaming = ({
         trackRunPrompt({
           who: user.email,
           prompt_type: promptType,
+          prompt_id: prompt?.id,
+          prompt_name: prompt?.title,
         });
       }
 

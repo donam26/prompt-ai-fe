@@ -67,13 +67,21 @@ export const trackSignup = (method: "email" | "google"): void => {
 
 /**
  * Track prompt run events
- * @param params - Parameters including who (user email) and prompt_type
+ * @param params - Parameters including who, prompt_type, prompt_id, prompt_name, prompt_slug
  */
 export const trackRunPrompt = (params: {
   who: string;
   prompt_type: string;
+  prompt_id?: number | string;
+  prompt_name?: string;
+  prompt_slug?: string;
 }): void => {
-  sendEvent("run_prompt", params);
+  sendEvent("run_prompt", {
+    ...params,
+    event_category: "prompt",
+    event_label:
+      params.prompt_name || params.prompt_id?.toString() || params.prompt_type,
+  });
 };
 
 /**

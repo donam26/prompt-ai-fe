@@ -164,6 +164,12 @@ export const sidebarConfig: SidebarItemType[] = [
         permission: "contact",
       },
       {
+        name: "Quản lý Feedback",
+        href: "/admin/feedbacks",
+        icon: MessageSquare,
+        permission: "feedback",
+      },
+      {
         name: "Gửi Mail hàng loạt",
         href: "/admin/send-mail",
         icon: Mail,
