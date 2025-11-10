@@ -53,33 +53,63 @@ export const VNPaySection = ({
           </div>
         ) : filteredSubscriptions.length > 0 ? (
           <div className="flex justify-center items-start mx-auto w-full max-w-6xl">
-            <div className="justify-center gap-10 grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 w-full">
-              {filteredSubscriptions.map(plan => (
-                <PricingCardV2
-                  key={plan.id}
-                  plan={{
-                    id: plan.id?.toString() || "",
-                    name: plan.name,
-                    price: Number(plan.price),
-                    description: "",
-                    isPopular: plan.isPopular, // Premium is always popular
-                    badge: plan.isPopular ? "Bán chạy" : "", // Premium badge
-                    buttonText: "Nâng cấp",
-                    buttonVariant: "default",
-                    contentSubscriptions: plan.contentSubscriptions?.map(
-                      feature => ({
-                        content: feature.content,
-                        included: feature.included,
-                      })
-                    ),
-                  }}
-                  isYearly={false}
-                  onSelectPlan={onSelectPlan}
-                  paymentMethod={paymentMethod}
-                  className="w-full"
-                />
-              ))}
-            </div>
+            {filteredSubscriptions.length <= 2 ? (
+              <div className="flex flex-wrap justify-center gap-10 w-full">
+                {filteredSubscriptions.map(plan => (
+                  <PricingCardV2
+                    key={plan.id}
+                    plan={{
+                      id: plan.id?.toString() || "",
+                      name: plan.name,
+                      price: Number(plan.price),
+                      description: "",
+                      isPopular: plan.isPopular,
+                      badge: plan.isPopular ? "Bán chạy" : "",
+                      buttonText: "Nâng cấp",
+                      buttonVariant: "default",
+                      contentSubscriptions: plan.contentSubscriptions?.map(
+                        feature => ({
+                          content: feature.content,
+                          included: feature.included,
+                        })
+                      ),
+                    }}
+                    isYearly={false}
+                    onSelectPlan={onSelectPlan}
+                    paymentMethod={paymentMethod}
+                    className="w-full max-w-[360px]"
+                  />
+                ))}
+              </div>
+            ) : (
+              <div className="justify-center gap-10 grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 w-full">
+                {filteredSubscriptions.map(plan => (
+                  <PricingCardV2
+                    key={plan.id}
+                    plan={{
+                      id: plan.id?.toString() || "",
+                      name: plan.name,
+                      price: Number(plan.price),
+                      description: "",
+                      isPopular: plan.isPopular,
+                      badge: plan.isPopular ? "Bán chạy" : "",
+                      buttonText: "Nâng cấp",
+                      buttonVariant: "default",
+                      contentSubscriptions: plan.contentSubscriptions?.map(
+                        feature => ({
+                          content: feature.content,
+                          included: feature.included,
+                        })
+                      ),
+                    }}
+                    isYearly={false}
+                    onSelectPlan={onSelectPlan}
+                    paymentMethod={paymentMethod}
+                    className="w-full"
+                  />
+                ))}
+              </div>
+            )}
           </div>
         ) : (
           <div className="py-12 text-center">
