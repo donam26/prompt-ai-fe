@@ -89,7 +89,7 @@ export const PricingCardV2 = ({
   return (
     <div
       className={cn(
-        "relative hover:shadow-xl p-4 sm:p-5 rounded-[36px] w-full font-medium text-center transition-all duration-300",
+        "relative flex flex-col hover:shadow-xl p-4 sm:p-5 rounded-[36px] w-full h-full font-medium text-center transition-all duration-300",
         "sm:min-w-[315px] min-w-0 max-w-[500px]",
         plan.isPopular
           ? "popular-card bg-[#111116] text-white shadow-2xl sm:scale-105"
@@ -159,7 +159,7 @@ export const PricingCardV2 = ({
       />
 
       {/* Features */}
-      <ul className="p-0 font-medium text-left list-none">
+      <ul className="flex-1 mb-4 sm:mb-6 p-0 font-medium text-left list-none">
         {plan.contentSubscriptions?.map((feature, index) => (
           <li
             key={index}
@@ -197,7 +197,7 @@ export const PricingCardV2 = ({
       </ul>
 
       {/* CTA */}
-      <div className="mt-3 sm:mt-4">
+      <div className="mt-auto pt-3 sm:pt-4">
         <Button
           onClick={handleSelectPlan}
           variant={getButtonVariant()}

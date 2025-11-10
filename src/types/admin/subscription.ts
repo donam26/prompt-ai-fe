@@ -36,6 +36,8 @@ export interface SubscriptionFormData {
   readonly price: string;
   readonly priceYear?: string | null;
   readonly isPopular?: boolean;
+  readonly isActive: boolean;
+  readonly displayOrder: number;
   readonly description?: string;
   readonly descriptionPerYear?: string | null;
   readonly pricePerMonthYear?: string | null;

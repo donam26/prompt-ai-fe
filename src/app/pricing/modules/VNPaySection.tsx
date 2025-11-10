@@ -4,7 +4,6 @@ import { Button } from "@/components/ui/button";
 import { PricingCardV2 } from "@/components/user/PricingCardV2";
 import { PaymentMethod } from "@/types/enums/payment-method";
 import { usePricingSubscriptions } from "@/hooks/usePricingSubscriptions";
-import { VNPAY_SUBSCRIPTION_PLAN_IDS } from "@/constants/subscription";
 
 interface VNPaySectionProps {
   paymentMethod: PaymentMethod;
@@ -23,8 +22,12 @@ export const VNPaySection = ({
   } = usePricingSubscriptions();
 
   const filteredSubscriptions = subscriptions
-    .filter(plan => VNPAY_SUBSCRIPTION_PLAN_IDS.includes(plan.id))
-    .reverse();
+    .filter(plan => plan.isActive)
+    .sort(
+      (planA, planB) =>
+        (planA.displayOrder ?? Number.MAX_SAFE_INTEGER) -
+        (planB.displayOrder ?? Number.MAX_SAFE_INTEGER)
+    );
 
   return (
     <>
@@ -50,7 +53,7 @@ export const VNPaySection = ({
           </div>
         ) : filteredSubscriptions.length > 0 ? (
           <div className="flex justify-center items-start mx-auto w-full max-w-6xl">
-            <div className="justify-center gap-10 grid w-full">
+            <div className="justify-center gap-10 grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 w-full">
               {filteredSubscriptions.map(plan => (
                 <PricingCardV2
                   key={plan.id}

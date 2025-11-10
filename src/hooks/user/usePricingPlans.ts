@@ -43,6 +43,8 @@ export const usePricingPlans = (): UsePricingPlansReturn => {
           price: subscription.price.toString(),
           description: subscription.description || "",
           isPopular: subscription.type === 2,
+          isActive: subscription.isActive ?? true,
+          displayOrder: subscription.displayOrder ?? 0,
           imageDiscount: subscription.imageDiscount || undefined,
           isEnterprise: subscription.type === 3,
           buttonText:

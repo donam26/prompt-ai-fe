@@ -369,6 +369,28 @@ export const SubscriptionForm = ({
                   )}
                 </div>
 
+                {/* Display Order */}
+                <Controller
+                  name="displayOrder"
+                  control={control}
+                  render={({ field }) => (
+                    <BaseTextField
+                      id="displayOrder"
+                      label="Thứ tự hiển thị"
+                      value={String(field.value)}
+                      onChange={(e: any) => {
+                        const value = e?.target?.value || e || "";
+                        if (value === "" || !isNaN(Number(value))) {
+                          field.onChange(value === "" ? 0 : Number(value));
+                        }
+                      }}
+                      placeholder="0"
+                      required
+                      error={errors.displayOrder?.message}
+                    />
+                  )}
+                />
+
                 {/* Price */}
                 <Controller
                   name="price"
@@ -425,12 +447,37 @@ export const SubscriptionForm = ({
                           id="isPopular"
                           checked={field.value}
                           onCheckedChange={field.onChange}
+                          aria-label="Đánh dấu gói phổ biến"
                         />
                         <label
                           htmlFor="isPopular"
                           className="font-medium text-sm"
                         >
                           Đánh dấu là gói phổ biến
+                        </label>
+                      </>
+                    )}
+                  />
+                </div>
+
+                {/* Is Active */}
+                <div className="flex items-center space-x-2">
+                  <Controller
+                    name="isActive"
+                    control={control}
+                    render={({ field }) => (
+                      <>
+                        <Switch
+                          id="isActive"
+                          checked={field.value}
+                          onCheckedChange={field.onChange}
+                          aria-label="Kích hoạt gói đăng ký"
+                        />
+                        <label
+                          htmlFor="isActive"
+                          className="font-medium text-sm"
+                        >
+                          Kích hoạt gói đăng ký
                         </label>
                       </>
                     )}

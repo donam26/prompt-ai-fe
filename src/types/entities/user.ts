@@ -61,6 +61,8 @@ export interface Subscription extends BaseEntity {
   billingCycle: string;
   imageDiscount?: string | null;
   isPopular?: boolean;
+  isActive?: boolean;
+  displayOrder?: number;
   contentSubscriptions?: Array<{
     content: string;
     included: boolean;

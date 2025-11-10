@@ -40,6 +40,7 @@ export const SUBSCRIPTIONS_CONSTANTS = {
     DESCRIPTION_MAX_LENGTH: 500,
     PRICE_MIN: 0,
     DURATION_MIN: 1,
+    DISPLAY_ORDER_MIN: 0,
   },
 
   // API endpoints

@@ -34,6 +34,13 @@ export const subscriptionFormSchema = z
     price: z.string().min(1, "Giá tiền là bắt buộc"),
     priceYear: z.string().optional(),
     isPopular: z.boolean().optional(),
+    isActive: z.boolean(),
+    displayOrder: z
+      .number()
+      .min(
+        SUBSCRIPTIONS_CONSTANTS.VALIDATION.DISPLAY_ORDER_MIN,
+        "Thứ tự hiển thị không được âm"
+      ),
     description: z.string().optional(),
     descriptionPerYear: z.string().optional(),
     pricePerMonthYear: z.string().optional(),
@@ -63,6 +70,8 @@ export const getSubscriptionFormDefaultValues = (
   price: subscription?.price || "0",
   priceYear: subscription?.priceYear || "",
   isPopular: subscription?.isPopular || false,
+  isActive: subscription?.isActive ?? true,
+  displayOrder: subscription?.displayOrder ?? 0,
   description: subscription?.description || "",
   descriptionPerYear: subscription?.descriptionPerYear || "",
   pricePerMonthYear: subscription?.pricePerMonthYear || "",

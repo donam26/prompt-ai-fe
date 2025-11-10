@@ -45,7 +45,7 @@ export function ImageCell({
             className
           )}
         >
-          <span className="hidden sm:block font-medium text-gray-400 text-xs">
+          <span className="hidden sm:block font-medium text-gray-400 text-xs text-center">
             {placeholder}
           </span>
           <span className="sm:hidden font-medium text-gray-400 text-xs">-</span>

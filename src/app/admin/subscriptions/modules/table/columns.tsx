@@ -4,7 +4,7 @@ import type { ColumnDef } from "@tanstack/react-table";
 import type { Subscription } from "@/types";
 import type { SubscriptionColumnHandlers } from "@/types/admin/subscription";
 import { Column } from "@/components/data-table";
-import { ActionsCell, ImageCell } from "@/components/table-cell";
+import { ActionsCell, ImageCell, StatusCell } from "@/components/table-cell";
 import { formatBillingCycle } from "@/types/enums";
 
 export function useSubscriptionColumns({
@@ -93,6 +93,17 @@ export function useSubscriptionColumns({
           {formatBillingCycle(row.original.billingCycle)}
         </div>
       ),
+    },
+    {
+      accessorKey: "isActive",
+      meta: { title: "Trạng thái" },
+      header: () => <div className="font-medium text-center">Trạng thái</div>,
+      cell: ({ row }) => (
+        <div className="flex justify-center min-w-[140px]">
+          <StatusCell isActive={row.original.isActive ?? false} />
+        </div>
+      ),
+      enableSorting: false,
     },
     {
       id: "actions",
