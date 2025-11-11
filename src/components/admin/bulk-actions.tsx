@@ -104,9 +104,7 @@ export const BulkActions = ({
             {/* Apply Button */}
             <Button
               onClick={onApplySubType}
-              disabled={
-                disabled || isBusy || !selectedSubType || !hasSelection
-              }
+              disabled={disabled || isBusy || !selectedSubType || !hasSelection}
               className="bg-blue-600 hover:bg-blue-700 dark:bg-blue-600 dark:hover:bg-blue-700 disabled:opacity-50 px-4 h-9 font-medium text-white text-sm transition-all duration-200 disabled:cursor-not-allowed"
             >
               {isLoading ? (

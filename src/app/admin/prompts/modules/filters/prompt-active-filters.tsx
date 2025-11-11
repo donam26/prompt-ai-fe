@@ -168,11 +168,7 @@ export const PromptActiveFilters = ({
 
       {/* Only Without Category filter */}
       {filters.onlyWithoutCategory && (
-        <Badge
-          key="onlyWithoutCategory"
-          variant="secondary"
-          className="gap-1"
-        >
+        <Badge key="onlyWithoutCategory" variant="secondary" className="gap-1">
           <span className="text-xs">Chưa có danh mục</span>
           <X
             className="w-3 h-3 cursor-pointer"
