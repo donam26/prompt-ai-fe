@@ -3,11 +3,16 @@
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { ArrowRightIcon } from "lucide-react";
-
-const SKOOL_COMMUNITY_URL =
-  "https://www.skool.com/prom-aihub/about?ref=1a6136e6caba48bcaf8d6a8120bc0cb8";
+import { useRouter } from "next/navigation";
+import { ROUTES_URL } from "@/constants/routes-url";
 
 export const SkoolCommunitySection = () => {
+  const router = useRouter();
+
+  const handleNavigateToPricing = () => {
+    router.push(ROUTES_URL.PRICING);
+  };
+
   return (
     <div className="relative mb-8 rounded-xl overflow-hidden">
       {/* Background Image for Desktop */}
@@ -76,7 +81,7 @@ export const SkoolCommunitySection = () => {
             <Button
               className="flex justify-center items-center shadow-[inset_0px_0px_12px_rgba(255,255,255,0.6)] border rounded-full w-[330px] h-[53.5px] font-semibold text-white text-lg hover:scale-105 transition-all duration-300 hero-button-gradient"
               style={{ padding: "16px" }}
-              onClick={() => window.open(SKOOL_COMMUNITY_URL, "_blank")}
+              onClick={handleNavigateToPricing}
             >
               Tham gia ngay
               <ArrowRightIcon className="w-5 h-5" />

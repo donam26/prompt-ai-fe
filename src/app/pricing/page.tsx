@@ -8,9 +8,7 @@ import { PaymentMethod } from "@/types/enums/payment-method";
 import { VNPaySection } from "./modules/VNPaySection";
 import { usePricingSubscriptions } from "@/hooks/usePricingSubscriptions";
 import { PaymentTutorialSection } from "./modules/payment-tutorial-section";
-
-const SKOOL_COMMUNITY_URL =
-  "https://www.skool.com/prom-aihub/about?ref=1a6136e6caba48bcaf8d6a8120bc0cb8";
+import { ROUTES_URL } from "@/constants/routes-url";
 
 export default function PricingPage() {
   const router = useRouter();
@@ -21,8 +19,7 @@ export default function PricingPage() {
 
   const handleSelectPlan = (planId: string, method: PaymentMethod) => {
     if (method === PaymentMethod.SKOOL) {
-      // Redirect to Skool Community
-      window.open(SKOOL_COMMUNITY_URL, "_blank");
+      router.push(ROUTES_URL.PRICING);
     } else {
       // Redirect to checkout page with plan data
       const plan = subscriptions.find(p => p.id?.toString() === planId);

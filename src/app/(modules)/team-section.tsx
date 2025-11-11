@@ -1,7 +1,8 @@
 import Image from "next/image";
+import Link from "next/link";
 import { MENTORS } from "@/constants/mentors";
 import { ArrowRightIcon } from "lucide-react";
-import { SKOOL_COMMUNITY_URL } from "@/constants/homepage";
+import { ROUTES_URL } from "@/constants/routes-url";
 import { createInfiniteScrollArray } from "@/utils";
 
 interface StatItemProps {
@@ -122,29 +123,13 @@ export const TeamsSection = () => {
 
           {/* Call to Action Button */}
           <div className="text-center">
-            <a
-              href={SKOOL_COMMUNITY_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center shadow-lg hover:shadow-xl px-8 py-4 rounded-full font-semibold text-lg hover:scale-105 transition-all duration-300 transform"
-              style={{
-                background: "linear-gradient(90deg, #5700C6 0%, #3F09A8 100%)",
-                color: "white",
-                border: "none",
-                textDecoration: "none",
-              }}
-              onMouseEnter={e => {
-                e.currentTarget.style.background =
-                  "linear-gradient(90deg, #6B1AD1 0%, #5700C6 100%)";
-              }}
-              onMouseLeave={e => {
-                e.currentTarget.style.background =
-                  "linear-gradient(90deg, #5700C6 0%, #3F09A8 100%)";
-              }}
+            <Link
+              href={ROUTES_URL.PRICING}
+              className="inline-flex items-center px-8 py-4 rounded-full font-semibold text-lg shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300 transform bg-gradient-to-r from-[#5700C6] to-[#3F09A8] hover:from-[#6B1AD1] hover:to-[#5700C6] text-white"
             >
               Đăng Ký Ngay!
               <ArrowRightIcon className="w-5 h-5" />
-            </a>
+            </Link>
           </div>
         </div>
       </div>

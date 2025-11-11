@@ -3,7 +3,8 @@
 import Image from "next/image";
 import { CTAButton } from "@/components/ui";
 import { ArrowRightIcon } from "lucide-react";
-import { SKOOL_COMMUNITY_URL } from "@/constants/homepage";
+import Link from "next/link";
+import { ROUTES_URL } from "@/constants/routes-url";
 
 const CoachingMentorshipSection = () => {
   return (
@@ -21,17 +22,12 @@ const CoachingMentorshipSection = () => {
             Modules và những khóa học dạy từng bước một, giúp bạn dễ dàng lĩnh
             hội những kĩ năng AI có thể kiếm được tiền luôn!
           </p>
-          <a
-            href={SKOOL_COMMUNITY_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-block"
-          >
+          <Link href={ROUTES_URL.PRICING} className="inline-block">
             <CTAButton className="w-[275px]">
               Khám phá ngay
               <ArrowRightIcon className="size-4" />
             </CTAButton>
-          </a>
+          </Link>
         </div>
       </div>
 

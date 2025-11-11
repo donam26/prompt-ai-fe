@@ -1,13 +1,20 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { SKOOL_COMMUNITY_URL } from "@/constants";
+import { useRouter } from "next/navigation";
+import { ROUTES_URL } from "@/constants/routes-url";
 import { ArrowRightIcon } from "lucide-react";
 
 export const HeroSection = () => {
+  const router = useRouter();
+
+  const handleNavigateToPricing = () => {
+    router.push(ROUTES_URL.PRICING);
+  };
+
   return (
     <section
-      className="relative bg-cover bg-no-repeat bg-center px-4 pt-24 md:pt-36 pb-8 lg:pb-10 min-h-[400px] sm:min-h-[500px] md:min-h-[600px]"
+      className="relative bg-cover bg-no-repeat bg-center px-4 pt-24 md:pt-36 pb-8 lg:pb-10 min-h-[200px] sm:min-h-[500px] md:min-h-[600px]"
       style={{
         backgroundImage: "url('/images/home/background.png')",
       }}
@@ -40,7 +47,7 @@ export const HeroSection = () => {
               <Button
                 className="flex justify-center items-center shadow-[inset_0px_0px_12px_rgba(255,255,255,0.6)] border rounded-full w-[330px] h-[53.5px] font-semibold text-white text-lg hover:scale-105 transition-all duration-300 hero-button-gradient"
                 style={{ padding: "16px" }}
-                onClick={() => window.open(SKOOL_COMMUNITY_URL, "_blank")}
+                onClick={handleNavigateToPricing}
               >
                 <span className="mr-2">Bắt đầu hành trình</span>
                 <ArrowRightIcon className="w-5 h-5 font-bold transition-transform group-hover:translate-x-1 duration-200" />

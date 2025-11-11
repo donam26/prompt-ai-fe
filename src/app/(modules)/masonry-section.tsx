@@ -7,7 +7,6 @@ import Masonry from "react-masonry-css";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Pagination, Autoplay } from "swiper/modules";
 import { MasonryCard } from "@/components/ui";
-import { SKOOL_COMMUNITY_URL } from "@/constants/homepage";
 
 import "swiper/css";
 import "swiper/css/pagination";
@@ -100,11 +99,10 @@ export const MasonrySection: React.FC<MasonrySectionProps> = ({
             mẽ tại đây!
           </h2>
           <div className="flex sm:flex-row flex-col justify-center items-center gap-4">
-            <a
-              href={SKOOL_COMMUNITY_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 bg-purple-600 hover:bg-purple-700 px-8 py-4 rounded-full font-semibold text-white transition-colors"
+            <button
+              type="button"
+              onClick={() => router.push(ROUTES_URL.PRICING)}
+              className="flex items-center gap-2 bg-purple-600 hover:bg-purple-700 px-8 py-4 rounded-full font-semibold text-white transition-colors"
             >
               Đăng Ký Ngay!
               <svg
@@ -120,7 +118,7 @@ export const MasonrySection: React.FC<MasonrySectionProps> = ({
                   d="M9 5l7 7-7 7"
                 />
               </svg>
-            </a>
+            </button>
             <button
               onClick={() => router.push(ROUTES_URL.CONTACT)}
               className="flex items-center gap-2 bg-transparent px-8 py-4 border-2 border-purple-600 rounded-full font-semibold text-purple-600 transition-colors"

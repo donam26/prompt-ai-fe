@@ -233,5 +233,4 @@ export const HERO_SHOWCASE: BrandLogo[] = [
 export const CHROME_EXTENSION_URL =
   "https://chromewebstore.google.com/detail/prom-nâng-cấp-prompt/gpcjhobhbnoifjkhgongdbggeljjpfif";
 
-export const SKOOL_COMMUNITY_URL =
-  "https://www.skool.com/prom-aihub/about?ref=1a6136e6caba48bcaf8d6a8120bc0cb8";
+export const SKOOL_COMMUNITY_URL = "http://localhost:3000/pricing";

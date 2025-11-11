@@ -13,7 +13,7 @@ import { paymentApi } from "@/services/api";
 import { showToast } from "@/components/ui/toast";
 import { ArrowLeft, CreditCard, Shield, CheckCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { SKOOL_COMMUNITY_URL } from "@/constants/homepage";
+import { ROUTES_URL } from "@/constants/routes-url";
 
 function CheckoutContentInner() {
   const router = useRouter();
@@ -32,7 +32,7 @@ function CheckoutContentInner() {
   };
 
   const handleSkoolPayment = () => {
-    window.open(SKOOL_COMMUNITY_URL, "_blank");
+    router.push(ROUTES_URL.PRICING);
   };
 
   const handleApplyDiscount = async () => {

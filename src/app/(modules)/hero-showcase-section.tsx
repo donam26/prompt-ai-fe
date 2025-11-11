@@ -8,7 +8,7 @@ export const HeroShowcaseSection = () => {
       {/* Single Large Image Section - Full Width */}
       <div className="w-full">
         {/* Single Large Image - Full Screen Width */}
-        <div className="group relative w-full h-[300px] sm:h-[400px] md:h-[500px] lg:h-[616px] transition-all duration-500 transform">
+        <div className="group relative w-full h-[200px] sm:h-[400px] md:h-[500px] lg:h-[616px] transition-all duration-500 transform">
           <Image
             src="/images/home/slider-home.png"
             alt="AI Creative Content Showcase"

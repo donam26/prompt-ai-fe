@@ -34,17 +34,9 @@ export function useImportPrompts(): IResponse {
       const result = await promptService.importPromptsFromExcel(file);
       setImportResult(() => result.data);
 
-      const { successCount, errorCount, totalProcessed } = result.data;
+      const { message } = result.data;
 
-      if (errorCount === 0) {
-        showToast.success(
-          `Import thành công! Đã import ${successCount}/${totalProcessed} prompt.`
-        );
-      } else {
-        showToast.warning(
-          `Import hoàn thành với ${errorCount} lỗi. Thành công: ${successCount}/${totalProcessed} prompt.`
-        );
-      }
+      showToast.success(message);
 
       return true;
     } catch (error: unknown) {
