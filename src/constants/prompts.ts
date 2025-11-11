@@ -10,6 +10,7 @@ export const PROMPTS_CONSTANTS = {
     industryIds: [],
     dateFrom: "",
     dateTo: "",
+    onlyWithoutCategory: undefined,
   } as PromptFilterState,
 
   // Pagination

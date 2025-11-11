@@ -62,6 +62,7 @@ export interface IPromptFilterProps {
   onIndustriesChange: (values: string[]) => void;
   onDateFromChange: (value: string) => void;
   onDateToChange: (value: string) => void;
+  onOnlyWithoutCategoryChange: (value: boolean) => void;
   onClearFilters: () => void;
   hasActiveFilters: boolean;
 }

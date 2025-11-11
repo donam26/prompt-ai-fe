@@ -170,6 +170,20 @@ export class PromptService extends BaseService {
   }
 
   /**
+   * Bulk delete prompts
+   */
+  async bulkDeletePrompts(promptIds: number[]): Promise<BaseApiResponse<void>> {
+    const { apiClient } = await import("../../base/apiClient");
+    const response = await apiClient.delete(`${this.baseUrl}/bulk`, {
+      data: { promptIds },
+    });
+    return {
+      success: true,
+      data: response.data,
+    };
+  }
+
+  /**
    * Import prompts from Excel file
    */
   async importPromptsFromExcel(file: File) {

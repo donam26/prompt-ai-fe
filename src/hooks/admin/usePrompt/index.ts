@@ -5,3 +5,4 @@ export * from "./useUpsertPrompt";
 export * from "./useExportPromptsExcel";
 export * from "./useBulkUpdateSubType";
 export * from "./useImportPrompts";
+export * from "./useBulkDeletePrompts";

@@ -49,6 +49,9 @@ export const PromptActiveFilters = ({
       case "isType":
         newFilters.isType = undefined;
         break;
+      case "onlyWithoutCategory":
+        newFilters.onlyWithoutCategory = undefined;
+        break;
       case "industryIds":
         if (valueToRemove) {
           newFilters.industryIds =
@@ -89,7 +92,8 @@ export const PromptActiveFilters = ({
     (filters.categoryIds?.length || 0) +
     (filters.industryIds?.length || 0) +
     (filters.isType !== undefined ? 1 : 0) +
-    (filters.dateFrom || filters.dateTo ? 1 : 0);
+    (filters.dateFrom || filters.dateTo ? 1 : 0) +
+    (filters.onlyWithoutCategory ? 1 : 0);
 
   if (activeTotal === 0) {
     return <></>;
@@ -158,6 +162,21 @@ export const PromptActiveFilters = ({
           <X
             className="w-3 h-3 cursor-pointer"
             onClick={() => handleRemoveFilter("isType")}
+          />
+        </Badge>
+      )}
+
+      {/* Only Without Category filter */}
+      {filters.onlyWithoutCategory && (
+        <Badge
+          key="onlyWithoutCategory"
+          variant="secondary"
+          className="gap-1"
+        >
+          <span className="text-xs">Chưa có danh mục</span>
+          <X
+            className="w-3 h-3 cursor-pointer"
+            onClick={() => handleRemoveFilter("onlyWithoutCategory")}
           />
         </Badge>
       )}

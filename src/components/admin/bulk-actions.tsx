@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { CheckCircle2, XCircle, Settings } from "lucide-react";
+import { CheckCircle2, XCircle, Settings, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -19,7 +19,9 @@ interface BulkActionsProps {
   onSubTypeChange: (value: string) => void;
   onApplySubType: () => void;
   onClearSelection: () => void;
+  onBulkDelete: () => void;
   isLoading?: boolean;
+  isBulkDeleting?: boolean;
   disabled?: boolean;
 }
 
@@ -29,10 +31,13 @@ export const BulkActions = ({
   onSubTypeChange,
   onApplySubType,
   onClearSelection,
+  onBulkDelete,
   isLoading = false,
+  isBulkDeleting = false,
   disabled = false,
 }: BulkActionsProps): React.JSX.Element => {
   const hasSelection = selectedCount > 0;
+  const isBusy = isLoading || isBulkDeleting;
 
   return (
     <div className="transition-all duration-300 ease-in-out">
@@ -100,7 +105,7 @@ export const BulkActions = ({
             <Button
               onClick={onApplySubType}
               disabled={
-                disabled || isLoading || !selectedSubType || !hasSelection
+                disabled || isBusy || !selectedSubType || !hasSelection
               }
               className="bg-blue-600 hover:bg-blue-700 dark:bg-blue-600 dark:hover:bg-blue-700 disabled:opacity-50 px-4 h-9 font-medium text-white text-sm transition-all duration-200 disabled:cursor-not-allowed"
             >
@@ -114,10 +119,30 @@ export const BulkActions = ({
               )}
             </Button>
 
+            {/* Bulk Delete */}
+            <Button
+              onClick={onBulkDelete}
+              disabled={disabled || isBusy || !hasSelection}
+              variant="destructive"
+              className="flex items-center gap-2 px-4 h-9 text-sm disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {isBulkDeleting ? (
+                <>
+                  <div className="border-2 border-white border-t-transparent rounded-full w-4 h-4 animate-spin"></div>
+                  <span>Đang xóa...</span>
+                </>
+              ) : (
+                <>
+                  <Trash2 className="w-4 h-4" />
+                  <span>Xóa đã chọn</span>
+                </>
+              )}
+            </Button>
+
             {/* Clear Selection */}
             <Button
               onClick={onClearSelection}
-              disabled={disabled || isLoading || !hasSelection}
+              disabled={disabled || isBusy || !hasSelection}
               variant="ghost"
               className="hover:bg-gray-100 dark:hover:bg-gray-700 px-3 h-9 text-gray-600 hover:text-gray-800 dark:hover:text-gray-200 dark:text-gray-400 transition-all duration-200"
             >
@@ -128,7 +153,7 @@ export const BulkActions = ({
         </div>
 
         {/* Progress Bar */}
-        {isLoading && (
+        {isBusy && (
           <div className="mt-3">
             <div className="bg-gray-200 dark:bg-gray-700 rounded-full w-full h-1.5">
               <div

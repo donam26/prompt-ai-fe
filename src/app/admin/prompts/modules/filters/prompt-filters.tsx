@@ -15,6 +15,7 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { BaseSelect } from "@/components/ui/base-select";
 import { MultiSelect } from "@/components/ui/multi-select";
+import { Switch } from "@/components/ui/switch";
 import { PromptActiveFilters } from "./prompt-active-filters";
 import { industryService } from "@/services";
 import { debounce } from "@/lib/utils";
@@ -135,6 +136,14 @@ export const PromptFilter = ({
     onPageReset?.();
   };
 
+  const handleOnlyWithoutCategoryChange = (value: boolean): void => {
+    onFilterChange({
+      ...filters,
+      onlyWithoutCategory: value ? true : undefined,
+    });
+    onPageReset?.();
+  };
+
   // Calculate if has active filters
   const hasActiveFilters =
     !!filters.searchTerm ||
@@ -142,7 +151,8 @@ export const PromptFilter = ({
     (filters.industryIds && filters.industryIds.length > 0) ||
     filters.isType !== undefined ||
     !!filters.dateFrom ||
-    !!filters.dateTo;
+    !!filters.dateTo ||
+    !!filters.onlyWithoutCategory;
 
   return (
     <div className={`space-y-4 ${className || ""}`}>
@@ -158,6 +168,7 @@ export const PromptFilter = ({
         onIndustriesChange={handleIndustriesChange}
         onDateFromChange={handleDateFromChange}
         onDateToChange={handleDateToChange}
+        onOnlyWithoutCategoryChange={handleOnlyWithoutCategoryChange}
         onClearFilters={onClearFilters}
         hasActiveFilters={hasActiveFilters}
       />
@@ -188,6 +199,7 @@ const PromptFilterCard = ({
   onIndustriesChange,
   onDateFromChange,
   onDateToChange,
+  onOnlyWithoutCategoryChange,
   onClearFilters,
   hasActiveFilters,
 }: IPromptFilterProps & { searchValue: string }): React.JSX.Element => (
@@ -246,7 +258,7 @@ const PromptFilterCard = ({
       </div>
 
       {/* Second Row - Categories and Type */}
-      <div className="gap-4 grid grid-cols-1 lg:grid-cols-2">
+      <div className="gap-4 grid grid-cols-1 lg:grid-cols-3">
         {/* Categories Filter - Multiple Select */}
         <div className="space-y-2">
           <Label className="font-medium text-sm">Danh mục</Label>
@@ -267,6 +279,23 @@ const PromptFilterCard = ({
             disabled={!filters.categoryIds || filters.categoryIds.length === 0}
             onChange={onIndustriesChange}
           />
+        </div>
+
+        {/* Only Without Category */}
+        <div className="space-y-2">
+          <Label className="font-medium text-sm">
+            Chỉ hiển thị prompt chưa có danh mục
+          </Label>
+          <div className="flex items-center gap-3 px-4 py-3 border border-gray-200 rounded-lg">
+            <Switch
+              checked={!!filters.onlyWithoutCategory}
+              onCheckedChange={onOnlyWithoutCategoryChange}
+              aria-label="Chỉ hiển thị prompt chưa có danh mục"
+            />
+            <span className="text-gray-700 text-sm">
+              Bật để lọc những prompt chưa gán danh mục
+            </span>
+          </div>
         </div>
       </div>
     </div>

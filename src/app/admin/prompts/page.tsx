@@ -13,7 +13,11 @@ import {
 } from "./modules";
 import { PROMPTS_CONSTANTS } from "@/constants/prompts";
 import { usePrompts, useCategories } from "@/hooks";
-import { useDeletePrompt, useBulkUpdateSubType } from "@/hooks/admin/usePrompt";
+import {
+  useDeletePrompt,
+  useBulkUpdateSubType,
+  useBulkDeletePrompts,
+} from "@/hooks/admin/usePrompt";
 import { ActionModal } from "@/components/admin/action-modal";
 import type { Prompt, PromptFilterState } from "@/types";
 import type { PaginationParams } from "@/types/base";
@@ -45,6 +49,7 @@ export default function PromptManagementPage(): React.JSX.Element {
   // SubType update state
   const [selectedSubType, setSelectedSubType] = useState<string>("");
   const [subTypeModalOpen, setSubTypeModalOpen] = useState(false);
+  const [bulkDeleteModalOpen, setBulkDeleteModalOpen] = useState(false);
 
   const {
     promptsWithPagination,
@@ -67,6 +72,8 @@ export default function PromptManagementPage(): React.JSX.Element {
 
   const { mutate: deletePrompt, isLoading: isDeleting } = useDeletePrompt();
   const { updateSubType, isUpdating } = useBulkUpdateSubType();
+  const { mutate: bulkDeletePrompts, isLoading: isBulkDeleting } =
+    useBulkDeletePrompts();
 
   const handlePaginationChange = useCallback(
     (newPagination: PaginationParams) => {
@@ -176,6 +183,28 @@ export default function PromptManagementPage(): React.JSX.Element {
     setSelectedSubType("");
   }, []);
 
+  const handleBulkDeleteRequest = useCallback(() => {
+    if (selectedRows.size === 0) {
+      return;
+    }
+    setBulkDeleteModalOpen(true);
+  }, [selectedRows]);
+
+  const handleConfirmBulkDelete = useCallback(async () => {
+    const selectedIds = Array.from(selectedRows).map(id => Number(id));
+    const success = await bulkDeletePrompts(selectedIds);
+    if (success) {
+      setSelectedRows(new Set());
+      setSelectedSubType("");
+      setBulkDeleteModalOpen(false);
+      refetch();
+    }
+  }, [selectedRows, bulkDeletePrompts, refetch]);
+
+  const handleCloseBulkDeleteModal = useCallback(() => {
+    setBulkDeleteModalOpen(false);
+  }, []);
+
   // Create columns with handlers
   const tanstackColumns = usePromptColumns({
     onEditAction: handleEditPrompt,
@@ -206,7 +235,9 @@ export default function PromptManagementPage(): React.JSX.Element {
             setSelectedRows(new Set());
             setSelectedSubType("");
           }}
+          onBulkDelete={handleBulkDeleteRequest}
           isLoading={isUpdating}
+          isBulkDeleting={isBulkDeleting}
         />
 
         <PromptFilter
@@ -257,6 +288,19 @@ export default function PromptManagementPage(): React.JSX.Element {
           cancelText="Hủy"
           isLoading={isUpdating}
           variant="default"
+        />
+
+        {/* Bulk Delete Modal */}
+        <ActionModal
+          isOpen={bulkDeleteModalOpen}
+          onClose={handleCloseBulkDeleteModal}
+          onConfirm={handleConfirmBulkDelete}
+          title="Xác nhận xóa nhiều prompt"
+          description={`Bạn có chắc chắn muốn xóa ${selectedRows.size} prompt đã chọn không?`}
+          confirmText="Xóa"
+          cancelText="Hủy"
+          isLoading={isBulkDeleting}
+          variant="destructive"
         />
       </div>
     </AdminContentCard>
