@@ -1,5 +1,6 @@
 export * from "./hero-section";
 export * from "./hero-showcase-section";
+export * from "./hero-revamp-section";
 export * from "./team-section";
 export * from "./how-to-use-section";
 export * from "./solutions-section";

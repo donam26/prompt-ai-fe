@@ -1,15 +1,8 @@
 "use client";
 
-import { lazy, Suspense } from "react";
+import { Suspense } from "react";
 import dynamic from "next/dynamic";
-import { HeroSection, HeroShowcaseSection } from "./(modules)";
-
-// Critical above-the-fold components - loaded immediately
-const TeamsSection = lazy(() =>
-  import("./(modules)/team-section").then(module => ({
-    default: module.TeamsSection,
-  }))
-);
+import { HeroRevampSection } from "./(modules)";
 
 // Lazy load below-the-fold sections for better performance
 const CoachingMentorshipSection = dynamic(
@@ -58,7 +51,7 @@ const CTABannerSection = dynamic(
 
 // Loading fallback component
 const SectionSkeleton = (): React.JSX.Element => (
-  <div className="animate-pulse space-y-4 pt-4 lg:pt-6">
+  <div className="space-y-4 pt-4 lg:pt-6 animate-pulse">
     <div className="bg-gray-200 rounded-lg h-64" />
   </div>
 );
@@ -67,15 +60,7 @@ export default function HomePage(): React.JSX.Element {
   return (
     <div className="min-h-screen">
       {/* Hero Sections - Full Width - Critical, loaded immediately */}
-      <HeroSection />
-      <HeroShowcaseSection />
-
-      {/* Teams Section - Loaded with Suspense */}
-      <section className="pt-12 lg:pt-12">
-        <Suspense fallback={<SectionSkeleton />}>
-          <TeamsSection />
-        </Suspense>
-      </section>
+      <HeroRevampSection />
 
       {/* Main Content Container */}
       <div className="mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">

@@ -51,7 +51,7 @@ export const PromptLibraryHome = ({ limit }: PromptLibraryHomeProps) => {
 
   return (
     <div className="bg-white py-8 lg:py-16 min-h-screen">
-      <div className="mx-auto px-4 max-w-7xl">
+      <div className="mx-auto max-w-7xl">
         {/* Header */}
         <div className="mb-12 text-center">
           <h1 className="mb-4 font-bold text-gray-900 text-4xl">
@@ -84,7 +84,7 @@ export const PromptLibraryHome = ({ limit }: PromptLibraryHomeProps) => {
               </div>
             </div>
           ) : categories.length > 0 ? (
-            <div className="justify-items-center gap-6 grid grid-cols-2 lg:grid-cols-3">
+            <div className="justify-items-center gap-4 grid grid-cols-2 lg:grid-cols-3">
               {(limit ? categories.slice(0, limit) : categories).map(
                 category => (
                   <CategoryCard

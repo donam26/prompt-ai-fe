@@ -33,7 +33,7 @@ const CoachingMentorshipSection = () => {
 
       {/* Right Section - Video Call Interface */}
       <div className="relative rounded-xl overflow-hidden">
-        <div className="z-10 relative grid h-full h-full">
+        <div className="z-10 relative grid h-full">
           {/* Video Call Interface */}
           <Image
             src="/images/home/comprehensive/coaching-mentorship-section.jpg"
