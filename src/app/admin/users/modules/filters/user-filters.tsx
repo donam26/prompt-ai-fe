@@ -311,27 +311,25 @@ const StatusFilter = ({
  * @returns The date range filter JSX
  */
 const DateRangeFilter = ({
-  dateFrom,
-  dateTo,
-  onDateFromChange,
-  onDateToChange,
+  dateFrom = "",
+  dateTo = "",
+  onDateFromChange = () => {},
+  onDateToChange = () => {},
 }: {
-  dateFrom: string;
-  dateTo: string;
-  onDateFromChange: (dateFrom: string) => void;
-  onDateToChange: (dateTo: string) => void;
+  dateFrom?: string;
+  dateTo?: string;
+  onDateFromChange?: (value: string) => void;
+  onDateToChange?: (value: string) => void;
 }): React.JSX.Element => (
-  <div className="gap-2 grid grid-cols-2">
+  <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
     <div>
       <DatePicker
         value={dateFrom ? new Date(dateFrom) : null}
         onChange={date => {
-          if (date) {
-            const formattedDate = date.toDate().toISOString().split("T")[0];
-            onDateFromChange(formattedDate);
-          } else {
-            onDateFromChange("");
-          }
+          const formattedDate = date
+            ? date.toDate().toISOString().split("T")[0]
+            : "";
+          onDateFromChange(formattedDate);
         }}
         format="DD/MM/YYYY"
         placeholder="Từ ngày"
@@ -344,12 +342,10 @@ const DateRangeFilter = ({
       <DatePicker
         value={dateTo ? new Date(dateTo) : null}
         onChange={date => {
-          if (date) {
-            const formattedDate = date.toDate().toISOString().split("T")[0];
-            onDateToChange(formattedDate);
-          } else {
-            onDateToChange("");
-          }
+          const formattedDate = date
+            ? date.toDate().toISOString().split("T")[0]
+            : "";
+          onDateToChange(formattedDate);
         }}
         format="DD/MM/YYYY"
         placeholder="Đến ngày"

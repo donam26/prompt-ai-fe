@@ -1,6 +1,5 @@
 import { HERO_SHOWCASE } from "@/constants";
 import Image from "next/image";
-import { createInfiniteScrollArray } from "@/utils";
 
 export const HeroShowcaseSection = () => {
   return (

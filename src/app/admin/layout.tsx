@@ -18,15 +18,6 @@ export default function AdminLayout({
   const router = useRouter();
 
   useEffect(() => {
-    const htmlElement = document.documentElement;
-    htmlElement.classList.remove("dark");
-    htmlElement.classList.add("light");
-    htmlElement.setAttribute("data-theme", "light");
-    document.body.classList.remove("dark");
-    document.body.classList.add("light");
-  }, []);
-
-  useEffect(() => {
     if (!isLoading && !isAdmin) {
       router.push(ROUTES_URL.HOME);
     }

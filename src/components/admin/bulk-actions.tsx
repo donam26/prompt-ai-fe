@@ -47,7 +47,7 @@ export const BulkActions = ({
           !hasSelection && "opacity-60"
         )}
       >
-        <div className="flex justify-between items-center">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           {/* Selection Info */}
           <div className="flex items-center gap-3">
             <div className="flex items-center gap-2">
@@ -72,16 +72,16 @@ export const BulkActions = ({
           </div>
 
           {/* Actions */}
-          <div className="flex items-center gap-3">
+          <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-3 w-full sm:w-auto">
             {/* SubType Selector */}
-            <div className="flex items-center gap-2">
+            <div className="flex w-full items-center gap-2 sm:w-auto">
               <Settings className="w-4 h-4 text-gray-500 dark:text-gray-400" />
               <Select
                 value={selectedSubType}
                 onValueChange={onSubTypeChange}
                 disabled={disabled || isLoading || !hasSelection}
               >
-                <SelectTrigger className="bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 w-36 h-9">
+                <SelectTrigger className="bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 h-9 w-full sm:w-36">
                   <SelectValue placeholder="Chọn loại" />
                 </SelectTrigger>
                 <SelectContent>
@@ -105,7 +105,7 @@ export const BulkActions = ({
             <Button
               onClick={onApplySubType}
               disabled={disabled || isBusy || !selectedSubType || !hasSelection}
-              className="bg-blue-600 hover:bg-blue-700 dark:bg-blue-600 dark:hover:bg-blue-700 disabled:opacity-50 px-4 h-9 font-medium text-white text-sm transition-all duration-200 disabled:cursor-not-allowed"
+              className="bg-blue-600 hover:bg-blue-700 dark:bg-blue-600 dark:hover:bg-blue-700 disabled:opacity-50 px-4 h-9 font-medium text-white text-sm transition-all duration-200 disabled:cursor-not-allowed w-full sm:w-auto"
             >
               {isLoading ? (
                 <div className="flex items-center gap-2">
@@ -122,7 +122,7 @@ export const BulkActions = ({
               onClick={onBulkDelete}
               disabled={disabled || isBusy || !hasSelection}
               variant="destructive"
-              className="flex items-center gap-2 px-4 h-9 text-sm disabled:opacity-50 disabled:cursor-not-allowed"
+              className="flex items-center gap-2 px-4 h-9 text-sm disabled:opacity-50 disabled:cursor-not-allowed w-full sm:w-auto"
             >
               {isBulkDeleting ? (
                 <>
@@ -142,7 +142,7 @@ export const BulkActions = ({
               onClick={onClearSelection}
               disabled={disabled || isBusy || !hasSelection}
               variant="ghost"
-              className="hover:bg-gray-100 dark:hover:bg-gray-700 px-3 h-9 text-gray-600 hover:text-gray-800 dark:hover:text-gray-200 dark:text-gray-400 transition-all duration-200"
+              className="hover:bg-gray-100 dark:hover:bg-gray-700 px-3 h-9 text-gray-600 hover:text-gray-800 dark:hover:text-gray-200 dark:text-gray-400 transition-all duration-200 w-full sm:w-auto"
             >
               <XCircle className="mr-1 w-4 h-4" />
               Bỏ chọn

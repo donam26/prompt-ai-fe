@@ -126,17 +126,17 @@ export const BlogFilter = ({
  * Date range filter component
  */
 const DateRangeFilter = ({
-  dateFrom,
-  dateTo,
-  onDateFromChange,
-  onDateToChange,
+  dateFrom = "",
+  dateTo = "",
+  onDateFromChange = () => {},
+  onDateToChange = () => {},
 }: {
-  dateFrom: string;
-  dateTo: string;
-  onDateFromChange: (value: string) => void;
-  onDateToChange: (value: string) => void;
+  dateFrom?: string;
+  dateTo?: string;
+  onDateFromChange?: (value: string) => void;
+  onDateToChange?: (value: string) => void;
 }): React.JSX.Element => (
-  <div className="gap-2 grid grid-cols-2">
+  <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
     <div>
       <Input
         type="date"

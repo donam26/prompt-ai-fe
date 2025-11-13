@@ -8,7 +8,6 @@ import React, {
   useMemo,
 } from "react";
 import { Search, X } from "lucide-react";
-import DatePicker from "react-multi-date-picker";
 
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -390,59 +389,34 @@ const IndustriesFilter = ({
 };
 
 const DateRangePicker = ({
-  dateFrom,
-  dateTo,
-  onDateFromChange,
-  onDateToChange,
+  dateFrom = "",
+  dateTo = "",
+  onDateFromChange = () => {},
+  onDateToChange = () => {},
 }: {
   dateFrom?: string;
   dateTo?: string;
-  onDateFromChange: (value: string) => void;
-  onDateToChange: (value: string) => void;
-}): React.JSX.Element => {
-  const handleDateFromChange = (date: any) => {
-    const dateString = date ? date.format("YYYY-MM-DD") : "";
-    onDateFromChange(dateString);
-  };
-
-  const handleDateToChange = (date: any) => {
-    const dateString = date ? date.format("YYYY-MM-DD") : "";
-    onDateToChange(dateString);
-  };
-
-  const formatDateForDisplay = (dateString?: string): Date | null => {
-    if (!dateString) return null;
-    const date = new Date(dateString);
-    return isNaN(date.getTime()) ? null : date;
-  };
-
-  return (
-    <div className="flex sm:flex-row flex-col gap-4 w-full lg:w-auto">
-      {/* Date From */}
-      <div className="w-full sm:w-48">
-        <DatePicker
-          value={formatDateForDisplay(dateFrom)}
-          onChange={handleDateFromChange}
-          format="DD/MM/YYYY"
-          placeholder="Từ ngày"
-          className="w-full"
-          containerClassName="w-full"
-          inputClass="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-        />
-      </div>
-
-      {/* Date To */}
-      <div className="w-full sm:w-48">
-        <DatePicker
-          value={formatDateForDisplay(dateTo)}
-          onChange={handleDateToChange}
-          format="DD/MM/YYYY"
-          placeholder="Đến ngày"
-          className="w-full"
-          containerClassName="w-full"
-          inputClass="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-        />
-      </div>
+  onDateFromChange?: (value: string) => void;
+  onDateToChange?: (value: string) => void;
+}): React.JSX.Element => (
+  <div className="gap-2 grid grid-cols-1 sm:grid-cols-2">
+    <div>
+      <Input
+        type="date"
+        value={dateFrom}
+        onChange={e => onDateFromChange(e.target.value)}
+        placeholder="Từ ngày"
+        className="w-full"
+      />
     </div>
-  );
-};
+    <div>
+      <Input
+        type="date"
+        value={dateTo}
+        onChange={e => onDateToChange(e.target.value)}
+        placeholder="Đến ngày"
+        className="w-full"
+      />
+    </div>
+  </div>
+);

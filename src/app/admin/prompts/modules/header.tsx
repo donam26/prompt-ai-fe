@@ -34,18 +34,22 @@ export const PromptHeader = ({
   };
 
   return (
-    <div className="flex justify-between items-center">
-      <div>
+    <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+      <div className="text-center sm:text-left">
         <h1 className="font-bold text-gray-900 text-3xl">Quản lý Prompt</h1>
         <p className="mt-2 text-gray-600">Quản lý các prompt trong hệ thống</p>
       </div>
-      <div className="flex items-center gap-3">
-        <ExportExcelButton filters={filters} disabled={disabled} />
+      <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 w-full sm:w-auto">
+        <ExportExcelButton
+          filters={filters}
+          disabled={disabled}
+          className="w-full sm:w-auto justify-center"
+        />
         <Button
           variant="outline"
           onClick={() => setImportDialogOpen(true)}
           disabled={disabled}
-          className="hover:bg-primary-50 border-primary-600 text-primary-600"
+          className="hover:bg-primary-50 border-primary-600 text-primary-600 w-full sm:w-auto justify-center"
         >
           <Upload className="mr-2 w-4 h-4" />
           Import Excel
@@ -54,7 +58,7 @@ export const PromptHeader = ({
           <DialogTrigger asChild>
             <Button
               onClick={onAddPrompt}
-              className="bg-primary-600 hover:bg-primary-700 shadow-sm text-white"
+              className="bg-primary-600 hover:bg-primary-700 shadow-sm text-white w-full sm:w-auto justify-center"
             >
               <Plus className="mr-2 w-4 h-4" />
               Thêm prompt

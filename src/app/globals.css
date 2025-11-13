@@ -5,6 +5,20 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    color-scheme: light;
+  }
+}
+
+* {
+  scroll-behavior: smooth;
+}
+
 /* Scrollbar utilities - hide by default, show on hover */
 @layer utilities {
   .scrollbar-hide {

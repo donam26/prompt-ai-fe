@@ -8,6 +8,7 @@ import { Toast } from "@/components/ui/toast";
 import { Header, Footer } from "@/components/layout";
 import { ConditionalMain } from "@/components/layout/conditional-main";
 import { Suspense } from "react";
+import { ThemeProvider } from "next-themes";
 import { CustomAuthSyncWrapper } from "@/app/(modules)/custom-auth-sync-wrapper";
 import { BackToTopButton } from "@/components/ui/back-to-top-button";
 import { ChatSupportButton } from "@/components/ui/chat-support-button";
@@ -74,7 +75,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }): React.JSX.Element {
   return (
-    <html lang="vi">
+    <html
+      lang="vi"
+      className="light"
+      suppressHydrationWarning
+      style={{ colorScheme: "light" }}
+    >
       <head>
         <meta name="google-adsense-account" content="ca-pub-2351800777200822" />
         <link
@@ -110,20 +116,26 @@ export default function RootLayout({
         )}
         <ErrorBoundary>
           <NextAuthProvider>
-            <CustomAuthSyncWrapper>
-              <Suspense fallback={null}>
-                <PageViewTracker />
-                <TimeOnPageTracker />
-              </Suspense>
-              <div className="flex flex-col min-h-screen">
-                <Header />
-                <ConditionalMain>{children}</ConditionalMain>
-                <Footer />
-              </div>
-              <BackToTopButton />
-              <ChatSupportButton />
-              <Toast />
-            </CustomAuthSyncWrapper>
+            <ThemeProvider
+              attribute="class"
+              defaultTheme="light"
+              forcedTheme="light"
+            >
+              <CustomAuthSyncWrapper>
+                <Suspense fallback={null}>
+                  <PageViewTracker />
+                  <TimeOnPageTracker />
+                </Suspense>
+                <div className="flex flex-col min-h-screen">
+                  <Header />
+                  <ConditionalMain>{children}</ConditionalMain>
+                  <Footer />
+                </div>
+                <BackToTopButton />
+                <ChatSupportButton />
+                <Toast />
+              </CustomAuthSyncWrapper>
+            </ThemeProvider>
           </NextAuthProvider>
         </ErrorBoundary>
       </body>

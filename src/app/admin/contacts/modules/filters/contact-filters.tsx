@@ -195,13 +195,13 @@ const TypeFilter = ({
  * Date range filter component
  */
 const DateRangeFilter = ({
-  value,
+  value = { from: "", to: "" },
   onChange,
 }: {
-  value: { from: string; to: string };
+  value?: { from: string; to: string };
   onChange: (range: { from: string; to: string }) => void;
 }): React.JSX.Element => (
-  <div className="gap-2 grid grid-cols-2">
+  <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
     <div>
       <Input
         type="date"
