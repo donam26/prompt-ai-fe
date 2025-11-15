@@ -324,14 +324,16 @@ export const HeroRevampSection = (): React.JSX.Element => {
             </div>
           )}
 
-          <div className="z-10 relative bg-white/70 shadow-[0px_24px_60px_rgba(87,0,198,0.08)] backdrop-blur-md p-4 border border-[#F4F0FF] rounded-2xl">
+          <div className="z-10 relative bg-white/70 shadow-[0px_24px_60px_rgba(87,0,198,0.08)] backdrop-blur-md p-4 sm:p-4 pb-0 sm:pb-4 border border-[#F4F0FF] rounded-2xl">
             {/* Desktop: Show 9 prompts */}
             <div className="hidden sm:block">
               <PromptLibraryHome limit={PROMPT_LIBRARY_LIMIT_DESKTOP} />
             </div>
-            {/* Mobile: Show 6 prompts */}
-            <div className="sm:hidden block">
-              <PromptLibraryHome limit={PROMPT_LIBRARY_LIMIT_MOBILE} />
+            {/* Mobile: Show 6 prompts - Remove extra padding */}
+            <div className="sm:hidden block -mx-4 -mb-4">
+              <div className="[&>div]:!py-0 [&>div>div]:!py-0 [&>div>div]:!pb-0 [&>div]:!min-h-0">
+                <PromptLibraryHome limit={PROMPT_LIBRARY_LIMIT_MOBILE} />
+              </div>
             </div>
           </div>
         </div>
