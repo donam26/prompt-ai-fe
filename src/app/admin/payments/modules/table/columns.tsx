@@ -164,9 +164,7 @@ export function usePaymentColumns({
     {
       accessorKey: "subscription",
       meta: { title: "Gói đăng ký" },
-      header: () => (
-        <div className="hidden lg:block font-medium">Gói đăng ký</div>
-      ),
+      header: () => <div className="font-medium">Gói đăng ký</div>,
       cell: ({ row }) => (
         <SubscriptionBadge
           subscriptionId={row.original.subscriptionId}

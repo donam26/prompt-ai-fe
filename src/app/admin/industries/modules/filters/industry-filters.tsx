@@ -14,6 +14,11 @@ import type { Category } from "@/types";
 export const IndustryFilter = ({
   filters,
   categories,
+  categoriesLoading = false,
+  categoriesSearch = "",
+  onCategoriesSearch,
+  onCategoriesScrollToBottom,
+  hasMoreCategories = false,
   onFilterChange,
   onClearFilters,
   onPageReset,
@@ -104,6 +109,11 @@ export const IndustryFilter = ({
             <CategoriesFilter
               value={filters.categoryIds || []}
               categories={categories}
+              categoriesLoading={categoriesLoading}
+              categoriesSearch={categoriesSearch}
+              onCategoriesSearch={onCategoriesSearch}
+              onCategoriesScrollToBottom={onCategoriesScrollToBottom}
+              hasMoreCategories={hasMoreCategories}
               onChange={handleCategoriesChange}
             />
           </div>
@@ -116,10 +126,20 @@ export const IndustryFilter = ({
 const CategoriesFilter = ({
   value,
   categories,
+  categoriesLoading = false,
+  categoriesSearch: _categoriesSearch = "",
+  onCategoriesSearch,
+  onCategoriesScrollToBottom,
+  hasMoreCategories = false,
   onChange,
 }: {
   value: string[];
   categories: Category[];
+  categoriesLoading?: boolean;
+  categoriesSearch?: string;
+  onCategoriesSearch?: (search: string) => void;
+  onCategoriesScrollToBottom?: () => void;
+  hasMoreCategories?: boolean;
   onChange: (values: string[]) => void;
 }): React.JSX.Element => {
   const categoryOptions = categories.map(category => ({
@@ -135,6 +155,11 @@ const CategoriesFilter = ({
       placeholder="Chọn danh mục..."
       maxCount={3}
       className="w-full"
+      shouldFilter={false}
+      onSearch={onCategoriesSearch}
+      onScrollToBottom={onCategoriesScrollToBottom}
+      isLoading={categoriesLoading}
+      hasMore={hasMoreCategories}
     />
   );
 };

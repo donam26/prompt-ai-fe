@@ -95,7 +95,7 @@ export function useProductColumns({
     {
       accessorKey: "link",
       meta: { title: "Link" },
-      header: () => <div className="hidden lg:block font-medium">Link</div>,
+      header: () => <div className="font-medium">Link</div>,
       cell: ({ row }) => {
         const link = row.original.link;
 
@@ -125,18 +125,16 @@ export function useProductColumns({
     {
       accessorKey: "section",
       meta: { title: "Section" },
-      header: () => <div className="hidden lg:block font-medium">Section</div>,
+      header: () => <div className="font-medium">Section</div>,
       cell: ({ row }) => {
         const categoryName = row.original.section?.name || "N/A";
 
         return (
-          <div className="hidden lg:block">
-            <BadgeCell
-              value={categoryName}
-              variant="secondary"
-              className="text-xs"
-            />
-          </div>
+          <BadgeCell
+            value={categoryName}
+            variant="secondary"
+            className="text-xs"
+          />
         );
       },
       enableSorting: false,
@@ -159,17 +157,13 @@ export function useProductColumns({
     {
       accessorKey: "updatedAt",
       meta: { title: "Cập nhật cuối" },
-      header: () => (
-        <div className="hidden lg:block font-medium">Cập nhật cuối</div>
-      ),
+      header: () => <div className="font-medium">Cập nhật cuối</div>,
       cell: ({ row }) => (
-        <div className="hidden lg:block">
-          <span className="text-gray-600 text-sm">
-            {row.original.updatedAt
-              ? new Date(row.original.updatedAt).toLocaleDateString("vi-VN")
-              : "N/A"}
-          </span>
-        </div>
+        <span className="text-gray-600 text-sm">
+          {row.original.updatedAt
+            ? new Date(row.original.updatedAt).toLocaleDateString("vi-VN")
+            : "N/A"}
+        </span>
       ),
       enableSorting: false,
     },

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect, useMemo, useRef } from "react";
 import { useRouter } from "next/navigation";
 
 import { AdminContentCard } from "@/components/admin/common/admin-content-card";
@@ -23,6 +23,9 @@ import {
   DEFAULT_TOTAL,
 } from "@/constants";
 import { DataTable } from "@/components/data-table";
+import type { IndustryFilterState } from "@/types/admin/industry";
+import { debounce } from "@/lib/utils";
+import { useDeepMemo } from "@/hooks/useDeepMemo";
 
 export default function CategoryManagementPage(): React.JSX.Element {
   const router = useRouter();
@@ -42,10 +45,96 @@ export default function CategoryManagementPage(): React.JSX.Element {
     filters,
   });
 
-  const {
-    industriesWithPagination: industriesData,
-    isFetching: industriesLoading,
-  } = useIndustries();
+  // Industries state management for infinite scroll and search in filter
+  const [industriesSearch, setIndustriesSearch] = useState<string>("");
+  const [industriesPagination, setIndustriesPagination] = useState<IPagination>(
+    {
+      pageIndex: 0,
+      pageSize: 10,
+    }
+  );
+  const [allIndustries, setAllIndustries] = useState<any[]>([]);
+
+  // Debounced search handler - update industriesSearch after 1 second
+  const debouncedSetSearch = useRef(
+    debounce((search: string) => {
+      setIndustriesSearch(search);
+    }, 1000)
+  ).current;
+
+  // Build filters for industries
+  const industriesFilters = useMemo<IndustryFilterState | undefined>(() => {
+    const hasSearch = !!industriesSearch.trim();
+
+    const filters: IndustryFilterState = {
+      ...(hasSearch && { searchTerm: industriesSearch.trim() }),
+    };
+
+    return filters;
+  }, [industriesSearch]);
+
+  // Fetch industries with pagination and search
+  const { industriesWithPagination, isFetching: industriesLoading } =
+    useIndustries({
+      pagination: industriesPagination,
+      filters: industriesFilters,
+      enabled: true,
+    });
+
+  // Reset industries when search changes
+  useEffect(() => {
+    setIndustriesPagination(prev => ({ ...prev, pageIndex: 0 }));
+    setAllIndustries([]);
+  }, [industriesSearch]);
+
+  // Memoize industries data with deep comparison to prevent infinite loops
+  const industriesDataRaw = industriesWithPagination?.data || [];
+  const industriesData = useDeepMemo(industriesDataRaw);
+
+  const currentPageIndex = industriesPagination.pageIndex;
+
+  // Accumulate industries data for infinite scroll
+  useEffect(() => {
+    if (industriesData.length > 0 || currentPageIndex === 0) {
+      if (currentPageIndex === 0) {
+        setAllIndustries(industriesData);
+      } else {
+        setAllIndustries(prev => {
+          const existingIds = new Set(prev.map(i => i.id));
+          const newItems = industriesData.filter(i => !existingIds.has(i.id));
+          return [...prev, ...newItems];
+        });
+      }
+    }
+  }, [industriesData, currentPageIndex]);
+
+  // Handle search change with debounce
+  const handleIndustriesSearch = useCallback(
+    (search: string) => {
+      debouncedSetSearch(search);
+    },
+    [debouncedSetSearch]
+  );
+
+  // Extract stable values to prevent infinite loops
+  const industriesTotalPages = industriesWithPagination?.totalPages || 1;
+  const industriesCurrentPageIndex = industriesPagination.pageIndex;
+
+  // Handle scroll to bottom (load more)
+  const handleIndustriesScrollToBottom = useCallback(() => {
+    if (industriesCurrentPageIndex + 1 < industriesTotalPages) {
+      setIndustriesPagination(prev => ({
+        ...prev,
+        pageIndex: prev.pageIndex + 1,
+      }));
+    }
+  }, [industriesTotalPages, industriesCurrentPageIndex]);
+
+  // Check if there are more items to load
+  const hasMoreIndustries = useMemo(() => {
+    return industriesCurrentPageIndex + 1 < industriesTotalPages;
+  }, [industriesTotalPages, industriesCurrentPageIndex]);
+
   const { mutate: deleteCategory, isLoading: isDeleting } = useDeleteCategory();
 
   const handlePaginationChange = useCallback(
@@ -54,11 +143,7 @@ export default function CategoryManagementPage(): React.JSX.Element {
     []
   );
 
-  const industries = Array.isArray(industriesData?.data)
-    ? industriesData.data
-    : [];
-
-  const isLoading = categoriesLoading || industriesLoading || isDeleting;
+  const isLoading = categoriesLoading || isDeleting;
 
   // 🔗 Navigation handlers
   const handleAddCategory = () => {
@@ -104,7 +189,12 @@ export default function CategoryManagementPage(): React.JSX.Element {
         <CategoryFilter
           filters={filters}
           sections={[]}
-          industries={industries}
+          industries={allIndustries}
+          industriesLoading={industriesLoading}
+          industriesSearch={industriesSearch}
+          onIndustriesSearch={handleIndustriesSearch}
+          onIndustriesScrollToBottom={handleIndustriesScrollToBottom}
+          hasMoreIndustries={hasMoreIndustries}
           onFilterChange={handleFilterChange}
           onClearFilters={handleClearFilters}
           onPageReset={() =>

@@ -49,15 +49,13 @@ export function useSectionColumns({
     {
       accessorKey: "createdAt",
       meta: { title: "Ngày tạo" },
-      header: () => <div className="hidden lg:block font-medium">Ngày tạo</div>,
+      header: () => <div className="font-medium">Ngày tạo</div>,
       cell: ({ row }) => (
-        <div className="hidden lg:block">
-          <span className="text-gray-600 text-sm">
-            {row.original.createdAt
-              ? new Date(row.original.createdAt).toLocaleDateString("vi-VN")
-              : "N/A"}
-          </span>
-        </div>
+        <span className="text-gray-600 text-sm">
+          {row.original.createdAt
+            ? new Date(row.original.createdAt).toLocaleDateString("vi-VN")
+            : "N/A"}
+        </span>
       ),
       enableSorting: false,
     },

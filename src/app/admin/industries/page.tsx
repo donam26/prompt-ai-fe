@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect, useMemo, useRef } from "react";
 
 import { AdminContentCard } from "@/components/admin/common/admin-content-card";
 import {
@@ -25,9 +25,11 @@ import {
   DEFAULT_PAGINATION,
   DEFAULT_TOTAL_PAGES,
   DEFAULT_TOTAL,
-  DEFAULT_PAGE_MAX_SIZE,
 } from "@/constants";
 import { DataTable } from "@/components/data-table";
+import type { CategoryFilterState } from "@/types/admin/category";
+import { debounce } from "@/lib/utils";
+import { useDeepMemo } from "@/hooks/useDeepMemo";
 
 export default function IndustryManagementPage(): React.JSX.Element {
   const [filters, setFilters] = useState<IndustryFilterState>(
@@ -52,12 +54,95 @@ export default function IndustryManagementPage(): React.JSX.Element {
     filters,
   });
 
-  const { categories } = useCategories({
-    pagination: {
-      pageIndex: DEFAULT_PAGE_INDEX,
-      pageSize: DEFAULT_PAGE_MAX_SIZE,
+  // Categories state management for infinite scroll and search in filter
+  const [categoriesSearch, setCategoriesSearch] = useState<string>("");
+  const [categoriesPagination, setCategoriesPagination] = useState<IPagination>(
+    {
+      pageIndex: 0,
+      pageSize: 10,
+    }
+  );
+  const [allCategories, setAllCategories] = useState<any[]>([]);
+
+  // Debounced search handler - update categoriesSearch after 1 second
+  const debouncedSetCategoriesSearch = useRef(
+    debounce((search: string) => {
+      setCategoriesSearch(search);
+    }, 1000)
+  ).current;
+
+  // Build filters for categories
+  const categoriesFilters = useMemo<CategoryFilterState | undefined>(() => {
+    const hasSearch = !!categoriesSearch.trim();
+    const filters: CategoryFilterState = {
+      searchTerm: hasSearch ? categoriesSearch.trim() : "",
+      sectionId: "",
+      status: "",
+      industryIds: [],
+    };
+    return filters;
+  }, [categoriesSearch]);
+
+  // Fetch categories with pagination and search
+  const { categoriesWithPagination, isFetching: categoriesLoading } =
+    useCategories({
+      pagination: categoriesPagination,
+      filters: categoriesFilters,
+    });
+
+  // Reset categories when search changes
+  useEffect(() => {
+    setCategoriesPagination(prev => ({ ...prev, pageIndex: 0 }));
+    setAllCategories([]);
+  }, [categoriesSearch]);
+
+  // Memoize categories data with deep comparison to prevent infinite loops
+  const categoriesDataRaw = categoriesWithPagination?.data || [];
+  const categoriesData = useDeepMemo(categoriesDataRaw);
+
+  const currentCategoriesPageIndex = categoriesPagination.pageIndex;
+
+  // Accumulate categories data for infinite scroll
+  useEffect(() => {
+    if (categoriesData.length > 0 || currentCategoriesPageIndex === 0) {
+      if (currentCategoriesPageIndex === 0) {
+        setAllCategories(categoriesData);
+      } else {
+        setAllCategories(prev => {
+          const existingIds = new Set(prev.map(c => c.id));
+          const newItems = categoriesData.filter(c => !existingIds.has(c.id));
+          return [...prev, ...newItems];
+        });
+      }
+    }
+  }, [categoriesData, currentCategoriesPageIndex]);
+
+  // Handle categories search change with debounce
+  const handleCategoriesSearch = useCallback(
+    (search: string) => {
+      debouncedSetCategoriesSearch(search);
     },
-  });
+    [debouncedSetCategoriesSearch]
+  );
+
+  // Extract stable values to prevent infinite loops
+  const categoriesTotalPages = categoriesWithPagination?.totalPages || 1;
+  const categoriesCurrentPageIndex = categoriesPagination.pageIndex;
+
+  // Handle categories scroll to bottom (load more)
+  const handleCategoriesScrollToBottom = useCallback(() => {
+    if (categoriesCurrentPageIndex + 1 < categoriesTotalPages) {
+      setCategoriesPagination(prev => ({
+        ...prev,
+        pageIndex: prev.pageIndex + 1,
+      }));
+    }
+  }, [categoriesTotalPages, categoriesCurrentPageIndex]);
+
+  // Check if there are more categories to load
+  const hasMoreCategories = useMemo(() => {
+    return categoriesCurrentPageIndex + 1 < categoriesTotalPages;
+  }, [categoriesTotalPages, categoriesCurrentPageIndex]);
 
   const { mutate: deleteIndustry, isLoading: isDeleting } = useDeleteIndustry();
   const { mutate: upsertIndustry, isUpserting } = useUpsertIndustry();
@@ -132,7 +217,12 @@ export default function IndustryManagementPage(): React.JSX.Element {
 
         <IndustryFilter
           filters={filters}
-          categories={categories}
+          categories={allCategories}
+          categoriesLoading={categoriesLoading}
+          categoriesSearch={categoriesSearch}
+          onCategoriesSearch={handleCategoriesSearch}
+          onCategoriesScrollToBottom={handleCategoriesScrollToBottom}
+          hasMoreCategories={hasMoreCategories}
           onFilterChange={handleFilterChange}
           onClearFilters={handleClearFilters}
           onPageReset={() =>
@@ -142,7 +232,7 @@ export default function IndustryManagementPage(): React.JSX.Element {
 
         <IndustryActiveFilters
           filters={filters}
-          categories={categories}
+          categories={allCategories}
           onFilterChange={handleFilterChange}
           onClearAll={handleClearFilters}
           onPageReset={() =>

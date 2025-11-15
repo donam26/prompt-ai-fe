@@ -11,7 +11,6 @@ import { debounce } from "@/lib/utils";
 import type { PaymentFilterProps } from "@/types/admin";
 import { PaymentStatus } from "@/constants/payment-status";
 import { PaymentActiveFilters } from "./payment-active-filters";
-import { useSubscriptions } from "@/hooks/admin/useSubscription";
 
 /**
  * Payment filter component with search, status, method, and date range filters
@@ -21,15 +20,18 @@ import { useSubscriptions } from "@/hooks/admin/useSubscription";
  */
 export const PaymentFilters = ({
   filters,
+  subscriptions = [],
+  subscriptionsLoading = false,
+  subscriptionsSearch = "",
+  onSubscriptionsSearch,
+  onSubscriptionsScrollToBottom,
+  hasMoreSubscriptions = false,
   onFilterChange,
   onClearFilters,
   onPageReset,
   className,
 }: PaymentFilterProps): React.JSX.Element => {
   const [searchValue, setSearchValue] = useState(filters.searchTerm || "");
-
-  // Fetch subscriptions data for filter
-  const { subscriptions } = useSubscriptions({});
 
   const updateSearchValue = useCallback((value: string) => {
     setSearchValue(value);
@@ -122,6 +124,11 @@ export const PaymentFilters = ({
                 values={filters.subscriptionIds || []}
                 onChange={handleSubscriptionChange}
                 subscriptions={subscriptions}
+                subscriptionsLoading={subscriptionsLoading}
+                subscriptionsSearch={subscriptionsSearch}
+                onSubscriptionsSearch={onSubscriptionsSearch}
+                onSubscriptionsScrollToBottom={onSubscriptionsScrollToBottom}
+                hasMoreSubscriptions={hasMoreSubscriptions}
               />
             </div>
 
@@ -182,26 +189,39 @@ const SubscriptionFilter = ({
   values,
   onChange,
   subscriptions,
+  subscriptionsLoading = false,
+  subscriptionsSearch: _subscriptionsSearch = "",
+  onSubscriptionsSearch,
+  onSubscriptionsScrollToBottom,
+  hasMoreSubscriptions = false,
 }: {
   values: string[];
   onChange: (values: string[]) => void;
   subscriptions: any[];
+  subscriptionsLoading?: boolean;
+  subscriptionsSearch?: string;
+  onSubscriptionsSearch?: (search: string) => void;
+  onSubscriptionsScrollToBottom?: () => void;
+  hasMoreSubscriptions?: boolean;
 }): React.JSX.Element => {
-  const subscriptionItems = subscriptions.map(sub => ({
-    id: sub.id.toString(),
-    name: sub.name,
+  const subscriptionOptions = subscriptions.map(sub => ({
+    value: sub.id.toString(),
+    label: sub.name,
   }));
 
   return (
     <MultiSelect
-      options={subscriptionItems.map(item => ({
-        value: item.id,
-        label: item.name,
-      }))}
+      options={subscriptionOptions}
       value={values}
       onValueChange={onChange}
       placeholder="Chọn gói đăng ký..."
+      maxCount={3}
       className="w-full"
+      shouldFilter={false}
+      onSearch={onSubscriptionsSearch}
+      onScrollToBottom={onSubscriptionsScrollToBottom}
+      isLoading={subscriptionsLoading}
+      hasMore={hasMoreSubscriptions}
     />
   );
 };

@@ -4,6 +4,7 @@ import { usePathname } from "next/navigation";
 import { ChevronDown, ChevronRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
+import { useAdminPermissions } from "@/hooks/useAdminPermissions";
 import type { SidebarItemType } from "@/components/admin/types/sidebar";
 
 interface Props {
@@ -26,7 +27,14 @@ export function SidebarItem({
   isDisabled = false,
 }: Props): React.JSX.Element {
   const pathname = usePathname();
+  const { canAccess, isSuperAdmin } = useAdminPermissions();
   const hasChildren = item.children && item.children.length > 0;
+
+  // Filter children items based on permissions
+  const filteredChildren =
+    item.children?.filter(
+      child => isSuperAdmin || canAccess(child.permission)
+    ) || [];
 
   const handleToggle = (): void => {
     if (hasChildren) {
@@ -98,7 +106,7 @@ export function SidebarItem({
         {/* Children Items */}
         {!isCollapsed && isExpanded && (
           <div className="space-y-1 ml-4">
-            {item.children?.map(child => {
+            {filteredChildren.map(child => {
               const isChildActive = pathname === child.href;
               return (
                 <Link

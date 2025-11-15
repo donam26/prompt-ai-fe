@@ -164,25 +164,19 @@ export function useCouponColumns({
     {
       accessorKey: "type",
       meta: { title: "Loại" },
-      header: () => <div className="hidden lg:block font-medium">Loại</div>,
-      cell: ({ row }) => (
-        <div className="hidden lg:block">
-          <TypeBadge type={row.original.type} />
-        </div>
-      ),
+      header: () => <div className="font-medium">Loại</div>,
+      cell: ({ row }) => <TypeBadge type={row.original.type} />,
       enableSorting: false,
     },
     {
       accessorKey: "usage",
       meta: { title: "Sử dụng" },
-      header: () => <div className="hidden lg:block font-medium">Sử dụng</div>,
+      header: () => <div className="font-medium">Sử dụng</div>,
       cell: ({ row }) => (
-        <div className="hidden lg:block">
-          <UsageDisplay
-            usageCount={row.original.usageCount}
-            maxUsage={row.original.maxUsage}
-          />
-        </div>
+        <UsageDisplay
+          usageCount={row.original.usageCount}
+          maxUsage={row.original.maxUsage}
+        />
       ),
       enableSorting: false,
     },
@@ -209,15 +203,11 @@ export function useCouponColumns({
     {
       accessorKey: "expiryDate",
       meta: { title: "Ngày hết hạn" },
-      header: () => (
-        <div className="hidden lg:block font-medium">Ngày hết hạn</div>
-      ),
+      header: () => <div className="font-medium">Ngày hết hạn</div>,
       cell: ({ row }) => (
-        <div className="hidden lg:block">
-          <span className="text-gray-600 text-sm">
-            {new Date(row.original.expiryDate).toLocaleDateString("vi-VN")}
-          </span>
-        </div>
+        <span className="text-gray-600 text-sm">
+          {new Date(row.original.expiryDate).toLocaleDateString("vi-VN")}
+        </span>
       ),
       enableSorting: false,
     },
@@ -227,13 +217,11 @@ export function useCouponColumns({
       header: () => <div className="font-medium">Ngày tạo</div>,
       cell: ({ row }) => {
         return (
-          <div>
-            <span className="text-gray-600 text-sm">
-              {row.original.createdAt
-                ? new Date(row.original.createdAt).toLocaleDateString("vi-VN")
-                : "N/A"}
-            </span>
-          </div>
+          <span className="text-gray-600 text-sm">
+            {row.original.createdAt
+              ? new Date(row.original.createdAt).toLocaleDateString("vi-VN")
+              : "N/A"}
+          </span>
         );
       },
       enableSorting: false,

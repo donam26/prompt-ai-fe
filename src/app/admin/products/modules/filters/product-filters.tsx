@@ -15,6 +15,11 @@ import { ProductActiveFilters } from "./product-active-filters";
 export const ProductFilter = ({
   filters,
   sections,
+  sectionsLoading = false,
+  sectionsSearch = "",
+  onSectionsSearch,
+  onSectionsScrollToBottom,
+  hasMoreSections = false,
   onFilterChange,
   onClearFilters,
   onPageReset,
@@ -105,6 +110,11 @@ export const ProductFilter = ({
               <SectionsFilter
                 value={filters.sectionIds || []}
                 sections={sections}
+                sectionsLoading={sectionsLoading}
+                sectionsSearch={sectionsSearch}
+                onSectionsSearch={onSectionsSearch}
+                onSectionsScrollToBottom={onSectionsScrollToBottom}
+                hasMoreSections={hasMoreSections}
                 onChange={handleSectionsChange}
               />
             </div>
@@ -126,10 +136,20 @@ export const ProductFilter = ({
 const SectionsFilter = ({
   value,
   sections,
+  sectionsLoading = false,
+  sectionsSearch: _sectionsSearch = "",
+  onSectionsSearch,
+  onSectionsScrollToBottom,
+  hasMoreSections = false,
   onChange,
 }: {
   value: string[];
   sections: Section[];
+  sectionsLoading?: boolean;
+  sectionsSearch?: string;
+  onSectionsSearch?: (search: string) => void;
+  onSectionsScrollToBottom?: () => void;
+  hasMoreSections?: boolean;
   onChange: (values: string[]) => void;
 }): React.JSX.Element => {
   const sectionOptions = sections.map(section => ({
@@ -145,6 +165,11 @@ const SectionsFilter = ({
       placeholder="Chọn section..."
       maxCount={3}
       className="w-full"
+      shouldFilter={false}
+      onSearch={onSectionsSearch}
+      onScrollToBottom={onSectionsScrollToBottom}
+      isLoading={sectionsLoading}
+      hasMore={hasMoreSections}
     />
   );
 };

@@ -135,78 +135,83 @@ export const DataTable = <T = Record<string, unknown>,>({
 
   return (
     <div className={cn("data-table-container space-y-4", className)}>
-      <div className={getTableClassName()}>
-        <Table>
-          <TableHeader>
-            <TableRow className="bg-gray-50 dark:bg-gray-900 border-gray-200 dark:border-gray-700 border-b">
-              {columns.map(column => (
-                <TableHead
-                  key={column.key}
-                  style={{ width: column.width }}
-                  className={cn(
-                    "px-4 py-3 font-semibold text-gray-700 dark:text-gray-200 text-sm",
-                    "border-r border-gray-200 dark:border-gray-700 last:border-r-0",
-                    column.align === "center" && "text-center",
-                    column.align === "right" && "text-right",
-                    column.sortable &&
-                      "cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800",
-                    column.className
-                  )}
-                >
-                  {column.title}
-                </TableHead>
-              ))}
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {data.length === 0 ? (
-              <TableRow>
-                <TableCell
-                  colSpan={columns.length}
-                  className="h-32 text-gray-500 dark:text-gray-400 text-center"
-                >
-                  <div className="flex flex-col items-center space-y-2">
-                    <div className="font-medium text-lg">{emptyText}</div>
-                    <div className="text-gray-400 text-sm">
-                      Không có dữ liệu để hiển thị
-                    </div>
-                  </div>
-                </TableCell>
+      {/* Mobile: Horizontal scroll wrapper */}
+      <div className="overflow-x-auto -mx-4 sm:mx-0">
+        <div className={cn("inline-block min-w-full", getTableClassName())}>
+          <Table className="min-w-full">
+            <TableHeader>
+              <TableRow className="bg-gray-50 dark:bg-gray-900 border-gray-200 dark:border-gray-700 border-b">
+                {columns.map(column => (
+                  <TableHead
+                    key={column.key}
+                    style={{ width: column.width, minWidth: column.width }}
+                    className={cn(
+                      "px-3 sm:px-4 py-2 sm:py-3 font-semibold text-gray-700 dark:text-gray-200 text-xs sm:text-sm whitespace-nowrap",
+                      "border-r border-gray-200 dark:border-gray-700 last:border-r-0",
+                      column.align === "center" && "text-center",
+                      column.align === "right" && "text-right",
+                      column.sortable &&
+                        "cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800",
+                      column.className
+                    )}
+                  >
+                    {column.title}
+                  </TableHead>
+                ))}
               </TableRow>
-            ) : (
-              data.map((record, index) => (
-                <TableRow
-                  key={getRowKey(record, index)}
-                  onClick={() => onRowClick?.(record, index)}
-                  className={getRowClassName(record, index)}
-                >
-                  {columns.map(column => {
-                    const value = column.dataIndex
-                      ? record[column.dataIndex]
-                      : record[column.key as keyof T];
-
-                    return (
-                      <TableCell
-                        key={column.key}
-                        className={cn(
-                          "px-4 py-3 text-gray-800 dark:text-gray-200 text-sm",
-                          "border-r border-gray-200 dark:border-gray-700 last:border-r-0",
-                          column.align === "center" && "text-center",
-                          column.align === "right" && "text-right",
-                          column.className
-                        )}
-                      >
-                        {column.render
-                          ? column.render(value, record, index, context)
-                          : String(value || "")}
-                      </TableCell>
-                    );
-                  })}
+            </TableHeader>
+            <TableBody>
+              {data.length === 0 ? (
+                <TableRow>
+                  <TableCell
+                    colSpan={columns.length}
+                    className="h-32 text-gray-500 dark:text-gray-400 text-center"
+                  >
+                    <div className="flex flex-col items-center space-y-2">
+                      <div className="font-medium text-lg">{emptyText}</div>
+                      <div className="text-gray-400 text-sm">
+                        Không có dữ liệu để hiển thị
+                      </div>
+                    </div>
+                  </TableCell>
                 </TableRow>
-              ))
-            )}
-          </TableBody>
-        </Table>
+              ) : (
+                data.map((record, index) => (
+                  <TableRow
+                    key={getRowKey(record, index)}
+                    onClick={() => onRowClick?.(record, index)}
+                    className={getRowClassName(record, index)}
+                  >
+                    {columns.map(column => {
+                      const value = column.dataIndex
+                        ? record[column.dataIndex]
+                        : record[column.key as keyof T];
+
+                      return (
+                        <TableCell
+                          key={column.key}
+                          className={cn(
+                            "px-3 sm:px-4 py-2 sm:py-3 text-gray-800 dark:text-gray-200 text-xs sm:text-sm",
+                            "border-r border-gray-200 dark:border-gray-700 last:border-r-0",
+                            column.align === "center" && "text-center",
+                            column.align === "right" && "text-right",
+                            // Allow text wrapping on mobile for better readability
+                            "break-words sm:whitespace-nowrap",
+                            column.className
+                          )}
+                        >
+                          {column.render
+                            ? column.render(value, record, index, context)
+                            : String(value || "")}
+                        </TableCell>
+                      );
+                    })}
+                  </TableRow>
+                ))
+              )}
+            </TableBody>
+          </Table>
+        </div>
       </div>
 
       {(pagination || (pageCount && pageIndex !== undefined && pageSize)) && (

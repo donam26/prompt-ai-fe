@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect, useMemo, useRef } from "react";
 import { useRouter } from "next/navigation";
 
 import { AdminContentCard } from "@/components/admin/common/admin-content-card";
@@ -12,6 +12,7 @@ import {
 } from "./modules";
 import { PAYMENTS_CONSTANTS } from "@/constants/payments";
 import { usePayments, useDeletePayment } from "@/hooks/admin/usePayment";
+import { useSubscriptions } from "@/hooks/admin/useSubscription";
 import type { Payment } from "@/types";
 import type { PaymentFilterState } from "@/types/admin/payment";
 import type { PaginationParams as IPagination } from "@/types/base";
@@ -23,6 +24,9 @@ import {
 } from "@/constants";
 import { DataTable } from "@/components/data-table";
 import { ActionModal } from "@/components/admin/action-modal";
+import type { SubscriptionFilterState } from "@/types/admin/subscription";
+import { debounce } from "@/lib/utils";
+import { useDeepMemo } from "@/hooks/useDeepMemo";
 
 export default function PaymentManagementPage(): React.JSX.Element {
   const router = useRouter();
@@ -45,6 +49,96 @@ export default function PaymentManagementPage(): React.JSX.Element {
     pagination,
     filters,
   });
+
+  // Subscriptions state management for infinite scroll and search in filter
+  const [subscriptionsSearch, setSubscriptionsSearch] = useState<string>("");
+  const [subscriptionsPagination, setSubscriptionsPagination] =
+    useState<IPagination>({
+      pageIndex: 0,
+      pageSize: 10,
+    });
+  const [allSubscriptions, setAllSubscriptions] = useState<any[]>([]);
+
+  // Debounced search handler - update subscriptionsSearch after 1 second
+  const debouncedSetSubscriptionsSearch = useRef(
+    debounce((search: string) => {
+      setSubscriptionsSearch(search);
+    }, 1000)
+  ).current;
+
+  // Build filters for subscriptions
+  const subscriptionsFilters = useMemo<
+    SubscriptionFilterState | undefined
+  >(() => {
+    const hasSearch = !!subscriptionsSearch.trim();
+    const filters: SubscriptionFilterState = {
+      searchTerm: hasSearch ? subscriptionsSearch.trim() : "",
+    };
+    return filters;
+  }, [subscriptionsSearch]);
+
+  // Fetch subscriptions with pagination and search
+  const { subscriptionsWithPagination, isFetching: subscriptionsLoading } =
+    useSubscriptions({
+      pagination: subscriptionsPagination,
+      filters: subscriptionsFilters,
+    });
+
+  // Reset subscriptions when search changes
+  useEffect(() => {
+    setSubscriptionsPagination(prev => ({ ...prev, pageIndex: 0 }));
+    setAllSubscriptions([]);
+  }, [subscriptionsSearch]);
+
+  // Memoize subscriptions data with deep comparison to prevent infinite loops
+  const subscriptionsDataRaw = subscriptionsWithPagination?.data || [];
+  const subscriptionsData = useDeepMemo(subscriptionsDataRaw);
+
+  const currentSubscriptionsPageIndex = subscriptionsPagination.pageIndex;
+
+  // Accumulate subscriptions data for infinite scroll
+  useEffect(() => {
+    if (subscriptionsData.length > 0 || currentSubscriptionsPageIndex === 0) {
+      if (currentSubscriptionsPageIndex === 0) {
+        setAllSubscriptions(subscriptionsData);
+      } else {
+        setAllSubscriptions(prev => {
+          const existingIds = new Set(prev.map(s => s.id));
+          const newItems = subscriptionsData.filter(
+            s => !existingIds.has(s.id)
+          );
+          return [...prev, ...newItems];
+        });
+      }
+    }
+  }, [subscriptionsData, currentSubscriptionsPageIndex]);
+
+  // Handle subscriptions search change with debounce
+  const handleSubscriptionsSearch = useCallback(
+    (search: string) => {
+      debouncedSetSubscriptionsSearch(search);
+    },
+    [debouncedSetSubscriptionsSearch]
+  );
+
+  // Extract stable values to prevent infinite loops
+  const subscriptionsTotalPages = subscriptionsWithPagination?.totalPages || 1;
+  const subscriptionsCurrentPageIndex = subscriptionsPagination.pageIndex;
+
+  // Handle subscriptions scroll to bottom (load more)
+  const handleSubscriptionsScrollToBottom = useCallback(() => {
+    if (subscriptionsCurrentPageIndex + 1 < subscriptionsTotalPages) {
+      setSubscriptionsPagination(prev => ({
+        ...prev,
+        pageIndex: prev.pageIndex + 1,
+      }));
+    }
+  }, [subscriptionsTotalPages, subscriptionsCurrentPageIndex]);
+
+  // Check if there are more subscriptions to load
+  const hasMoreSubscriptions = useMemo(() => {
+    return subscriptionsCurrentPageIndex + 1 < subscriptionsTotalPages;
+  }, [subscriptionsTotalPages, subscriptionsCurrentPageIndex]);
 
   const { mutate: deletePayment, isLoading: isDeleting } = useDeletePayment();
 
@@ -103,6 +197,12 @@ export default function PaymentManagementPage(): React.JSX.Element {
 
         <PaymentFilters
           filters={filters}
+          subscriptions={allSubscriptions}
+          subscriptionsLoading={subscriptionsLoading}
+          subscriptionsSearch={subscriptionsSearch}
+          onSubscriptionsSearch={handleSubscriptionsSearch}
+          onSubscriptionsScrollToBottom={handleSubscriptionsScrollToBottom}
+          hasMoreSubscriptions={hasMoreSubscriptions}
           onFilterChange={handleFilterChange}
           onClearFilters={handleClearFilters}
           onPageReset={() =>

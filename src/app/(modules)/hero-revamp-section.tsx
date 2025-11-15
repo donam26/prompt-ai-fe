@@ -16,9 +16,28 @@ import astronautImage from "@/../public/images/home/astronaut/phi-hanh-gia-trang
 import extensionPreview from "@/../public/images/ui-elements/extention.gif";
 import CTAButton from "@/components/cta-button";
 import { ArrowDown } from "lucide-react";
-import { HeroShowcaseSection } from "./hero-showcase-section";
 
-const PROMPT_LIBRARY_LIMIT = 6;
+const PROMPT_LIBRARY_LIMIT_DESKTOP = 9;
+const PROMPT_LIBRARY_LIMIT_MOBILE = 6;
+
+interface PartnerLogo {
+  src?: string;
+  alt: string;
+  isText?: boolean;
+  text?: string;
+}
+
+const PARTNER_LOGOS: PartnerLogo[] = [
+  { src: "/images/ai-tools/gpt.png", alt: "ChatGPT" },
+  { src: "/images/ai-tools/mid.png", alt: "Midjourney" },
+  { src: "/images/ai-tools/imggrok.png", alt: "Grok" },
+  { src: "/images/ui-elements/imgAiHay.png", alt: "AIHay" },
+  { src: "/images/ai-tools/imgdeep.png", alt: "DeepSeek" },
+  { src: "/images/ai-tools/gen.png", alt: "Gemini" },
+  { src: "/images/logos/logoclaude.png", alt: "Claude" },
+  { src: "/images/ai-tools/dall.png", alt: "DALL-E" },
+  { isText: true, text: "và nhiều hơn nữa!", alt: "More partners" },
+];
 
 export const HeroRevampSection = (): React.JSX.Element => {
   const router = useRouter();
@@ -209,8 +228,56 @@ export const HeroRevampSection = (): React.JSX.Element => {
         </div>
 
         {/* Partner logos */}
-        <HeroShowcaseSection />
+        <div className="z-[3] flex sm:flex-col justify-center sm:items-center gap-1 sm:mt-5 max-w-[1400px] sm:max-w-[600px]">
+          {/* Desktop: Show full list without animation */}
+          <div className="hidden sm:flex sm:flex-wrap justify-around items-center gap-3 px-5 rounded-2xl min-w-[750px] h-[100px] scrollbar-hide">
+            {PARTNER_LOGOS.map((partner, index) => (
+              <div
+                key={`partner-desktop-${partner.alt}-${index}`}
+                className="flex justify-center items-center text-[#6e6e6e] text-xl"
+              >
+                {partner.isText ? (
+                  <span>{partner.text}</span>
+                ) : (
+                  partner.src && (
+                    <Image
+                      src={partner.src}
+                      alt={partner.alt}
+                      width={50}
+                      height={36}
+                      className="h-9 object-contain"
+                    />
+                  )
+                )}
+              </div>
+            ))}
+          </div>
 
+          {/* Mobile: Slider with animation */}
+          <div className="sm:hidden flex flex-nowrap justify-around items-center gap-3 px-5 rounded-2xl min-w-fit h-[50px] overflow-hidden partners-logos-container scrollbar-hide">
+            {/* Duplicate list 2 times for seamless animation on mobile */}
+            {[...PARTNER_LOGOS, ...PARTNER_LOGOS].map((partner, index) => (
+              <div
+                key={`partner-mobile-${partner.alt}-${index}`}
+                className="flex flex-[0_0_auto] justify-center items-center mr-5 text-[#6e6e6e] text-xs partner-item"
+              >
+                {partner.isText ? (
+                  <span>{partner.text}</span>
+                ) : (
+                  partner.src && (
+                    <Image
+                      src={partner.src}
+                      alt={partner.alt}
+                      width={50}
+                      height={36}
+                      className="h-[25px] object-contain"
+                    />
+                  )
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
         <div className="relative mt-8 sm:mt-16 w-full">
           <div className="hidden md:block -top-20 lg:-top-28 -left-8 lg:-left-16 z-20 absolute pointer-events-none">
             <Image
@@ -248,7 +315,9 @@ export const HeroRevampSection = (): React.JSX.Element => {
                 <Image
                   src={extensionPreview}
                   alt="Extension Demo"
-                  className="shadow-2xl rounded-2xl w-48 sm:w-60 md:w-64 lg:w-[400px] h-32 sm:h-32 md:h-32 lg:h-[280px]"
+                  width={400}
+                  height={280}
+                  className="shadow-2xl rounded-2xl w-40 sm:w-52 md:w-64 lg:w-80 xl:w-[400px] h-auto object-contain"
                   priority
                 />
               </div>
@@ -256,7 +325,14 @@ export const HeroRevampSection = (): React.JSX.Element => {
           )}
 
           <div className="z-10 relative bg-white/70 shadow-[0px_24px_60px_rgba(87,0,198,0.08)] backdrop-blur-md p-4 border border-[#F4F0FF] rounded-2xl">
-            <PromptLibraryHome limit={PROMPT_LIBRARY_LIMIT} />
+            {/* Desktop: Show 9 prompts */}
+            <div className="hidden sm:block">
+              <PromptLibraryHome limit={PROMPT_LIBRARY_LIMIT_DESKTOP} />
+            </div>
+            {/* Mobile: Show 6 prompts */}
+            <div className="sm:hidden block">
+              <PromptLibraryHome limit={PROMPT_LIBRARY_LIMIT_MOBILE} />
+            </div>
           </div>
         </div>
       </section>

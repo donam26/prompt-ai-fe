@@ -29,6 +29,11 @@ import { ActiveFilters } from "@/app/admin/category/modules/filters/active-filte
 export const CategoryFilter = ({
   filters,
   industries,
+  industriesLoading = false,
+  industriesSearch = "",
+  onIndustriesSearch,
+  onIndustriesScrollToBottom,
+  hasMoreIndustries = false,
   onFilterChange,
   onClearFilters,
   onPageReset,
@@ -133,6 +138,11 @@ export const CategoryFilter = ({
               { ...filters, searchTerm: searchValue } as CategoryFilterState
             }
             industries={industries}
+            industriesLoading={industriesLoading}
+            industriesSearch={industriesSearch}
+            onIndustriesSearch={onIndustriesSearch}
+            onIndustriesScrollToBottom={onIndustriesScrollToBottom}
+            hasMoreIndustries={hasMoreIndustries}
             onSearchChange={handleSearchChange}
             onStatusChange={handleStatusChange}
             onIndustryChange={handleIndustryChange}
@@ -167,6 +177,11 @@ export const CategoryFilter = ({
 const FilterCard = ({
   filters,
   industries,
+  industriesLoading = false,
+  industriesSearch = "",
+  onIndustriesSearch,
+  onIndustriesScrollToBottom,
+  hasMoreIndustries = false,
   onSearchChange,
   onStatusChange,
   onIndustryChange,
@@ -196,6 +211,11 @@ const FilterCard = ({
           <IndustryFilter
             value={filters.industryIds || []}
             industries={industries}
+            industriesLoading={industriesLoading}
+            industriesSearch={industriesSearch}
+            onIndustriesSearch={onIndustriesSearch}
+            onIndustriesScrollToBottom={onIndustriesScrollToBottom}
+            hasMoreIndustries={hasMoreIndustries}
             onChange={onIndustryChange}
           />
         </div>
@@ -241,10 +261,20 @@ const StatusFilter = ({
 const IndustryFilter = ({
   value,
   industries,
+  industriesLoading = false,
+  industriesSearch: _industriesSearch = "",
+  onIndustriesSearch,
+  onIndustriesScrollToBottom,
+  hasMoreIndustries = false,
   onChange,
 }: {
   readonly value: readonly string[];
   readonly industries: Industry[];
+  readonly industriesLoading?: boolean;
+  readonly industriesSearch?: string;
+  readonly onIndustriesSearch?: (search: string) => void;
+  readonly onIndustriesScrollToBottom?: () => void;
+  readonly hasMoreIndustries?: boolean;
   readonly onChange: (values: string[]) => void;
 }): React.JSX.Element => {
   const options = industries.map((industry: Industry) => ({
@@ -260,6 +290,11 @@ const IndustryFilter = ({
       placeholder="Chọn ngành nghề..."
       maxCount={3}
       className="w-full"
+      shouldFilter={false}
+      onSearch={onIndustriesSearch}
+      onScrollToBottom={onIndustriesScrollToBottom}
+      isLoading={industriesLoading}
+      hasMore={hasMoreIndustries}
     />
   );
 };

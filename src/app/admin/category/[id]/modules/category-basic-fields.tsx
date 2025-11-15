@@ -29,6 +29,11 @@ interface Props {
     name: string;
     description?: string;
   }>;
+  industriesLoading?: boolean;
+  industriesSearch?: string;
+  onIndustriesSearch?: (search: string) => void;
+  onIndustriesScrollToBottom?: () => void;
+  hasMoreIndustries?: boolean;
 }
 
 // Get options from constants
@@ -38,6 +43,11 @@ export function CategoryBasicFields({
   control,
   isDisabled,
   industries = [],
+  industriesLoading = false,
+  industriesSearch: _industriesSearch = "",
+  onIndustriesSearch,
+  onIndustriesScrollToBottom,
+  hasMoreIndustries = false,
 }: Props) {
   return (
     <div className="space-y-6 mb-4">
@@ -164,6 +174,11 @@ export function CategoryBasicFields({
                   maxCount={3}
                   className="w-full"
                   disabled={isDisabled}
+                  shouldFilter={false}
+                  onSearch={onIndustriesSearch}
+                  onScrollToBottom={onIndustriesScrollToBottom}
+                  isLoading={industriesLoading}
+                  hasMore={hasMoreIndustries}
                 />
               </FormControl>
               <FormMessage />

@@ -19,10 +19,10 @@ export function useIndustryColumns({
       meta: { title: "Tên ngành nghề" },
       header: () => <div className="font-medium">Tên ngành nghề</div>,
       cell: ({ row }) => (
-        <div className="flex items-center gap-2 min-w-[200px] max-w-[300px]">
-          <Building2 className="w-4 h-4 text-gray-500" />
+        <div className="flex items-start gap-2 min-w-[200px] max-w-[300px]">
+          <Building2 className="flex-shrink-0 mt-0.5 w-4 h-4 text-gray-500" />
           <span
-            className="font-semibold text-gray-900 truncate"
+            className="font-semibold text-gray-900 line-clamp-2"
             title={row.original.name}
           >
             {row.original.name}
@@ -49,9 +49,9 @@ export function useIndustryColumns({
     {
       accessorKey: "createdAt",
       meta: { title: "Ngày tạo" },
-      header: () => <div className="hidden lg:block font-medium">Ngày tạo</div>,
+      header: () => <div className="font-medium">Ngày tạo</div>,
       cell: ({ row }) => (
-        <div className="hidden lg:block">
+        <div>
           <span className="text-gray-600 text-sm">
             {row.original.createdAt
               ? new Date(row.original.createdAt).toLocaleDateString("vi-VN")

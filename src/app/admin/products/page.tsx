@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect, useMemo, useRef } from "react";
 import { useRouter } from "next/navigation";
 
 import { AdminContentCard } from "@/components/admin/common/admin-content-card";
@@ -21,10 +21,12 @@ import {
   DEFAULT_PAGINATION,
   DEFAULT_TOTAL_PAGES,
   DEFAULT_TOTAL,
-  DEFAULT_PAGE_MAX_SIZE,
 } from "@/constants";
 import { DataTable } from "@/components/data-table";
 import { ActionModal } from "@/components/admin/action-modal";
+import type { SectionFilterState } from "@/types/admin/section";
+import { debounce } from "@/lib/utils";
+import { useDeepMemo } from "@/hooks/useDeepMemo";
 
 export default function ProductManagementPage(): React.JSX.Element {
   const router = useRouter();
@@ -44,12 +46,90 @@ export default function ProductManagementPage(): React.JSX.Element {
     filters,
   });
 
-  const { sections } = useSections({
-    pagination: {
-      pageIndex: DEFAULT_PAGE_INDEX,
-      pageSize: DEFAULT_PAGE_MAX_SIZE,
-    },
+  // Sections state management for infinite scroll and search in filter
+  const [sectionsSearch, setSectionsSearch] = useState<string>("");
+  const [sectionsPagination, setSectionsPagination] = useState<IPagination>({
+    pageIndex: 0,
+    pageSize: 10,
   });
+  const [allSections, setAllSections] = useState<any[]>([]);
+
+  // Debounced search handler - update sectionsSearch after 1 second
+  const debouncedSetSectionsSearch = useRef(
+    debounce((search: string) => {
+      setSectionsSearch(search);
+    }, 1000)
+  ).current;
+
+  // Build filters for sections
+  const sectionsFilters = useMemo<SectionFilterState | undefined>(() => {
+    const hasSearch = !!sectionsSearch.trim();
+    const filters: SectionFilterState = {
+      searchTerm: hasSearch ? sectionsSearch.trim() : "",
+    };
+    return filters;
+  }, [sectionsSearch]);
+
+  // Fetch sections with pagination and search
+  const { sectionsWithPagination, isFetching: sectionsLoading } = useSections({
+    pagination: sectionsPagination,
+    filters: sectionsFilters,
+    enabled: true,
+  });
+
+  // Reset sections when search changes
+  useEffect(() => {
+    setSectionsPagination(prev => ({ ...prev, pageIndex: 0 }));
+    setAllSections([]);
+  }, [sectionsSearch]);
+
+  // Memoize sections data with deep comparison to prevent infinite loops
+  const sectionsDataRaw = sectionsWithPagination?.data || [];
+  const sectionsData = useDeepMemo(sectionsDataRaw);
+
+  const currentSectionsPageIndex = sectionsPagination.pageIndex;
+
+  // Accumulate sections data for infinite scroll
+  useEffect(() => {
+    if (sectionsData.length > 0 || currentSectionsPageIndex === 0) {
+      if (currentSectionsPageIndex === 0) {
+        setAllSections(sectionsData);
+      } else {
+        setAllSections(prev => {
+          const existingIds = new Set(prev.map(s => s.id));
+          const newItems = sectionsData.filter(s => !existingIds.has(s.id));
+          return [...prev, ...newItems];
+        });
+      }
+    }
+  }, [sectionsData, currentSectionsPageIndex]);
+
+  // Handle sections search change with debounce
+  const handleSectionsSearch = useCallback(
+    (search: string) => {
+      debouncedSetSectionsSearch(search);
+    },
+    [debouncedSetSectionsSearch]
+  );
+
+  // Extract stable values to prevent infinite loops
+  const sectionsTotalPages = sectionsWithPagination?.totalPages || 1;
+  const sectionsCurrentPageIndex = sectionsPagination.pageIndex;
+
+  // Handle sections scroll to bottom (load more)
+  const handleSectionsScrollToBottom = useCallback(() => {
+    if (sectionsCurrentPageIndex + 1 < sectionsTotalPages) {
+      setSectionsPagination(prev => ({
+        ...prev,
+        pageIndex: prev.pageIndex + 1,
+      }));
+    }
+  }, [sectionsTotalPages, sectionsCurrentPageIndex]);
+
+  // Check if there are more sections to load
+  const hasMoreSections = useMemo(() => {
+    return sectionsCurrentPageIndex + 1 < sectionsTotalPages;
+  }, [sectionsTotalPages, sectionsCurrentPageIndex]);
 
   const { mutate: deleteProduct, isLoading: isDeleting } = useDeleteProduct();
 
@@ -111,7 +191,12 @@ export default function ProductManagementPage(): React.JSX.Element {
 
         <ProductFilter
           filters={filters}
-          sections={sections}
+          sections={allSections}
+          sectionsLoading={sectionsLoading}
+          sectionsSearch={sectionsSearch}
+          onSectionsSearch={handleSectionsSearch}
+          onSectionsScrollToBottom={handleSectionsScrollToBottom}
+          hasMoreSections={hasMoreSections}
           onFilterChange={handleFilterChange}
           onClearFilters={handleClearFilters}
           onPageReset={() =>

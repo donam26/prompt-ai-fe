@@ -2,7 +2,7 @@
 
 import type { Category } from "@/types";
 import { useParams, useRouter } from "next/navigation";
-import { useCallback, useEffect } from "react";
+import { useCallback, useEffect, useState, useMemo, useRef } from "react";
 import {
   useCategoryDetail,
   useUpsertCategory,
@@ -13,6 +13,10 @@ import { showToast } from "@/components/ui/toast";
 import { CATEGORY_CONSTANTS } from "@/constants/category";
 import { FormMode } from "@/constants/common";
 import { CategoryForm } from "./modules/category-form";
+import type { IndustryFilterState } from "@/types/admin/industry";
+import type { PaginationParams } from "@/types/base";
+import { debounce } from "@/lib/utils";
+import { useDeepMemo } from "@/hooks/useDeepMemo";
 
 export default function CategoryDetailsPage() {
   const { id } = useParams<{ id?: string }>();
@@ -33,19 +37,101 @@ export default function CategoryDetailsPage() {
     error: upsertCategoryError,
   } = useUpsertCategory();
 
-  // Fetch industries by category - only when category is selected
+  // Industries state management for infinite scroll and search
+  const [industriesSearch, setIndustriesSearch] = useState<string>("");
+  const [industriesPagination, setIndustriesPagination] =
+    useState<PaginationParams>({
+      pageIndex: 0,
+      pageSize: 10,
+    });
+  const [allIndustries, setAllIndustries] = useState<any[]>([]);
+
+  // Debounced search handler - update industriesSearch after 1 second
+  const debouncedSetSearch = useRef(
+    debounce((search: string) => {
+      setIndustriesSearch(search);
+    }, 1000)
+  ).current;
+
+  // Build filters for industries
+  const industriesFilters = useMemo<IndustryFilterState | undefined>(() => {
+    const hasCategoryId = !!categoryIdToUpdate;
+    const hasSearch = !!industriesSearch.trim();
+
+    // Always return filters object, even if empty, to allow loading all industries
+    const filters: IndustryFilterState = {
+      ...(hasCategoryId && { categoryIds: [categoryIdToUpdate!] }),
+      ...(hasSearch && { searchTerm: industriesSearch.trim() }),
+    };
+
+    return filters;
+  }, [categoryIdToUpdate, industriesSearch]);
+
+  // Fetch industries with pagination and search
   const { industriesWithPagination, isFetching: industriesLoading } =
     useIndustries({
-      pagination: {
-        pageIndex: 1,
-        pageSize: 100,
-      },
-      filters: categoryIdToUpdate
-        ? {
-            categoryIds: [categoryIdToUpdate],
-          }
-        : undefined,
+      pagination: industriesPagination,
+      filters: industriesFilters,
+      enabled: true,
     });
+
+  // Reset industries when search changes
+  useEffect(() => {
+    setIndustriesPagination(prev => ({ ...prev, pageIndex: 0 }));
+    // Clear existing data when search changes to avoid showing stale data
+    setAllIndustries([]);
+  }, [industriesSearch]);
+
+  // Memoize industries data to ensure stable reference and prevent dependency array size changes
+  const industriesDataRaw = industriesWithPagination?.data || [];
+  const industriesData = useDeepMemo(industriesDataRaw);
+
+  const currentPageIndex = industriesPagination.pageIndex;
+
+  // Accumulate industries data for infinite scroll
+  useEffect(() => {
+    if (industriesData.length > 0 || currentPageIndex === 0) {
+      if (currentPageIndex === 0) {
+        // Reset on new search or initial load
+        setAllIndustries(industriesData);
+      } else {
+        // Append new data for infinite scroll (concat data mới vào data hiện tại)
+        setAllIndustries(prev => {
+          const existingIds = new Set(prev.map(i => i.id));
+          const newItems = industriesData.filter(i => !existingIds.has(i.id));
+          return [...prev, ...newItems];
+        });
+      }
+    }
+  }, [industriesData, currentPageIndex]);
+
+  // Handle search change with debounce
+  const handleIndustriesSearch = useCallback(
+    (search: string) => {
+      // Update immediately for UI feedback, but debounce the actual API call
+      debouncedSetSearch(search);
+    },
+    [debouncedSetSearch]
+  );
+
+  // Extract stable values to prevent infinite loops
+  const industriesTotalPages = industriesWithPagination?.totalPages || 1;
+  const industriesCurrentPageIndex = industriesPagination.pageIndex;
+
+  // Handle scroll to bottom (load more)
+  const handleIndustriesScrollToBottom = useCallback(() => {
+    if (industriesCurrentPageIndex + 1 < industriesTotalPages) {
+      setIndustriesPagination(prev => ({
+        ...prev,
+        pageIndex: prev.pageIndex + 1,
+      }));
+    }
+  }, [industriesTotalPages, industriesCurrentPageIndex]);
+
+  // Check if there are more items to load
+  const hasMoreIndustries = useMemo(() => {
+    return industriesCurrentPageIndex + 1 < industriesTotalPages;
+  }, [industriesTotalPages, industriesCurrentPageIndex]);
 
   const handleSave = useCallback(
     async (data: Partial<Category>) => {
@@ -85,11 +171,6 @@ export default function CategoryDetailsPage() {
     return <FormSkeleton />;
   }
 
-  // Extract industries data
-  const industries = Array.isArray(industriesWithPagination?.data)
-    ? industriesWithPagination.data
-    : [];
-
   return (
     <CategoryForm
       category={categoryData}
@@ -98,8 +179,12 @@ export default function CategoryDetailsPage() {
       onCancel={handleCancel}
       isSaving={isUpserting}
       isLoading={isLoading}
-      industries={industries}
+      industries={allIndustries}
       industriesLoading={industriesLoading}
+      industriesSearch={industriesSearch}
+      onIndustriesSearch={handleIndustriesSearch}
+      onIndustriesScrollToBottom={handleIndustriesScrollToBottom}
+      hasMoreIndustries={hasMoreIndustries}
     />
   );
 }

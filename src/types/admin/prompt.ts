@@ -10,6 +10,17 @@ import type {
  */
 export interface PromptFilterProps extends BaseFilterProps<PromptFilterState> {
   readonly categories: Category[];
+  readonly categoriesLoading?: boolean;
+  readonly categoriesSearch?: string;
+  readonly onCategoriesSearch?: (search: string) => void;
+  readonly onCategoriesScrollToBottom?: () => void;
+  readonly hasMoreCategories?: boolean;
+  readonly industries?: Category[];
+  readonly industriesLoading?: boolean;
+  readonly industriesSearch?: string;
+  readonly onIndustriesSearch?: (search: string) => void;
+  readonly onIndustriesScrollToBottom?: () => void;
+  readonly hasMoreIndustries?: boolean;
 }
 
 /**
@@ -54,8 +65,17 @@ export type PromptColumnHandlers = BaseColumnHandlers;
 export interface IPromptFilterProps {
   filters: PromptFilterState;
   categories: Category[];
-  filteredIndustries: Category[];
-  isLoadingIndustries?: boolean;
+  categoriesLoading?: boolean;
+  categoriesSearch?: string;
+  onCategoriesSearch?: (search: string) => void;
+  onCategoriesScrollToBottom?: () => void;
+  hasMoreCategories?: boolean;
+  industries: Category[];
+  industriesLoading?: boolean;
+  industriesSearch?: string;
+  onIndustriesSearch?: (search: string) => void;
+  onIndustriesScrollToBottom?: () => void;
+  hasMoreIndustries?: boolean;
   onSearchChange: (value: string) => void;
   onCategoriesChange: (values: string[]) => void;
   onPremiumChange: (value: string) => void;

@@ -27,6 +27,10 @@ export interface Props {
   className?: string;
   industries?: Industry[];
   industriesLoading?: boolean;
+  industriesSearch?: string;
+  onIndustriesSearch?: (search: string) => void;
+  onIndustriesScrollToBottom?: () => void;
+  hasMoreIndustries?: boolean;
 }
 
 export const CategoryForm = ({
@@ -38,6 +42,10 @@ export const CategoryForm = ({
   onCancel,
   industries = [],
   industriesLoading = false,
+  industriesSearch = "",
+  onIndustriesSearch,
+  onIndustriesScrollToBottom,
+  hasMoreIndustries = false,
 }: Props) => {
   const [isUploading, setIsUploading] = useState(false);
   const isCreateMode = mode === FormMode.CREATE;
@@ -70,8 +78,8 @@ export const CategoryForm = ({
   const categoryImage = watch("image");
 
   const isDisabled = useMemo(() => {
-    return isSaving || !isDirty || isUploading || industriesLoading;
-  }, [isSaving, isDirty, isUploading, industriesLoading]);
+    return isSaving || !isDirty || isUploading;
+  }, [isSaving, isDirty, isUploading]);
 
   const onSubmit = useCallback(
     (data: CategoryFormValues) => {
@@ -88,7 +96,7 @@ export const CategoryForm = ({
       ? BUTTON_TEXT.CREATE
       : BUTTON_TEXT.EDIT;
 
-  if (isLoading || industriesLoading) {
+  if (isLoading) {
     return (
       <AdminPageLayout
         title={isCreateMode ? "Create New Category" : "Edit Category"}
@@ -158,6 +166,11 @@ export const CategoryForm = ({
               control={control}
               isDisabled={isSaving}
               industries={industries}
+              industriesLoading={industriesLoading}
+              industriesSearch={industriesSearch}
+              onIndustriesSearch={onIndustriesSearch}
+              onIndustriesScrollToBottom={onIndustriesScrollToBottom}
+              hasMoreIndustries={hasMoreIndustries}
             />
             <Controller
               name="isCommingSoon"

@@ -50,6 +50,9 @@ export interface MultiSelectProps {
   onValueChange?: (values: string[]) => void;
   onSearch?: (q: string) => void;
   onPopoverOpenChange?: (open: boolean) => void;
+  onScrollToBottom?: () => void; // Callback when scrolling to bottom for infinite scroll
+  isLoading?: boolean; // Loading state for infinite scroll
+  hasMore?: boolean; // Whether there are more items to load
 }
 
 export function MultiSelect({
@@ -67,6 +70,9 @@ export function MultiSelect({
   onValueChange,
   onSearch,
   onPopoverOpenChange,
+  onScrollToBottom,
+  isLoading = false,
+  hasMore = false,
 }: MultiSelectProps) {
   // controlled vs uncontrolled
   const isControlled = value !== undefined;
@@ -79,6 +85,7 @@ export function MultiSelect({
   const [isAnimating, setIsAnimating] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const selectedRef = useRef<string[]>(selectedValues);
+  const commandListRef = useRef<HTMLDivElement>(null);
 
   // sync controlled value -> local
   useLayoutEffect(() => {
@@ -176,6 +183,27 @@ export function MultiSelect({
       }
     }
   };
+
+  // Handle scroll for infinite scroll
+  const handleScroll = React.useCallback(
+    (e: React.UIEvent<HTMLDivElement>) => {
+      const target = e.currentTarget;
+      const scrollTop = target.scrollTop;
+      const scrollHeight = target.scrollHeight;
+      const clientHeight = target.clientHeight;
+
+      // Check if scrolled to bottom (with 50px threshold)
+      if (
+        scrollHeight - scrollTop - clientHeight < 50 &&
+        hasMore &&
+        !isLoading &&
+        onScrollToBottom
+      ) {
+        onScrollToBottom();
+      }
+    },
+    [hasMore, isLoading, onScrollToBottom]
+  );
 
   return (
     <Popover
@@ -286,8 +314,14 @@ export function MultiSelect({
             onValueChange={handleSearch}
             onKeyDown={handleInputKeyDown}
           />
-          <CommandList>
-            <CommandEmpty>No results</CommandEmpty>
+          <CommandList
+            ref={commandListRef}
+            onScroll={handleScroll}
+            className="max-h-[300px] overflow-y-auto"
+          >
+            <CommandEmpty>
+              {isLoading ? "Loading..." : "No results"}
+            </CommandEmpty>
             <CommandGroup>
               {/* Select All (for current filtered options) */}
               <CommandItem
@@ -336,6 +370,18 @@ export function MultiSelect({
                   </CommandItem>
                 );
               })}
+
+              {/* Loading indicator for infinite scroll */}
+              {isLoading && (
+                <CommandItem disabled>
+                  <div className="flex justify-center items-center w-full py-2">
+                    <div className="border-2 border-primary border-t-transparent rounded-full w-4 h-4 animate-spin"></div>
+                    <span className="ml-2 text-muted-foreground text-sm">
+                      Loading more...
+                    </span>
+                  </div>
+                </CommandItem>
+              )}
             </CommandGroup>
 
             <CommandSeparator />

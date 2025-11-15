@@ -21,25 +21,25 @@ export function FormActions({
   formId,
 }: Props) {
   return (
-    <div className="flex flex-row justify-end gap-2">
+    <div className="flex flex-row justify-end gap-2 flex-wrap sm:flex-nowrap">
       <Button
         type="button"
         variant="outline"
         onClick={onCancelAction}
         disabled={isSaving}
-        className="flex items-center gap-2 bg-transparent w-auto sm:w-full lg:w-auto h-10"
+        className="flex items-center justify-center gap-2 bg-transparent min-w-[100px] sm:min-w-auto h-10"
       >
-        <X className="w-4 h-4" />
-        {cancelText}
+        <X className="w-4 h-4 flex-shrink-0" />
+        <span className="whitespace-nowrap">{cancelText}</span>
       </Button>
       <Button
         type="submit"
         form={formId}
         disabled={isDisabled}
-        className="flex items-center gap-2 w-auto sm:w-full lg:w-auto h-10"
+        className="flex items-center justify-center gap-2 min-w-[100px] sm:min-w-auto h-10"
       >
         <Save className="flex-shrink-0 w-4 h-4" />
-        {saveText}
+        <span className="whitespace-nowrap">{saveText}</span>
       </Button>
     </div>
   );

@@ -14,6 +14,11 @@ export interface ProductFilterState {
 export interface ProductFilterProps {
   readonly filters: ProductFilterState;
   readonly sections: Section[];
+  readonly sectionsLoading?: boolean;
+  readonly sectionsSearch?: string;
+  readonly onSectionsSearch?: (search: string) => void;
+  readonly onSectionsScrollToBottom?: () => void;
+  readonly hasMoreSections?: boolean;
   readonly onFilterChange: (filters: ProductFilterState) => void;
   readonly onClearFilters: () => void;
   readonly onPageReset?: () => void;

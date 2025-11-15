@@ -77,9 +77,9 @@ export function usePromptColumns({
       header: () => <div className="font-medium">Tiêu đề</div>,
       cell: ({ row }) => (
         <div className="flex flex-col space-y-1 min-w-[200px] max-w-[300px]">
-          <div className="flex items-center gap-2">
+          <div className="flex items-start gap-2">
             <span
-              className="font-semibold text-gray-900 truncate"
+              className="flex-1 font-semibold text-gray-900 line-clamp-2"
               title={row.original.title}
             >
               {row.original.title}
@@ -92,7 +92,7 @@ export function usePromptColumns({
           </div>
           {(row.original.shortDescription || row.original.description) && (
             <div
-              className="max-w-[280px] text-gray-500 text-sm line-clamp-2 prose prose-sm"
+              className="max-w-[300px] text-gray-500 text-sm line-clamp-2 prose prose-sm"
               title={row.original.shortDescription || row.original.description}
               dangerouslySetInnerHTML={{
                 __html:
@@ -121,11 +121,7 @@ export function usePromptColumns({
       cell: ({ row }) => (
         <div className="hidden md:block">
           <BadgeCell
-            label={
-              row.original.category?.name ||
-              row.original.category?.name ||
-              "Chưa phân loại"
-            }
+            label={row.original.category?.name || "Chưa phân loại"}
             variant="section"
             maxWidth="max-w-[100px]"
           />
@@ -136,11 +132,9 @@ export function usePromptColumns({
     {
       accessorKey: "industries",
       meta: { title: "Ngành nghề" },
-      header: () => (
-        <div className="hidden lg:block font-medium">Ngành nghề</div>
-      ),
+      header: () => <div className="font-medium">Ngành nghề</div>,
       cell: ({ row }) => (
-        <div className="hidden lg:block">
+        <div>
           {row.original.promptIndustries &&
           row.original.promptIndustries.length > 0 ? (
             <BadgeList
@@ -163,9 +157,9 @@ export function usePromptColumns({
     {
       accessorKey: "createdAt",
       meta: { title: "Ngày tạo" },
-      header: () => <div className="hidden lg:block font-medium">Ngày tạo</div>,
+      header: () => <div className="font-medium">Ngày tạo</div>,
       cell: ({ row }) => (
-        <div className="hidden lg:block">
+        <div>
           <span className="text-gray-600 text-sm">
             {row.original.createdAt
               ? new Date(row.original.createdAt).toLocaleDateString("vi-VN")

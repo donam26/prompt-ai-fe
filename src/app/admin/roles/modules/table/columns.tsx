@@ -18,16 +18,16 @@ export function useRoleColumns({
       meta: { title: "Tên vai trò" },
       header: () => <div className="font-medium">Tên vai trò</div>,
       cell: ({ row }) => (
-        <div className="flex flex-col space-y-1 min-w-[200px]">
+        <div className="flex flex-col space-y-1 min-w-[200px] max-w-[300px]">
           <span
-            className="font-semibold text-gray-900 truncate"
+            className="font-semibold text-gray-900 line-clamp-2"
             title={row.original.name}
           >
             {row.original.name}
           </span>
           {row.original.description && (
             <span
-              className="max-w-[200px] text-gray-500 text-xs truncate"
+              className="max-w-[300px] text-gray-500 text-xs line-clamp-2"
               title={row.original.description}
             >
               {row.original.description}
@@ -53,9 +53,9 @@ export function useRoleColumns({
     {
       accessorKey: "createdAt",
       meta: { title: "Ngày tạo" },
-      header: () => <div className="hidden lg:block font-medium">Ngày tạo</div>,
+      header: () => <div className="font-medium">Ngày tạo</div>,
       cell: ({ row }) => (
-        <div className="hidden lg:block">
+        <div className="">
           <span className="text-gray-600 text-sm">
             {row.original.createdAt
               ? new Date(row.original.createdAt).toLocaleDateString("vi-VN")

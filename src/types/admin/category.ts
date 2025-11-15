@@ -74,6 +74,11 @@ export interface CategoryFilterProps {
   readonly filters: Partial<CategoryFilterState>;
   readonly sections: Section[];
   readonly industries: Industry[];
+  readonly industriesLoading?: boolean;
+  readonly industriesSearch?: string;
+  readonly onIndustriesSearch?: (search: string) => void;
+  readonly onIndustriesScrollToBottom?: () => void;
+  readonly hasMoreIndustries?: boolean;
   readonly onFilterChange: (filters: CategoryFilterState) => void;
   readonly onClearFilters: () => void;
   readonly onPageReset?: () => void;
@@ -95,6 +100,11 @@ export interface ActiveFilterItem {
 export interface FilterCardProps {
   readonly filters: CategoryFilterState;
   readonly industries: Industry[];
+  readonly industriesLoading?: boolean;
+  readonly industriesSearch?: string;
+  readonly onIndustriesSearch?: (search: string) => void;
+  readonly onIndustriesScrollToBottom?: () => void;
+  readonly hasMoreIndustries?: boolean;
   readonly onSearchChange: (value: string) => void;
   readonly onStatusChange: (value: string) => void;
   readonly onIndustryChange: (values: string[]) => void;

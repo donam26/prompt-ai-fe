@@ -467,6 +467,35 @@
     @apply space-y-6;
   }
 
+  /* Data table mobile responsive */
+  .data-table-container {
+    @apply w-full;
+  }
+
+  .data-table-container .overflow-x-auto {
+    /* Smooth scrolling on mobile */
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(156, 163, 175, 0.5) transparent;
+  }
+
+  .data-table-container .overflow-x-auto::-webkit-scrollbar {
+    height: 8px;
+  }
+
+  .data-table-container .overflow-x-auto::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .data-table-container .overflow-x-auto::-webkit-scrollbar-thumb {
+    background-color: rgba(156, 163, 175, 0.5);
+    border-radius: 4px;
+  }
+
+  .data-table-container .overflow-x-auto::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(156, 163, 175, 0.7);
+  }
+
   /* Mobile responsive - moved to inline styles */
 }
 
@@ -1658,4 +1687,28 @@
   -webkit-background-clip: text;
   color: transparent;
   -webkit-text-fill-color: transparent;
+}
+
+/* Partners Bar Animation - Mobile only */
+@keyframes scroll-partners {
+  0% {
+    transform: translateX(0);
+  }
+
+  100% {
+    transform: translateX(calc(-50% - 10px));
+  }
+}
+
+@media (max-width: 640px) {
+  .partners-logos-container {
+    gap: 20px;
+    width: max-content;
+    animation: scroll-partners 5s linear infinite;
+  }
+
+  .partners-logos-container .partner-item {
+    flex: 0 0 auto;
+    margin-right: 0px;
+  }
 }

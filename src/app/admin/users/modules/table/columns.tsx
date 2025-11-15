@@ -19,10 +19,10 @@ export function useUserColumns({
       meta: { title: "Tên người dùng" },
       header: () => <div className="font-medium">Tên người dùng</div>,
       cell: ({ row }) => (
-        <div className="flex flex-col space-y-1 min-w-[200px] max-w-[280px]">
+        <div className="flex flex-col space-y-1 min-w-[200px] max-w-[300px]">
           <div className="flex items-center gap-2">
             <span
-              className="font-semibold text-gray-900 truncate"
+              className="flex-1 font-semibold text-gray-900 line-clamp-2"
               title={row.original.fullName || "Unknown User"}
             >
               {row.original.fullName || "Unknown User"}
@@ -32,7 +32,7 @@ export function useUserColumns({
             )}
           </div>
           <span
-            className="max-w-[240px] text-gray-500 text-sm truncate"
+            className="max-w-[300px] text-gray-500 text-sm line-clamp-2"
             title={row.original.email}
           >
             {row.original.email}
@@ -74,9 +74,9 @@ export function useUserColumns({
     {
       accessorKey: "createdAt",
       meta: { title: "Ngày tạo" },
-      header: () => <div className="hidden lg:block font-medium">Ngày tạo</div>,
+      header: () => <div className="font-medium">Ngày tạo</div>,
       cell: ({ row }) => (
-        <div className="hidden lg:block">
+        <div>
           <span className="text-gray-600 text-sm">
             {row.original.createdAt
               ? new Date(row.original.createdAt).toLocaleString("vi-VN", {
@@ -97,9 +97,7 @@ export function useUserColumns({
     {
       accessorKey: "subscription",
       meta: { title: "Gói & Prompt" },
-      header: () => (
-        <div className="hidden lg:block font-medium">Gói & Prompt</div>
-      ),
+      header: () => <div className="font-medium">Gói & Prompt</div>,
       cell: ({ row }) => {
         const subscriptionName =
           row.original.userSub?.subscription?.nameSub ||
@@ -108,19 +106,17 @@ export function useUserColumns({
         const countPrompt = row.original.countPromt ?? 0;
 
         return (
-          <div className="hidden lg:block">
-            <div className="flex flex-col space-y-2">
-              <BadgeCell
-                label={subscriptionName}
-                variant="secondary"
-                maxWidth="max-w-[150px]"
-              />
-              <BadgeCell
-                label={`${countPrompt} tokens`}
-                variant="custom"
-                maxWidth="max-w-[100px]"
-              />
-            </div>
+          <div className="flex flex-col space-y-2">
+            <BadgeCell
+              label={subscriptionName}
+              variant="secondary"
+              maxWidth="max-w-[150px]"
+            />
+            <BadgeCell
+              label={`${countPrompt} tokens`}
+              variant="custom"
+              maxWidth="max-w-[100px]"
+            />
           </div>
         );
       },

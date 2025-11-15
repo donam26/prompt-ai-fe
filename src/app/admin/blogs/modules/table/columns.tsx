@@ -27,7 +27,7 @@ export function useBlogColumns({
         <div className="hidden md:flex justify-center items-center">
           {row.original.featuredImage ? (
             <ImageCell
-              src={row.original.featuredImage as string}
+              src={row.original.featuredImage}
               alt={row.original.title}
               size="sm"
               className="rounded-md"
@@ -46,14 +46,14 @@ export function useBlogColumns({
       cell: ({ row }) => (
         <div className="flex flex-col space-y-1 min-w-[200px] max-w-[300px]">
           <span
-            className="font-semibold text-gray-900 truncate"
+            className="font-semibold text-gray-900 line-clamp-2"
             title={row.original.title}
           >
             {row.original.title}
           </span>
           {row.original.metaDescription && (
             <span
-              className="text-gray-500 text-xs truncate"
+              className="text-gray-500 text-xs line-clamp-2"
               title={row.original.metaDescription}
             >
               {row.original.metaDescription}
@@ -63,27 +63,9 @@ export function useBlogColumns({
       ),
     },
     {
-      accessorKey: "status",
-      meta: { title: "Trạng thái" },
-      header: () => (
-        <div className="hidden lg:block font-medium">Trạng thái</div>
-      ),
-      cell: ({ row }) => (
-        <div className="hidden lg:block">
-          <BadgeCell
-            label={row.original.publishedAt ? "Đã xuất bản" : "Bản nháp"}
-            variant={row.original.publishedAt ? "premium" : "default"}
-            className="min-w-[100px]"
-          />
-        </div>
-      ),
-      enableSorting: false,
-      size: 120,
-    },
-    {
       accessorKey: "category",
       meta: { title: "Danh mục" },
-      header: () => <div className="hidden lg:block font-medium">Danh mục</div>,
+      header: () => <div className="font-medium">Danh mục</div>,
       cell: ({ row }) => {
         const categoryName =
           row.original.category?.name ||
@@ -113,7 +95,7 @@ export function useBlogColumns({
         };
 
         return (
-          <div className="hidden lg:block">
+          <div>
             <BadgeCell
               value={categoryName}
               variant={getCategoryVariant(categoryName)}
@@ -142,11 +124,9 @@ export function useBlogColumns({
     {
       accessorKey: "updatedAt",
       meta: { title: "Cập nhật cuối" },
-      header: () => (
-        <div className="hidden lg:block font-medium">Cập nhật cuối</div>
-      ),
+      header: () => <div className="font-medium">Cập nhật cuối</div>,
       cell: ({ row }) => (
-        <div className="hidden lg:block">
+        <div>
           <span className="text-gray-600 text-sm">
             {row.original.updatedAt
               ? new Date(row.original.updatedAt).toLocaleDateString("vi-VN")

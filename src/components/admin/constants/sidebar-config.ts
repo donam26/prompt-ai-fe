@@ -40,7 +40,7 @@ export const sidebarConfig: SidebarItemType[] = [
         name: "Quản lý Prompts",
         href: "/admin/prompts",
         icon: FileText,
-        permission: "prompts",
+        permission: "prompt",
       },
       {
         name: "Quản lý Blog",
@@ -52,7 +52,7 @@ export const sidebarConfig: SidebarItemType[] = [
         name: "Quản lý loại Blog",
         href: "/admin/blog-category",
         icon: BookOpen,
-        permission: "blog_category",
+        permission: "blogCategory",
         isDisabled: true,
       },
       {
@@ -72,6 +72,12 @@ export const sidebarConfig: SidebarItemType[] = [
         href: "/admin/sections",
         icon: Tag,
         permission: "section",
+      },
+      {
+        name: "Quản lý ngành nghề",
+        href: "/admin/industries",
+        icon: Building,
+        permission: "industry",
       },
     ],
   },
@@ -125,12 +131,6 @@ export const sidebarConfig: SidebarItemType[] = [
     permission: "industry",
     children: [
       {
-        name: "Quản lý ngành nghề",
-        href: "/admin/industries",
-        icon: Building,
-        permission: "industry",
-      },
-      {
         name: "Quản lý sản phẩm",
         href: "/admin/products",
         icon: Package,
@@ -173,7 +173,7 @@ export const sidebarConfig: SidebarItemType[] = [
         name: "Gửi Mail hàng loạt",
         href: "/admin/send-mail",
         icon: Mail,
-        permission: "send_mail",
+        permission: "sendMail",
       },
     ],
   },

@@ -75,7 +75,7 @@ export function AdminSidebar({ className = "" }: Props): React.JSX.Element {
   return (
     <aside
       className={cn(
-        "bg-white shadow-lg border-gray-200 border-primary dark:border-gray-700 dark:border-primary border-t-4 border-r border-l rounded-t-2xl overflow-x-hidden overflow-y-auto transition-all duration-300 ease-in-out",
+        "flex flex-col bg-white shadow-lg border-gray-200 border-primary dark:border-gray-700 dark:border-primary border-t-4 border-r border-l rounded-t-2xl h-full overflow-x-hidden transition-all duration-300 ease-in-out",
         isCollapsed ? "w-16 sm:w-[84px]" : "w-full sm:w-64 md:w-72 lg:w-80",
         className
       )}

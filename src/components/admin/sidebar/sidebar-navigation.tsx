@@ -33,9 +33,17 @@ export function SidebarNavigation({
   });
 
   // Filter navigation items based on permissions
-  const filteredNavigation = sidebarConfig.filter(
-    item => isSuperAdmin || canAccess(item.permission)
-  );
+  const filteredNavigation = sidebarConfig.filter(item => {
+    if (isSuperAdmin) return true;
+
+    // If item has children, show it if at least one child has permission
+    if (item.children && item.children.length > 0) {
+      return item.children.some(child => canAccess(child.permission));
+    }
+
+    // For items without children, check the item's permission
+    return canAccess(item.permission);
+  });
 
   const handleItemToggle = (itemId: string, hasChildren: boolean) => {
     if (hasChildren) {
@@ -46,7 +54,7 @@ export function SidebarNavigation({
   };
 
   return (
-    <ScrollArea className="flex-1">
+    <ScrollArea className="flex-1 h-full">
       <nav
         className={`space-y-1.5 ${collapsed ? "px-2" : "px-6"} pb-6`}
         role="navigation"

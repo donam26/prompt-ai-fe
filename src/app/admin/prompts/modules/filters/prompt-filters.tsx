@@ -1,12 +1,6 @@
 "use client";
 
-import React, {
-  useState,
-  useEffect,
-  useCallback,
-  useLayoutEffect,
-  useMemo,
-} from "react";
+import React, { useState, useCallback, useLayoutEffect, useMemo } from "react";
 import { Search, X } from "lucide-react";
 
 import { Input } from "@/components/ui/input";
@@ -16,7 +10,6 @@ import { BaseSelect } from "@/components/ui/base-select";
 import { MultiSelect } from "@/components/ui/multi-select";
 import { Switch } from "@/components/ui/switch";
 import { PromptActiveFilters } from "./prompt-active-filters";
-import { industryService } from "@/services";
 import { debounce } from "@/lib/utils";
 import type {
   PromptFilterProps,
@@ -27,13 +20,22 @@ import { Category } from "@/types";
 export const PromptFilter = ({
   filters,
   categories,
+  categoriesLoading = false,
+  categoriesSearch = "",
+  onCategoriesSearch,
+  onCategoriesScrollToBottom,
+  hasMoreCategories = false,
+  industries = [],
+  industriesLoading = false,
+  industriesSearch = "",
+  onIndustriesSearch,
+  onIndustriesScrollToBottom,
+  hasMoreIndustries = false,
   onFilterChange,
   onClearFilters,
   onPageReset,
   className,
 }: PromptFilterProps): React.JSX.Element => {
-  const [filteredIndustries, setFilteredIndustries] = useState<Category[]>([]);
-  const [isLoadingIndustries, setIsLoadingIndustries] = useState(false);
   const [searchValue, setSearchValue] = useState(filters.searchTerm || "");
 
   const updateSearchValue = useCallback((value: string) => {
@@ -63,35 +65,6 @@ export const PromptFilter = ({
     },
     [debouncedSearchHandler]
   );
-
-  // Fetch industries when categoryIds change
-  useEffect(() => {
-    // Only fetch when categories are selected
-    if (!filters.categoryIds || filters.categoryIds.length === 0) {
-      setFilteredIndustries([]);
-      return;
-    }
-
-    const fetchIndustries = async () => {
-      setIsLoadingIndustries(true);
-      try {
-        const response = await industryService.getIndustries({
-          categoryIds: filters.categoryIds,
-        });
-        const industriesData: Category[] =
-          (response.data?.data as Category[]) ||
-          (Array.isArray(response.data) ? response.data : []);
-        setFilteredIndustries(industriesData);
-      } catch (error) {
-        console.error("Error fetching industries:", error);
-        setFilteredIndustries([]);
-      } finally {
-        setIsLoadingIndustries(false);
-      }
-    };
-
-    fetchIndustries();
-  }, [filters.categoryIds]);
 
   const handlePremiumChange = (value: string): void => {
     onFilterChange({
@@ -158,8 +131,17 @@ export const PromptFilter = ({
       <PromptFilterCard
         filters={filters}
         categories={categories}
-        filteredIndustries={filteredIndustries}
-        isLoadingIndustries={isLoadingIndustries}
+        categoriesLoading={categoriesLoading}
+        categoriesSearch={categoriesSearch}
+        onCategoriesSearch={onCategoriesSearch}
+        onCategoriesScrollToBottom={onCategoriesScrollToBottom}
+        hasMoreCategories={hasMoreCategories}
+        industries={industries}
+        industriesLoading={industriesLoading}
+        industriesSearch={industriesSearch}
+        onIndustriesSearch={onIndustriesSearch}
+        onIndustriesScrollToBottom={onIndustriesScrollToBottom}
+        hasMoreIndustries={hasMoreIndustries}
         searchValue={searchValue}
         onSearchChange={handleSearchChange}
         onCategoriesChange={handleCategoriesChange}
@@ -176,7 +158,7 @@ export const PromptFilter = ({
         <PromptActiveFilters
           filters={filters}
           categories={categories}
-          industries={filteredIndustries}
+          industries={industries}
           onFilterChange={onFilterChange}
           onClearAll={onClearFilters}
           onPageReset={onPageReset}
@@ -189,8 +171,17 @@ export const PromptFilter = ({
 const PromptFilterCard = ({
   filters,
   categories,
-  filteredIndustries,
-  isLoadingIndustries,
+  categoriesLoading = false,
+  categoriesSearch = "",
+  onCategoriesSearch,
+  onCategoriesScrollToBottom,
+  hasMoreCategories = false,
+  industries = [],
+  industriesLoading = false,
+  industriesSearch = "",
+  onIndustriesSearch,
+  onIndustriesScrollToBottom,
+  hasMoreIndustries = false,
   searchValue,
   onSearchChange,
   onCategoriesChange,
@@ -218,8 +209,8 @@ const PromptFilterCard = ({
     </div>
 
     <div className="space-y-4">
-      {/* First Row - Search and Industries */}
-      <div className="gap-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+      {/* First Row - Search and Premium Filter */}
+      <div className="gap-4 grid grid-cols-1 sm:grid-cols-2">
         {/* Search Input */}
         <div className="space-y-2">
           <Label className="font-medium text-sm">Tìm kiếm</Label>
@@ -243,17 +234,17 @@ const PromptFilterCard = ({
             onChange={onPremiumChange}
           />
         </div>
+      </div>
 
-        {/* Third Row - Date Range */}
-        <div className="space-y-2 w-full lg:w-auto">
-          <Label className="font-medium text-sm">Khoảng thời gian</Label>
-          <DateRangePicker
-            dateFrom={filters.dateFrom}
-            dateTo={filters.dateTo}
-            onDateFromChange={onDateFromChange}
-            onDateToChange={onDateToChange}
-          />
-        </div>
+      {/* Date Range Row */}
+      <div className="space-y-2">
+        <Label className="font-medium text-sm">Khoảng thời gian</Label>
+        <DateRangePicker
+          dateFrom={filters.dateFrom}
+          dateTo={filters.dateTo}
+          onDateFromChange={onDateFromChange}
+          onDateToChange={onDateToChange}
+        />
       </div>
 
       {/* Second Row - Categories and Type */}
@@ -264,6 +255,11 @@ const PromptFilterCard = ({
           <CategoriesMultiFilter
             value={filters.categoryIds || []}
             categories={categories}
+            categoriesLoading={categoriesLoading}
+            categoriesSearch={categoriesSearch}
+            onCategoriesSearch={onCategoriesSearch}
+            onCategoriesScrollToBottom={onCategoriesScrollToBottom}
+            hasMoreCategories={hasMoreCategories}
             onChange={onCategoriesChange}
           />
         </div>
@@ -273,8 +269,12 @@ const PromptFilterCard = ({
           <Label className="font-medium text-sm">Ngành nghề</Label>
           <IndustriesFilter
             value={filters.industryIds}
-            industries={filteredIndustries}
-            isLoading={isLoadingIndustries}
+            industries={industries}
+            industriesLoading={industriesLoading}
+            industriesSearch={industriesSearch}
+            onIndustriesSearch={onIndustriesSearch}
+            onIndustriesScrollToBottom={onIndustriesScrollToBottom}
+            hasMoreIndustries={hasMoreIndustries}
             disabled={!filters.categoryIds || filters.categoryIds.length === 0}
             onChange={onIndustriesChange}
           />
@@ -328,10 +328,20 @@ const PremiumFilter = ({
 const CategoriesMultiFilter = ({
   value,
   categories,
+  categoriesLoading = false,
+  categoriesSearch: _categoriesSearch = "",
+  onCategoriesSearch,
+  onCategoriesScrollToBottom,
+  hasMoreCategories = false,
   onChange,
 }: {
   value: string[];
   categories: Category[];
+  categoriesLoading?: boolean;
+  categoriesSearch?: string;
+  onCategoriesSearch?: (search: string) => void;
+  onCategoriesScrollToBottom?: () => void;
+  hasMoreCategories?: boolean;
   onChange: (values: string[]) => void;
 }): React.JSX.Element => {
   const categoryOptions = categories.map(category => ({
@@ -347,6 +357,11 @@ const CategoriesMultiFilter = ({
       placeholder="Chọn danh mục..."
       maxCount={3}
       className="w-full"
+      shouldFilter={false}
+      onSearch={onCategoriesSearch}
+      onScrollToBottom={onCategoriesScrollToBottom}
+      isLoading={categoriesLoading}
+      hasMore={hasMoreCategories}
     />
   );
 };
@@ -354,13 +369,21 @@ const CategoriesMultiFilter = ({
 const IndustriesFilter = ({
   value,
   industries,
-  isLoading,
-  disabled,
+  industriesLoading = false,
+  industriesSearch: _industriesSearch = "",
+  onIndustriesSearch,
+  onIndustriesScrollToBottom,
+  hasMoreIndustries = false,
+  disabled = false,
   onChange,
 }: {
   value: string[];
   industries: Category[];
-  isLoading?: boolean;
+  industriesLoading?: boolean;
+  industriesSearch?: string;
+  onIndustriesSearch?: (search: string) => void;
+  onIndustriesScrollToBottom?: () => void;
+  hasMoreIndustries?: boolean;
   disabled?: boolean;
   onChange: (values: string[]) => void;
 }): React.JSX.Element => {
@@ -371,7 +394,7 @@ const IndustriesFilter = ({
 
   const placeholder = disabled
     ? "Vui lòng chọn danh mục trước..."
-    : isLoading
+    : industriesLoading
       ? "Đang tải ngành nghề..."
       : "Chọn ngành nghề...";
 
@@ -383,7 +406,12 @@ const IndustriesFilter = ({
       placeholder={placeholder}
       maxCount={3}
       className="w-full"
-      disabled={disabled || isLoading}
+      disabled={disabled || industriesLoading}
+      shouldFilter={false}
+      onSearch={onIndustriesSearch}
+      onScrollToBottom={onIndustriesScrollToBottom}
+      isLoading={industriesLoading}
+      hasMore={hasMoreIndustries}
     />
   );
 };
@@ -398,25 +426,54 @@ const DateRangePicker = ({
   dateTo?: string;
   onDateFromChange?: (value: string) => void;
   onDateToChange?: (value: string) => void;
-}): React.JSX.Element => (
-  <div className="gap-2 grid grid-cols-1 sm:grid-cols-2">
-    <div>
-      <Input
-        type="date"
-        value={dateFrom}
-        onChange={e => onDateFromChange(e.target.value)}
-        placeholder="Từ ngày"
-        className="w-full"
-      />
+}): React.JSX.Element => {
+  const [fromFocused, setFromFocused] = React.useState(false);
+  const [toFocused, setToFocused] = React.useState(false);
+
+  return (
+    <div className="gap-2 grid grid-cols-1 sm:grid-cols-2">
+      <div className="space-y-1">
+        <Label className="text-gray-600 text-xs">Từ ngày</Label>
+        <div className="relative">
+          <Input
+            type="date"
+            value={dateFrom}
+            onChange={e => onDateFromChange(e.target.value)}
+            onFocus={() => setFromFocused(true)}
+            onBlur={() => setFromFocused(false)}
+            className={`pr-24 w-full text-sm ${!dateFrom && !fromFocused ? "text-transparent" : ""}`}
+            style={{
+              colorScheme: "light",
+            }}
+          />
+          {!dateFrom && !fromFocused && (
+            <div className="top-1/2 left-3 absolute text-gray-400 text-sm -translate-y-1/2 pointer-events-none transform">
+              Chọn ngày
+            </div>
+          )}
+        </div>
+      </div>
+      <div className="space-y-1">
+        <Label className="text-gray-600 text-xs">Đến ngày</Label>
+        <div className="relative">
+          <Input
+            type="date"
+            value={dateTo}
+            onChange={e => onDateToChange(e.target.value)}
+            onFocus={() => setToFocused(true)}
+            onBlur={() => setToFocused(false)}
+            className={`pr-24 w-full text-sm ${!dateTo && !toFocused ? "text-transparent" : ""}`}
+            style={{
+              colorScheme: "light",
+            }}
+          />
+          {!dateTo && !toFocused && (
+            <div className="top-1/2 left-3 absolute text-gray-400 text-sm -translate-y-1/2 pointer-events-none transform">
+              Chọn ngày
+            </div>
+          )}
+        </div>
+      </div>
     </div>
-    <div>
-      <Input
-        type="date"
-        value={dateTo}
-        onChange={e => onDateToChange(e.target.value)}
-        placeholder="Đến ngày"
-        className="w-full"
-      />
-    </div>
-  </div>
-);
+  );
+};

@@ -17,6 +17,12 @@ export interface PaymentFilterState {
  */
 export interface PaymentFilterProps {
   readonly filters: PaymentFilterState;
+  readonly subscriptions?: any[];
+  readonly subscriptionsLoading?: boolean;
+  readonly subscriptionsSearch?: string;
+  readonly onSubscriptionsSearch?: (search: string) => void;
+  readonly onSubscriptionsScrollToBottom?: () => void;
+  readonly hasMoreSubscriptions?: boolean;
   readonly onFilterChange: (filters: PaymentFilterState) => void;
   readonly onClearFilters: () => void;
   readonly onPageReset?: () => void;
