@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useMemo } from "react";
+import { usePathname } from "next/navigation";
 import { Loader2 } from "lucide-react";
 import { ToggleButtonGroup } from "./ToggleButtonGroup";
 import { CategoryCard } from "./CategoryCard";
@@ -14,7 +15,11 @@ interface PromptLibraryHomeProps {
 export const enumType = { FREE: "free", PREMIUM: "premium" };
 
 export const PromptLibraryHome = ({ limit }: PromptLibraryHomeProps) => {
+  const pathname = usePathname();
   const [type, setType] = useState(enumType.PREMIUM);
+
+  // Check if current route is home page
+  const isHomePage = pathname === "/";
 
   // Memoize filters to prevent unnecessary re-renders
   const filters = useMemo(
@@ -49,6 +54,48 @@ export const PromptLibraryHome = ({ limit }: PromptLibraryHomeProps) => {
     },
   ];
 
+  // Extract categories to display based on limit
+  const categoriesToDisplay = useMemo(() => {
+    return limit ? categories.slice(0, limit) : categories;
+  }, [categories, limit]);
+
+  // Render categories grid content
+  const renderCategoriesGrid = () => {
+    if (isFetching) {
+      return (
+        <div className="flex justify-center items-center py-20">
+          <div className="flex flex-col items-center gap-4">
+            <Loader2 className="w-8 h-8 text-gray-400 animate-spin" />
+            <p className="text-gray-500">Đang tải danh mục...</p>
+          </div>
+        </div>
+      );
+    }
+
+    if (categories.length === 0) {
+      return (
+        <div className="py-20 text-center">
+          <p className="text-gray-500 text-lg">Không có danh mục nào!</p>
+        </div>
+      );
+    }
+
+    return (
+      <div
+        className={`justify-items-center gap-4 grid grid-cols-2 lg:grid-cols-3 ${isHomePage ? "" : "p-4"}`}
+      >
+        {categoriesToDisplay.map(category => (
+          <CategoryCard
+            key={category.id}
+            category={category}
+            link={getCategoryUrl(category.name, category.id, type)}
+            isPremium={category.type === "premium"}
+          />
+        ))}
+      </div>
+    );
+  };
+
   return (
     <div className="bg-white min-h-screen">
       <div className="mx-auto max-w-7xl">
@@ -75,33 +122,7 @@ export const PromptLibraryHome = ({ limit }: PromptLibraryHomeProps) => {
         </div>
 
         {/* Categories Grid */}
-        <div className="mt-6">
-          {isFetching ? (
-            <div className="flex justify-center items-center py-20">
-              <div className="flex flex-col items-center gap-4">
-                <Loader2 className="w-8 h-8 text-gray-400 animate-spin" />
-                <p className="text-gray-500">Đang tải danh mục...</p>
-              </div>
-            </div>
-          ) : categories.length > 0 ? (
-            <div className="justify-items-center gap-4 grid grid-cols-2 lg:grid-cols-3">
-              {(limit ? categories.slice(0, limit) : categories).map(
-                category => (
-                  <CategoryCard
-                    key={category.id}
-                    category={category}
-                    link={getCategoryUrl(category.name, category.id, type)}
-                    isPremium={category.type === "premium"}
-                  />
-                )
-              )}
-            </div>
-          ) : (
-            <div className="py-20 text-center">
-              <p className="text-gray-500 text-lg">Không có danh mục nào!</p>
-            </div>
-          )}
-        </div>
+        <div className="mt-6">{renderCategoriesGrid()}</div>
       </div>
     </div>
   );

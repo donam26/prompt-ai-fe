@@ -330,7 +330,7 @@ export const HeroRevampSection = (): React.JSX.Element => {
               <PromptLibraryHome limit={PROMPT_LIBRARY_LIMIT_DESKTOP} />
             </div>
             {/* Mobile: Show 6 prompts - Remove extra padding */}
-            <div className="sm:hidden block -mx-4 -mb-4">
+            <div className="sm:hidden block -mx-4 -mb-4 p-4">
               <div className="[&>div]:!py-0 [&>div>div]:!py-0 [&>div>div]:!pb-0 [&>div]:!min-h-0">
                 <PromptLibraryHome limit={PROMPT_LIBRARY_LIMIT_MOBILE} />
               </div>

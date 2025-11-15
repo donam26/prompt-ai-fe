@@ -29,7 +29,7 @@ export default function ListPromptsPage() {
   const params = useParams();
   const searchParams = useSearchParams();
   const router = useRouter();
-  const { user } = useAuth();
+  const { user, isLoading: isLoadingUser } = useAuth();
 
   // Extract slug and ID from params
   const slug = params.slug as string[];
@@ -52,14 +52,27 @@ export default function ListPromptsPage() {
   const [pageSize] = useState(12);
 
   // Check if user has Free subscription
-  const isFreeUser =
-    user?.userSub?.subscription?.nameSub === "Free" ||
-    !user?.userSub?.subscription?.nameSub;
+  // Only check after user data is loaded, default to free user if not loaded or no subscription
+  const isFreeUser = useMemo(() => {
+    // If user is still loading, return false to avoid premature redirect
+    // The useEffect will wait for user to load before checking subscription
+    if (isLoadingUser) {
+      return false;
+    }
+    // If user is not loaded or has no subscription, treat as free user
+    if (!user?.userSub?.subscription?.nameSub) {
+      return true;
+    }
+    // Check if subscription is Free
+    return user.userSub.subscription.nameSub === "Free";
+  }, [user, isLoadingUser]);
 
   // Fetch category
   useEffect(() => {
     const fetchCategory = async () => {
       if (!categoryId) return;
+      // Wait for user data to be loaded before checking subscription
+      if (isLoadingUser) return;
 
       try {
         setIsLoadingCategory(true);
@@ -68,6 +81,7 @@ export default function ListPromptsPage() {
         setCategory(categoryData);
 
         // Redirect to pricing if Free user tries to access premium category
+        // Only check after user data is loaded
         if (categoryData.type === "premium" && isFreeUser) {
           showToast.error(
             "Bạn cần nâng cấp gói Premium để truy cập danh mục này"
@@ -84,7 +98,7 @@ export default function ListPromptsPage() {
     };
 
     fetchCategory();
-  }, [categoryId, isFreeUser, router]);
+  }, [categoryId, isFreeUser, isLoadingUser, router]);
 
   // Memoized industry and topic strings
   const industryIdsString = useMemo(() => industryIds.join(","), [industryIds]);
