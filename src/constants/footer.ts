@@ -75,7 +75,7 @@ export const SOCIAL_LINKS = [
 ] as const;
 
 export const FOOTER_IMAGES = {
-  logo: "/icons/ui/logo.svg",
+  logo: "/icons/logos/logo-final-1.svg",
   boCongThuong: "/images/logos/logoBoCongThuong.png",
 } as const;
 

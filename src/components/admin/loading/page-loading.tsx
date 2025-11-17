@@ -11,7 +11,7 @@ const PageLoading: React.FC = () => {
       <div className="flex flex-col items-center space-y-8 animate-in duration-700 fade-in-0">
         <div className="relative">
           <Image
-            src="/icons/ui/logo.svg"
+            src="/icons/logos/logo-final-1.svg"
             alt="Admin Logo"
             width={120}
             height={120}

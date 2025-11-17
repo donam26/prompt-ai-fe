@@ -36,7 +36,7 @@ export const metadata: Metadata = {
   keywords: "prompt, AI, ChatGPT, Midjourney, prompt library, AI tools",
   authors: [{ name: "Prom Team" }],
   icons: {
-    icon: "/icons/ui/logo.svg",
+    icon: "/icons/logos/logo-final-1.svg",
   },
   openGraph: {
     title: "Prom - Thư Viện & Nâng Cấp Prompt!",

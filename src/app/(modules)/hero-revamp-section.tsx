@@ -60,7 +60,7 @@ export const HeroRevampSection = (): React.JSX.Element => {
       className="relative overflow-hidden"
       style={{ background: "linear-gradient(90deg, #e1f6ff 0%, #e6b8ff 100%)" }}
     >
-      <section className="relative flex flex-col items-center mx-auto px-4 sm:px-6 lg:px-8 pt-20 sm:pt-20 lg:pt-32 pb-6 lg:pb-8 w-full">
+      <section className="relative flex flex-col items-center mx-auto px-4 sm:px-6 lg:px-8 pt-20 sm:pt-24 md:pt-28 lg:pt-32 pb-6 lg:pb-8 w-full">
         <Image
           src={decorLeft}
           alt=""
@@ -99,25 +99,25 @@ export const HeroRevampSection = (): React.JSX.Element => {
         </div>
 
         {/* Desktop CTA & Illustration */}
-        <div className="hidden items-center gap-4 sm:grid grid-cols-4 sm:grid-cols-3 mt-4 sm:mt-0">
+        <div className="hidden sm:flex justify-center items-center gap-4 mt-4 sm:mt-4 md:mt-6">
           {/* Text and Image Section */}
-          <div className="flex md:flex-row flex-col justify-end items-center gap-2 md:mr-[-24px]">
+          <div className="flex md:flex-row flex-col justify-center items-center gap-2">
             <Image
               src={promptImage}
               alt="Nâng Cấp Prompt"
-              className="order-1 md:order-2 md:mb-6 w-auto h-12 sm:h-full"
+              className="order-1 md:order-2 md:mb-6 w-auto h-12 sm:h-14 md:h-16 lg:h-20 xl:h-24"
               priority
             />
             <Image
               src={promptText}
               alt="Nâng Cấp Prompt Text"
-              className="order-2 md:order-1 w-auto h-12 sm:h-full"
+              className="order-2 md:order-1 w-auto h-12 sm:h-14 md:h-16 lg:h-20 xl:h-24"
               priority
             />
           </div>
 
           {/* Buttons Section */}
-          <div className="flex sm:flex-row flex-col justify-start sm:items-center gap-4 col-span-3 sm:col-span-2 sm:ml-6">
+          <div className="flex sm:flex-row flex-col justify-center items-center gap-4">
             <CTAButton
               className="flex justify-center items-center gap-2 bg-[radial-gradient(42.61%_55.51%_at_60.46%_100%,rgba(255,255,255,0.15)_0%,rgba(255,255,255,0)_100%),radial-gradient(58.56%_126.24%_at_31.37%_0%,rgba(255,255,255,0.25)_0%,rgba(255,255,255,0)_77.6%),radial-gradient(74.14%_74.14%_at_102.47%_39.73%,#B566E6_0%,rgba(181,102,230,0)_77.6%),radial-gradient(88.4%_88.4%_at_86.12%_6.46%,#FF1C89_0%,rgba(229,102,163,0)_56.56%),radial-gradient(73.57%_73.57%_at_0%_67.49%,#5666EF_0%,rgba(86,102,239,0)_69.33%),radial-gradient(124.52%_124.52%_at_-3.99%_35.36%,#0066FF_0%,rgba(0,78,255,0)_69.33%),#D0E0F3] shadow-[inset_0px_0px_12px_rgba(255,255,255,0.6)] rounded-full w-[212px] h-[53.5px]"
               onClick={handleOpenExtension}
