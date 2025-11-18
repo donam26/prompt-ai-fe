@@ -13,8 +13,8 @@ const PromptLibrarySection = dynamic(
   () => import("./(modules)/prompt-library-section"),
   { ssr: true }
 );
-const LivestreamCommunitySection = dynamic(
-  () => import("./(modules)/livestream-community-section"),
+const AIModulesSection = dynamic(
+  () => import("./(modules)/ai-modules-section"),
   { ssr: true }
 );
 const EnterpriseTrainingSection = dynamic(
@@ -72,10 +72,9 @@ export default function HomePage(): React.JSX.Element {
             <PromptLibrarySection />
           </Suspense>
         </section>
-
         <section className="pt-4 lg:pt-6">
           <Suspense fallback={<SectionSkeleton />}>
-            <LivestreamCommunitySection />
+            <AIModulesSection />
           </Suspense>
         </section>
 

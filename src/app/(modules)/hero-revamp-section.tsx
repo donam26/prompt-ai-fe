@@ -97,11 +97,9 @@ export const HeroRevampSection = (): React.JSX.Element => {
             Hơn 8,000+ prompts tạo ra từ các chuyên gia về AI
           </p>
         </div>
-
-        {/* Desktop CTA & Illustration */}
-        <div className="hidden sm:flex justify-center items-center gap-4 mt-4 sm:mt-4 md:mt-6">
+        <div className="relative">
           {/* Text and Image Section */}
-          <div className="flex md:flex-row flex-col justify-center items-center gap-2">
+          <div className="hidden left-[-8rem] sm:left-[-7rem] md:left-[-10rem] lg:left-[-17.5rem] absolute sm:flex md:flex-row flex-col justify-center items-center gap-2">
             <Image
               src={promptImage}
               alt="Nâng Cấp Prompt"
@@ -116,63 +114,66 @@ export const HeroRevampSection = (): React.JSX.Element => {
             />
           </div>
 
-          {/* Buttons Section */}
-          <div className="flex sm:flex-row flex-col justify-center items-center gap-4">
-            <CTAButton
-              className="flex justify-center items-center gap-2 bg-[radial-gradient(42.61%_55.51%_at_60.46%_100%,rgba(255,255,255,0.15)_0%,rgba(255,255,255,0)_100%),radial-gradient(58.56%_126.24%_at_31.37%_0%,rgba(255,255,255,0.25)_0%,rgba(255,255,255,0)_77.6%),radial-gradient(74.14%_74.14%_at_102.47%_39.73%,#B566E6_0%,rgba(181,102,230,0)_77.6%),radial-gradient(88.4%_88.4%_at_86.12%_6.46%,#FF1C89_0%,rgba(229,102,163,0)_56.56%),radial-gradient(73.57%_73.57%_at_0%_67.49%,#5666EF_0%,rgba(86,102,239,0)_69.33%),radial-gradient(124.52%_124.52%_at_-3.99%_35.36%,#0066FF_0%,rgba(0,78,255,0)_69.33%),#D0E0F3] shadow-[inset_0px_0px_12px_rgba(255,255,255,0.6)] rounded-full w-[212px] h-[53.5px]"
-              onClick={handleOpenExtension}
-            >
-              Tải ngay
-              <ArrowDown className="w-4 h-4" />
-            </CTAButton>
-            <Button
-              onClick={handleNavigateToPromptLibrary}
-              className="relative flex justify-center items-center gap-2 bg-[rgba(214,214,214,0.3)] hover:bg-[rgba(214,214,214,0.3)] shadow-[0px_69px_69px_rgba(255,255,255,0.09),0px_17px_38px_rgba(255,255,255,0.1)] backdrop-blur-[9px] px-4 py-3 rounded-full w-[212px] h-[53.5px] overflow-hidden font-semibold text-[#5700C6] text-lg hover:scale-105 transition-transform duration-300"
-            >
-              <span>Thư viện prompt</span>
-              <svg
-                width="14"
-                height="14"
-                viewBox="0 0 14 14"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
+          {/* Desktop CTA & Illustration */}
+          <div className="hidden sm:flex justify-center items-center gap-4 mt-4 sm:mt-4 md:mt-6">
+            {/* Buttons Section */}
+            <div className="flex sm:flex-row flex-col justify-center items-center gap-4 w-full">
+              <CTAButton
+                className="flex justify-center items-center gap-2 bg-[radial-gradient(42.61%_55.51%_at_60.46%_100%,rgba(255,255,255,0.15)_0%,rgba(255,255,255,0)_100%),radial-gradient(58.56%_126.24%_at_31.37%_0%,rgba(255,255,255,0.25)_0%,rgba(255,255,255,0)_77.6%),radial-gradient(74.14%_74.14%_at_102.47%_39.73%,#B566E6_0%,rgba(181,102,230,0)_77.6%),radial-gradient(88.4%_88.4%_at_86.12%_6.46%,#FF1C89_0%,rgba(229,102,163,0)_56.56%),radial-gradient(73.57%_73.57%_at_0%_67.49%,#5666EF_0%,rgba(86,102,239,0)_69.33%),radial-gradient(124.52%_124.52%_at_-3.99%_35.36%,#0066FF_0%,rgba(0,78,255,0)_69.33%),#D0E0F3] shadow-[inset_0px_0px_12px_rgba(255,255,255,0.6)] rounded-full w-[212px] h-[53.5px]"
+                onClick={handleOpenExtension}
               >
-                <path
-                  d="M1 1.00002L13 1M13 1L13 13M13 1L1.00002 13"
-                  stroke="#5700C6"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-                <path
-                  d="M1 1.00002L13 1M13 1L13 13M13 1L1.00002 13"
-                  stroke="url(#paint0_linear_hero_prompt_mobile)"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-                <defs>
-                  <linearGradient
-                    id="paint0_linear_hero_prompt_mobile"
-                    x1="1"
-                    y1="7"
-                    x2="13"
-                    y2="7"
-                    gradientUnits="userSpaceOnUse"
-                  >
-                    <stop stopColor="#F0E8FF" stopOpacity="0" />
-                    <stop offset="1" stopColor="#3F09A8" />
-                  </linearGradient>
-                </defs>
-              </svg>
-              <span className="absolute inset-0 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.2)] border border-white/60 rounded-full pointer-events-none" />
-            </Button>
+                Tải ngay
+                <ArrowDown className="w-4 h-4" />
+              </CTAButton>
+              <Button
+                onClick={handleNavigateToPromptLibrary}
+                className="relative flex justify-center items-center gap-2 bg-[rgba(214,214,214,0.3)] hover:bg-[rgba(214,214,214,0.3)] shadow-[0px_69px_69px_rgba(255,255,255,0.09),0px_17px_38px_rgba(255,255,255,0.1)] backdrop-blur-[9px] px-4 py-3 rounded-full w-[212px] h-[53.5px] overflow-hidden font-semibold text-[#5700C6] text-lg hover:scale-105 transition-transform duration-300"
+              >
+                <span>Thư viện prompt</span>
+                <svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 14 14"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M1 1.00002L13 1M13 1L13 13M13 1L1.00002 13"
+                    stroke="#5700C6"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                  <path
+                    d="M1 1.00002L13 1M13 1L13 13M13 1L1.00002 13"
+                    stroke="url(#paint0_linear_hero_prompt_mobile)"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                  <defs>
+                    <linearGradient
+                      id="paint0_linear_hero_prompt_mobile"
+                      x1="1"
+                      y1="7"
+                      x2="13"
+                      y2="7"
+                      gradientUnits="userSpaceOnUse"
+                    >
+                      <stop stopColor="#F0E8FF" stopOpacity="0" />
+                      <stop offset="1" stopColor="#3F09A8" />
+                    </linearGradient>
+                  </defs>
+                </svg>
+                <span className="absolute inset-0 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.2)] border border-white/60 rounded-full pointer-events-none" />
+              </Button>
+            </div>
           </div>
         </div>
 
         {/* Mobile CTA & Illustration */}
-        <div className="sm:hidden flex justify-center items-center gap-4 mt-4">
-          <div className="flex flex-col items-center gap-2">
+        <div className="sm:hidden relative flex justify-center items-center gap-4 mt-4">
+          <div className="left-[-5rem] sm:left-[-12rem] md:left-[-15rem] lg:left-[-17.5rem] xl:left-[-20rem] absolute flex flex-col items-center gap-2 rem]">
             <Image
               src={promptImage}
               alt="Nâng Cấp Prompt"
