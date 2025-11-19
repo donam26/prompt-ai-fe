@@ -53,21 +53,14 @@ const FeedbackItem = ({
   const isProcessed = feedback.status === FEEDBACKS_CONSTANTS.STATUS.PROCESSED;
 
   return (
-    <div
-      className={`group flex justify-between items-center p-4 rounded-lg transition-all cursor-pointer ${
+    <button
+      type="button"
+      className={`group flex justify-between items-center p-4 rounded-lg transition-all cursor-pointer w-full text-left ${
         isProcessed
           ? "hover:bg-gray-50 dark:hover:bg-gray-800 border border-gray-200 dark:border-gray-700"
           : "bg-primary-50 dark:bg-primary-900/20 border-l-4 border-primary-500 dark:border-primary-400 hover:bg-primary-100 dark:hover:bg-primary-900/30"
       }`}
       onClick={() => onView(feedback)}
-      onKeyDown={e => {
-        if (e.key === "Enter" || e.key === " ") {
-          e.preventDefault();
-          onView(feedback);
-        }
-      }}
-      tabIndex={0}
-      role="button"
       aria-label={`Xem chi tiết feedback ${feedback.email}`}
     >
       <div className="flex flex-1 items-center gap-4 min-w-0">
@@ -119,7 +112,7 @@ const FeedbackItem = ({
         </div>
       </div>
       <ArrowRight className="flex-shrink-0 ml-2 w-4 h-4 text-gray-400 group-hover:text-primary transition-colors" />
-    </div>
+    </button>
   );
 };
 

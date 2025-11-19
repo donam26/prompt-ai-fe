@@ -193,7 +193,6 @@ export default function ProductManagementPage(): React.JSX.Element {
           filters={filters}
           sections={allSections}
           sectionsLoading={sectionsLoading}
-          sectionsSearch={sectionsSearch}
           onSectionsSearch={handleSectionsSearch}
           onSectionsScrollToBottom={handleSectionsScrollToBottom}
           hasMoreSections={hasMoreSections}

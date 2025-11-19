@@ -191,7 +191,6 @@ export default function CategoryManagementPage(): React.JSX.Element {
           sections={[]}
           industries={allIndustries}
           industriesLoading={industriesLoading}
-          industriesSearch={industriesSearch}
           onIndustriesSearch={handleIndustriesSearch}
           onIndustriesScrollToBottom={handleIndustriesScrollToBottom}
           hasMoreIndustries={hasMoreIndustries}

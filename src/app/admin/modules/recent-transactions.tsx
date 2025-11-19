@@ -58,36 +58,29 @@ export const RecentTransactions = (): React.JSX.Element => {
   };
 
   return (
-    <div
+    <button
       onClick={handleClick}
-      onKeyDown={e => {
-        if (e.key === "Enter" || e.key === " ") {
-          e.preventDefault();
-          handleClick();
-        }
-      }}
-      tabIndex={0}
-      role="button"
+      type="button"
       aria-label="Xem tất cả giao dịch"
-      className="hover:scale-105 transition-transform cursor-pointer"
+      className="w-full text-left hover:scale-105 transition-transform cursor-pointer"
     >
       <div className="bg-gradient-to-br from-primary-50 dark:from-primary-900/30 to-primary-100 dark:to-primary-800/30 shadow-sm hover:shadow-md p-6 border border-primary-200 dark:border-primary-700 rounded-xl transition-shadow">
         <div className="flex justify-between items-center">
-          <div className="flex items-center gap-4">
-            <div className="flex justify-center items-center bg-primary-500/20 rounded-2xl w-16 h-16">
-              <CreditCard className="w-8 h-8 text-primary-600 dark:text-primary-400" />
+          <div className="flex items-center gap-3 sm:gap-4">
+            <div className="flex justify-center items-center bg-primary-500/20 rounded-xl sm:rounded-2xl w-12 sm:w-16 h-12 sm:h-16 shrink-0">
+              <CreditCard className="w-6 sm:w-8 h-6 sm:h-8 text-primary-600 dark:text-primary-400" />
             </div>
-            <div>
+            <div className="flex-1 min-w-0">
               <p className="mb-1 font-medium text-gray-600 dark:text-gray-400 text-xs uppercase tracking-wide">
                 Số lượng giao dịch (30 ngày)
               </p>
-              <p className="font-bold text-gray-900 dark:text-gray-100 text-3xl">
+              <p className="font-bold text-gray-900 dark:text-gray-100 text-2xl sm:text-3xl">
                 {isFetching ? "..." : totalCount.toLocaleString("vi-VN")}
               </p>
             </div>
           </div>
         </div>
       </div>
-    </div>
+    </button>
   );
 };

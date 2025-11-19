@@ -190,7 +190,6 @@ const SubscriptionFilter = ({
   onChange,
   subscriptions,
   subscriptionsLoading = false,
-  subscriptionsSearch: _subscriptionsSearch = "",
   onSubscriptionsSearch,
   onSubscriptionsScrollToBottom,
   hasMoreSubscriptions = false,

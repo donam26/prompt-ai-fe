@@ -75,7 +75,6 @@ export interface CategoryFilterProps {
   readonly sections: Section[];
   readonly industries: Industry[];
   readonly industriesLoading?: boolean;
-  readonly industriesSearch?: string;
   readonly onIndustriesSearch?: (search: string) => void;
   readonly onIndustriesScrollToBottom?: () => void;
   readonly hasMoreIndustries?: boolean;
@@ -101,7 +100,6 @@ export interface FilterCardProps {
   readonly filters: CategoryFilterState;
   readonly industries: Industry[];
   readonly industriesLoading?: boolean;
-  readonly industriesSearch?: string;
   readonly onIndustriesSearch?: (search: string) => void;
   readonly onIndustriesScrollToBottom?: () => void;
   readonly hasMoreIndustries?: boolean;

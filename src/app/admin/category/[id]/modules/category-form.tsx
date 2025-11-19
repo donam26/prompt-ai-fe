@@ -69,9 +69,9 @@ export const CategoryForm = ({
   useEffect(() => {
     if (category) {
       const defaultValues = getCategoryFormDefaultValues(category);
-      Object.entries(defaultValues).forEach(([key, value]) => {
+      for (const [key, value] of Object.entries(defaultValues)) {
         setValue(key as keyof CategoryFormValues, value);
-      });
+      }
     }
   }, [category, setValue]);
 
@@ -158,8 +158,7 @@ export const CategoryForm = ({
           <AdminContentCard>
             <div className="mb-4">
               <h3 className="font-semibold text-lg">
-                Basic Information
-                <span className="text-red-500">*</span>
+                Basic Information <span className="text-red-500">*</span>
               </h3>
             </div>
             <CategoryBasicFields

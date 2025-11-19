@@ -127,7 +127,6 @@ const CategoriesFilter = ({
   value,
   categories,
   categoriesLoading = false,
-  categoriesSearch: _categoriesSearch = "",
   onCategoriesSearch,
   onCategoriesScrollToBottom,
   hasMoreCategories = false,

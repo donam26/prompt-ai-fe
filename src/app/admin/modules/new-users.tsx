@@ -58,36 +58,29 @@ export const NewUsers = (): React.JSX.Element => {
   };
 
   return (
-    <div
+    <button
       onClick={handleClick}
-      onKeyDown={e => {
-        if (e.key === "Enter" || e.key === " ") {
-          e.preventDefault();
-          handleClick();
-        }
-      }}
-      tabIndex={0}
-      role="button"
+      type="button"
       aria-label="Xem tất cả người dùng"
-      className="hover:scale-105 transition-transform cursor-pointer"
+      className="w-full text-left hover:scale-105 transition-transform cursor-pointer"
     >
       <div className="bg-gradient-to-br from-green-50 dark:from-green-900/30 to-emerald-50 dark:to-emerald-900/30 shadow-sm hover:shadow-md p-6 border border-green-200 dark:border-green-700 rounded-xl transition-shadow">
         <div className="flex justify-between items-center">
-          <div className="flex items-center gap-4">
-            <div className="flex justify-center items-center bg-green-500/20 rounded-2xl w-16 h-16">
-              <UserPlus className="w-8 h-8 text-green-600 dark:text-green-400" />
+          <div className="flex items-center gap-3 sm:gap-4">
+            <div className="flex justify-center items-center bg-green-500/20 rounded-xl sm:rounded-2xl w-12 sm:w-16 h-12 sm:h-16 shrink-0">
+              <UserPlus className="w-6 sm:w-8 h-6 sm:h-8 text-green-600 dark:text-green-400" />
             </div>
-            <div>
+            <div className="flex-1 min-w-0">
               <p className="mb-1 font-medium text-gray-600 dark:text-gray-400 text-xs uppercase tracking-wide">
                 Người dùng mới (30 ngày)
               </p>
-              <p className="font-bold text-gray-900 dark:text-gray-100 text-3xl">
+              <p className="font-bold text-gray-900 dark:text-gray-100 text-2xl sm:text-3xl">
                 {isFetching ? "..." : totalCount.toLocaleString("vi-VN")}
               </p>
             </div>
           </div>
         </div>
       </div>
-    </div>
+    </button>
   );
 };

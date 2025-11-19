@@ -16,7 +16,6 @@ export const ProductFilter = ({
   filters,
   sections,
   sectionsLoading = false,
-  sectionsSearch = "",
   onSectionsSearch,
   onSectionsScrollToBottom,
   hasMoreSections = false,
@@ -111,7 +110,6 @@ export const ProductFilter = ({
                 value={filters.sectionIds || []}
                 sections={sections}
                 sectionsLoading={sectionsLoading}
-                sectionsSearch={sectionsSearch}
                 onSectionsSearch={onSectionsSearch}
                 onSectionsScrollToBottom={onSectionsScrollToBottom}
                 hasMoreSections={hasMoreSections}
@@ -137,7 +135,6 @@ const SectionsFilter = ({
   value,
   sections,
   sectionsLoading = false,
-  sectionsSearch: _sectionsSearch = "",
   onSectionsSearch,
   onSectionsScrollToBottom,
   hasMoreSections = false,
@@ -146,7 +143,6 @@ const SectionsFilter = ({
   value: string[];
   sections: Section[];
   sectionsLoading?: boolean;
-  sectionsSearch?: string;
   onSectionsSearch?: (search: string) => void;
   onSectionsScrollToBottom?: () => void;
   hasMoreSections?: boolean;

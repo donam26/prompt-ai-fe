@@ -15,7 +15,6 @@ export interface ProductFilterProps {
   readonly filters: ProductFilterState;
   readonly sections: Section[];
   readonly sectionsLoading?: boolean;
-  readonly sectionsSearch?: string;
   readonly onSectionsSearch?: (search: string) => void;
   readonly onSectionsScrollToBottom?: () => void;
   readonly hasMoreSections?: boolean;

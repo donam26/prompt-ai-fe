@@ -37,7 +37,7 @@ export function MainContent({
   }, []);
 
   const contentClasses = cn(
-    "flex-1 bg-white dark:bg-gray-800 md:rounded-none rounded-t-2xl overflow-x-hidden",
+    "flex-1 bg-white dark:bg-gray-800 md:rounded-none rounded-t-2xl overflow-x-hidden overflow-y-auto",
     {
       "p-2 sm:p-4 md:p-8 lg:p-10 !pt-0": shouldApplyPadding,
     }
@@ -48,6 +48,8 @@ export function MainContent({
       className={contentClasses}
       style={{
         marginLeft: isMobile ? "0" : "auto",
+        height: "100%",
+        maxHeight: "100vh",
       }}
     >
       {children}

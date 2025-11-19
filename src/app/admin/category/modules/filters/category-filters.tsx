@@ -30,7 +30,6 @@ export const CategoryFilter = ({
   filters,
   industries,
   industriesLoading = false,
-  industriesSearch = "",
   onIndustriesSearch,
   onIndustriesScrollToBottom,
   hasMoreIndustries = false,
@@ -139,7 +138,6 @@ export const CategoryFilter = ({
             }
             industries={industries}
             industriesLoading={industriesLoading}
-            industriesSearch={industriesSearch}
             onIndustriesSearch={onIndustriesSearch}
             onIndustriesScrollToBottom={onIndustriesScrollToBottom}
             hasMoreIndustries={hasMoreIndustries}
@@ -178,7 +176,6 @@ const FilterCard = ({
   filters,
   industries,
   industriesLoading = false,
-  industriesSearch = "",
   onIndustriesSearch,
   onIndustriesScrollToBottom,
   hasMoreIndustries = false,
@@ -212,7 +209,6 @@ const FilterCard = ({
             value={filters.industryIds || []}
             industries={industries}
             industriesLoading={industriesLoading}
-            industriesSearch={industriesSearch}
             onIndustriesSearch={onIndustriesSearch}
             onIndustriesScrollToBottom={onIndustriesScrollToBottom}
             hasMoreIndustries={hasMoreIndustries}
@@ -262,7 +258,6 @@ const IndustryFilter = ({
   value,
   industries,
   industriesLoading = false,
-  industriesSearch: _industriesSearch = "",
   onIndustriesSearch,
   onIndustriesScrollToBottom,
   hasMoreIndustries = false,
@@ -271,7 +266,6 @@ const IndustryFilter = ({
   readonly value: readonly string[];
   readonly industries: Industry[];
   readonly industriesLoading?: boolean;
-  readonly industriesSearch?: string;
   readonly onIndustriesSearch?: (search: string) => void;
   readonly onIndustriesScrollToBottom?: () => void;
   readonly hasMoreIndustries?: boolean;

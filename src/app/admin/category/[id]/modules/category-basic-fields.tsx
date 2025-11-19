@@ -22,18 +22,18 @@ import {
 import { MultiSelect } from "@/components/ui/multi-select";
 
 interface Props {
-  control: Control<CategoryFormValues>;
-  isDisabled: boolean;
-  industries?: Array<{
-    id: string | number;
-    name: string;
-    description?: string;
+  readonly control: Control<CategoryFormValues>;
+  readonly isDisabled: boolean;
+  readonly industries?: ReadonlyArray<{
+    readonly id: string | number;
+    readonly name: string;
+    readonly description?: string;
   }>;
-  industriesLoading?: boolean;
-  industriesSearch?: string;
-  onIndustriesSearch?: (search: string) => void;
-  onIndustriesScrollToBottom?: () => void;
-  hasMoreIndustries?: boolean;
+  readonly industriesLoading?: boolean;
+  readonly industriesSearch?: string;
+  readonly onIndustriesSearch?: (search: string) => void;
+  readonly onIndustriesScrollToBottom?: () => void;
+  readonly hasMoreIndustries?: boolean;
 }
 
 // Get options from constants
@@ -44,7 +44,6 @@ export function CategoryBasicFields({
   isDisabled,
   industries = [],
   industriesLoading = false,
-  industriesSearch: _industriesSearch = "",
   onIndustriesSearch,
   onIndustriesScrollToBottom,
   hasMoreIndustries = false,
