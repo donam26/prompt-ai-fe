@@ -37,6 +37,8 @@ export const metadata: Metadata = {
   authors: [{ name: "Prom Team" }],
   icons: {
     icon: "/icons/logos/logo-single.svg",
+    apple: "/icons/logos/logo-single.svg",
+    shortcut: "/icons/logos/logo-single.svg",
   },
   openGraph: {
     title: "Prom - Thư Viện & Nâng Cấp Prompt!",
@@ -83,6 +85,12 @@ export default function RootLayout({
     >
       <head>
         <meta name="google-adsense-account" content="ca-pub-2351800777200822" />
+        <link rel="apple-touch-icon" href="/icons/logos/logo-single.svg" />
+        <link
+          rel="icon"
+          href="/icons/logos/logo-single.svg"
+          type="image/svg+xml"
+        />
         <link
           rel="preload"
           href="/images/home/background.png"
