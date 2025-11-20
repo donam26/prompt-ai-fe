@@ -19,12 +19,10 @@ export function useBlogColumns({
       accessorKey: "featuredImage",
       meta: { title: "Hình ảnh" },
       header: () => (
-        <div className="hidden md:block w-full font-medium text-center">
-          Hình ảnh
-        </div>
+        <div className="w-full font-medium text-center">Hình ảnh</div>
       ),
       cell: ({ row }) => (
-        <div className="hidden md:flex justify-center items-center">
+        <div className="flex justify-center items-center">
           {row.original.featuredImage ? (
             <ImageCell
               src={row.original.featuredImage}
@@ -38,6 +36,7 @@ export function useBlogColumns({
         </div>
       ),
       enableSorting: false,
+      size: 30,
     },
     {
       accessorKey: "title",
@@ -109,9 +108,9 @@ export function useBlogColumns({
     {
       accessorKey: "createdAt",
       meta: { title: "Ngày tạo" },
-      header: () => <div className="hidden md:block font-medium">Ngày tạo</div>,
+      header: () => <div className="font-medium">Ngày tạo</div>,
       cell: ({ row }) => (
-        <div className="hidden md:block">
+        <div className="whitespace-nowrap">
           <span className="text-gray-600 text-sm">
             {row.original.createdAt
               ? new Date(row.original.createdAt).toLocaleDateString("vi-VN")
@@ -120,13 +119,14 @@ export function useBlogColumns({
         </div>
       ),
       enableSorting: false,
+      size: 70,
     },
     {
       accessorKey: "updatedAt",
       meta: { title: "Cập nhật cuối" },
       header: () => <div className="font-medium">Cập nhật cuối</div>,
       cell: ({ row }) => (
-        <div>
+        <div className="whitespace-nowrap">
           <span className="text-gray-600 text-sm">
             {row.original.updatedAt
               ? new Date(row.original.updatedAt).toLocaleDateString("vi-VN")
@@ -135,13 +135,14 @@ export function useBlogColumns({
         </div>
       ),
       enableSorting: false,
+      size: 70,
     },
     {
       id: "actions",
       meta: { title: "Thao tác" },
       header: () => <div className="font-medium text-center">Thao tác</div>,
       cell: ({ row }) => (
-        <div className="flex justify-center items-center min-w-[120px]">
+        <div className="flex justify-center items-center gap-1">
           <ActionsCell
             item={row.original}
             onEdit={onEditAction}
@@ -150,6 +151,7 @@ export function useBlogColumns({
         </div>
       ),
       enableSorting: false,
+      size: 30,
     },
   ];
 }
@@ -196,7 +198,7 @@ export const adaptColumnsForDataTable = (
         }
         return accessorKey ? record[accessorKey as keyof Blog] : "";
       },
-      width: 200,
+      width: 30,
       align: "left" as const,
       className: "",
     };

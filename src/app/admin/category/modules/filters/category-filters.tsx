@@ -130,7 +130,7 @@ export const CategoryFilter = ({
 
   return (
     <Card className={`${className || ""}`}>
-      <CardContent className="p-6">
+      <CardContent className="">
         <div className={FILTER_CONSTANTS.CONTAINER}>
           <FilterCard
             filters={

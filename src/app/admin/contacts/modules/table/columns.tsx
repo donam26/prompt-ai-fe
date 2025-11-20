@@ -127,7 +127,7 @@ export function useContactColumns({
       meta: { title: "Ngày gửi" },
       header: () => <div className="font-medium">Ngày gửi</div>,
       cell: ({ row }) => (
-        <div>
+        <div className="whitespace-nowrap">
           <span className="text-gray-600 text-sm">
             {row.original.createdAt
               ? new Date(row.original.createdAt).toLocaleDateString("vi-VN")
@@ -136,17 +136,19 @@ export function useContactColumns({
         </div>
       ),
       enableSorting: false,
+      size: 120,
     },
     {
       id: "actions",
       meta: { title: "Thao tác" },
       header: () => <div className="font-medium text-center">Thao tác</div>,
       cell: ({ row }) => (
-        <div className="flex justify-center items-center min-w-[100px]">
+        <div className="flex justify-center items-center gap-1">
           <ActionsCell item={row.original} onView={onViewAction} />
         </div>
       ),
       enableSorting: false,
+      size: 100,
     },
   ];
 }
@@ -184,7 +186,7 @@ export const adaptColumnsForDataTable = (
         }
         return accessorKey ? record[accessorKey as keyof Contact] : "";
       },
-      width: 200,
+      width: 30,
       align: "left" as const,
       className: "",
     };

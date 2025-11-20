@@ -30,7 +30,7 @@ export const useTopicColumns = ({
     cell: ({ row }) => {
       const createdAt = row.getValue("createdAt") as string;
       return (
-        <div className="text-gray-600 text-sm">
+        <div className="whitespace-nowrap text-gray-600 text-sm">
           {new Date(createdAt).toLocaleString("vi-VN", {
             day: "2-digit",
             month: "2-digit",
@@ -43,6 +43,7 @@ export const useTopicColumns = ({
         </div>
       );
     },
+    size: 160,
   },
   {
     accessorKey: "updatedAt",
@@ -71,7 +72,7 @@ export const useTopicColumns = ({
       const topic = row.original;
 
       return (
-        <div className="flex items-center gap-2">
+        <div className="flex justify-center items-center gap-2">
           {onEdit && (
             <Button
               variant="ghost"
@@ -95,6 +96,7 @@ export const useTopicColumns = ({
         </div>
       );
     },
+    size: 100,
   },
 ];
 
@@ -162,7 +164,7 @@ export const adaptColumnsForDataTable = (
         }
         return accessorKey ? record[accessorKey as keyof Topic] : "";
       },
-      width: 200,
+      width: 30,
       align: "left" as const,
       className: "",
     };

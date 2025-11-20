@@ -131,13 +131,11 @@ export function useExpiringSubscriptionsColumns({
     {
       accessorKey: "token",
       meta: { title: "Token còn lại" },
-      header: () => (
-        <div className="hidden md:block font-medium">Token còn lại</div>
-      ),
+      header: () => <div className="font-medium">Token còn lại</div>,
       cell: ({ row }) => {
         const token = row.original.token || 0;
         return (
-          <div className="hidden md:block">
+          <div>
             <span className="font-medium text-gray-900">
               {token.toLocaleString("vi-VN")}
             </span>
@@ -153,11 +151,12 @@ export function useExpiringSubscriptionsColumns({
         <div className="w-full font-medium text-center">Thao tác</div>
       ),
       cell: ({ row }) => (
-        <div className="flex justify-center items-center">
+        <div className="flex justify-center items-center gap-1">
           <ActionsCell item={row.original} onEdit={onEditAction} />
         </div>
       ),
       enableSorting: false,
+      size: 100,
     },
   ];
 }
@@ -203,7 +202,7 @@ export const adaptColumnsForDataTable = (
           ? record[accessorKey as keyof ExpiringSubscription]
           : "";
       },
-      width: 200,
+      width: 30,
       align: "left" as const,
       className: "",
     };

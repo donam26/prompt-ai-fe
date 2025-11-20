@@ -57,12 +57,10 @@ export function useProductColumns({
       accessorKey: "image",
       meta: { title: "Hình ảnh" },
       header: () => (
-        <div className="hidden md:block w-full font-medium text-center">
-          Hình ảnh
-        </div>
+        <div className="w-full font-medium text-center">Hình ảnh</div>
       ),
       cell: ({ row }) => (
-        <div className="hidden md:flex justify-center items-center">
+        <div className="flex justify-center items-center">
           {row.original.image && row.original.image.length > 0 ? (
             <ImageCell
               src={row.original.image}
@@ -100,7 +98,7 @@ export function useProductColumns({
         const link = row.original.link;
 
         return (
-          <div className="hidden lg:flex items-center gap-2 max-w-[300px]">
+          <div className="lg:flex items-center gap-2 max-w-[300px]">
             {link ? (
               <>
                 <a
@@ -142,9 +140,9 @@ export function useProductColumns({
     {
       accessorKey: "createdAt",
       meta: { title: "Ngày tạo" },
-      header: () => <div className="hidden md:block font-medium">Ngày tạo</div>,
+      header: () => <div className="font-medium">Ngày tạo</div>,
       cell: ({ row }) => (
-        <div className="hidden md:block">
+        <div className="whitespace-nowrap">
           <span className="text-gray-600 text-sm">
             {row.original.createdAt
               ? new Date(row.original.createdAt).toLocaleDateString("vi-VN")
@@ -153,6 +151,7 @@ export function useProductColumns({
         </div>
       ),
       enableSorting: false,
+      size: 120,
     },
     {
       accessorKey: "updatedAt",
@@ -172,7 +171,7 @@ export function useProductColumns({
       meta: { title: "Thao tác" },
       header: () => <div className="font-medium text-center">Thao tác</div>,
       cell: ({ row }) => (
-        <div className="flex justify-center items-center min-w-[120px]">
+        <div className="flex justify-center items-center gap-1">
           <ActionsCell
             item={row.original}
             onEdit={onEditAction}
@@ -181,6 +180,7 @@ export function useProductColumns({
         </div>
       ),
       enableSorting: false,
+      size: 100,
     },
   ];
 }
@@ -227,7 +227,7 @@ export const adaptColumnsForDataTable = (
         }
         return accessorKey ? record[accessorKey as keyof Product] : "";
       },
-      width: 200,
+      width: 30,
       align: "left" as const,
       className: "",
     };

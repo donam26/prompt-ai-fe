@@ -13,9 +13,11 @@ export const SubscriptionHeader = ({
   const hasActiveFilters = Boolean(filters.searchTerm);
 
   return (
-    <div className={`flex items-center justify-between ${className}`}>
-      <div className="space-y-1">
-        <h1 className="font-semibold text-2xl tracking-tight">
+    <div
+      className={`flex sm:flex-row flex-col sm:justify-between sm:items-start gap-4 ${className}`}
+    >
+      <div className="space-y-1 sm:text-left text-center">
+        <h1 className="font-semibold text-2xl sm:text-3xl tracking-tight">
           Quản lý gói đăng ký
         </h1>
         <p className="text-muted-foreground">
@@ -24,11 +26,11 @@ export const SubscriptionHeader = ({
         </p>
       </div>
 
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-2 w-full sm:w-auto">
         <Button
           onClick={onAddSubscription}
           disabled={disabled}
-          className="flex items-center gap-2"
+          className="flex justify-center items-center gap-2 w-full sm:w-auto"
         >
           <Plus className="w-4 h-4" />
           Thêm gói mới

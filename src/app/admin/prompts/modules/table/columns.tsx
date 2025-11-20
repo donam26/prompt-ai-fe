@@ -117,9 +117,9 @@ export function usePromptColumns({
     {
       accessorKey: "category",
       meta: { title: "Danh mục" },
-      header: () => <div className="hidden md:block font-medium">Danh mục</div>,
+      header: () => <div className="font-medium">Danh mục</div>,
       cell: ({ row }) => (
-        <div className="hidden md:block">
+        <div>
           <BadgeCell
             label={row.original.category?.name || "Chưa phân loại"}
             variant="section"
@@ -159,7 +159,7 @@ export function usePromptColumns({
       meta: { title: "Ngày tạo" },
       header: () => <div className="font-medium">Ngày tạo</div>,
       cell: ({ row }) => (
-        <div>
+        <div className="whitespace-nowrap">
           <span className="text-gray-600 text-sm">
             {row.original.createdAt
               ? new Date(row.original.createdAt).toLocaleDateString("vi-VN")
@@ -168,13 +168,14 @@ export function usePromptColumns({
         </div>
       ),
       enableSorting: false,
+      size: 120,
     },
     {
       id: "actions",
       meta: { title: "Thao tác" },
       header: () => <div className="font-medium text-center">Thao tác</div>,
       cell: ({ row }) => (
-        <div className="flex items-center gap-1 min-w-[100px]">
+        <div className="flex justify-center items-center gap-1">
           <ActionsCell
             item={row.original}
             onEdit={onEditAction}
@@ -183,6 +184,7 @@ export function usePromptColumns({
         </div>
       ),
       enableSorting: false,
+      size: 100,
     },
   ];
 }
@@ -250,7 +252,7 @@ export const adaptColumnsForDataTable = (
         }
         return accessorKey ? record[accessorKey as keyof Prompt] : "";
       },
-      width: size || 200,
+      width: size || 30,
       align: isSelectColumn ? ("center" as const) : ("left" as const),
       className: "",
     };

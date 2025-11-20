@@ -43,9 +43,9 @@ export function useUserColumns({
     {
       accessorKey: "role",
       meta: { title: "Vai trò" },
-      header: () => <div className="hidden md:block font-medium">Vai trò</div>,
+      header: () => <div className="font-medium">Vai trò</div>,
       cell: ({ row }) => (
-        <div className="hidden md:block">
+        <div>
           <BadgeCell
             label={getUserRoleLabel(row.original.role)}
             variant="secondary"
@@ -76,7 +76,7 @@ export function useUserColumns({
       meta: { title: "Ngày tạo" },
       header: () => <div className="font-medium">Ngày tạo</div>,
       cell: ({ row }) => (
-        <div>
+        <div className="whitespace-nowrap">
           <span className="text-gray-600 text-sm">
             {row.original.createdAt
               ? new Date(row.original.createdAt).toLocaleString("vi-VN", {
@@ -93,6 +93,7 @@ export function useUserColumns({
         </div>
       ),
       enableSorting: false,
+      size: 160,
     },
     {
       accessorKey: "subscription",
@@ -127,7 +128,7 @@ export function useUserColumns({
       meta: { title: "Thao tác" },
       header: () => <div className="font-medium text-center">Thao tác</div>,
       cell: ({ row }) => (
-        <div className="flex justify-center items-center min-w-[120px]">
+        <div className="flex justify-center items-center gap-1">
           <ActionsCell
             item={row.original}
             onEdit={onEditAction}
@@ -136,6 +137,7 @@ export function useUserColumns({
         </div>
       ),
       enableSorting: false,
+      size: 100,
     },
   ];
 }
@@ -182,7 +184,7 @@ export const adaptColumnsForDataTable = (
         }
         return accessorKey ? record[accessorKey as keyof User] : "";
       },
-      width: 200,
+      width: 30,
       align: "left" as const,
       className: "",
     };

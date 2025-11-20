@@ -46,13 +46,7 @@ export default function SendMailPage() {
 
   return (
     <AdminPageLayout title="Gửi Mail Hàng Loạt">
-      <div className="space-y-8 p-6">
-        <div className="flex justify-between items-center">
-          <h1 className="font-bold text-gray-900 text-2xl">
-            Gửi Mail Hàng Loạt
-          </h1>
-        </div>
-
+      <div className="space-y-8">
         <div className="gap-8 grid grid-cols-1 lg:grid-cols-2">
           {/* Send Mail Form */}
           <div className="bg-white shadow-md p-6 rounded-lg">

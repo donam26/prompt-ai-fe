@@ -53,21 +53,21 @@ export const UserHeader = ({
 
   return (
     <>
-      <div className="flex justify-between items-center">
-        <div>
-          <h1 className="font-bold text-gray-900 text-3xl">
+      <div className="flex sm:flex-row flex-col sm:justify-between sm:items-start gap-4">
+        <div className="sm:text-left text-center">
+          <h1 className="font-bold text-gray-900 text-2xl sm:text-3xl">
             Quản lý Người dùng
           </h1>
-          <p className="mt-2 text-gray-600">
+          <p className="mt-1 sm:mt-2 text-gray-600">
             Quản lý tài khoản người dùng trong hệ thống
           </p>
         </div>
-        <div className="flex flex-wrap gap-3">
+        <div className="flex sm:flex-row flex-col flex-wrap gap-3 w-full sm:w-auto">
           <Button
             onClick={handleExportClick}
             variant="outline"
             disabled={isExporting}
-            className="hover:bg-green-50 border-green-600 text-green-600"
+            className="hover:bg-green-50 border-green-600 text-green-600 justify-center w-full sm:w-auto"
           >
             <Download className="mr-2 w-4 h-4" />
             {isExporting ? "Đang export..." : "Export Excel"}
@@ -75,7 +75,7 @@ export const UserHeader = ({
           <Button
             onClick={handleImportClick}
             variant="outline"
-            className="hover:bg-primary-50 border-primary-600 text-primary-600"
+            className="hover:bg-primary-50 border-primary-600 text-primary-600 justify-center w-full sm:w-auto"
           >
             <Upload className="mr-2 w-4 h-4" />
             Import CSV
@@ -84,7 +84,7 @@ export const UserHeader = ({
             <DialogTrigger asChild>
               <Button
                 onClick={onAddUser}
-                className="bg-primary-600 hover:bg-primary-700 shadow-sm text-white"
+                className="bg-primary-600 hover:bg-primary-700 shadow-sm text-white justify-center w-full sm:w-auto"
               >
                 <Plus className="mr-2 w-4 h-4" />
                 Thêm người dùng

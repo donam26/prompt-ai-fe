@@ -24,7 +24,7 @@ const StatusBadge = ({ status }: { status: string }) => {
 // Payment Method Badge Component
 const PaymentMethodBadge = ({ method }: { method: string }) => {
   return (
-    <div className="hidden md:flex items-center gap-2">
+    <div className="flex items-center gap-2">
       <CreditCard className="w-4 h-4 text-gray-500" />
       <BadgeCell
         label={method || "N/A"}
@@ -153,9 +153,7 @@ export function usePaymentColumns({
     {
       accessorKey: "method",
       meta: { title: "Phương thức" },
-      header: () => (
-        <div className="hidden md:block font-medium">Phương thức</div>
-      ),
+      header: () => <div className="font-medium">Phương thức</div>,
       cell: ({ row }) => (
         <PaymentMethodBadge method={row.original.paymentMethod} />
       ),
@@ -187,26 +185,36 @@ export function usePaymentColumns({
       meta: { title: "Ngày thanh toán" },
       header: () => <div className="font-medium">Ngày thanh toán</div>,
       cell: ({ row }) => (
-        <div>
+        <div className="whitespace-nowrap">
           <span className="text-gray-600 text-sm">
             {row.original.paymentDate
-              ? new Date(row.original.paymentDate).toLocaleDateString("vi-VN")
+              ? new Date(row.original.paymentDate).toLocaleString("vi-VN", {
+                  day: "2-digit",
+                  month: "2-digit",
+                  year: "numeric",
+                  hour: "2-digit",
+                  minute: "2-digit",
+                  second: "2-digit",
+                  hour12: false,
+                })
               : "N/A"}
           </span>
         </div>
       ),
       enableSorting: false,
+      size: 160,
     },
     {
       id: "actions",
       meta: { title: "Thao tác" },
       header: () => <div className="font-medium text-center">Thao tác</div>,
       cell: ({ row }) => (
-        <div className="flex justify-center items-center min-w-[100px]">
+        <div className="flex justify-center items-center gap-1">
           <ActionsCell item={row.original} onEdit={onViewAction} />
         </div>
       ),
       enableSorting: false,
+      size: 100,
     },
   ];
 }
@@ -244,7 +252,7 @@ export const adaptColumnsForDataTable = (
         }
         return accessorKey ? record[accessorKey as keyof Payment] : "";
       },
-      width: 200,
+      width: 30,
       align: "left" as const,
       className: "",
     };

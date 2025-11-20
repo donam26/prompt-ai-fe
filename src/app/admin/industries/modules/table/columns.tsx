@@ -33,9 +33,9 @@ export function useIndustryColumns({
     {
       accessorKey: "description",
       meta: { title: "Mô tả" },
-      header: () => <div className="hidden md:block font-medium">Mô tả</div>,
+      header: () => <div className="font-medium">Mô tả</div>,
       cell: ({ row }) => (
-        <div className="hidden md:block">
+        <div>
           <span
             className="max-w-[300px] text-gray-500 text-sm truncate"
             title={row.original.description}
@@ -51,7 +51,7 @@ export function useIndustryColumns({
       meta: { title: "Ngày tạo" },
       header: () => <div className="font-medium">Ngày tạo</div>,
       cell: ({ row }) => (
-        <div>
+        <div className="whitespace-nowrap">
           <span className="text-gray-600 text-sm">
             {row.original.createdAt
               ? new Date(row.original.createdAt).toLocaleDateString("vi-VN")
@@ -60,13 +60,14 @@ export function useIndustryColumns({
         </div>
       ),
       enableSorting: false,
+      size: 120,
     },
     {
       id: "actions",
       meta: { title: "Thao tác" },
       header: () => <div className="font-medium text-center">Thao tác</div>,
       cell: ({ row }) => (
-        <div className="flex justify-center items-center min-w-[100px]">
+        <div className="flex justify-center items-center gap-1">
           <ActionsCell
             item={row.original}
             onEdit={onEditAction}
@@ -75,6 +76,7 @@ export function useIndustryColumns({
         </div>
       ),
       enableSorting: false,
+      size: 100,
     },
   ];
 }
@@ -123,7 +125,7 @@ export const adaptColumnsForDataTable = (
         }
         return accessorKey ? record[accessorKey as keyof Industry] : "";
       },
-      width: 200,
+      width: 30,
       align: "left" as const,
       className: "",
     };

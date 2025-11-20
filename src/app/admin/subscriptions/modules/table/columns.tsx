@@ -17,7 +17,7 @@ export function useSubscriptionColumns({
       meta: { title: "Ảnh" },
       header: () => <div className="font-medium">Ảnh</div>,
       cell: ({ row }) => (
-        <div className="hidden sm:flex justify-center">
+        <div className="flex justify-center items-center">
           <ImageCell
             src={row.original.imageDiscount || undefined}
             alt={row.original.imageDiscount || undefined}
@@ -110,7 +110,7 @@ export function useSubscriptionColumns({
       meta: { title: "Thao tác" },
       header: () => <div className="font-medium text-center">Thao tác</div>,
       cell: ({ row }) => (
-        <div className="flex justify-center items-center min-w-[120px]">
+        <div className="flex justify-center items-center gap-1">
           <ActionsCell
             item={row.original}
             onEdit={onEdit}
@@ -119,6 +119,7 @@ export function useSubscriptionColumns({
         </div>
       ),
       enableSorting: false,
+      size: 100,
     },
   ];
 }
@@ -160,7 +161,7 @@ export const adaptColumnsForDataTable = (
         }
         return accessorKey ? record[accessorKey as keyof Subscription] : "";
       },
-      width: 200,
+      width: 30,
       align: "left" as const,
       className: "",
     };

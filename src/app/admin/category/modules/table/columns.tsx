@@ -27,7 +27,7 @@ export function useCategoryColumns({
         <div className="w-full font-medium text-center">Hình ảnh</div>
       ),
       cell: ({ row }) => (
-        <div className="hidden sm:flex justify-center">
+        <div className="flex justify-center items-center">
           <ImageCell
             src={row.original.image}
             alt={row.original.name}
@@ -73,11 +73,9 @@ export function useCategoryColumns({
     {
       accessorKey: "section",
       meta: { title: "Phân loại" },
-      header: () => (
-        <div className="hidden md:block font-medium">Phân loại</div>
-      ),
+      header: () => <div className="font-medium">Phân loại</div>,
       cell: ({ row }) => (
-        <div className="hidden md:block">
+        <div>
           <BadgeCell
             label={row.original.section?.name || "Chưa phân loại"}
             variant="section"
@@ -110,7 +108,7 @@ export function useCategoryColumns({
       meta: { title: "Thao tác" },
       header: () => <div className="font-medium text-center">Thao tác</div>,
       cell: ({ row }) => (
-        <div className="flex justify-center items-center min-w-[100px]">
+        <div className="flex justify-center items-center gap-1">
           <ActionsCell
             item={row.original}
             onEdit={onEditAction}
@@ -119,6 +117,7 @@ export function useCategoryColumns({
         </div>
       ),
       enableSorting: false,
+      size: 100,
     },
   ];
 }
@@ -167,7 +166,7 @@ export const adaptColumnsForDataTable = (
         }
         return accessorKey ? record[accessorKey as keyof Category] : "";
       },
-      width: 200,
+      width: 30,
       align: "left" as const,
       className: "",
     };
