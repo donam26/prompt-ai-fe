@@ -186,12 +186,53 @@ export const hasPermission = (user: User | null, screen: string) => {
       }
     }
 
-    // Ensure it's an array
-    if (!Array.isArray(userPermissions)) {
-      userPermissions = [];
+    // Handle object format: { "permission": true, ... }
+    if (
+      typeof userPermissions === "object" &&
+      !Array.isArray(userPermissions) &&
+      userPermissions !== null
+    ) {
+      const permsObj = userPermissions as Record<string, boolean>;
+
+      // Check exact match first
+      if (permsObj[screen] === true) {
+        return true;
+      }
+
+      // Normalize screen name variations
+      // Convert camelCase to different formats
+      const camelToSnake = (str: string): string => {
+        return str
+          .replace(/([A-Z])/g, "_$1")
+          .toLowerCase()
+          .replace(/^_/, "");
+      };
+
+      const snakeCaseScreen = camelToSnake(screen);
+      if (permsObj[snakeCaseScreen] === true) {
+        return true;
+      }
+
+      // Check all keys in object (in case of different naming)
+      const allKeys = Object.keys(permsObj);
+      const normalizedScreen = screen.toLowerCase();
+      return allKeys.some(key => {
+        const normalizedKey = key.toLowerCase();
+        return (
+          (normalizedKey === normalizedScreen ||
+            normalizedKey === snakeCaseScreen.toLowerCase() ||
+            camelToSnake(key).toLowerCase() === normalizedScreen) &&
+          permsObj[key] === true
+        );
+      });
     }
 
-    return userPermissions.includes(screen);
+    // Handle array format
+    if (Array.isArray(userPermissions)) {
+      return userPermissions.includes(screen);
+    }
+
+    return false;
   }
 
   // Other roles have no admin access
@@ -229,10 +270,24 @@ export const getAccessibleScreens = (user: User | null) => {
       }
     }
 
-    // Ensure it's an array
-    if (!Array.isArray(userPermissions)) {
-      userPermissions = [];
+    // Handle object format: { "permission": true, ... }
+    if (
+      typeof userPermissions === "object" &&
+      !Array.isArray(userPermissions) &&
+      userPermissions !== null
+    ) {
+      // Extract keys where value is true
+      return Object.keys(userPermissions).filter(
+        key => (userPermissions as Record<string, boolean>)[key] === true
+      );
     }
+
+    // Handle array format
+    if (Array.isArray(userPermissions)) {
+      return userPermissions;
+    }
+
+    return [];
 
     return userPermissions;
   }

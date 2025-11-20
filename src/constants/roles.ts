@@ -53,18 +53,30 @@ export const ROLE_CONSTANTS = {
     ROLE_VIEW: (id: string | number) => `/admin/roles/${id}/view`,
   },
 
-  // Screen permissions
+  // Screen permissions - based on ADMIN_SCREENS and sidebar-config
+  // Note: These are in camelCase format as used in frontend
+  // API may return snake_case (blog_category, send_mail, upload_word) which will be normalized
   PERMISSIONS: [
+    "dashboard",
     "prompt",
     "blog",
-    "blog_category",
+    "blogCategory",
     "topic",
     "category",
+    "section",
+    "industry",
     "product",
     "user",
+    "users",
+    "role",
+    "roles",
+    "subscription",
+    "coupon",
+    "payment",
     "contact",
-    "send_mail",
-    "upload_word",
+    "feedback",
+    "sendMail",
     "tool",
+    "uploadWord",
   ],
 } as const;

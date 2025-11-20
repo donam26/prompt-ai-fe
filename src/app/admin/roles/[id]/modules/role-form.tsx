@@ -14,8 +14,8 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Checkbox } from "@/components/ui/checkbox";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { MultiSelect } from "@/components/ui/multi-select";
 import { AdminContentCard, AdminPageLayout } from "@/components/admin";
 import { FormActions } from "@/components/form-actions";
 import { FormMode, BUTTON_TEXT } from "@/constants/common";
@@ -67,23 +67,40 @@ export const RoleForm = ({
     defaultValues: getDefaultValues(),
   });
 
+  const permissions = useMemo(() => ROLE_CONSTANTS.PERMISSIONS, []);
+
+  // Normalize permission from snake_case to camelCase
+  const normalizePermission = useCallback((permission: string): string => {
+    const permissionMap: Record<string, string> = {
+      blog_category: "blogCategory",
+      send_mail: "sendMail",
+      upload_word: "uploadWord",
+    };
+    return permissionMap[permission] || permission;
+  }, []);
+
+  // Filter and normalize selected permissions to only include valid ones
+  const validSelectedPermissions = useMemo(() => {
+    const permissionsSet = new Set(permissions);
+    return selectedPermissions
+      .map(p => normalizePermission(p))
+      .filter(p => permissionsSet.has(p as (typeof permissions)[number]));
+  }, [selectedPermissions, permissions, normalizePermission]);
+
   // Update form values when role data changes
   useEffect(() => {
     if (role) {
       const defaultValues = getDefaultValues();
       form.reset(defaultValues);
-      setSelectedPermissions(defaultValues.permissions);
+      // Normalize and filter permissions to only include valid ones
+      const permissionsSet = new Set(permissions);
+      const normalizedPermissions = (defaultValues.permissions || [])
+        .map(p => normalizePermission(p))
+        .filter(p => permissionsSet.has(p as (typeof permissions)[number]));
+      setSelectedPermissions(normalizedPermissions);
+      form.setValue("permissions", normalizedPermissions);
     }
-  }, [role, form, getDefaultValues]);
-
-  const handlePermissionToggle = (permission: string, checked: boolean) => {
-    const newPermissions = checked
-      ? [...selectedPermissions, permission]
-      : selectedPermissions.filter(p => p !== permission);
-
-    setSelectedPermissions(newPermissions);
-    form.setValue("permissions", newPermissions);
-  };
+  }, [role, form, getDefaultValues, permissions, normalizePermission]);
 
   const onSubmit = useCallback(
     async (data: RoleFormSchema) => {
@@ -91,13 +108,42 @@ export const RoleForm = ({
         id: data.id,
         name: data.name,
         description: data.description,
-        permissions: selectedPermissions,
+        permissions: validSelectedPermissions,
       });
     },
-    [onSave, selectedPermissions]
+    [onSave, validSelectedPermissions]
   );
 
-  const permissions = useMemo(() => ROLE_CONSTANTS.PERMISSIONS, []);
+  // Convert permissions to MultiSelect options
+  const permissionOptions = useMemo(() => {
+    return permissions.map(permission => {
+      // Format permission name: camelCase -> "Camel Case", snake_case -> "Snake Case"
+      let formattedLabel = permission.replaceAll("_", " ");
+      // Add space before capital letters
+      const parts: string[] = [];
+      let currentPart = "";
+      for (const char of formattedLabel) {
+        if (char >= "A" && char <= "Z" && currentPart) {
+          parts.push(currentPart);
+          currentPart = char;
+        } else {
+          currentPart += char;
+        }
+      }
+      if (currentPart) {
+        parts.push(currentPart);
+      }
+      formattedLabel = parts.join(" ");
+      // Capitalize first letter
+      formattedLabel =
+        formattedLabel.charAt(0).toUpperCase() + formattedLabel.slice(1).trim();
+
+      return {
+        label: formattedLabel,
+        value: permission,
+      };
+    });
+  }, [permissions]);
 
   return (
     <AdminPageLayout
@@ -168,35 +214,39 @@ export const RoleForm = ({
                   <CardTitle className="px-6">Quyền hạn truy cập</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
-                  <div className="space-y-3 max-h-[400px] overflow-y-auto">
-                    {permissions.map(permission => (
-                      <div
-                        key={permission}
-                        className="flex items-center space-x-2"
-                      >
-                        <Checkbox
-                          id={`permission-${permission}`}
-                          checked={selectedPermissions.includes(permission)}
-                          onCheckedChange={checked =>
-                            handlePermissionToggle(
-                              permission,
-                              checked as boolean
-                            )
-                          }
-                        />
-                        <label
-                          htmlFor={`permission-${permission}`}
-                          className="font-medium text-sm capitalize cursor-pointer"
-                        >
-                          {permission.replace(/_/g, " ")}
-                        </label>
-                      </div>
-                    ))}
-                  </div>
-                  <div className="text-muted-foreground text-sm">
-                    Đã chọn: {selectedPermissions.length}/{permissions.length}{" "}
-                    quyền
-                  </div>
+                  <FormField
+                    control={form.control}
+                    name="permissions"
+                    render={() => (
+                      <FormItem>
+                        <FormLabel>Chọn quyền hạn</FormLabel>
+                        <FormControl>
+                          <MultiSelect
+                            options={permissionOptions}
+                            value={validSelectedPermissions}
+                            onValueChange={values => {
+                              // Filter to only include valid permissions
+                              const permissionsSet = new Set(permissions);
+                              const validValues = values.filter(v =>
+                                permissionsSet.has(
+                                  v as (typeof permissions)[number]
+                                )
+                              );
+                              setSelectedPermissions(validValues);
+                              form.setValue("permissions", validValues);
+                            }}
+                            placeholder="Chọn quyền hạn..."
+                            maxCount={5}
+                          />
+                        </FormControl>
+                        <div className="text-muted-foreground text-sm">
+                          Đã chọn: {validSelectedPermissions.length}/
+                          {permissions.length} quyền
+                        </div>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
                 </CardContent>
               </Card>
             </div>

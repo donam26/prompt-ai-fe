@@ -22,6 +22,7 @@ export * from "./admin/usePayment";
 export * from "./admin/useRole";
 export * from "./admin/useCoupon";
 export * from "./useAdminPermissions";
+export * from "./useAdminAccess";
 
 // User hooks
 export * from "./user/usePricingPlans";

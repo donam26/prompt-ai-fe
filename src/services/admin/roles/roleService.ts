@@ -70,17 +70,31 @@ export class RoleService extends BaseService {
    * Get users by role
    */
   async getUsersByRole(
-    role: string | number,
+    roleId: string | number,
     params?: Record<string, unknown>
   ) {
-    return await this.list({ ...params, role });
+    const { apiClient } = await import("../../base/apiClient");
+    const queryParams = new URLSearchParams();
+    if (params) {
+      Object.entries(params).forEach(([key, value]) => {
+        if (value !== undefined && value !== null && value !== "") {
+          queryParams.append(key, String(value));
+        }
+      });
+    }
+    queryParams.append("role", String(roleId));
+    const queryString = queryParams.toString();
+    const response = await apiClient.get(
+      `${this.baseUrl}/${roleId}/users${queryString ? `?${queryString}` : ""}`
+    );
+    return response;
   }
 
   /**
    * Assign user to role
    */
   async assignUserToRole(role: string | number, userId: string | number) {
-    return await this.post(`${role}${ENDPOINTS.ROLES.ASSIGN_MULTIPLE}`, {
+    return await this.post(`/${role}${ENDPOINTS.ROLES.ASSIGN_MULTIPLE}`, {
       userIds: [userId],
     });
   }
@@ -92,7 +106,7 @@ export class RoleService extends BaseService {
     role: string | number,
     userIds: (string | number)[]
   ) {
-    return await this.post(`${role}${ENDPOINTS.ROLES.ASSIGN_MULTIPLE}`, {
+    return await this.post(`/${role}${ENDPOINTS.ROLES.ASSIGN_MULTIPLE}`, {
       userIds,
     });
   }
@@ -102,7 +116,7 @@ export class RoleService extends BaseService {
    */
   async removeUserFromRole(role: string | number, userId: string | number) {
     return await this.deleteEndpoint(
-      `${role}${ENDPOINTS.ROLES.REMOVE_USER}/${userId}`
+      `/${role}${ENDPOINTS.ROLES.REMOVE_USER}/${userId}`
     );
   }
 

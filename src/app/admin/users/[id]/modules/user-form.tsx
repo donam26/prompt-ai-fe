@@ -2,18 +2,19 @@
 
 import type { User, Subscription, UserSubscription } from "@/types";
 import { useCallback, useEffect, useMemo } from "react";
-import { useForm, Controller } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { BaseTextField } from "@/components/ui/base";
 import { AdminContentCard, AdminPageLayout } from "@/components/admin";
 import { FormActions } from "@/components/form-actions";
 import { FormMode, BUTTON_TEXT } from "@/constants/common";
 import { userFormSchema, type UserFormSchema } from "@/libs/form-schemas";
 import { USERS_CONSTANTS } from "@/constants/users";
-import { USER_ROLE_OPTIONS } from "@/types/enums";
 import { Form } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import {
+  UserBasicFields,
+  UserAdditionalInfo,
+  UserSubscriptionFields,
+} from "./";
 
 export interface Props {
   readonly user?: User | null;
@@ -134,13 +135,14 @@ export const UserForm = ({
     [onSave]
   );
 
-  const formButtonText = isSaving
-    ? mode === FormMode.CREATE
-      ? BUTTON_TEXT.CREATING
-      : BUTTON_TEXT.SAVING
-    : mode === FormMode.CREATE
-      ? BUTTON_TEXT.CREATE
-      : BUTTON_TEXT.EDIT;
+  const formButtonText = useMemo(() => {
+    if (isSaving) {
+      return mode === FormMode.CREATE
+        ? BUTTON_TEXT.CREATING
+        : BUTTON_TEXT.SAVING;
+    }
+    return isCreateMode ? BUTTON_TEXT.CREATE : BUTTON_TEXT.EDIT;
+  }, [isSaving, mode, isCreateMode]);
 
   if (isLoading) {
     return (
@@ -195,109 +197,7 @@ export const UserForm = ({
                 <span className="text-red-500">*</span>
               </h3>
             </div>
-
-            <div className="space-y-4">
-              {/* Full Name */}
-              <Controller
-                name="fullName"
-                control={control}
-                render={({ field }) => (
-                  <BaseTextField
-                    id="fullName"
-                    label="Họ và tên"
-                    value={field.value}
-                    onChange={field.onChange}
-                    placeholder="Nhập họ và tên"
-                    required
-                    error={errors.fullName?.message}
-                  />
-                )}
-              />
-
-              {/* Email */}
-              <Controller
-                name="email"
-                control={control}
-                render={({ field }) => (
-                  <BaseTextField
-                    id="email"
-                    label="Email"
-                    type="email"
-                    value={field.value}
-                    onChange={field.onChange}
-                    placeholder="Nhập địa chỉ email"
-                    required
-                    error={errors.email?.message}
-                  />
-                )}
-              />
-
-              {/* Role and Status Row */}
-              <div className="gap-4 grid grid-cols-1 md:grid-cols-2">
-                <Controller
-                  name="role"
-                  control={control}
-                  render={({ field }) => (
-                    <div className="space-y-2">
-                      <Label className="font-medium text-sm">
-                        Vai trò
-                        <span className="ml-1 text-red-500">*</span>
-                      </Label>
-                      <select
-                        {...field}
-                        value={field.value}
-                        onChange={e => field.onChange(Number(e.target.value))}
-                        className="px-3 py-2 border border-gray-300 focus:border-transparent rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 w-full h-10"
-                      >
-                        {USER_ROLE_OPTIONS.map(option => (
-                          <option key={option.value} value={option.value}>
-                            {option.label}
-                          </option>
-                        ))}
-                      </select>
-                      {errors.role && (
-                        <p className="text-red-500 text-sm">
-                          {errors.role.message}
-                        </p>
-                      )}
-                    </div>
-                  )}
-                />
-                <Controller
-                  name="accountStatus"
-                  control={control}
-                  render={({ field }) => (
-                    <div className="space-y-2">
-                      <Label className="font-medium text-sm">
-                        Trạng thái
-                        <span className="ml-1 text-red-500">*</span>
-                      </Label>
-                      <select
-                        {...field}
-                        value={field.value}
-                        onChange={e => field.onChange(Number(e.target.value))}
-                        className="px-3 py-2 border border-gray-300 focus:border-transparent rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 w-full h-10"
-                      >
-                        <option value={USERS_CONSTANTS.STATUS.ACTIVE}>
-                          Hoạt động
-                        </option>
-                        <option value={USERS_CONSTANTS.STATUS.INACTIVE}>
-                          Không hoạt động
-                        </option>
-                        <option value={USERS_CONSTANTS.STATUS.PENDING}>
-                          Chờ xử lý
-                        </option>
-                      </select>
-                      {errors.accountStatus && (
-                        <p className="text-red-500 text-sm">
-                          {errors.accountStatus.message}
-                        </p>
-                      )}
-                    </div>
-                  )}
-                />
-              </div>
-            </div>
+            <UserBasicFields control={control} errors={errors} />
           </AdminContentCard>
 
           {/* Additional Information (Read-only) */}
@@ -306,232 +206,17 @@ export const UserForm = ({
               <div className="mb-4">
                 <h3 className="font-semibold text-lg">Thông tin bổ sung</h3>
               </div>
-
-              <div className="space-y-4">
-                <div className="gap-4 grid grid-cols-1 md:grid-cols-2">
-                  {/* User ID */}
-                  <div className="space-y-2">
-                    <Label className="font-medium text-sm">ID người dùng</Label>
-                    <Input
-                      value={user.id || ""}
-                      disabled
-                      className="bg-gray-50 w-full"
-                    />
-                  </div>
-                </div>
-
-                <div className="gap-4 grid grid-cols-1 md:grid-cols-2">
-                  {/* Created At */}
-                  <div className="space-y-2">
-                    <Label className="font-medium text-sm">Ngày tạo</Label>
-                    <Input
-                      value={
-                        user.createdAt
-                          ? new Date(user.createdAt).toLocaleString("vi-VN", {
-                              day: "2-digit",
-                              month: "2-digit",
-                              year: "numeric",
-                              hour: "2-digit",
-                              minute: "2-digit",
-                              second: "2-digit",
-                              hour12: false,
-                            })
-                          : ""
-                      }
-                      disabled
-                      className="bg-gray-50 w-full"
-                    />
-                  </div>
-
-                  {/* Updated At */}
-                  <div className="space-y-2">
-                    <Label className="font-medium text-sm">Ngày cập nhật</Label>
-                    <Input
-                      value={
-                        user.updatedAt
-                          ? new Date(user.updatedAt).toLocaleString("vi-VN", {
-                              day: "2-digit",
-                              month: "2-digit",
-                              year: "numeric",
-                              hour: "2-digit",
-                              minute: "2-digit",
-                              second: "2-digit",
-                              hour12: false,
-                            })
-                          : ""
-                      }
-                      disabled
-                      className="bg-gray-50 w-full"
-                    />
-                  </div>
-                </div>
-
-                {/* Permissions */}
-                {user.permissions && (
-                  <div className="space-y-2">
-                    <Label className="font-medium text-sm">Quyền hạn</Label>
-                    <div className="flex flex-wrap gap-2">
-                      {(Array.isArray(user.permissions)
-                        ? user.permissions
-                        : [user.permissions]
-                      ).map((permission: string, index: number) => (
-                        <span
-                          key={index}
-                          className="bg-blue-100 px-2 py-1 rounded-md text-blue-800 text-xs"
-                        >
-                          {permission}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                )}
-
-                {/* Subscription Info - Editable */}
-                {(user?.userSub || !isCreateMode) && (
-                  <div className="space-y-4 bg-gray-50 p-4 rounded-lg">
-                    <h4 className="font-medium text-sm">
-                      Thông tin gói đăng ký
-                    </h4>
-
-                    {/* Subscription Plan Info (Read-only) */}
-                    {user?.userSub?.subscription && (
-                      <div className="gap-4 grid grid-cols-1 md:grid-cols-2">
-                        <div className="space-y-2">
-                          <Label className="font-medium text-xs">
-                            Gói đang sử dụng
-                          </Label>
-                          <Input
-                            value={
-                              (user.userSub.subscription as any).nameSub ||
-                              (user.userSub.subscription as any).name ||
-                              ""
-                            }
-                            disabled
-                            className="bg-white w-full text-sm"
-                          />
-                        </div>
-                        <div className="space-y-2">
-                          <Label className="font-medium text-xs">Giá</Label>
-                          <Input
-                            value={
-                              user.userSub.subscription.price
-                                ? new Intl.NumberFormat("vi-VN", {
-                                    style: "currency",
-                                    currency: "VND",
-                                  }).format(
-                                    Number(user.userSub.subscription.price)
-                                  )
-                                : "0₫"
-                            }
-                            disabled
-                            className="bg-white w-full text-sm"
-                          />
-                        </div>
-                      </div>
-                    )}
-
-                    {/* Editable Subscription Fields */}
-                    <div className="gap-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4">
-                      <Controller
-                        name="subscriptionId"
-                        control={control}
-                        render={({ field }) => (
-                          <div className="space-y-2">
-                            <Label className="font-medium text-xs">
-                              Gói đăng ký
-                            </Label>
-                            <select
-                              {...field}
-                              value={field.value || ""}
-                              onChange={e =>
-                                field.onChange(
-                                  Number(e.target.value) || undefined
-                                )
-                              }
-                              className="bg-white px-3 py-2 border border-gray-300 focus:border-transparent rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 w-full text-sm"
-                              disabled={isFetchingSubscriptions}
-                            >
-                              <option value="">Chọn gói đăng ký</option>
-                              {subscriptions.map(subscription => (
-                                <option
-                                  key={subscription.id}
-                                  value={subscription.id}
-                                >
-                                  {(subscription as any).nameSub ||
-                                    subscription.name}{" "}
-                                  -{" "}
-                                  {subscription.price
-                                    ? new Intl.NumberFormat("vi-VN", {
-                                        style: "currency",
-                                        currency: "VND",
-                                      }).format(Number(subscription.price))
-                                    : "0₫"}
-                                </option>
-                              ))}
-                            </select>
-                          </div>
-                        )}
-                      />
-                      <Controller
-                        name="countPrompt"
-                        control={control}
-                        render={({ field }) => (
-                          <div className="space-y-2">
-                            <Label className="font-medium text-xs">
-                              Số prompt đã tạo
-                            </Label>
-                            <Input
-                              {...field}
-                              type="number"
-                              min="0"
-                              value={field.value || 0}
-                              onChange={e =>
-                                field.onChange(Number(e.target.value))
-                              }
-                              className="bg-white w-full text-sm"
-                            />
-                          </div>
-                        )}
-                      />
-                      <Controller
-                        name="subscriptionStartDate"
-                        control={control}
-                        render={({ field }) => (
-                          <div className="space-y-2">
-                            <Label className="font-medium text-xs">
-                              Ngày bắt đầu
-                            </Label>
-                            <div className="relative">
-                              <Input
-                                {...field}
-                                type="date"
-                                className="bg-white w-full text-sm"
-                              />
-                            </div>
-                          </div>
-                        )}
-                      />
-                      <Controller
-                        name="subscriptionEndDate"
-                        control={control}
-                        render={({ field }) => (
-                          <div className="space-y-2">
-                            <Label className="font-medium text-xs">
-                              Ngày kết thúc
-                            </Label>
-                            <div className="relative">
-                              <Input
-                                {...field}
-                                type="date"
-                                className="bg-white w-full text-sm"
-                              />
-                            </div>
-                          </div>
-                        )}
-                      />
-                    </div>
-                  </div>
-                )}
+              <UserAdditionalInfo user={user} />
+              {/* Subscription Info - Editable */}
+              <div className="mt-4">
+                <UserSubscriptionFields
+                  control={control}
+                  errors={errors}
+                  user={user}
+                  subscriptions={subscriptions}
+                  isFetchingSubscriptions={isFetchingSubscriptions}
+                  isCreateMode={isCreateMode}
+                />
               </div>
             </AdminContentCard>
           )}

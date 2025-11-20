@@ -8,7 +8,7 @@ import { FormSkeleton } from "@/components/ui/skeleton";
 import { showToast } from "@/components/ui/toast";
 import { ROLE_CONSTANTS } from "@/constants/roles";
 import { FormMode } from "@/constants/common";
-import { RoleForm } from "./modules/role-form";
+import { RoleForm, RoleUsers } from "./modules";
 
 export default function RoleDetailsPage() {
   const { id } = useParams<{ id?: string }>();
@@ -88,6 +88,19 @@ export default function RoleDetailsPage() {
       : `Chỉnh sửa thông tin vai trò ${roleData?.name || ""}`;
   }, [isCreateMode, roleData]);
 
+  const defaultRole: Role = useMemo(
+    () => ({
+      id: "",
+      name: "",
+      description: "",
+      permissions: [],
+      createdAt: "",
+      updatedAt: "",
+      isActive: true,
+    }),
+    []
+  );
+
   if (isLoading) {
     return <FormSkeleton />;
   }
@@ -103,25 +116,32 @@ export default function RoleDetailsPage() {
     );
   }
 
+  if (isCreateMode) {
+    return (
+      <RoleForm
+        role={defaultRole}
+        onSave={handleSave}
+        onCancel={handleCancel}
+        isSaving={isUpserting}
+        mode={formMode}
+        pageTitle={pageTitle}
+        pageDescription={pageDescription}
+      />
+    );
+  }
+
   return (
-    <RoleForm
-      role={
-        roleData || {
-          id: "",
-          name: "",
-          description: "",
-          permissions: [],
-          createdAt: "",
-          updatedAt: "",
-          isActive: true,
-        }
-      }
-      onSave={handleSave}
-      onCancel={handleCancel}
-      isSaving={isUpserting}
-      mode={formMode}
-      pageTitle={pageTitle}
-      pageDescription={pageDescription}
-    />
+    <div className="space-y-6">
+      <RoleForm
+        role={roleData || defaultRole}
+        onSave={handleSave}
+        onCancel={handleCancel}
+        isSaving={isUpserting}
+        mode={formMode}
+        pageTitle={pageTitle}
+        pageDescription={pageDescription}
+      />
+      {roleData && <RoleUsers roleId={roleData.id} roleName={roleData.name} />}
+    </div>
   );
 }

@@ -18,6 +18,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 // Removed unused import
 import { LAYOUT_ROUTES, LAYOUT_LABELS } from "@/constants/layout";
+import { useAdminAccess } from "@/hooks/useAdminAccess";
 
 interface Props {
   readonly user: {
@@ -32,6 +33,7 @@ interface Props {
 
 export function UserDropdown({ user, onLogout }: Props): React.JSX.Element {
   const router = useRouter();
+  const { canAccessAdmin, isSuperAdmin } = useAdminAccess();
 
   const handleProfileClick = (): void => {
     router.push(LAYOUT_ROUTES.userInfo);
@@ -68,9 +70,9 @@ export function UserDropdown({ user, onLogout }: Props): React.JSX.Element {
             <p className="text-muted-foreground text-xs leading-none">
               {user?.email || "user@example.com"}
             </p>
-            {user?.role === 2 && (
+            {canAccessAdmin && (
               <Badge variant="secondary" className="mt-1 w-fit">
-                Admin
+                {isSuperAdmin ? "Super Admin" : "Admin"}
               </Badge>
             )}
           </div>
@@ -89,7 +91,7 @@ export function UserDropdown({ user, onLogout }: Props): React.JSX.Element {
           <Settings className="mr-2 w-4 h-4" />
           <span>{LAYOUT_LABELS.user.settings}</span>
         </DropdownMenuItem> */}
-        {user?.role === 2 && (
+        {canAccessAdmin && (
           <>
             <DropdownMenuSeparator />
             <DropdownMenuItem onClick={handleAdminClick}>

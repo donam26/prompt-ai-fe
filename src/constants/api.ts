@@ -140,8 +140,8 @@ export const ENDPOINTS = {
     BASE: "/roles",
     DELETED: "/roles/deleted/list",
     USERS: "/roles/users",
-    ASSIGN_MULTIPLE: "/roles/assign-multiple-users",
-    REMOVE_USER: "/roles/remove-user",
+    ASSIGN_MULTIPLE: "/assign-multiple-users",
+    REMOVE_USER: "/remove-user",
     USER_STATS: "/stats/users-by-role",
   },
 
