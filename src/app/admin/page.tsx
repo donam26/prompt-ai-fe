@@ -15,6 +15,7 @@ export default function AdminDashboard(): React.JSX.Element {
     <AdminPageLayout
       title={ADMIN_LABELS.DASHBOARD.TITLE}
       description={ADMIN_LABELS.DASHBOARD.SUBTITLE}
+      className="p-4"
     >
       <div className="space-y-4 sm:space-y-6">
         {/* Top Row - Three cards */}
