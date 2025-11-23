@@ -130,7 +130,12 @@ export const Pagination = ({
   };
 
   return (
-    <div className={cn("pagination-container w-full min-w-0 px-2 sm:px-0", className)}>
+    <div
+      className={cn(
+        "pagination-container w-full min-w-0 px-2 sm:px-0",
+        className
+      )}
+    >
       {/* Mobile Layout */}
       <div className="lg:hidden flex flex-col space-y-4 w-full min-w-0">
         {showPageSizeSelector && (onPageSizeChange || onPaginationChange) ? (

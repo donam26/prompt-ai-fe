@@ -136,7 +136,7 @@ export const DataTable = <T = Record<string, unknown>,>({
   return (
     <div className={cn("data-table-container space-y-4", className)}>
       {/* Mobile: Horizontal scroll wrapper */}
-      <div className="overflow-x-auto -mx-4 sm:mx-0">
+      <div className="-mx-4 sm:mx-0 overflow-x-auto">
         <div className={cn("inline-block min-w-full", getTableClassName())}>
           <Table className="min-w-full">
             <TableHeader>
