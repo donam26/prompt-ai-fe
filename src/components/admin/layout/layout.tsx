@@ -28,7 +28,7 @@ export function AdminLayout({ children }: AdminLayoutProps): React.JSX.Element {
   }, []);
 
   return (
-    <div className="flex md:flex-row flex-col gap-2 md:gap-0 bg-gray-100 dark:bg-gray-900 p-2 md:p-0 pt-4 md:pt-0 max-w-[100vw] h-screen overflow-hidden">
+    <div className="flex md:flex-row flex-col gap-2 md:gap-0 bg-gray-100 dark:bg-gray-900 p-2 md:p-0 pt-4 md:pt-0 max-w-[100vw] h-screen overflow-hidden min-h-0">
       <AdminSidebar />
       <MainContent shouldApplyPadding={shouldApplyPadding}>
         {children}

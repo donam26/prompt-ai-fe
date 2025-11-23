@@ -10,7 +10,6 @@ interface AdminContentCardProps {
   readonly children: React.ReactNode;
   readonly title?: string;
   readonly description?: string;
-  readonly padding?: "none" | "sm" | "md" | "lg";
   readonly className?: string;
 }
 
@@ -23,12 +22,12 @@ export function AdminContentCard({
   return (
     <Card
       className={cn(
-        "bg-white dark:bg-gray-800 shadow-lg border border-gray-200 dark:border-gray-700 rounded-xl overflow-hidden",
+        "flex flex-col bg-white dark:bg-gray-800 shadow-lg border border-gray-200 dark:border-gray-700 rounded-xl min-h-0",
         className
       )}
     >
       {(title || description) && (
-        <CardHeader className="pb-4">
+        <CardHeader className="flex-shrink-0 pb-8">
           {title && (
             <h3 className="font-semibold text-gray-900 text-lg">{title}</h3>
           )}
@@ -37,7 +36,9 @@ export function AdminContentCard({
           )}
         </CardHeader>
       )}
-      <CardContent>{children}</CardContent>
+      <CardContent className="flex-1 min-h-0 overflow-visible">
+        {children}
+      </CardContent>
     </Card>
   );
 }
