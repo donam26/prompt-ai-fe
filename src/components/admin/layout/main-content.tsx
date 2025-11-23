@@ -50,7 +50,7 @@ export function MainContent({
         marginLeft: isMobile ? "0" : "auto",
       }}
     >
-      <div className="mb-8 pb-8">{children}</div>
+      <div className="mb-20 pb-8">{children}</div>
     </main>
   );
 }
