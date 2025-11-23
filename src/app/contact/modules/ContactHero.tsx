@@ -2,7 +2,7 @@
 
 export const ContactHero = () => {
   return (
-    <div className="relative bg-white py-8 lg:py-16">
+    <div className="relative bg-white py-8">
       <div className="mx-auto px-4 text-center container">
         <h1 className="mb-4 font-bold text-gray-900 text-5xl md:text-6xl">
           Liên hệ với chúng tôi.

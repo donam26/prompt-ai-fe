@@ -97,7 +97,7 @@ export const PromptLibraryHome = ({ limit }: PromptLibraryHomeProps) => {
   };
 
   return (
-    <div className="bg-white py-8 lg:py-16 min-h-screen">
+    <div className="bg-white py-8 min-h-screen">
       <div className="mx-auto max-w-7xl">
         {/* Header */}
         <div className="mb-12 text-center">

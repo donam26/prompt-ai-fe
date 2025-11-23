@@ -237,7 +237,7 @@ export default function ListPromptsPage() {
   };
 
   return (
-    <div className="bg-white mx-auto px-4 min-h-screen container">
+    <div className="bg-white mx-auto px-4 py-8 min-h-screen container">
       <div className="mx-auto max-w-7xl">
         {/* Header */}
         <div className="mb-8 text-center">

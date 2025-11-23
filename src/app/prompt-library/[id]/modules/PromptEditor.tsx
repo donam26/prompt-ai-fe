@@ -243,7 +243,7 @@ export const PromptEditor = ({
           />
         </div>
         <div className="chat-controls">
-          <div className="flex sm:flex-row flex-col justify-between gap-3 w-full">
+          <div className="flex sm:flex-row flex-col flex-wrap justify-between gap-3 w-full">
             <div className="flex items-center gap-4">
               <Select value={model} onValueChange={onModelChange}>
                 <SelectTrigger className="w-full sm:w-auto">
