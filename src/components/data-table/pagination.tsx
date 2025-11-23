@@ -130,20 +130,20 @@ export const Pagination = ({
   };
 
   return (
-    <div className={cn("pagination-container", className)}>
+    <div className={cn("pagination-container w-full min-w-0 px-2 sm:px-0", className)}>
       {/* Mobile Layout */}
-      <div className="lg:hidden flex flex-col space-y-4">
+      <div className="lg:hidden flex flex-col space-y-4 w-full min-w-0">
         {showPageSizeSelector && (onPageSizeChange || onPaginationChange) ? (
           // Show page size selector when available
-          <div className="flex flex-col items-center space-y-2">
+          <div className="flex flex-col items-center space-y-2 w-full min-w-0">
             {totalPages > 1 && (
-              <div className="flex justify-center items-center font-medium text-gray-700 dark:text-gray-200 text-sm">
+              <div className="flex justify-center items-center font-medium text-gray-700 dark:text-gray-200 text-sm whitespace-nowrap px-2">
                 Trang {currentPage} của {totalPages}
               </div>
             )}
 
-            <div className="flex items-center gap-2">
-              <span className="text-gray-600 dark:text-gray-300 text-xs">
+            <div className="flex items-center gap-2 flex-wrap justify-center px-2">
+              <span className="text-gray-600 dark:text-gray-300 text-xs whitespace-nowrap">
                 Hiển thị:
               </span>
               <Select
@@ -162,14 +162,14 @@ export const Pagination = ({
                   ))}
                 </SelectContent>
               </Select>
-              <span className="text-gray-600 dark:text-gray-300 text-xs">
+              <span className="text-gray-600 dark:text-gray-300 text-xs whitespace-nowrap">
                 mục
               </span>
             </div>
           </div>
         ) : (
           // Show page info when no page size selector
-          <div className="flex justify-center items-center font-medium text-gray-700 dark:text-gray-200 text-sm">
+          <div className="flex justify-center items-center font-medium text-gray-700 dark:text-gray-200 text-sm whitespace-nowrap px-2">
             {totalPages > 0 ? (
               <>
                 Trang {currentPage} của {totalPages}
@@ -181,11 +181,11 @@ export const Pagination = ({
         )}
 
         {totalPages > 1 && (
-          <div className="flex justify-center items-center space-x-2">
+          <div className="flex justify-center items-center space-x-2 w-full min-w-0 px-2">
             {showPrevNext && (
               <Button
                 variant="outline"
-                className="p-0 w-8 h-8"
+                className="p-0 w-8 h-8 flex-shrink-0"
                 onClick={() => handlePageChange(1)}
                 disabled={currentPage === 1 || loading}
               >
@@ -194,7 +194,7 @@ export const Pagination = ({
             )}
             <Button
               variant="outline"
-              className="p-0 w-8 h-8"
+              className="p-0 w-8 h-8 flex-shrink-0"
               onClick={() => handlePageChange(Math.max(1, currentPage - 1))}
               disabled={currentPage === 1 || loading}
             >
@@ -202,7 +202,7 @@ export const Pagination = ({
             </Button>
             <Button
               variant="outline"
-              className="p-0 w-8 h-8"
+              className="p-0 w-8 h-8 flex-shrink-0"
               onClick={() =>
                 handlePageChange(Math.min(totalPages, currentPage + 1))
               }
@@ -213,7 +213,7 @@ export const Pagination = ({
             {showPrevNext && (
               <Button
                 variant="outline"
-                className="p-0 w-8 h-8"
+                className="p-0 w-8 h-8 flex-shrink-0"
                 onClick={() => handlePageChange(totalPages)}
                 disabled={currentPage === totalPages || loading}
               >
