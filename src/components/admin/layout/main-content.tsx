@@ -39,7 +39,7 @@ export function MainContent({
   const contentClasses = cn(
     "flex-1 bg-white dark:bg-gray-800 md:rounded-none rounded-t-2xl min-h-0 overflow-x-hidden overflow-y-auto",
     {
-      " ": shouldApplyPadding,
+      "": shouldApplyPadding,
     }
   );
 
@@ -48,9 +48,12 @@ export function MainContent({
       className={contentClasses}
       style={{
         marginLeft: isMobile ? "0" : "auto",
+        height: "100%",
+        maxHeight: "100%",
+        WebkitOverflowScrolling: "touch",
       }}
     >
-      <div className="mb-24 pb-8">{children}</div>
+      <div className="mb-10 pb-6 sm:pb-8 w-full min-w-0">{children}</div>
     </main>
   );
 }

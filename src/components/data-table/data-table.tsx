@@ -136,7 +136,7 @@ export const DataTable = <T = Record<string, unknown>,>({
   return (
     <div className={cn("data-table-container space-y-4", className)}>
       {/* Mobile: Horizontal scroll wrapper */}
-      <div className="-mx-4 sm:mx-0 overflow-x-auto">
+      <div className="overflow-visible">
         <div className={cn("inline-block min-w-full", getTableClassName())}>
           <Table className="min-w-full">
             <TableHeader>
@@ -215,7 +215,7 @@ export const DataTable = <T = Record<string, unknown>,>({
       </div>
 
       {(pagination || (pageCount && pageIndex !== undefined && pageSize)) && (
-        <div className="bg-white dark:bg-gray-800 px-1 sm:px-4 py-3 border border-gray-200 dark:border-gray-700 rounded-lg w-full min-w-0">
+        <div className="bg-white dark:bg-gray-800 px-2 sm:px-4 py-3 border border-gray-200 dark:border-gray-700 rounded-lg w-full min-w-0 overflow-visible">
           <Pagination
             currentPage={
               pagination ? pagination.currentPage : (pageIndex || 0) + 1

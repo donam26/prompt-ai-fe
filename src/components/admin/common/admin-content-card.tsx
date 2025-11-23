@@ -25,9 +25,12 @@ export function AdminContentCard({
         "flex flex-col bg-white dark:bg-gray-800 shadow-lg border border-gray-200 dark:border-gray-700 rounded-xl w-full min-w-0 min-h-0",
         className
       )}
+      style={{
+        padding: 0,
+      }}
     >
       {(title || description) && (
-        <CardHeader className="flex-shrink-0 pb-8">
+        <CardHeader className="flex-shrink-0 px-4 sm:px-6 pb-8">
           {title && (
             <h3 className="font-semibold text-gray-900 text-lg">{title}</h3>
           )}
@@ -36,7 +39,7 @@ export function AdminContentCard({
           )}
         </CardHeader>
       )}
-      <CardContent className="flex-1 w-full min-w-0 min-h-0 overflow-visible">
+      <CardContent className="flex-1 px-2 sm:px-6 pb-2 sm:pb-6 w-full min-w-0 min-h-0 overflow-visible">
         {children}
       </CardContent>
     </Card>
