@@ -141,7 +141,6 @@ export const RecentFeedbacks = (): React.JSX.Element => {
     <AdminContentCard
       title="Feedback gần nhất"
       description="Danh sách các feedback mới nhất từ người dùng"
-      padding="lg"
     >
       <div className="space-y-4">
         {isFetching ? (

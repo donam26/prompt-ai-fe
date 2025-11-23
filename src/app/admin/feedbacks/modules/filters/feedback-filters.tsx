@@ -2,6 +2,7 @@
 
 import React, { useCallback, useLayoutEffect, useMemo, useState } from "react";
 import { Search } from "lucide-react";
+import DatePicker from "react-multi-date-picker";
 
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -156,25 +157,92 @@ const DateRangeFilter = ({
 }: {
   value?: { from: string; to: string };
   onChange: (range: { from: string; to: string }) => void;
-}): React.JSX.Element => (
-  <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
-    <div>
-      <Input
-        type="date"
-        value={value.from}
-        onChange={e => onChange({ ...value, from: e.target.value })}
-        placeholder="Từ ngày"
-        className="w-full"
-      />
+}): React.JSX.Element => {
+  const fromPickerRef = React.useRef<any>(null);
+  const toPickerRef = React.useRef<any>(null);
+  const isFromOpeningRef = React.useRef(false);
+  const isToOpeningRef = React.useRef(false);
+
+  const handleFromOpen = (): void => {
+    isFromOpeningRef.current = true;
+  };
+
+  const handleFromClose = (): void => {
+    isFromOpeningRef.current = false;
+  };
+
+  const handleFromChange = (date: any): void => {
+    if (isFromOpeningRef.current) {
+      isFromOpeningRef.current = false;
+      return;
+    }
+    if (date) {
+      const formattedDate = date.toDate().toISOString().split("T")[0];
+      if (formattedDate !== value.from) {
+        onChange({ ...value, from: formattedDate });
+      }
+    } else if (value.from) {
+      onChange({ ...value, from: "" });
+    }
+  };
+
+  const handleToOpen = (): void => {
+    isToOpeningRef.current = true;
+  };
+
+  const handleToClose = (): void => {
+    isToOpeningRef.current = false;
+  };
+
+  const handleToChange = (date: any): void => {
+    if (isToOpeningRef.current) {
+      isToOpeningRef.current = false;
+      return;
+    }
+    if (date) {
+      const formattedDate = date.toDate().toISOString().split("T")[0];
+      if (formattedDate !== value.to) {
+        onChange({ ...value, to: formattedDate });
+      }
+    } else if (value.to) {
+      onChange({ ...value, to: "" });
+    }
+  };
+
+  return (
+    <div className="gap-2 grid grid-cols-1 sm:grid-cols-2 min-w-0">
+      <div className="w-full min-w-0">
+        <DatePicker
+          ref={fromPickerRef}
+          value={value.from ? new Date(value.from) : null}
+          onChange={handleFromChange}
+          onOpen={handleFromOpen}
+          onClose={handleFromClose}
+          format="DD/MM/YYYY"
+          placeholder="Từ ngày"
+          className="w-full min-w-0"
+          inputClass="w-full min-w-0 h-10 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent cursor-pointer"
+          containerStyle={{ width: "100%", minWidth: 0 }}
+          editable={false}
+          calendarPosition="bottom-left"
+        />
+      </div>
+      <div className="w-full min-w-0">
+        <DatePicker
+          ref={toPickerRef}
+          value={value.to ? new Date(value.to) : null}
+          onChange={handleToChange}
+          onOpen={handleToOpen}
+          onClose={handleToClose}
+          format="DD/MM/YYYY"
+          placeholder="Đến ngày"
+          className="w-full min-w-0"
+          inputClass="w-full min-w-0 h-10 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent cursor-pointer"
+          containerStyle={{ width: "100%", minWidth: 0 }}
+          editable={false}
+          calendarPosition="bottom-left"
+        />
+      </div>
     </div>
-    <div>
-      <Input
-        type="date"
-        value={value.to}
-        onChange={e => onChange({ ...value, to: e.target.value })}
-        placeholder="Đến ngày"
-        className="w-full"
-      />
-    </div>
-  </div>
-);
+  );
+};

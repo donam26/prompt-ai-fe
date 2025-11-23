@@ -185,7 +185,7 @@ const UserFilterCard = ({
   onClearFilters: () => void;
   hasActiveFilters: boolean;
 }): React.JSX.Element => (
-  <div className="space-y-4 bg-white p-4 border border-gray-200 rounded-lg">
+  <div className="space-y-4 bg-white p-4 border border-gray-200 rounded-lg w-full min-w-0">
     <div className="flex justify-between items-center">
       <h3 className="font-medium text-gray-900 text-lg">Bộ lọc</h3>
       {hasActiveFilters && (
@@ -201,7 +201,7 @@ const UserFilterCard = ({
       )}
     </div>
 
-    <div className="space-y-4">
+    <div className="space-y-4 w-full min-w-0">
       {/* Search Input */}
       <div className="space-y-2">
         <Label className="font-medium text-sm">Tìm kiếm</Label>
@@ -231,7 +231,7 @@ const UserFilterCard = ({
       </div>
 
       {/* Date Range Filter */}
-      <div className="space-y-2">
+      <div className="space-y-2 w-full min-w-0">
         <Label className="font-medium text-sm">Khoảng thời gian</Label>
         <DateRangeFilter
           dateFrom={filters.dateFrom}
@@ -320,39 +320,92 @@ const DateRangeFilter = ({
   dateTo?: string;
   onDateFromChange?: (value: string) => void;
   onDateToChange?: (value: string) => void;
-}): React.JSX.Element => (
-  <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
-    <div>
-      <DatePicker
-        value={dateFrom ? new Date(dateFrom) : null}
-        onChange={date => {
-          const formattedDate = date
-            ? date.toDate().toISOString().split("T")[0]
-            : "";
-          onDateFromChange(formattedDate);
-        }}
-        format="DD/MM/YYYY"
-        placeholder="Từ ngày"
-        className="w-full"
-        inputClass="w-full h-10 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-        containerStyle={{ width: "100%" }}
-      />
+}): React.JSX.Element => {
+  const fromPickerRef = React.useRef<any>(null);
+  const toPickerRef = React.useRef<any>(null);
+  const isFromOpeningRef = React.useRef(false);
+  const isToOpeningRef = React.useRef(false);
+
+  const handleFromOpen = (): void => {
+    isFromOpeningRef.current = true;
+  };
+
+  const handleFromClose = (): void => {
+    isFromOpeningRef.current = false;
+  };
+
+  const handleFromChange = (date: any): void => {
+    if (isFromOpeningRef.current) {
+      isFromOpeningRef.current = false;
+      return;
+    }
+    if (date) {
+      const formattedDate = date.toDate().toISOString().split("T")[0];
+      if (formattedDate !== dateFrom) {
+        onDateFromChange(formattedDate);
+      }
+    } else if (dateFrom) {
+      onDateFromChange("");
+    }
+  };
+
+  const handleToOpen = (): void => {
+    isToOpeningRef.current = true;
+  };
+
+  const handleToClose = (): void => {
+    isToOpeningRef.current = false;
+  };
+
+  const handleToChange = (date: any): void => {
+    if (isToOpeningRef.current) {
+      isToOpeningRef.current = false;
+      return;
+    }
+    if (date) {
+      const formattedDate = date.toDate().toISOString().split("T")[0];
+      if (formattedDate !== dateTo) {
+        onDateToChange(formattedDate);
+      }
+    } else if (dateTo) {
+      onDateToChange("");
+    }
+  };
+
+  return (
+    <div className="gap-2 grid grid-cols-1 sm:grid-cols-2 min-w-0">
+      <div className="w-full min-w-0">
+        <DatePicker
+          ref={fromPickerRef}
+          value={dateFrom ? new Date(dateFrom) : null}
+          onChange={handleFromChange}
+          onOpen={handleFromOpen}
+          onClose={handleFromClose}
+          format="DD/MM/YYYY"
+          placeholder="Từ ngày"
+          className="w-full min-w-0"
+          inputClass="w-full min-w-0 h-10 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent cursor-pointer"
+          containerStyle={{ width: "100%", minWidth: 0 }}
+          editable={false}
+          calendarPosition="bottom-left"
+        />
+      </div>
+      <div className="w-full min-w-0">
+        <DatePicker
+          ref={toPickerRef}
+          value={dateTo ? new Date(dateTo) : null}
+          onChange={handleToChange}
+          onOpen={handleToOpen}
+          onClose={handleToClose}
+          format="DD/MM/YYYY"
+          placeholder="Đến ngày"
+          className="w-full min-w-0"
+          inputClass="w-full min-w-0 h-10 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent cursor-pointer"
+          containerStyle={{ width: "100%", minWidth: 0 }}
+          editable={false}
+          calendarPosition="bottom-left"
+        />
+      </div>
     </div>
-    <div>
-      <DatePicker
-        value={dateTo ? new Date(dateTo) : null}
-        onChange={date => {
-          const formattedDate = date
-            ? date.toDate().toISOString().split("T")[0]
-            : "";
-          onDateToChange(formattedDate);
-        }}
-        format="DD/MM/YYYY"
-        placeholder="Đến ngày"
-        className="w-full"
-        inputClass="w-full h-10 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-        containerStyle={{ width: "100%" }}
-      />
-    </div>
-  </div>
-);
+  );
+};

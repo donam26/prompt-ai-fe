@@ -22,7 +22,7 @@ export function AdminContentCard({
   return (
     <Card
       className={cn(
-        "flex flex-col bg-white dark:bg-gray-800 shadow-lg border border-gray-200 dark:border-gray-700 rounded-xl min-h-0",
+        "flex flex-col bg-white dark:bg-gray-800 shadow-lg border border-gray-200 dark:border-gray-700 rounded-xl w-full min-w-0 min-h-0",
         className
       )}
     >
@@ -36,7 +36,7 @@ export function AdminContentCard({
           )}
         </CardHeader>
       )}
-      <CardContent className="flex-1 min-h-0 overflow-visible">
+      <CardContent className="flex-1 w-full min-w-0 min-h-0 overflow-visible">
         {children}
       </CardContent>
     </Card>

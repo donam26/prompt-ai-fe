@@ -135,7 +135,6 @@ export const MailLogs = (): React.JSX.Element => {
     <AdminContentCard
       title="Log mail gần nhất"
       description="Lịch sử gửi email gần đây"
-      padding="lg"
     >
       <div className="space-y-4">
         {isFetching ? (

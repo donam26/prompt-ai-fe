@@ -2,6 +2,7 @@
 
 import React, { useState, useCallback, useLayoutEffect, useMemo } from "react";
 import { Search, X } from "lucide-react";
+import DatePicker from "react-multi-date-picker";
 
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -425,52 +426,90 @@ const DateRangePicker = ({
   onDateFromChange?: (value: string) => void;
   onDateToChange?: (value: string) => void;
 }): React.JSX.Element => {
-  const [fromFocused, setFromFocused] = React.useState(false);
-  const [toFocused, setToFocused] = React.useState(false);
+  const fromPickerRef = React.useRef<any>(null);
+  const toPickerRef = React.useRef<any>(null);
+  const isFromOpeningRef = React.useRef(false);
+  const isToOpeningRef = React.useRef(false);
+
+  const handleFromOpen = (): void => {
+    isFromOpeningRef.current = true;
+  };
+
+  const handleFromClose = (): void => {
+    isFromOpeningRef.current = false;
+  };
+
+  const handleFromChange = (date: any): void => {
+    if (isFromOpeningRef.current) {
+      isFromOpeningRef.current = false;
+      return;
+    }
+    if (date) {
+      const formattedDate = date.toDate().toISOString().split("T")[0];
+      if (formattedDate !== dateFrom) {
+        onDateFromChange(formattedDate);
+      }
+    } else if (dateFrom) {
+      onDateFromChange("");
+    }
+  };
+
+  const handleToOpen = (): void => {
+    isToOpeningRef.current = true;
+  };
+
+  const handleToClose = (): void => {
+    isToOpeningRef.current = false;
+  };
+
+  const handleToChange = (date: any): void => {
+    if (isToOpeningRef.current) {
+      isToOpeningRef.current = false;
+      return;
+    }
+    if (date) {
+      const formattedDate = date.toDate().toISOString().split("T")[0];
+      if (formattedDate !== dateTo) {
+        onDateToChange(formattedDate);
+      }
+    } else if (dateTo) {
+      onDateToChange("");
+    }
+  };
 
   return (
-    <div className="gap-2 grid grid-cols-1 sm:grid-cols-2">
-      <div className="space-y-1">
-        <Label className="text-gray-600 text-xs">Từ ngày</Label>
-        <div className="relative">
-          <Input
-            type="date"
-            value={dateFrom}
-            onChange={e => onDateFromChange(e.target.value)}
-            onFocus={() => setFromFocused(true)}
-            onBlur={() => setFromFocused(false)}
-            className={`pr-24 w-full text-sm ${!dateFrom && !fromFocused ? "text-transparent" : ""}`}
-            style={{
-              colorScheme: "light",
-            }}
-          />
-          {!dateFrom && !fromFocused && (
-            <div className="top-1/2 left-3 absolute text-gray-400 text-sm -translate-y-1/2 pointer-events-none transform">
-              Chọn ngày
-            </div>
-          )}
-        </div>
+    <div className="gap-2 grid grid-cols-1 sm:grid-cols-2 min-w-0">
+      <div className="w-full min-w-0">
+        <DatePicker
+          ref={fromPickerRef}
+          value={dateFrom ? new Date(dateFrom) : null}
+          onChange={handleFromChange}
+          onOpen={handleFromOpen}
+          onClose={handleFromClose}
+          format="DD/MM/YYYY"
+          placeholder="Từ ngày"
+          className="w-full min-w-0"
+          inputClass="w-full min-w-0 h-10 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent cursor-pointer"
+          containerStyle={{ width: "100%", minWidth: 0 }}
+          editable={false}
+          calendarPosition="bottom-left"
+        />
       </div>
-      <div className="space-y-1">
-        <Label className="text-gray-600 text-xs">Đến ngày</Label>
-        <div className="relative">
-          <Input
-            type="date"
-            value={dateTo}
-            onChange={e => onDateToChange(e.target.value)}
-            onFocus={() => setToFocused(true)}
-            onBlur={() => setToFocused(false)}
-            className={`pr-24 w-full text-sm ${!dateTo && !toFocused ? "text-transparent" : ""}`}
-            style={{
-              colorScheme: "light",
-            }}
-          />
-          {!dateTo && !toFocused && (
-            <div className="top-1/2 left-3 absolute text-gray-400 text-sm -translate-y-1/2 pointer-events-none transform">
-              Chọn ngày
-            </div>
-          )}
-        </div>
+      <div className="w-full min-w-0">
+        <DatePicker
+          ref={toPickerRef}
+          value={dateTo ? new Date(dateTo) : null}
+          onChange={handleToChange}
+          onOpen={handleToOpen}
+          onClose={handleToClose}
+          format="DD/MM/YYYY"
+          placeholder="Đến ngày"
+          className="w-full min-w-0"
+          inputClass="w-full min-w-0 h-10 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent cursor-pointer"
+          containerStyle={{ width: "100%", minWidth: 0 }}
+          editable={false}
+          calendarPosition="bottom-left"
+        />
       </div>
     </div>
   );
