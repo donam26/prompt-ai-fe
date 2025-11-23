@@ -130,25 +130,22 @@ export const Pagination = ({
   };
 
   return (
-    <div
-      className={cn(
-        "pagination-container w-full min-w-0 px-2 sm:px-0",
-        className
-      )}
-    >
+    <div className={cn("w-full min-w-0 pagination-container", className)}>
       {/* Mobile Layout */}
-      <div className="lg:hidden flex flex-col space-y-4 w-full min-w-0">
+      <div className="lg:hidden flex flex-col space-y-3 w-full min-w-0">
         {showPageSizeSelector && (onPageSizeChange || onPaginationChange) ? (
           // Show page size selector when available
           <div className="flex flex-col items-center space-y-2 w-full min-w-0">
             {totalPages > 1 && (
-              <div className="flex justify-center items-center font-medium text-gray-700 dark:text-gray-200 text-sm whitespace-nowrap px-2">
-                Trang {currentPage} của {totalPages}
+              <div className="flex justify-center items-center px-1 w-full font-medium text-gray-700 dark:text-gray-200 text-xs sm:text-sm whitespace-nowrap">
+                <span className="truncate">
+                  Trang {currentPage} của {totalPages}
+                </span>
               </div>
             )}
 
-            <div className="flex items-center gap-2 flex-wrap justify-center px-2">
-              <span className="text-gray-600 dark:text-gray-300 text-xs whitespace-nowrap">
+            <div className="flex flex-wrap justify-center items-center gap-1.5 sm:gap-2 px-1 w-full">
+              <span className="text-[10px] text-gray-600 dark:text-gray-300 sm:text-xs whitespace-nowrap">
                 Hiển thị:
               </span>
               <Select
@@ -156,7 +153,7 @@ export const Pagination = ({
                 onValueChange={value => handlePageSizeChange(Number(value))}
                 disabled={loading}
               >
-                <SelectTrigger className="w-16 h-7 text-xs">
+                <SelectTrigger className="flex-shrink-0 w-14 sm:w-16 h-7 text-xs">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
@@ -167,18 +164,18 @@ export const Pagination = ({
                   ))}
                 </SelectContent>
               </Select>
-              <span className="text-gray-600 dark:text-gray-300 text-xs whitespace-nowrap">
+              <span className="text-[10px] text-gray-600 dark:text-gray-300 sm:text-xs whitespace-nowrap">
                 mục
               </span>
             </div>
           </div>
         ) : (
           // Show page info when no page size selector
-          <div className="flex justify-center items-center font-medium text-gray-700 dark:text-gray-200 text-sm whitespace-nowrap px-2">
+          <div className="flex justify-center items-center px-1 w-full font-medium text-gray-700 dark:text-gray-200 text-xs sm:text-sm whitespace-nowrap">
             {totalPages > 0 ? (
-              <>
+              <span className="truncate">
                 Trang {currentPage} của {totalPages}
-              </>
+              </span>
             ) : (
               "Không có trang"
             )}
@@ -186,43 +183,43 @@ export const Pagination = ({
         )}
 
         {totalPages > 1 && (
-          <div className="flex justify-center items-center space-x-2 w-full min-w-0 px-2">
+          <div className="flex justify-center items-center space-x-1.5 sm:space-x-2 px-1 w-full min-w-0">
             {showPrevNext && (
               <Button
                 variant="outline"
-                className="p-0 w-8 h-8 flex-shrink-0"
+                className="flex-shrink-0 p-0 w-7 sm:w-8 h-7 sm:h-8"
                 onClick={() => handlePageChange(1)}
                 disabled={currentPage === 1 || loading}
               >
-                <ChevronsLeft className="w-4 h-4" />
+                <ChevronsLeft className="w-3.5 sm:w-4 h-3.5 sm:h-4" />
               </Button>
             )}
             <Button
               variant="outline"
-              className="p-0 w-8 h-8 flex-shrink-0"
+              className="flex-shrink-0 p-0 w-7 sm:w-8 h-7 sm:h-8"
               onClick={() => handlePageChange(Math.max(1, currentPage - 1))}
               disabled={currentPage === 1 || loading}
             >
-              <ChevronLeft className="w-4 h-4" />
+              <ChevronLeft className="w-3.5 sm:w-4 h-3.5 sm:h-4" />
             </Button>
             <Button
               variant="outline"
-              className="p-0 w-8 h-8 flex-shrink-0"
+              className="flex-shrink-0 p-0 w-7 sm:w-8 h-7 sm:h-8"
               onClick={() =>
                 handlePageChange(Math.min(totalPages, currentPage + 1))
               }
               disabled={currentPage === totalPages || loading}
             >
-              <ChevronRight className="w-4 h-4" />
+              <ChevronRight className="w-3.5 sm:w-4 h-3.5 sm:h-4" />
             </Button>
             {showPrevNext && (
               <Button
                 variant="outline"
-                className="p-0 w-8 h-8 flex-shrink-0"
+                className="flex-shrink-0 p-0 w-7 sm:w-8 h-7 sm:h-8"
                 onClick={() => handlePageChange(totalPages)}
                 disabled={currentPage === totalPages || loading}
               >
-                <ChevronsRight className="w-4 h-4" />
+                <ChevronsRight className="w-3.5 sm:w-4 h-3.5 sm:h-4" />
               </Button>
             )}
           </div>
