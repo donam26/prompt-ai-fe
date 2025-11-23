@@ -25,7 +25,7 @@ export const ConditionalMain = ({
     <main
       className={cn(
         "flex flex-col flex-1 bg-white pt-0",
-        !isHomePage ? "mt-[96px]" : "",
+        !isHomePage ? "md:mt-[96px] mt-[60px]" : "",
         className
       )}
     >
