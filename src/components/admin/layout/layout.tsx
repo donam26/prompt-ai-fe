@@ -29,7 +29,7 @@ export function AdminLayout({ children }: AdminLayoutProps): React.JSX.Element {
 
   return (
     <div
-      className="flex md:flex-row flex-col gap-2 md:gap-0 bg-gray-100 dark:bg-gray-900 p-2 md:p-0 pt-4 md:pt-0 max-w-[100vw] h-screen min-h-0 overflow-hidden"
+      className="flex md:flex-row flex-col gap-2 md:gap-6 p-2 md:p-0 pt-4 md:pt-0 max-w-[100vw] h-screen min-h-0 overflow-hidden"
       style={{
         height: "100vh",
         maxHeight: "100vh",

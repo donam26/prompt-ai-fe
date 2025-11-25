@@ -35,28 +35,28 @@ export const ProfileSidebar = ({
   return (
     <>
       {/* Mobile Sidebar - Horizontal at top */}
-      <div className="sm:hidden w-full">
+      <div className="sm:hidden w-full min-w-0 sticky top-0 z-10 bg-white">
         <div
           className={cn(
-            "bg-white shadow-md border-gray-200 border-b w-full transition-all duration-300 ease-in-out",
-            isCollapsed ? "rounded-2xl" : "rounded-t-2xl"
+            "bg-white shadow-sm border-gray-200 border-b w-full min-w-0 transition-all duration-300 ease-in-out",
+            isCollapsed ? "" : "shadow-md"
           )}
         >
           {/* Mobile Header */}
-          <div className="flex justify-between items-center p-4">
-            <h1 className="font-bold text-gray-900 text-xl truncate">
+          <div className="flex justify-between items-center px-3 py-3 min-w-0">
+            <h1 className="font-bold text-gray-900 text-lg truncate min-w-0 flex-1">
               Profile
             </h1>
             <Button
               variant="outline"
               onClick={onToggle}
-              className="hover:bg-gray-100 p-2 border-gray-300 rounded-md text-gray-900 transition-colors cursor-pointer"
+              className="hover:bg-gray-100 p-1.5 border-gray-300 rounded-md text-gray-900 transition-colors cursor-pointer flex-shrink-0 h-8 w-8"
               aria-label={isCollapsed ? "Expand menu" : "Collapse menu"}
             >
               {isCollapsed ? (
-                <ChevronDown size={20} />
+                <ChevronDown size={18} />
               ) : (
-                <ChevronUp size={20} />
+                <ChevronUp size={18} />
               )}
             </Button>
           </div>
@@ -68,49 +68,49 @@ export const ProfileSidebar = ({
               isCollapsed ? "max-h-0 opacity-0" : "max-h-[200px] opacity-100"
             )}
           >
-            <div className="flex items-center gap-2 p-4 border-gray-200 border-t">
+            <div className="flex items-center gap-2 px-3 pb-3 border-gray-200 border-t min-w-0">
               <button
                 onClick={() => onMenuClick(ProfileMenuItem.ACCOUNT)}
                 className={cn(
-                  "flex flex-1 items-center gap-2 px-4 py-2 rounded-lg transition-colors",
+                  "flex flex-1 items-center justify-center gap-2 px-3 py-2.5 rounded-lg transition-colors min-w-0",
                   selectedMenuItem === ProfileMenuItem.ACCOUNT
                     ? "bg-purple-600 text-white"
-                    : "hover:bg-gray-100"
+                    : "hover:bg-gray-100 bg-gray-50"
                 )}
               >
                 <div
                   className={cn(
-                    "flex flex-shrink-0 justify-center items-center rounded-full w-6 h-6",
+                    "flex flex-shrink-0 justify-center items-center rounded-full w-5 h-5",
                     selectedMenuItem === ProfileMenuItem.ACCOUNT
                       ? "bg-white"
                       : "bg-purple-100"
                   )}
                 >
-                  <User className="w-4 h-4 text-purple-600" />
+                  <User className="w-3.5 h-3.5 text-purple-600" />
                 </div>
-                <span className="font-medium text-sm">Tài khoản</span>
+                <span className="font-medium text-xs truncate">Tài khoản</span>
               </button>
 
               <button
                 onClick={() => onMenuClick(ProfileMenuItem.FAVORITES)}
                 className={cn(
-                  "flex flex-1 items-center gap-2 px-4 py-2 rounded-lg transition-colors",
+                  "flex flex-1 items-center justify-center gap-2 px-3 py-2.5 rounded-lg transition-colors min-w-0",
                   selectedMenuItem === ProfileMenuItem.FAVORITES
                     ? "bg-purple-600 text-white"
-                    : "hover:bg-gray-100"
+                    : "hover:bg-gray-100 bg-gray-50"
                 )}
               >
                 <div
                   className={cn(
-                    "flex flex-shrink-0 justify-center items-center rounded-full w-6 h-6",
+                    "flex flex-shrink-0 justify-center items-center rounded-full w-5 h-5",
                     selectedMenuItem === ProfileMenuItem.FAVORITES
                       ? "bg-white"
                       : "bg-gray-100"
                   )}
                 >
-                  <Heart className="w-4 h-4 text-gray-600" />
+                  <Heart className="w-3.5 h-3.5 text-gray-600" />
                 </div>
-                <span className="font-medium text-sm">Yêu thích</span>
+                <span className="font-medium text-xs truncate">Yêu thích</span>
               </button>
             </div>
           </div>

@@ -62,18 +62,18 @@ export class UserService {
    * Update user info
    *
    * @param id - User ID
-   * @param formData - Form data with user info
+   * @param formData - Form data with user info (fullName or full_name, profile_image)
    * @returns Promise with updated user data
    */
   async updateUserInfo(
     id: string | number,
     formData: FormData
-  ): Promise<{ user: User }> {
-    const response = await apiClient.put(`/users/info/${id}`, formData, {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-    });
+  ): Promise<{
+    success: boolean;
+    message: string;
+    data: User;
+  }> {
+    const response = await apiClient.put(`/users/update-info/${id}`, formData);
     return response.data;
   }
 

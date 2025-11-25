@@ -115,7 +115,7 @@ function ProfileContent() {
   }
 
   return (
-    <div className="flex md:flex-row flex-col gap-2 md:gap-0 bg-white p-2 md:p-0 pt-4 md:pt-0 max-w-[100vw] min-h-screen overflow-x-hidden">
+    <div className="flex md:flex-row flex-col gap-0 md:gap-0 bg-gray-50 md:bg-white min-w-0 max-w-[100vw] min-h-screen overflow-x-hidden">
       {/* Sidebar */}
       <ProfileSidebar
         isCollapsed={isCollapsed}
@@ -126,8 +126,8 @@ function ProfileContent() {
       />
 
       {/* Main Content */}
-      <div className="flex-1 p-4 max-w-full container">
-        <div className="bg-gray-50 p-6 rounded-lg min-h-[600px]">
+      <div className="flex-1 p-3 sm:p-4 md:p-6 lg:p-8 w-full min-w-0 overflow-x-hidden">
+        <div className="bg-white shadow-sm md:shadow-none p-4 sm:p-5 md:p-6 rounded-lg sm:rounded-xl w-full min-w-0 min-h-[calc(100vh-8rem)] md:min-h-[600px]">
           {renderContent()}
         </div>
       </div>

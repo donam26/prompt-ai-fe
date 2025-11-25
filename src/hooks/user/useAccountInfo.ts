@@ -30,10 +30,17 @@ export const useAccountInfo = (options: UseAccountInfoOptions) => {
     try {
       const response = await userService.getUserInfo();
       if (response.data) {
-        setUserInfo(response.data);
+        // Map profileImage to avatar for consistency
+        const userData = {
+          ...response.data,
+          avatar: response.data.profileImage || response.data.avatar,
+        };
+        setUserInfo(userData);
       }
     } catch (err: unknown) {
       console.error("Error fetching user info:", err);
+    } finally {
+      setIsLoading(false);
     }
   }, [userId, enabled]);
 
@@ -54,35 +61,55 @@ export const useAccountInfo = (options: UseAccountInfoOptions) => {
 
       try {
         const formData = new FormData();
-        formData.append("fullName", data.fullName.trim());
+        
+        // Append fullName (BE accepts both fullName and full_name)
+        if (data.fullName && data.fullName.trim()) {
+          formData.append("fullName", data.fullName.trim());
+        }
 
+        // Append profile_image (BE expects profile_image, not profileImage)
         if (data.profileImage) {
-          formData.append("profileImage", data.profileImage);
+          formData.append("profile_image", data.profileImage);
         }
 
         const response = await userService.updateUserInfo(userId, formData);
 
-        if (response && response.user && user) {
+        if (response && response.success && response.data && user) {
+          // Map profileImage to avatar for consistency
           const updatedUser = {
             ...user,
-            fullName: response.user.fullName,
-            avatar: response.user.avatar,
+            fullName: response.data.fullName,
+            avatar: response.data.profileImage || response.data.avatar,
           };
 
           setUser(updatedUser);
+          
+          // Call get me API to refresh user info
           await fetchUserInfo();
-          showToast.success("Cập nhật thông tin thành công");
+          
+          // Show success message from API or default message
+          const successMessage = response.message || "Cập nhật thông tin thành công";
+          showToast.success(successMessage);
           return true;
         } else {
-          setError("Cập nhật thông tin không thành công");
-          showToast.error("Cập nhật thông tin không thành công");
+          const errorMessage = response?.message || "Cập nhật thông tin không thành công";
+          setError(errorMessage);
+          showToast.error(errorMessage);
           return false;
         }
       } catch (err: unknown) {
-        const errorMessage =
-          err instanceof Error
-            ? err.message
-            : "Đã xảy ra lỗi khi cập nhật thông tin";
+        let errorMessage = "Đã xảy ra lỗi khi cập nhật thông tin";
+        
+        // Try to extract error message from response
+        if (err && typeof err === "object" && "response" in err) {
+          const axiosError = err as { response?: { data?: { message?: string } } };
+          if (axiosError.response?.data?.message) {
+            errorMessage = axiosError.response.data.message;
+          }
+        } else if (err instanceof Error) {
+          errorMessage = err.message;
+        }
+        
         setError(errorMessage);
         showToast.error(errorMessage);
         return false;

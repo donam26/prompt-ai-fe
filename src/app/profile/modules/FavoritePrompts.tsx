@@ -70,9 +70,9 @@ export default function FavoritePrompts({ user }: FavoritePromptsProps) {
     }
 
     return (
-      <div className="gap-6 grid grid-cols-1 sm:grid-cols-2 2xl:grid-cols-4 xl:grid-cols-3">
+      <div className="gap-6 grid grid-cols-1 sm:grid-cols-2 2xl:grid-cols-4 xl:grid-cols-3 w-full min-w-0">
         {favoritePrompts.map(prompt => (
-          <div key={prompt.id} className="relative">
+          <div key={prompt.id} className="relative w-full min-w-0">
             <PromptCardV2
               prompt={prompt}
               favoriteList={favoritePrompts.map(p => String(p.id))}
@@ -86,30 +86,30 @@ export default function FavoritePrompts({ user }: FavoritePromptsProps) {
   };
 
   return (
-    <div className="space-y-6">
-      <div>
+    <div className="space-y-6 w-full min-w-0">
+      <div className="w-full min-w-0">
         <h1 className="mb-2 font-bold text-2xl">Prompt yêu thích</h1>
-        <p className="text-gray-600">
+        <p className="text-gray-600 break-words">
           Xem các Prompts yêu thích của bạn theo danh mục dưới đây!
         </p>
       </div>
 
       {/* Search Bar */}
-      <div className="relative max-w-md">
+      <div className="relative w-full max-w-md min-w-0">
         <Search className="top-1/2 left-3 absolute w-4 h-4 text-gray-400 -translate-y-1/2 transform" />
         <Input
           placeholder="Tìm kiếm prompt yêu thích..."
           value={searchTerm}
           onChange={e => setSearchTerm(e.target.value)}
-          className="pl-10"
+          className="pl-10 w-full min-w-0"
         />
       </div>
 
       {/* Stats */}
       {!isFetching && (
-        <div className="flex justify-between items-center">
-          <div className="flex items-center space-x-4 text-gray-600 text-sm">
-            <span>
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 w-full min-w-0">
+          <div className="flex flex-wrap items-center gap-2 sm:gap-4 text-gray-600 text-sm min-w-0">
+            <span className="whitespace-nowrap">
               Tổng cộng:{" "}
               <strong>
                 {favoritePromptsWithPagination?.total || favoritePrompts.length}
@@ -117,7 +117,7 @@ export default function FavoritePrompts({ user }: FavoritePromptsProps) {
               prompt
             </span>
             {searchTerm && (
-              <span>
+              <span className="whitespace-nowrap">
                 Kết quả:{" "}
                 <strong>
                   {favoritePromptsWithPagination?.total ||
@@ -131,7 +131,7 @@ export default function FavoritePrompts({ user }: FavoritePromptsProps) {
           {/* Pagination Info */}
           {favoritePromptsWithPagination &&
             favoritePromptsWithPagination.totalPages > 1 && (
-              <div className="text-gray-600 text-sm">
+              <div className="text-gray-600 text-sm whitespace-nowrap">
                 Trang {currentPage + 1} /{" "}
                 {favoritePromptsWithPagination.totalPages}
               </div>
@@ -140,25 +140,25 @@ export default function FavoritePrompts({ user }: FavoritePromptsProps) {
       )}
 
       {/* Prompt Cards */}
-      {renderPromptCards()}
+      <div className="w-full min-w-0">{renderPromptCards()}</div>
 
       {/* Pagination Controls */}
       {favoritePromptsWithPagination &&
         favoritePromptsWithPagination.totalPages > 1 &&
         !searchTerm && (
-          <div className="flex justify-center items-center space-x-2 mt-8">
+          <div className="flex flex-wrap justify-center items-center gap-2 mt-8 w-full min-w-0">
             <Button
               variant="outline"
               size="sm"
               onClick={() => handlePageChange(currentPage - 1)}
               disabled={currentPage === 0 || isFetching}
-              className="flex items-center space-x-1"
+              className="flex items-center space-x-1 flex-shrink-0"
             >
               <ChevronLeft className="w-4 h-4" />
               <span>Trước</span>
             </Button>
 
-            <div className="flex items-center space-x-1">
+            <div className="flex flex-wrap items-center gap-1 min-w-0">
               {Array.from(
                 { length: favoritePromptsWithPagination.totalPages },
                 (_, i) => i
@@ -169,7 +169,7 @@ export default function FavoritePrompts({ user }: FavoritePromptsProps) {
                   size="sm"
                   onClick={() => handlePageChange(page)}
                   disabled={isFetching}
-                  className="p-0 w-8 h-8"
+                  className="p-0 w-8 h-8 flex-shrink-0"
                 >
                   {page + 1}
                 </Button>
@@ -184,7 +184,7 @@ export default function FavoritePrompts({ user }: FavoritePromptsProps) {
                 currentPage >= favoritePromptsWithPagination.totalPages - 1 ||
                 isFetching
               }
-              className="flex items-center space-x-1"
+              className="flex items-center space-x-1 flex-shrink-0"
             >
               <span>Sau</span>
               <ChevronRight className="w-4 h-4" />
