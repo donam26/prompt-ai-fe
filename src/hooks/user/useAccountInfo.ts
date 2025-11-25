@@ -61,7 +61,7 @@ export const useAccountInfo = (options: UseAccountInfoOptions) => {
 
       try {
         const formData = new FormData();
-        
+
         // Append fullName (BE accepts both fullName and full_name)
         if (data.fullName && data.fullName.trim()) {
           formData.append("fullName", data.fullName.trim());
@@ -83,33 +83,37 @@ export const useAccountInfo = (options: UseAccountInfoOptions) => {
           };
 
           setUser(updatedUser);
-          
+
           // Call get me API to refresh user info
           await fetchUserInfo();
-          
+
           // Show success message from API or default message
-          const successMessage = response.message || "Cập nhật thông tin thành công";
+          const successMessage =
+            response.message || "Cập nhật thông tin thành công";
           showToast.success(successMessage);
           return true;
         } else {
-          const errorMessage = response?.message || "Cập nhật thông tin không thành công";
+          const errorMessage =
+            response?.message || "Cập nhật thông tin không thành công";
           setError(errorMessage);
           showToast.error(errorMessage);
           return false;
         }
       } catch (err: unknown) {
         let errorMessage = "Đã xảy ra lỗi khi cập nhật thông tin";
-        
+
         // Try to extract error message from response
         if (err && typeof err === "object" && "response" in err) {
-          const axiosError = err as { response?: { data?: { message?: string } } };
+          const axiosError = err as {
+            response?: { data?: { message?: string } };
+          };
           if (axiosError.response?.data?.message) {
             errorMessage = axiosError.response.data.message;
           }
         } else if (err instanceof Error) {
           errorMessage = err.message;
         }
-        
+
         setError(errorMessage);
         showToast.error(errorMessage);
         return false;

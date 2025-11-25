@@ -38,7 +38,8 @@ export default function AccountInfo({
 
   const handleUpdateProfile = async () => {
     // Validate: must have at least name or image to update
-    const hasNameChange = editName.trim() && editName.trim() !== userInfo?.fullName;
+    const hasNameChange =
+      editName.trim() && editName.trim() !== userInfo?.fullName;
     const hasImageChange = selectedFile !== null;
 
     if (!hasNameChange && !hasImageChange) {
@@ -130,9 +131,14 @@ export default function AccountInfo({
           <h2 className="font-semibold text-lg sm:text-xl break-words w-full">
             {userInfo?.fullName || "Chưa cập nhật"}
           </h2>
-          <p className="text-gray-600 text-sm sm:text-base break-words w-full">{userInfo?.email}</p>
+          <p className="text-gray-600 text-sm sm:text-base break-words w-full">
+            {userInfo?.email}
+          </p>
         </div>
-        <Button onClick={openEditModal} className="flex-shrink-0 w-full sm:w-auto text-sm sm:text-base px-4 py-2 h-9 sm:h-10">
+        <Button
+          onClick={openEditModal}
+          className="flex-shrink-0 w-full sm:w-auto text-sm sm:text-base px-4 py-2 h-9 sm:h-10"
+        >
           Chỉnh sửa
         </Button>
       </div>
@@ -142,8 +148,12 @@ export default function AccountInfo({
         <h2 className="font-semibold text-base sm:text-lg">Hồ sơ</h2>
         <div className="space-y-3 w-full min-w-0">
           <div className="w-full min-w-0">
-            <Label className="font-medium text-gray-700 text-xs sm:text-sm">Email</Label>
-            <p className="text-gray-900 text-sm sm:text-base break-words w-full mt-1">{userInfo?.email}</p>
+            <Label className="font-medium text-gray-700 text-xs sm:text-sm">
+              Email
+            </Label>
+            <p className="text-gray-900 text-sm sm:text-base break-words w-full mt-1">
+              {userInfo?.email}
+            </p>
           </div>
           <Separator />
           <div className="w-full min-w-0">
@@ -164,7 +174,9 @@ export default function AccountInfo({
 
       {/* Subscription Info */}
       <div className="space-y-3 sm:space-y-4 w-full min-w-0">
-        <h2 className="font-semibold text-base sm:text-lg">Thông tin gói đăng ký</h2>
+        <h2 className="font-semibold text-base sm:text-lg">
+          Thông tin gói đăng ký
+        </h2>
         {userInfo?.userSub ? (
           <div className="bg-gradient-to-r from-blue-50 to-indigo-50 p-3 sm:p-4 border border-blue-200 rounded-lg w-full min-w-0">
             <div className="flex items-center space-x-2 mb-3 min-w-0">
@@ -209,7 +221,9 @@ export default function AccountInfo({
 
             <div className="mt-3 pt-3 border-blue-200 border-t">
               <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 min-w-0">
-                <span className="text-gray-600 text-xs sm:text-sm">Trạng thái</span>
+                <span className="text-gray-600 text-xs sm:text-sm">
+                  Trạng thái
+                </span>
                 <span
                   className={`px-2 py-1 rounded-full text-xs font-medium flex-shrink-0 ${
                     userInfo.userSub.status === 1
@@ -226,7 +240,9 @@ export default function AccountInfo({
           <div className="bg-gray-50 p-3 sm:p-4 border border-gray-200 rounded-lg w-full min-w-0">
             <div className="flex items-center space-x-2 min-w-0">
               <Calendar className="w-4 h-4 sm:w-5 sm:h-5 text-gray-500 flex-shrink-0" />
-              <p className="text-gray-600 text-sm sm:text-base break-words">Chưa có thông tin gói đăng ký</p>
+              <p className="text-gray-600 text-sm sm:text-base break-words">
+                Chưa có thông tin gói đăng ký
+              </p>
             </div>
           </div>
         )}
@@ -234,11 +250,17 @@ export default function AccountInfo({
 
       {/* Connected Accounts */}
       <div className="space-y-3 sm:space-y-4 w-full min-w-0">
-        <h2 className="font-semibold text-base sm:text-lg">Tài khoản đã liên kết</h2>
+        <h2 className="font-semibold text-base sm:text-lg">
+          Tài khoản đã liên kết
+        </h2>
         <div className="flex items-center space-x-2 sm:space-x-3 bg-gray-50 p-3 rounded-lg w-full min-w-0">
           <Globe className="w-4 h-4 sm:w-5 sm:h-5 text-blue-500 flex-shrink-0" />
-          <span className="font-medium text-sm sm:text-base flex-shrink-0">Google</span>
-          <span className="text-gray-600 text-xs sm:text-sm break-words min-w-0 truncate">{userInfo?.email}</span>
+          <span className="font-medium text-sm sm:text-base flex-shrink-0">
+            Google
+          </span>
+          <span className="text-gray-600 text-xs sm:text-sm break-words min-w-0 truncate">
+            {userInfo?.email}
+          </span>
         </div>
       </div>
 
@@ -325,7 +347,10 @@ export default function AccountInfo({
               </div>
             </div>
             <div className="w-full min-w-0">
-              <Label htmlFor="fullName" className="w-full min-w-0 block mb-1.5 text-sm">
+              <Label
+                htmlFor="fullName"
+                className="w-full min-w-0 block mb-1.5 text-sm"
+              >
                 Tên hiển thị
               </Label>
               <Input
@@ -348,7 +373,8 @@ export default function AccountInfo({
                     URL.revokeObjectURL(previewUrl);
                   }
                   // Use profileImage or avatar, prioritize profileImage from API
-                  const imageUrl = userInfo?.profileImage || userInfo?.avatar || null;
+                  const imageUrl =
+                    userInfo?.profileImage || userInfo?.avatar || null;
                   setPreviewUrl(imageUrl);
                 }}
                 disabled={isSubmitting}
