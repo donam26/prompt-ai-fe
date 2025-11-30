@@ -4,7 +4,7 @@ export const EXPIRING_SUBSCRIPTIONS_CONSTANTS = {
   // Initial filter state
   INITIAL_FILTERS: {
     search: "",
-    days: 1,
+    days: 5,
     subscriptionType: undefined,
   } as ExpiringSubscriptionsFilterState,
 
