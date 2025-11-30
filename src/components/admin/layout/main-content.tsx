@@ -53,9 +53,7 @@ export function MainContent({
         WebkitOverflowScrolling: "touch",
       }}
     >
-      <div className="mb-40 sm:mb-8 pb-6 sm:pb-8 w-full min-w-0">
-        {children}
-      </div>
+      <div className="mb-20 pb-6 sm:pb-8 w-full min-w-0">{children}</div>
     </main>
   );
 }

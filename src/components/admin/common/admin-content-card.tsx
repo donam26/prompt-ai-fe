@@ -39,7 +39,7 @@ export function AdminContentCard({
           )}
         </CardHeader>
       )}
-      <CardContent className="flex-1 px-2 sm:px-6 pb-2 sm:pb-6 w-full min-w-0 min-h-0 overflow-visible">
+      <CardContent className="flex-1 p-4 sm:p-6 w-full min-w-0 min-h-0 overflow-visible">
         {children}
       </CardContent>
     </Card>
