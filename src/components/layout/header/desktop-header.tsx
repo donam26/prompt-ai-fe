@@ -115,52 +115,59 @@ export const DesktopHeader = ({
 
       {/* Right Actions */}
       <div className="flex items-center gap-4">
-        {isHydrated && user ? (
-          <>
-            <Link
-              href={LAYOUT_ROUTES.userInfoFavorites}
-              className="group flex justify-center items-center hover:bg-gray-100 rounded-lg w-10 h-10 text-primary-600 hover:text-red-500 transition-all duration-200"
-              aria-label="Favorites"
-            >
-              <Heart className="fill-current w-5 h-5 group-hover:scale-110 transition-transform duration-200" />
-            </Link>
-            <UserDropdown
-              user={{ ...user, id: Number(user.id) }}
-              onLogout={handleLogout}
-            />
-          </>
-        ) : isHydrated ? (
-          <>
-            <Link
-              href={LAYOUT_ROUTES.login}
-              className="font-bold text-[#5700c6] hover:text-[#4a00a8] text-base transition-colors duration-200"
-            >
-              {LAYOUT_LABELS.auth.login}
-            </Link>
-            <Link
-              href={LAYOUT_ROUTES.login}
-              className="flex items-center gap-2 bg-[#5700c6] hover:bg-[#4a00a8] px-6 py-3 rounded-full font-bold text-white text-base transition-all duration-200"
-            >
-              {LAYOUT_LABELS.auth.register}
-              <svg
-                className="w-4 h-4"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M9 5l7 7-7 7"
+        {(() => {
+          if (!isHydrated) {
+            return (
+              <div className="bg-gray-200 rounded-lg w-20 h-10 animate-pulse" />
+            );
+          }
+          if (user) {
+            return (
+              <>
+                <Link
+                  href={LAYOUT_ROUTES.userInfoFavorites}
+                  className="group flex justify-center items-center hover:bg-gray-100 rounded-lg w-10 h-10 text-primary-600 hover:text-red-500 transition-all duration-200"
+                  aria-label="Favorites"
+                >
+                  <Heart className="fill-current w-5 h-5 group-hover:scale-110 transition-transform duration-200" />
+                </Link>
+                <UserDropdown
+                  user={{ ...user, id: Number(user.id) }}
+                  onLogout={handleLogout}
                 />
-              </svg>
-            </Link>
-          </>
-        ) : (
-          // Loading skeleton for hydration
-          <div className="bg-gray-200 rounded-lg w-20 h-10 animate-pulse" />
-        )}
+              </>
+            );
+          }
+          return (
+            <>
+              <Link
+                href={LAYOUT_ROUTES.login}
+                className="font-bold text-[#5700c6] hover:text-[#4a00a8] text-base transition-colors duration-200"
+              >
+                {LAYOUT_LABELS.auth.login}
+              </Link>
+              <Link
+                href={LAYOUT_ROUTES.register}
+                className="flex items-center gap-2 bg-[#5700c6] hover:bg-[#4a00a8] px-6 py-3 rounded-full font-bold text-white text-base transition-all duration-200"
+              >
+                {LAYOUT_LABELS.auth.register}
+                <svg
+                  className="w-4 h-4"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M9 5l7 7-7 7"
+                  />
+                </svg>
+              </Link>
+            </>
+          );
+        })()}
       </div>
     </div>
   );

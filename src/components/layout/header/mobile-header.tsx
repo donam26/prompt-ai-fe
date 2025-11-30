@@ -100,8 +100,10 @@ export const MobileHeader = ({
       {isMobileMenuOpen && (
         <>
           {/* Backdrop */}
-          <div
-            className="z-40 fixed inset-0 bg-black/50"
+          <button
+            type="button"
+            aria-label="Close menu"
+            className="z-40 fixed inset-0 bg-black/50 p-0 border-0 cursor-pointer"
             onClick={() => setIsMobileMenuOpen(false)}
             style={{
               animation: "fadeIn 0.2s ease-out",
@@ -196,7 +198,7 @@ export const MobileHeader = ({
                       {LAYOUT_LABELS.auth.login}
                     </Link>
                     <Link
-                      href={LAYOUT_ROUTES.login}
+                      href={LAYOUT_ROUTES.register}
                       className="group flex justify-center items-center gap-2 bg-[#5700c6] hover:bg-[#4a00a8] px-6 py-3 rounded-full w-full font-bold text-white text-base hover:scale-105 transition-all duration-300 transform"
                       onClick={() => setIsMobileMenuOpen(false)}
                     >

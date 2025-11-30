@@ -3,6 +3,7 @@
 import { Suspense } from "react";
 import dynamic from "next/dynamic";
 import { HeroRevampSection } from "./(modules)";
+import { RegisterSuggestionPopup } from "@/components/register-suggestion-popup";
 
 // Lazy load below-the-fold sections for better performance
 const CoachingMentorshipSection = dynamic(
@@ -55,6 +56,9 @@ const SectionSkeleton = (): React.JSX.Element => (
 export default function HomePage(): React.JSX.Element {
   return (
     <div className="min-h-screen">
+      {/* Register Suggestion Popup */}
+      <RegisterSuggestionPopup />
+
       {/* Hero Sections - Full Width - Critical, loaded immediately */}
       <HeroRevampSection />
 

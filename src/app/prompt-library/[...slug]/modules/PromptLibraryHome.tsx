@@ -16,7 +16,7 @@ export const enumType = { FREE: "free", PREMIUM: "premium" };
 
 export const PromptLibraryHome = ({ limit }: PromptLibraryHomeProps) => {
   const pathname = usePathname();
-  const [type, setType] = useState(enumType.PREMIUM);
+  const [type, setType] = useState(enumType.FREE);
 
   // Check if current route is home page
   const isHomePage = pathname === "/";
