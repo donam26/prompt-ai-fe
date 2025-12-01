@@ -5,17 +5,39 @@ import { useBlogDetail } from "@/hooks/admin/useBlog/useBlogDetail";
 import { Loader2, AlertCircle, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { BlogDetail } from "./modules/BlogDetail";
+import { useAuthRedirect } from "@/hooks/useAuthRedirect";
+import { ROUTES_URL } from "@/constants/routes-url";
 
 export default function BlogDetailPage() {
   const params = useParams();
   const router = useRouter();
   const blogId = params.id as string;
 
+  // Check if user is logged in, redirect to login if not
+  const { isLoading: isAuthLoading } = useAuthRedirect({
+    redirectTo: ROUTES_URL.LOGIN,
+    requireAuth: true,
+    showWarning: true,
+    warningMessage: "Bạn cần đăng nhập để xem bài viết này",
+  });
+
   const { blog, isLoading, error } = useBlogDetail(blogId);
 
   const handleBack = () => {
     router.back();
   };
+
+  // Loading state - check auth first
+  if (isAuthLoading) {
+    return (
+      <div className="flex justify-center items-center min-h-screen">
+        <div className="flex flex-col items-center gap-4">
+          <Loader2 className="w-8 h-8 text-purple-600 animate-spin" />
+          <p className="text-gray-600">Đang kiểm tra đăng nhập...</p>
+        </div>
+      </div>
+    );
+  }
 
   // Loading state
   if (isLoading) {

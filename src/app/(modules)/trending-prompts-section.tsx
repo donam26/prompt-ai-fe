@@ -48,7 +48,7 @@ export const TrendingPromptsSection = ({}: TrendingPromptsSectionProps) => {
 
     // Check if prompt is premium and user is Free
     if (prompt.subType === 2 && isFreeUser) {
-      showToast.error(
+      showToast.warning(
         "Bạn cần nâng cấp gói Premium để xem prompt này. Đang chuyển đến trang giá..."
       );
       setTimeout(() => {

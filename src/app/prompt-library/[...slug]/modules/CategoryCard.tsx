@@ -36,7 +36,9 @@ export const CategoryCard = ({
     // Check if category is premium and user is Free
     if (isPremium && isFreeUser && !isComingSoonStatus) {
       e.preventDefault();
-      showToast.error("Bạn cần nâng cấp gói Premium để truy cập danh mục này");
+      showToast.warning(
+        "Bạn cần nâng cấp gói Premium để truy cập danh mục này"
+      );
       setTimeout(() => {
         router.push(ROUTES_URL.PRICING);
       }, 500);

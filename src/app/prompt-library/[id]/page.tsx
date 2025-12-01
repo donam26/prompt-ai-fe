@@ -12,6 +12,7 @@ import { Sidebar, MenuItem } from "./modules/Sidebar";
 import { PromptEditor } from "./modules/PromptEditor";
 import { ResultViewer } from "./modules/ResultViewer";
 import { useAuth } from "@/hooks/useAuth";
+import { useAuthRedirect } from "@/hooks/useAuthRedirect";
 import { ROUTES_URL } from "@/constants/routes-url";
 
 export default function PromptDetailPage() {
@@ -19,6 +20,15 @@ export default function PromptDetailPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const promptId = params.id as string;
+
+  // Check if user is logged in, redirect to login if not
+  const { isLoading: isAuthLoading } = useAuthRedirect({
+    redirectTo: ROUTES_URL.LOGIN,
+    requireAuth: true,
+    showWarning: true,
+    warningMessage: "Bạn cần đăng nhập để xem prompt này",
+  });
+
   const { user } = useAuth();
 
   // Check if user has Free subscription
@@ -178,6 +188,18 @@ export default function PromptDetailPage() {
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, [isCollapsed]);
+
+  // Loading state - check auth first
+  if (isAuthLoading) {
+    return (
+      <div className="flex justify-center items-center min-h-screen">
+        <div className="flex flex-col items-center gap-4">
+          <Loader2 className="w-8 h-8 text-purple-600 animate-spin" />
+          <p className="text-gray-600">Đang kiểm tra đăng nhập...</p>
+        </div>
+      </div>
+    );
+  }
 
   // Loading state
   if (isLoadingPrompt) {

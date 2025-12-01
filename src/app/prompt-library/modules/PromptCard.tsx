@@ -102,9 +102,7 @@ export const PromptCard = ({
     // Check if prompt is premium and user is Free
     if (prompt.subType === 2 && isFreeUser) {
       e.preventDefault();
-      showToast.error(
-        "Bạn cần nâng cấp gói Premium để xem prompt này. Đang chuyển đến trang giá..."
-      );
+      showToast.warning("Bạn cần nâng cấp gói Premium để xem prompt này.");
       setTimeout(() => {
         router.push(ROUTES_URL.PRICING);
       }, 500);

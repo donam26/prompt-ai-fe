@@ -20,6 +20,8 @@ const MODEL_OPTIONS = [
   { value: "gpt-4o-mini", label: "GPT 4o Mini" },
   { value: "gpt-4o", label: "GPT 4o" },
   { value: "gpt-4", label: "GPT 4" },
+  { value: "gpt-5.1", label: "GPT 5.1" },
+  { value: "gpt-5-mini", label: "GPT 5 Mini" },
 ] as const;
 
 const LANGUAGE_OPTIONS = [

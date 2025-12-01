@@ -23,12 +23,22 @@ import {
 import { categoryService } from "@/services/admin/categories";
 import { Category } from "@/types";
 import { useAuth } from "@/hooks/useAuth";
+import { useAuthRedirect } from "@/hooks/useAuthRedirect";
 import { showToast } from "@/components/ui/toast";
 
 export default function ListPromptsPage() {
   const params = useParams();
   const searchParams = useSearchParams();
   const router = useRouter();
+
+  // Check if user is logged in, redirect to login if not
+  const { isLoading: isAuthLoading } = useAuthRedirect({
+    redirectTo: ROUTES_URL.LOGIN,
+    requireAuth: true,
+    showWarning: true,
+    warningMessage: "Bạn cần đăng nhập để xem danh sách prompts",
+  });
+
   const { user, isLoading: isLoadingUser } = useAuth();
 
   // Extract slug and ID from params
@@ -83,7 +93,7 @@ export default function ListPromptsPage() {
         // Redirect to pricing if Free user tries to access premium category
         // Only check after user data is loaded
         if (categoryData.type === "premium" && isFreeUser) {
-          showToast.error(
+          showToast.warning(
             "Bạn cần nâng cấp gói Premium để truy cập danh mục này"
           );
           setTimeout(() => {
@@ -235,6 +245,18 @@ export default function ListPromptsPage() {
 
     router.push(detailUrl);
   };
+
+  // Loading state - check auth first
+  if (isAuthLoading) {
+    return (
+      <div className="flex justify-center items-center min-h-screen">
+        <div className="flex flex-col items-center gap-4">
+          <Loader2 className="w-8 h-8 text-purple-600 animate-spin" />
+          <p className="text-gray-600">Đang kiểm tra đăng nhập...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="bg-white mx-auto px-4 py-8 min-h-screen container">
