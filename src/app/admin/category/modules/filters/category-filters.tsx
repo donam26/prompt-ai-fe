@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useCallback, useLayoutEffect, useMemo, useState } from "react";
+import React, { useCallback, useLayoutEffect, useRef, useState } from "react";
 import { Search } from "lucide-react";
 
 import { Input } from "@/components/ui/input";
@@ -51,20 +51,33 @@ export const CategoryFilter = ({
     updateSearchValue(filters.searchTerm || "");
   }, [filters.searchTerm, updateSearchValue]);
 
-  const debouncedSearchHandler = useMemo(
-    () =>
-      debounce((value: string) => {
-        onFilterChange(
-          updateSearchFilter(
-            filters as Record<string, unknown>,
-            "searchTerm",
-            value
-          ) as unknown as CategoryFilterState
-        );
-        onPageReset?.();
-      }, DEBOUNCE_DELAY),
-    [filters, onFilterChange, onPageReset]
+  // Use useRef to persist debounced function across renders
+  const debouncedSearchHandlerRef = useRef(
+    debounce((value: string) => {
+      onFilterChange(
+        updateSearchFilter(
+          filters as Record<string, unknown>,
+          "searchTerm",
+          value
+        ) as unknown as CategoryFilterState
+      );
+      onPageReset?.();
+    }, DEBOUNCE_DELAY)
   );
+
+  // Update the debounced function when filters, onFilterChange, or onPageReset change
+  useLayoutEffect(() => {
+    debouncedSearchHandlerRef.current = debounce((value: string) => {
+      onFilterChange(
+        updateSearchFilter(
+          filters as Record<string, unknown>,
+          "searchTerm",
+          value
+        ) as unknown as CategoryFilterState
+      );
+      onPageReset?.();
+    }, DEBOUNCE_DELAY);
+  }, [filters, onFilterChange, onPageReset]);
 
   /**
    * Handles search input changes with debouncing
@@ -72,9 +85,9 @@ export const CategoryFilter = ({
   const handleSearchChange = useCallback(
     (value: string) => {
       setSearchValue(value);
-      debouncedSearchHandler(value);
+      debouncedSearchHandlerRef.current(value);
     },
-    [debouncedSearchHandler]
+    []
   );
 
   /**

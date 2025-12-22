@@ -75,11 +75,9 @@ export default function CategoryDetailsPage() {
       enabled: true,
     });
 
-  // Reset industries when search changes
+  // Reset pagination when search changes (don't clear data yet, wait for API response)
   useEffect(() => {
     setIndustriesPagination(prev => ({ ...prev, pageIndex: 0 }));
-    // Clear existing data when search changes to avoid showing stale data
-    setAllIndustries([]);
   }, [industriesSearch]);
 
   // Memoize industries data to ensure stable reference and prevent dependency array size changes
@@ -89,19 +87,19 @@ export default function CategoryDetailsPage() {
   const currentPageIndex = industriesPagination.pageIndex;
 
   // Accumulate industries data for infinite scroll
+  // When pageIndex is 0, replace all data (this handles search reset)
+  // When pageIndex > 0, append new data for infinite scroll
   useEffect(() => {
-    if (industriesData.length > 0 || currentPageIndex === 0) {
-      if (currentPageIndex === 0) {
-        // Reset on new search or initial load
-        setAllIndustries(industriesData);
-      } else {
-        // Append new data for infinite scroll (concat data mới vào data hiện tại)
-        setAllIndustries(prev => {
-          const existingIds = new Set(prev.map(i => i.id));
-          const newItems = industriesData.filter(i => !existingIds.has(i.id));
-          return [...prev, ...newItems];
-        });
-      }
+    if (currentPageIndex === 0) {
+      // Replace all data when starting fresh (new search or initial load)
+      setAllIndustries(industriesData);
+    } else if (industriesData.length > 0) {
+      // Append new data for infinite scroll
+      setAllIndustries(prev => {
+        const existingIds = new Set(prev.map(i => i.id));
+        const newItems = industriesData.filter(i => !existingIds.has(i.id));
+        return [...prev, ...newItems];
+      });
     }
   }, [industriesData, currentPageIndex]);
 

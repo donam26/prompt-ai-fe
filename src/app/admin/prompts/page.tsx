@@ -99,10 +99,9 @@ export default function PromptManagementPage(): React.JSX.Element {
       filters: categoriesFilters,
     });
 
-  // Reset categories when search changes
+  // Reset pagination when search changes (don't clear data yet, wait for API response)
   useEffect(() => {
     setCategoriesPagination(prev => ({ ...prev, pageIndex: 0 }));
-    setAllCategories([]);
   }, [categoriesSearch]);
 
   // Memoize categories data with deep comparison to prevent infinite loops
@@ -112,17 +111,19 @@ export default function PromptManagementPage(): React.JSX.Element {
   const currentCategoriesPageIndex = categoriesPagination.pageIndex;
 
   // Accumulate categories data for infinite scroll
+  // When pageIndex is 0, replace all data (this handles search reset)
+  // When pageIndex > 0, append new data for infinite scroll
   useEffect(() => {
-    if (categoriesData.length > 0 || currentCategoriesPageIndex === 0) {
-      if (currentCategoriesPageIndex === 0) {
-        setAllCategories(categoriesData);
-      } else {
-        setAllCategories(prev => {
-          const existingIds = new Set(prev.map(c => c.id));
-          const newItems = categoriesData.filter(c => !existingIds.has(c.id));
-          return [...prev, ...newItems];
-        });
-      }
+    if (currentCategoriesPageIndex === 0) {
+      // Replace all data when starting fresh (new search or initial load)
+      setAllCategories(categoriesData);
+    } else if (categoriesData.length > 0) {
+      // Append new data for infinite scroll
+      setAllCategories(prev => {
+        const existingIds = new Set(prev.map(c => c.id));
+        const newItems = categoriesData.filter(c => !existingIds.has(c.id));
+        return [...prev, ...newItems];
+      });
     }
   }, [categoriesData, currentCategoriesPageIndex]);
 
@@ -189,10 +190,9 @@ export default function PromptManagementPage(): React.JSX.Element {
       enabled: !!filters.categoryIds && filters.categoryIds.length > 0,
     });
 
-  // Reset industries when search or categoryIds change
+  // Reset pagination when search or categoryIds change (don't clear data yet, wait for API response)
   useEffect(() => {
     setIndustriesPagination(prev => ({ ...prev, pageIndex: 0 }));
-    setAllIndustries([]);
   }, [industriesSearch, filters.categoryIds]);
 
   // Memoize industries data with deep comparison to prevent infinite loops
@@ -202,17 +202,19 @@ export default function PromptManagementPage(): React.JSX.Element {
   const currentIndustriesPageIndex = industriesPagination.pageIndex;
 
   // Accumulate industries data for infinite scroll
+  // When pageIndex is 0, replace all data (this handles search reset)
+  // When pageIndex > 0, append new data for infinite scroll
   useEffect(() => {
-    if (industriesData.length > 0 || currentIndustriesPageIndex === 0) {
-      if (currentIndustriesPageIndex === 0) {
-        setAllIndustries(industriesData);
-      } else {
-        setAllIndustries(prev => {
-          const existingIds = new Set(prev.map(i => i.id));
-          const newItems = industriesData.filter(i => !existingIds.has(i.id));
-          return [...prev, ...newItems];
-        });
-      }
+    if (currentIndustriesPageIndex === 0) {
+      // Replace all data when starting fresh (new search or initial load)
+      setAllIndustries(industriesData);
+    } else if (industriesData.length > 0) {
+      // Append new data for infinite scroll
+      setAllIndustries(prev => {
+        const existingIds = new Set(prev.map(i => i.id));
+        const newItems = industriesData.filter(i => !existingIds.has(i.id));
+        return [...prev, ...newItems];
+      });
     }
   }, [industriesData, currentIndustriesPageIndex]);
 

@@ -84,10 +84,9 @@ export default function PaymentManagementPage(): React.JSX.Element {
       filters: subscriptionsFilters,
     });
 
-  // Reset subscriptions when search changes
+  // Reset pagination when search changes (don't clear data yet, wait for API response)
   useEffect(() => {
     setSubscriptionsPagination(prev => ({ ...prev, pageIndex: 0 }));
-    setAllSubscriptions([]);
   }, [subscriptionsSearch]);
 
   // Memoize subscriptions data with deep comparison to prevent infinite loops
@@ -97,19 +96,21 @@ export default function PaymentManagementPage(): React.JSX.Element {
   const currentSubscriptionsPageIndex = subscriptionsPagination.pageIndex;
 
   // Accumulate subscriptions data for infinite scroll
+  // When pageIndex is 0, replace all data (this handles search reset)
+  // When pageIndex > 0, append new data for infinite scroll
   useEffect(() => {
-    if (subscriptionsData.length > 0 || currentSubscriptionsPageIndex === 0) {
-      if (currentSubscriptionsPageIndex === 0) {
-        setAllSubscriptions(subscriptionsData);
-      } else {
-        setAllSubscriptions(prev => {
-          const existingIds = new Set(prev.map(s => s.id));
-          const newItems = subscriptionsData.filter(
-            s => !existingIds.has(s.id)
-          );
-          return [...prev, ...newItems];
-        });
-      }
+    if (currentSubscriptionsPageIndex === 0) {
+      // Replace all data when starting fresh (new search or initial load)
+      setAllSubscriptions(subscriptionsData);
+    } else if (subscriptionsData.length > 0) {
+      // Append new data for infinite scroll
+      setAllSubscriptions(prev => {
+        const existingIds = new Set(prev.map(s => s.id));
+        const newItems = subscriptionsData.filter(
+          s => !existingIds.has(s.id)
+        );
+        return [...prev, ...newItems];
+      });
     }
   }, [subscriptionsData, currentSubscriptionsPageIndex]);
 

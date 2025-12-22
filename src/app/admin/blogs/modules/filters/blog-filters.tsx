@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useCallback, useLayoutEffect, useMemo, useState } from "react";
+import React, { useCallback, useLayoutEffect, useRef, useState } from "react";
 import { Search, X } from "lucide-react";
 import DatePicker from "react-multi-date-picker";
 
@@ -29,23 +29,32 @@ export const BlogFilter = ({
     updateSearchValue(filters.searchTerm || "");
   }, [filters.searchTerm, updateSearchValue]);
 
-  const debouncedSearchHandler = useMemo(
-    () =>
-      debounce((value: string) => {
-        onFilterChange({
-          ...filters,
-          searchTerm: value,
-        });
-      }, 300),
-    [filters, onFilterChange]
+  // Use useRef to persist debounced function across renders
+  const debouncedSearchHandlerRef = useRef(
+    debounce((value: string) => {
+      onFilterChange({
+        ...filters,
+        searchTerm: value,
+      });
+    }, 300)
   );
+
+  // Update the debounced function when filters or onFilterChange change
+  useLayoutEffect(() => {
+    debouncedSearchHandlerRef.current = debounce((value: string) => {
+      onFilterChange({
+        ...filters,
+        searchTerm: value,
+      });
+    }, 300);
+  }, [filters, onFilterChange]);
 
   const handleSearchChange = useCallback(
     (value: string) => {
       setSearchValue(value);
-      debouncedSearchHandler(value);
+      debouncedSearchHandlerRef.current(value);
     },
-    [debouncedSearchHandler]
+    []
   );
 
   const handleDateFromChange = (value: string): void => {

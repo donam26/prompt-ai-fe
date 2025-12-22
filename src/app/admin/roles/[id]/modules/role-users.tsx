@@ -88,10 +88,9 @@ export const RoleUsers = ({
     enabled: true,
   });
 
-  // Reset available users when search changes
+  // Reset pagination when search changes (don't clear data yet, wait for API response)
   useEffect(() => {
     setUsersPagination(prev => ({ ...prev, pageIndex: 0 }));
-    setAllAvailableUsers([]);
   }, [usersSearch]);
 
   // Memoize role users data
@@ -135,6 +134,8 @@ export const RoleUsers = ({
   const currentUsersPageIndex = usersPagination.pageIndex;
 
   // Accumulate available users data for infinite scroll
+  // When pageIndex is 0, replace all data (this handles search reset)
+  // When pageIndex > 0, append new data for infinite scroll
   useEffect(() => {
     // Early return: ensure availableUsersData is an array
     if (!Array.isArray(availableUsersData)) {
@@ -144,24 +145,21 @@ export const RoleUsers = ({
       return;
     }
 
-    // Reset on first page
+    // Replace all data when starting fresh (new search or initial load)
     if (currentUsersPageIndex === 0) {
       setAllAvailableUsers(availableUsersData);
       return;
     }
 
-    // Early return: skip if no new data
-    if (availableUsersData.length === 0) {
-      return;
+    // Append new data for infinite scroll
+    if (availableUsersData.length > 0) {
+      setAllAvailableUsers(prev => {
+        const prevArray = Array.isArray(prev) ? prev : [];
+        const existingIds = new Set(prevArray.map(u => u.id));
+        const newItems = availableUsersData.filter(u => !existingIds.has(u.id));
+        return [...prevArray, ...newItems];
+      });
     }
-
-    // Append new items for subsequent pages
-    setAllAvailableUsers(prev => {
-      const prevArray = Array.isArray(prev) ? prev : [];
-      const existingIds = new Set(prevArray.map(u => u.id));
-      const newItems = availableUsersData.filter(u => !existingIds.has(u.id));
-      return [...prevArray, ...newItems];
-    });
   }, [availableUsersData, currentUsersPageIndex]);
 
   // Get role user IDs for filtering

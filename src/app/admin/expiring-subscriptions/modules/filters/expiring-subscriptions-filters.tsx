@@ -3,7 +3,6 @@
 import React, {
   useCallback,
   useLayoutEffect,
-  useMemo,
   useRef,
   useState,
 } from "react";
@@ -60,36 +59,52 @@ export const ExpiringSubscriptionsFilter = ({
     updateDaysValue(filters.days?.toString() || "1");
   }, [filters.days, updateDaysValue]);
 
-  const debouncedSearchHandler = useMemo(
-    () =>
-      debounce((value: string) => {
-        onFilterChange({
-          ...filtersRef.current,
-          search: value,
-        });
-        onPageReset?.();
-      }, 300),
-    [onFilterChange, onPageReset]
+  // Use useRef to persist debounced functions across renders
+  const debouncedSearchHandlerRef = useRef(
+    debounce((value: string) => {
+      onFilterChange({
+        ...filtersRef.current,
+        search: value,
+      });
+      onPageReset?.();
+    }, 300)
   );
 
-  const debouncedDaysHandler = useMemo(
-    () =>
-      debounce((value: number | undefined) => {
-        onFilterChange({
-          ...filtersRef.current,
-          days: value,
-        });
-        onPageReset?.();
-      }, 1000),
-    [onFilterChange, onPageReset]
+  const debouncedDaysHandlerRef = useRef(
+    debounce((value: number | undefined) => {
+      onFilterChange({
+        ...filtersRef.current,
+        days: value,
+      });
+      onPageReset?.();
+    }, 1000)
   );
+
+  // Update the debounced functions when onFilterChange or onPageReset change
+  useLayoutEffect(() => {
+    debouncedSearchHandlerRef.current = debounce((value: string) => {
+      onFilterChange({
+        ...filtersRef.current,
+        search: value,
+      });
+      onPageReset?.();
+    }, 300);
+
+    debouncedDaysHandlerRef.current = debounce((value: number | undefined) => {
+      onFilterChange({
+        ...filtersRef.current,
+        days: value,
+      });
+      onPageReset?.();
+    }, 1000);
+  }, [onFilterChange, onPageReset]);
 
   const handleSearchChange = useCallback(
     (value: string) => {
       setSearchValue(value);
-      debouncedSearchHandler(value);
+      debouncedSearchHandlerRef.current(value);
     },
-    [debouncedSearchHandler]
+    []
   );
 
   const handleSubscriptionTypeChange = (value: string): void => {
@@ -105,9 +120,9 @@ export const ExpiringSubscriptionsFilter = ({
       setDaysValue(value);
       const numValue = value === "" ? 1 : Number(value);
       const daysValue = numValue < 1 ? 1 : numValue;
-      debouncedDaysHandler(daysValue);
+      debouncedDaysHandlerRef.current(daysValue);
     },
-    [debouncedDaysHandler]
+    []
   );
 
   const getActiveFilters = () => {

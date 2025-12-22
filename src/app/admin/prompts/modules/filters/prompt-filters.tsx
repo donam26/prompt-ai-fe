@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useCallback, useLayoutEffect, useMemo } from "react";
+import React, { useState, useCallback, useLayoutEffect, useRef } from "react";
 import { Search, X } from "lucide-react";
 import DatePicker from "react-multi-date-picker";
 
@@ -47,25 +47,32 @@ export const PromptFilter = ({
     updateSearchValue(filters.searchTerm || "");
   }, [filters.searchTerm, updateSearchValue]);
 
-  const debouncedSearchHandler = useMemo(
-    () =>
-      debounce((value: string) => {
-        onFilterChange({
-          ...filters,
-          searchTerm: value,
-        });
-        onPageReset?.();
-      }, 300),
-    [filters, onFilterChange, onPageReset]
+  // Use useRef to persist debounced function across renders
+  const debouncedSearchHandlerRef = useRef(
+    debounce((value: string) => {
+      onFilterChange({
+        ...filters,
+        searchTerm: value,
+      });
+      onPageReset?.();
+    }, 300)
   );
 
-  const handleSearchChange = useCallback(
-    (value: string) => {
-      setSearchValue(value);
-      debouncedSearchHandler(value);
-    },
-    [debouncedSearchHandler]
-  );
+  // Update the debounced function when filters, onFilterChange, or onPageReset change
+  useLayoutEffect(() => {
+    debouncedSearchHandlerRef.current = debounce((value: string) => {
+      onFilterChange({
+        ...filters,
+        searchTerm: value,
+      });
+      onPageReset?.();
+    }, 300);
+  }, [filters, onFilterChange, onPageReset]);
+
+  const handleSearchChange = useCallback((value: string) => {
+    setSearchValue(value);
+    debouncedSearchHandlerRef.current(value);
+  }, []);
 
   const handlePremiumChange = (value: string): void => {
     onFilterChange({
@@ -330,6 +337,7 @@ const CategoriesMultiFilter = ({
   value,
   categories,
   categoriesLoading = false,
+  categoriesSearch = "",
   onCategoriesSearch,
   onCategoriesScrollToBottom,
   hasMoreCategories = false,
@@ -358,6 +366,7 @@ const CategoriesMultiFilter = ({
       maxCount={3}
       className="w-full"
       shouldFilter={false}
+      searchValue={categoriesSearch}
       onSearch={onCategoriesSearch}
       onScrollToBottom={onCategoriesScrollToBottom}
       isLoading={categoriesLoading}
@@ -370,6 +379,7 @@ const IndustriesFilter = ({
   value,
   industries,
   industriesLoading = false,
+  industriesSearch = "",
   onIndustriesSearch,
   onIndustriesScrollToBottom,
   hasMoreIndustries = false,
@@ -407,6 +417,7 @@ const IndustriesFilter = ({
       className="w-full"
       disabled={disabled || industriesLoading}
       shouldFilter={false}
+      searchValue={industriesSearch}
       onSearch={onIndustriesSearch}
       onScrollToBottom={onIndustriesScrollToBottom}
       isLoading={industriesLoading}

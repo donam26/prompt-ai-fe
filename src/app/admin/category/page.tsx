@@ -81,10 +81,9 @@ export default function CategoryManagementPage(): React.JSX.Element {
       enabled: true,
     });
 
-  // Reset industries when search changes
+  // Reset pagination when search changes (don't clear data yet, wait for API response)
   useEffect(() => {
     setIndustriesPagination(prev => ({ ...prev, pageIndex: 0 }));
-    setAllIndustries([]);
   }, [industriesSearch]);
 
   // Memoize industries data with deep comparison to prevent infinite loops
@@ -94,17 +93,19 @@ export default function CategoryManagementPage(): React.JSX.Element {
   const currentPageIndex = industriesPagination.pageIndex;
 
   // Accumulate industries data for infinite scroll
+  // When pageIndex is 0, replace all data (this handles search reset)
+  // When pageIndex > 0, append new data for infinite scroll
   useEffect(() => {
-    if (industriesData.length > 0 || currentPageIndex === 0) {
-      if (currentPageIndex === 0) {
-        setAllIndustries(industriesData);
-      } else {
-        setAllIndustries(prev => {
-          const existingIds = new Set(prev.map(i => i.id));
-          const newItems = industriesData.filter(i => !existingIds.has(i.id));
-          return [...prev, ...newItems];
-        });
-      }
+    if (currentPageIndex === 0) {
+      // Replace all data when starting fresh (new search or initial load)
+      setAllIndustries(industriesData);
+    } else if (industriesData.length > 0) {
+      // Append new data for infinite scroll
+      setAllIndustries(prev => {
+        const existingIds = new Set(prev.map(i => i.id));
+        const newItems = industriesData.filter(i => !existingIds.has(i.id));
+        return [...prev, ...newItems];
+      });
     }
   }, [industriesData, currentPageIndex]);
 

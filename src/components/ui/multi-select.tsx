@@ -49,6 +49,7 @@ export interface MultiSelectProps {
   className?: string;
   onValueChange?: (values: string[]) => void;
   onSearch?: (q: string) => void;
+  searchValue?: string; // controlled search value
   onPopoverOpenChange?: (open: boolean) => void;
   onScrollToBottom?: () => void; // Callback when scrolling to bottom for infinite scroll
   isLoading?: boolean; // Loading state for infinite scroll
@@ -69,6 +70,7 @@ export function MultiSelect({
   className,
   onValueChange,
   onSearch,
+  searchValue,
   onPopoverOpenChange,
   onScrollToBottom,
   isLoading = false,
@@ -83,7 +85,7 @@ export function MultiSelect({
   );
   const [isPopoverOpen, setIsPopoverOpen] = useState(false);
   const [isAnimating, setIsAnimating] = useState(false);
-  const [searchTerm, setSearchTerm] = useState("");
+  const [searchTerm, setSearchTerm] = useState(searchValue || "");
   const selectedRef = useRef<string[]>(selectedValues);
   const commandListRef = useRef<HTMLDivElement>(null);
 
@@ -95,6 +97,13 @@ export function MultiSelect({
       setSelectedValues([...safeValue]);
     }
   }, [value]);
+
+  // sync controlled searchValue -> local searchTerm
+  useLayoutEffect(() => {
+    if (searchValue !== undefined) {
+      setSearchTerm(searchValue);
+    }
+  }, [searchValue]);
 
   // if defaultValue changes and uncontrolled, update
   useEffect(() => {

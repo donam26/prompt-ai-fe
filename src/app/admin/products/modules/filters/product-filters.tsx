@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useCallback, useLayoutEffect, useMemo, useState } from "react";
+import React, { useCallback, useLayoutEffect, useRef, useState } from "react";
 import { Search, X } from "lucide-react";
 
 import { Input } from "@/components/ui/input";
@@ -34,24 +34,34 @@ export const ProductFilter = ({
     updateSearchValue(filters.searchTerm || "");
   }, [filters.searchTerm, updateSearchValue]);
 
-  const debouncedSearchHandler = useMemo(
-    () =>
-      debounce((value: string) => {
-        onFilterChange({
-          ...filters,
-          searchTerm: value,
-        });
-        onPageReset?.();
-      }, 300),
-    [filters, onFilterChange, onPageReset]
+  // Use useRef to persist debounced function across renders
+  const debouncedSearchHandlerRef = useRef(
+    debounce((value: string) => {
+      onFilterChange({
+        ...filters,
+        searchTerm: value,
+      });
+      onPageReset?.();
+    }, 300)
   );
+
+  // Update the debounced function when filters, onFilterChange, or onPageReset change
+  useLayoutEffect(() => {
+    debouncedSearchHandlerRef.current = debounce((value: string) => {
+      onFilterChange({
+        ...filters,
+        searchTerm: value,
+      });
+      onPageReset?.();
+    }, 300);
+  }, [filters, onFilterChange, onPageReset]);
 
   const handleSearchChange = useCallback(
     (value: string) => {
       setSearchValue(value);
-      debouncedSearchHandler(value);
+      debouncedSearchHandlerRef.current(value);
     },
-    [debouncedSearchHandler]
+    []
   );
 
   const handleSectionsChange = useCallback(

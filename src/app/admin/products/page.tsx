@@ -77,10 +77,9 @@ export default function ProductManagementPage(): React.JSX.Element {
     enabled: true,
   });
 
-  // Reset sections when search changes
+  // Reset pagination when search changes (don't clear data yet, wait for API response)
   useEffect(() => {
     setSectionsPagination(prev => ({ ...prev, pageIndex: 0 }));
-    setAllSections([]);
   }, [sectionsSearch]);
 
   // Memoize sections data with deep comparison to prevent infinite loops
@@ -90,17 +89,19 @@ export default function ProductManagementPage(): React.JSX.Element {
   const currentSectionsPageIndex = sectionsPagination.pageIndex;
 
   // Accumulate sections data for infinite scroll
+  // When pageIndex is 0, replace all data (this handles search reset)
+  // When pageIndex > 0, append new data for infinite scroll
   useEffect(() => {
-    if (sectionsData.length > 0 || currentSectionsPageIndex === 0) {
-      if (currentSectionsPageIndex === 0) {
-        setAllSections(sectionsData);
-      } else {
-        setAllSections(prev => {
-          const existingIds = new Set(prev.map(s => s.id));
-          const newItems = sectionsData.filter(s => !existingIds.has(s.id));
-          return [...prev, ...newItems];
-        });
-      }
+    if (currentSectionsPageIndex === 0) {
+      // Replace all data when starting fresh (new search or initial load)
+      setAllSections(sectionsData);
+    } else if (sectionsData.length > 0) {
+      // Append new data for infinite scroll
+      setAllSections(prev => {
+        const existingIds = new Set(prev.map(s => s.id));
+        const newItems = sectionsData.filter(s => !existingIds.has(s.id));
+        return [...prev, ...newItems];
+      });
     }
   }, [sectionsData, currentSectionsPageIndex]);
 
