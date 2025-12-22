@@ -46,13 +46,10 @@ export const SectionFilter = ({
     }, 300);
   }, [filters, onFilterChange, onPageReset]);
 
-  const handleSearchChange = useCallback(
-    (value: string) => {
-      setSearchValue(value);
-      debouncedSearchHandlerRef.current(value);
-    },
-    []
-  );
+  const handleSearchChange = useCallback((value: string) => {
+    setSearchValue(value);
+    debouncedSearchHandlerRef.current(value);
+  }, []);
 
   return (
     <div className={`space-y-4 ${className || ""}`}>

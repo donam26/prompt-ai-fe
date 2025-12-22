@@ -51,13 +51,10 @@ export const FeedbackFilters = ({
     }, 300);
   }, [filters, onFilterChange, onPageReset]);
 
-  const handleSearchChange = useCallback(
-    (value: string) => {
-      setSearchValue(value);
-      debouncedSearchHandlerRef.current(value);
-    },
-    []
-  );
+  const handleSearchChange = useCallback((value: string) => {
+    setSearchValue(value);
+    debouncedSearchHandlerRef.current(value);
+  }, []);
 
   const handleStatusChange = (value: string): void => {
     onFilterChange({

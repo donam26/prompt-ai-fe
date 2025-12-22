@@ -1,11 +1,6 @@
 "use client";
 
-import React, {
-  useCallback,
-  useLayoutEffect,
-  useRef,
-  useState,
-} from "react";
+import React, { useCallback, useLayoutEffect, useRef, useState } from "react";
 import { Search, X } from "lucide-react";
 
 import { Input } from "@/components/ui/input";
@@ -99,13 +94,10 @@ export const ExpiringSubscriptionsFilter = ({
     }, 1000);
   }, [onFilterChange, onPageReset]);
 
-  const handleSearchChange = useCallback(
-    (value: string) => {
-      setSearchValue(value);
-      debouncedSearchHandlerRef.current(value);
-    },
-    []
-  );
+  const handleSearchChange = useCallback((value: string) => {
+    setSearchValue(value);
+    debouncedSearchHandlerRef.current(value);
+  }, []);
 
   const handleSubscriptionTypeChange = (value: string): void => {
     onFilterChange({
@@ -115,15 +107,12 @@ export const ExpiringSubscriptionsFilter = ({
     onPageReset?.();
   };
 
-  const handleDaysChange = useCallback(
-    (value: string) => {
-      setDaysValue(value);
-      const numValue = value === "" ? 1 : Number(value);
-      const daysValue = numValue < 1 ? 1 : numValue;
-      debouncedDaysHandlerRef.current(daysValue);
-    },
-    []
-  );
+  const handleDaysChange = useCallback((value: string) => {
+    setDaysValue(value);
+    const numValue = value === "" ? 1 : Number(value);
+    const daysValue = numValue < 1 ? 1 : numValue;
+    debouncedDaysHandlerRef.current(daysValue);
+  }, []);
 
   const getActiveFilters = () => {
     const activeFilters = [];

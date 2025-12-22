@@ -49,13 +49,10 @@ export const BlogFilter = ({
     }, 300);
   }, [filters, onFilterChange]);
 
-  const handleSearchChange = useCallback(
-    (value: string) => {
-      setSearchValue(value);
-      debouncedSearchHandlerRef.current(value);
-    },
-    []
-  );
+  const handleSearchChange = useCallback((value: string) => {
+    setSearchValue(value);
+    debouncedSearchHandlerRef.current(value);
+  }, []);
 
   const handleDateFromChange = (value: string): void => {
     onFilterChange({

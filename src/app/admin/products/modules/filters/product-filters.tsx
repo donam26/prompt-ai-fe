@@ -56,13 +56,10 @@ export const ProductFilter = ({
     }, 300);
   }, [filters, onFilterChange, onPageReset]);
 
-  const handleSearchChange = useCallback(
-    (value: string) => {
-      setSearchValue(value);
-      debouncedSearchHandlerRef.current(value);
-    },
-    []
-  );
+  const handleSearchChange = useCallback((value: string) => {
+    setSearchValue(value);
+    debouncedSearchHandlerRef.current(value);
+  }, []);
 
   const handleSectionsChange = useCallback(
     (values: string[]) => {

@@ -106,9 +106,7 @@ export default function PaymentManagementPage(): React.JSX.Element {
       // Append new data for infinite scroll
       setAllSubscriptions(prev => {
         const existingIds = new Set(prev.map(s => s.id));
-        const newItems = subscriptionsData.filter(
-          s => !existingIds.has(s.id)
-        );
+        const newItems = subscriptionsData.filter(s => !existingIds.has(s.id));
         return [...prev, ...newItems];
       });
     }

@@ -46,13 +46,10 @@ export const SubscriptionFilters = ({
     }, 300);
   }, [filters, onFilterChange]);
 
-  const handleSearchChange = useCallback(
-    (value: string) => {
-      setSearchValue(value);
-      debouncedSearchHandlerRef.current(value);
-    },
-    []
-  );
+  const handleSearchChange = useCallback((value: string) => {
+    setSearchValue(value);
+    debouncedSearchHandlerRef.current(value);
+  }, []);
 
   const hasActiveFilters = filters.searchTerm;
 

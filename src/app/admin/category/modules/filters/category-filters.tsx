@@ -82,13 +82,10 @@ export const CategoryFilter = ({
   /**
    * Handles search input changes with debouncing
    */
-  const handleSearchChange = useCallback(
-    (value: string) => {
-      setSearchValue(value);
-      debouncedSearchHandlerRef.current(value);
-    },
-    []
-  );
+  const handleSearchChange = useCallback((value: string) => {
+    setSearchValue(value);
+    debouncedSearchHandlerRef.current(value);
+  }, []);
 
   /**
    * Handles status filter changes
