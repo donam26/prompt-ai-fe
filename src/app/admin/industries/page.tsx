@@ -64,7 +64,9 @@ export default function IndustryManagementPage(): React.JSX.Element {
   const [allCategories, setAllCategories] = useState<any[]>([]);
 
   // Timeout ref for categories search debounce
-  const categoriesSearchTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const categoriesSearchTimeoutRef = useRef<ReturnType<
+    typeof setTimeout
+  > | null>(null);
 
   // Build filters for categories
   const categoriesFilters = useMemo<CategoryFilterState | undefined>(() => {
@@ -124,27 +126,24 @@ export default function IndustryManagementPage(): React.JSX.Element {
 
   // Handle categories search change with debounce
   // Update immediately when clearing, debounce when typing
-  const handleCategoriesSearch = useCallback(
-    (search: string) => {
-      // Clear any pending timeout
-      if (categoriesSearchTimeoutRef.current) {
-        clearTimeout(categoriesSearchTimeoutRef.current);
-        categoriesSearchTimeoutRef.current = null;
-      }
+  const handleCategoriesSearch = useCallback((search: string) => {
+    // Clear any pending timeout
+    if (categoriesSearchTimeoutRef.current) {
+      clearTimeout(categoriesSearchTimeoutRef.current);
+      categoriesSearchTimeoutRef.current = null;
+    }
 
-      if (search.trim() === "") {
-        // Update immediately when clearing
-        setCategoriesSearch("");
-      } else {
-        // Debounce when typing
-        categoriesSearchTimeoutRef.current = setTimeout(() => {
-          setCategoriesSearch(search);
-          categoriesSearchTimeoutRef.current = null;
-        }, 1000);
-      }
-    },
-    []
-  );
+    if (search.trim() === "") {
+      // Update immediately when clearing
+      setCategoriesSearch("");
+    } else {
+      // Debounce when typing
+      categoriesSearchTimeoutRef.current = setTimeout(() => {
+        setCategoriesSearch(search);
+        categoriesSearchTimeoutRef.current = null;
+      }, 1000);
+    }
+  }, []);
 
   // Extract stable values to prevent infinite loops
   const categoriesTotalPages = categoriesWithPagination?.totalPages || 1;

@@ -46,7 +46,9 @@ export default function CategoryDetailsPage() {
   const [allIndustries, setAllIndustries] = useState<any[]>([]);
 
   // Timeout ref for industries search debounce
-  const industriesSearchTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const industriesSearchTimeoutRef = useRef<ReturnType<
+    typeof setTimeout
+  > | null>(null);
 
   // Build filters for industries
   const industriesFilters = useMemo<IndustryFilterState | undefined>(() => {
@@ -97,9 +99,6 @@ export default function CategoryDetailsPage() {
   useEffect(() => {
     // Get selected industries from categoryData (if in edit mode)
     const selectedIndustriesFromCategory = categoryData?.industries || [];
-    const selectedIndustryIds = new Set(
-      selectedIndustriesFromCategory.map(i => i.id.toString())
-    );
 
     if (currentPageIndex === 0) {
       // Replace all data when starting fresh (new search or initial load)
@@ -107,7 +106,7 @@ export default function CategoryDetailsPage() {
       const searchResultsMap = new Map(
         industriesData.map(i => [i.id.toString(), i])
       );
-      
+
       // Add selected industries that are not in search results
       selectedIndustriesFromCategory.forEach(industry => {
         const idStr = industry.id.toString();
@@ -131,27 +130,24 @@ export default function CategoryDetailsPage() {
 
   // Handle industries search change with debounce
   // Update immediately when clearing, debounce when typing
-  const handleIndustriesSearch = useCallback(
-    (search: string) => {
-      // Clear any pending timeout
-      if (industriesSearchTimeoutRef.current) {
-        clearTimeout(industriesSearchTimeoutRef.current);
-        industriesSearchTimeoutRef.current = null;
-      }
+  const handleIndustriesSearch = useCallback((search: string) => {
+    // Clear any pending timeout
+    if (industriesSearchTimeoutRef.current) {
+      clearTimeout(industriesSearchTimeoutRef.current);
+      industriesSearchTimeoutRef.current = null;
+    }
 
-      if (search.trim() === "") {
-        // Update immediately when clearing
-        setIndustriesSearch("");
-      } else {
-        // Debounce when typing
-        industriesSearchTimeoutRef.current = setTimeout(() => {
-          setIndustriesSearch(search);
-          industriesSearchTimeoutRef.current = null;
-        }, 1000);
-      }
-    },
-    []
-  );
+    if (search.trim() === "") {
+      // Update immediately when clearing
+      setIndustriesSearch("");
+    } else {
+      // Debounce when typing
+      industriesSearchTimeoutRef.current = setTimeout(() => {
+        setIndustriesSearch(search);
+        industriesSearchTimeoutRef.current = null;
+      }, 1000);
+    }
+  }, []);
 
   // Extract stable values to prevent infinite loops
   const industriesTotalPages = industriesWithPagination?.totalPages || 1;
