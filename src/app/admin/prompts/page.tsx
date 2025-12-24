@@ -83,7 +83,7 @@ export default function PromptManagementPage(): React.JSX.Element {
     const filters: CategoryFilterState = {
       searchTerm: hasSearch ? categoriesSearch.trim() : "",
       sectionId: "",
-      status: "",
+      isComingSoon: false,
       industryIds: [],
     };
     return filters;
