@@ -99,7 +99,7 @@ export function PromptBasicFields({
                     <SelectValue placeholder="Select a category" />
                   </SelectTrigger>
                 </FormControl>
-                <SelectContent className="min-w-[200px]">
+                <SelectContent className="min-w-[200px] max-h-[300px]">
                   {categories.map(category => (
                     <SelectItem
                       key={category.id}
@@ -138,7 +138,7 @@ export function PromptBasicFields({
                     <SelectValue placeholder="Select a type" />
                   </SelectTrigger>
                 </FormControl>
-                <SelectContent className="min-w-[150px]">
+                <SelectContent className="min-w-[150px] max-h-[300px]">
                   {TYPE_OPTIONS.map(option => (
                     <SelectItem key={option.value} value={option.value}>
                       {option.label}

@@ -62,7 +62,7 @@ export interface ColumnHandlers {
 export interface CategoryFilterState {
   searchTerm: string;
   sectionId: string; // "all" means no filter
-  status: string; // "all" means no filter
+  isComingSoon: boolean; // "all" means no filter
   industryIds: string[]; // array of industry IDs
   type?: string;
 }

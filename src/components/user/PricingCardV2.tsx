@@ -5,6 +5,7 @@ import { cn } from "@/lib/utils";
 import Image from "next/image";
 import { PaymentMethod } from "@/types/enums/payment-method";
 import { useUser } from "@/hooks/useUser";
+import { BillingCycle } from "@/types/enums/billing-cycle";
 
 interface PricingCardV2Props {
   readonly plan: {
@@ -21,8 +22,8 @@ interface PricingCardV2Props {
       content: string;
       included: boolean;
     }>;
+    billingCycle?: BillingCycle;
   };
-  readonly isYearly: boolean;
   readonly onSelectPlan: (planId: string, paymentMethod: PaymentMethod) => void;
   readonly paymentMethod: PaymentMethod;
   readonly className?: string;
@@ -30,13 +31,12 @@ interface PricingCardV2Props {
 
 export const PricingCardV2 = ({
   plan,
-  isYearly,
   onSelectPlan,
   paymentMethod,
   className,
 }: PricingCardV2Props) => {
   const { user } = useUser();
-  const currentPrice = isYearly ? Number(plan.price) : Number(plan.price);
+  const currentPrice = Number(plan.price);
 
   const formatPrice = (price: number): string => {
     if (price === 0) return "0đ";
@@ -85,6 +85,16 @@ export const PricingCardV2 = ({
   // 1. User already has this plan (current plan)
   // 2. User has a higher or equal plan
   const isButtonDisabled = isCurrentPlan || hasHigherOrEqualPlan;
+
+  const returnBillingCycle = () => {
+    if (plan.billingCycle === BillingCycle.YEARLY) {
+      return "năm";
+    }
+    if (plan.billingCycle === BillingCycle.LIFETIME) {
+      return "trọn đời";
+    }
+    return "tháng";
+  };
 
   return (
     <div
@@ -136,17 +146,9 @@ export const PricingCardV2 = ({
                 plan.isPopular ? "text-white" : "text-[#111116]"
               )}
             >
-              /{isYearly ? "năm" : "tháng"}
+              /{returnBillingCycle()}
             </span>
           )}
-        </p>
-        <p
-          className={cn(
-            "mt-2 sm:mt-2.5 mb-0 font-medium text-sm sm:text-base leading-[100%] tracking-[0%]",
-            plan.isPopular ? "text-white" : "text-[#1D1E25]"
-          )}
-        >
-          {plan.description ? formatPrice(Number(plan.description)) : ""}
         </p>
       </div>
 

@@ -2,7 +2,6 @@
 export interface SearchParams {
   search?: string;
   searchText?: string;
-  searchTxt?: string;
 }
 
 // Filter parameters

@@ -44,6 +44,7 @@ export function CategoryBasicFields({
   isDisabled,
   industries = [],
   industriesLoading = false,
+  industriesSearch = "",
   onIndustriesSearch,
   onIndustriesScrollToBottom,
   hasMoreIndustries = false,
@@ -156,6 +157,11 @@ export function CategoryBasicFields({
         }: {
           field: ControllerRenderProps<CategoryFormValues, "industryIds">;
         }) => {
+          const selectedValues = field.value || [];
+
+          // Map industries from API to options
+          // Selected industries are now preserved in allIndustries from page.tsx
+          // so we don't need to merge missing options here
           const options = industries.map(industry => ({
             value: industry.id.toString(),
             label: industry.name,
@@ -167,13 +173,14 @@ export function CategoryBasicFields({
               <FormControl>
                 <MultiSelect
                   options={options}
-                  defaultValue={field.value || []}
+                  value={selectedValues}
                   onValueChange={field.onChange}
                   placeholder="Chọn ngành nghề..."
                   maxCount={3}
                   className="w-full"
                   disabled={isDisabled}
                   shouldFilter={false}
+                  searchValue={industriesSearch}
                   onSearch={onIndustriesSearch}
                   onScrollToBottom={onIndustriesScrollToBottom}
                   isLoading={industriesLoading}

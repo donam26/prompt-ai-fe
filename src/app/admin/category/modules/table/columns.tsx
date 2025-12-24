@@ -86,19 +86,14 @@ export function useCategoryColumns({
       enableSorting: false,
     },
     {
-      accessorKey: "status",
+      accessorKey: "isComingSoon",
       meta: { title: "Trạng thái" },
       header: () => (
         <div className="w-full font-medium text-center">Trạng thái</div>
       ),
       cell: ({ row }) => (
         <div className="flex justify-center items-center min-w-[120px]">
-          <StatusCell
-            isComingSoon={
-              row.original.isComingSoon || row.original.isComingSoon
-            }
-            isActive={!row.original.isComingSoon && !row.original.isComingSoon}
-          />
+          <StatusCell isComingSoon={row.original.isComingSoon} />
         </div>
       ),
       enableSorting: false,

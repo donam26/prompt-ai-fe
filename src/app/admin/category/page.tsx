@@ -24,7 +24,6 @@ import {
 } from "@/constants";
 import { DataTable } from "@/components/data-table";
 import type { IndustryFilterState } from "@/types/admin/industry";
-import { debounce } from "@/lib/utils";
 import { useDeepMemo } from "@/hooks/useDeepMemo";
 
 export default function CategoryManagementPage(): React.JSX.Element {
@@ -55,12 +54,10 @@ export default function CategoryManagementPage(): React.JSX.Element {
   );
   const [allIndustries, setAllIndustries] = useState<any[]>([]);
 
-  // Debounced search handler - update industriesSearch after 1 second
-  const debouncedSetSearch = useRef(
-    debounce((search: string) => {
-      setIndustriesSearch(search);
-    }, 1000)
-  ).current;
+  // Timeout ref for industries search debounce
+  const industriesSearchTimeoutRef = useRef<ReturnType<
+    typeof setTimeout
+  > | null>(null);
 
   // Build filters for industries
   const industriesFilters = useMemo<IndustryFilterState | undefined>(() => {
@@ -86,6 +83,15 @@ export default function CategoryManagementPage(): React.JSX.Element {
     setIndustriesPagination(prev => ({ ...prev, pageIndex: 0 }));
   }, [industriesSearch]);
 
+  // Cleanup timeout on unmount
+  useEffect(() => {
+    return () => {
+      if (industriesSearchTimeoutRef.current) {
+        clearTimeout(industriesSearchTimeoutRef.current);
+      }
+    };
+  }, []);
+
   // Memoize industries data with deep comparison to prevent infinite loops
   const industriesDataRaw = industriesWithPagination?.data || [];
   const industriesData = useDeepMemo(industriesDataRaw);
@@ -109,13 +115,26 @@ export default function CategoryManagementPage(): React.JSX.Element {
     }
   }, [industriesData, currentPageIndex]);
 
-  // Handle search change with debounce
-  const handleIndustriesSearch = useCallback(
-    (search: string) => {
-      debouncedSetSearch(search);
-    },
-    [debouncedSetSearch]
-  );
+  // Handle industries search change with debounce
+  // Update immediately when clearing, debounce when typing
+  const handleIndustriesSearch = useCallback((search: string) => {
+    // Clear any pending timeout
+    if (industriesSearchTimeoutRef.current) {
+      clearTimeout(industriesSearchTimeoutRef.current);
+      industriesSearchTimeoutRef.current = null;
+    }
+
+    if (search.trim() === "") {
+      // Update immediately when clearing
+      setIndustriesSearch("");
+    } else {
+      // Debounce when typing
+      industriesSearchTimeoutRef.current = setTimeout(() => {
+        setIndustriesSearch(search);
+        industriesSearchTimeoutRef.current = null;
+      }, 1000);
+    }
+  }, []);
 
   // Extract stable values to prevent infinite loops
   const industriesTotalPages = industriesWithPagination?.totalPages || 1;
@@ -146,7 +165,6 @@ export default function CategoryManagementPage(): React.JSX.Element {
 
   const isLoading = categoriesLoading || isDeleting;
 
-  // 🔗 Navigation handlers
   const handleAddCategory = () => {
     router.push(CATEGORY_CONSTANTS.ROUTES.CATEGORY_CREATE);
   };

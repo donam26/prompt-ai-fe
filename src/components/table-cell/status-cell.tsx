@@ -30,7 +30,7 @@ const STATUS_THEMES = {
     text: "text-amber-700",
     border: "border-amber-200",
     icon: Lock,
-    label: "Coming Soon",
+    label: "Sắp ra mắt",
   },
   deleted: {
     bg: "bg-red-50",
@@ -43,16 +43,22 @@ const STATUS_THEMES = {
 
 export function StatusCell({
   isComingSoon = false,
-  isActive = true,
+  isActive = false,
   isDeleted = false,
   className,
 }: StatusCellProps) {
-  let theme = isActive ? STATUS_THEMES.active : STATUS_THEMES.inactive;
+  // Priority: deleted > comingSoon > active > inactive
+  let theme: (typeof STATUS_THEMES)[keyof typeof STATUS_THEMES];
 
-  if (isDeleted) {
+  if (isDeleted === true) {
     theme = STATUS_THEMES.deleted;
-  } else if (isComingSoon) {
+  } else if (isComingSoon === true) {
     theme = STATUS_THEMES.comingSoon;
+  } else if (isActive === true) {
+    theme = STATUS_THEMES.active;
+  } else {
+    // Default: active (for categories, false/undefined means active/available)
+    theme = STATUS_THEMES.active;
   }
 
   const Icon = theme.icon;
@@ -70,10 +76,7 @@ export function StatusCell({
         )}
       >
         <Icon className="flex-shrink-0 w-3 h-3" />
-        <span className="hidden xs:inline">{theme.label}</span>
-        <span className="xs:hidden">
-          {isComingSoon ? "Soon" : isDeleted ? "Xóa" : "OK"}
-        </span>
+        <span className="text-xs">{theme.label}</span>
       </div>
     </div>
   );

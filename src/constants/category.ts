@@ -12,7 +12,7 @@ export const CATEGORY_CONSTANTS = {
   INITIAL_FILTERS: {
     searchTerm: "",
     sectionId: "",
-    status: "",
+    isComingSoon: false,
     industryIds: [],
   } as CategoryFilterState,
 

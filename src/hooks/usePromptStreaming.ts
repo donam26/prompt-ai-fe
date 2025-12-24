@@ -77,7 +77,7 @@ export const usePromptStreaming = ({
     const currentText = contentEditableRef.current?.innerText || "";
 
     // Use currentText from ref instead of state for validation
-    if (!currentText || !currentText.trim()) {
+    if (!currentText?.trim()) {
       showToast.error("Vui lòng nhập prompt trước khi chạy!", {
         description: "Prompt không được để trống.",
       });
@@ -106,9 +106,9 @@ export const usePromptStreaming = ({
       }
 
       // Check if user has credits
-      const userCredits = user?.userSub?.token ?? 0;
+      const userCredits = user?.countPromt ?? 0;
       if (userCredits <= 0) {
-        showToast.error("Không đủ credit", {
+        showToast.warning("Bạn đã hết credit", {
           title: "Tài khoản của bạn đã hết credit",
           description:
             "Vui lòng nâng cấp gói hoặc mua thêm credit để tiếp tục sử dụng.",

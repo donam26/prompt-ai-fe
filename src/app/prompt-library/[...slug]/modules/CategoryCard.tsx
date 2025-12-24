@@ -25,7 +25,7 @@ export const CategoryCard = ({
 }: CategoryCardProps) => {
   const router = useRouter();
   const { user } = useAuth();
-  const isComingSoonStatus = category.isComingSoon === true;
+  const isComingSoonStatus = category.isComingSoon;
 
   // Check if user has Free subscription
   const isFreeUser =

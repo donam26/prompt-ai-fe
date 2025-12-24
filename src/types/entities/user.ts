@@ -3,6 +3,7 @@
  */
 
 import type { BaseEntity, BaseAdminEntity, EntityId, Timestamp } from "../base";
+import { BillingCycle } from "../enums/billing-cycle";
 
 // User entity
 export interface User extends BaseEntity {
@@ -58,7 +59,7 @@ export interface Subscription extends BaseEntity {
   features?: string[];
   description?: string;
   descriptionPerYear?: string;
-  billingCycle: string;
+  billingCycle: BillingCycle;
   imageDiscount?: string | null;
   isPopular?: boolean;
   isActive?: boolean;

@@ -29,94 +29,88 @@ export const VNPaySection = ({
         (planB.displayOrder ?? Number.MAX_SAFE_INTEGER)
     );
 
-  return (
-    <>
-      {/* VNPay Header */}
+  const renderPricingCards = (plans: typeof filteredSubscriptions) => {
+    const isSmallLayout = plans.length <= 2;
+    let cardClassName: string;
+    let containerClassName: string;
 
-      {/* Pricing Plans Section */}
-      <div className="mt-8 sm:mt-12">
-        {isLoadingSubscriptions ? (
-          <div className="flex justify-center items-center py-12">
-            <div className="text-center">
-              <div className="mx-auto mb-4 border-purple-600 border-b-2 rounded-full w-12 h-12 animate-spin"></div>
-              <p className="text-gray-600">Đang tải gói đăng ký...</p>
-            </div>
-          </div>
-        ) : subscriptionsError ? (
-          <div className="py-12 text-center">
-            <p className="mb-4 text-red-600">
-              Lỗi khi tải dữ liệu: {subscriptionsError}
-            </p>
-            <Button onClick={refetch} variant="outline">
-              Thử lại
-            </Button>
-          </div>
-        ) : filteredSubscriptions.length > 0 ? (
-          <div className="flex justify-center items-start mx-auto w-full max-w-6xl">
-            {filteredSubscriptions.length <= 2 ? (
-              <div className="flex flex-wrap justify-center gap-10 w-full">
-                {filteredSubscriptions.map(plan => (
-                  <PricingCardV2
-                    key={plan.id}
-                    plan={{
-                      id: plan.id?.toString() || "",
-                      name: plan.name,
-                      price: Number(plan.price),
-                      description: "",
-                      isPopular: plan.isPopular,
-                      badge: plan.isPopular ? "Bán chạy" : "",
-                      buttonText: "Nâng cấp",
-                      buttonVariant: "default",
-                      contentSubscriptions: plan.contentSubscriptions?.map(
-                        feature => ({
-                          content: feature.content,
-                          included: feature.included,
-                        })
-                      ),
-                    }}
-                    isYearly={false}
-                    onSelectPlan={onSelectPlan}
-                    paymentMethod={paymentMethod}
-                    className="w-full max-w-[360px]"
-                  />
-                ))}
-              </div>
-            ) : (
-              <div className="justify-center gap-10 grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 w-full">
-                {filteredSubscriptions.map(plan => (
-                  <PricingCardV2
-                    key={plan.id}
-                    plan={{
-                      id: plan.id?.toString() || "",
-                      name: plan.name,
-                      price: Number(plan.price),
-                      description: "",
-                      isPopular: plan.isPopular,
-                      badge: plan.isPopular ? "Bán chạy" : "",
-                      buttonText: "Nâng cấp",
-                      buttonVariant: "default",
-                      contentSubscriptions: plan.contentSubscriptions?.map(
-                        feature => ({
-                          content: feature.content,
-                          included: feature.included,
-                        })
-                      ),
-                    }}
-                    isYearly={false}
-                    onSelectPlan={onSelectPlan}
-                    paymentMethod={paymentMethod}
-                    className="w-full"
-                  />
-                ))}
-              </div>
-            )}
-          </div>
-        ) : (
-          <div className="py-12 text-center">
-            <p className="text-gray-600">Chưa có gói Premium nào</p>
-          </div>
-        )}
+    if (isSmallLayout) {
+      cardClassName = "w-full max-w-[360px]";
+      containerClassName = "flex flex-wrap justify-center gap-10 w-full";
+    } else {
+      cardClassName = "w-full";
+      containerClassName =
+        "justify-center gap-10 grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 w-full";
+    }
+
+    return (
+      <div className={containerClassName}>
+        {plans.map(plan => (
+          <PricingCardV2
+            key={plan.id}
+            plan={{
+              id: plan.id?.toString() || "",
+              name: plan.name,
+              price: Number(plan.price),
+              description: "",
+              isPopular: plan.isPopular,
+              badge: plan.isPopular ? "Bán chạy" : "",
+              buttonText: "Nâng cấp",
+              buttonVariant: "default",
+              contentSubscriptions: plan.contentSubscriptions?.map(feature => ({
+                content: feature.content,
+                included: feature.included,
+              })),
+              billingCycle: plan.billingCycle,
+            }}
+            onSelectPlan={onSelectPlan}
+            paymentMethod={paymentMethod}
+            className={cardClassName}
+          />
+        ))}
       </div>
-    </>
-  );
+    );
+  };
+
+  const renderContent = () => {
+    if (isLoadingSubscriptions) {
+      return (
+        <div className="flex justify-center items-center py-12">
+          <div className="text-center">
+            <div className="mx-auto mb-4 border-purple-600 border-b-2 rounded-full w-12 h-12 animate-spin"></div>
+            <p className="text-gray-600">Đang tải gói đăng ký...</p>
+          </div>
+        </div>
+      );
+    }
+
+    if (subscriptionsError) {
+      return (
+        <div className="py-12 text-center">
+          <p className="mb-4 text-red-600">
+            Lỗi khi tải dữ liệu: {subscriptionsError}
+          </p>
+          <Button onClick={refetch} variant="outline">
+            Thử lại
+          </Button>
+        </div>
+      );
+    }
+
+    if (filteredSubscriptions.length > 0) {
+      return (
+        <div className="flex justify-center items-start mx-auto w-full max-w-6xl">
+          {renderPricingCards(filteredSubscriptions)}
+        </div>
+      );
+    }
+
+    return (
+      <div className="py-12 text-center">
+        <p className="text-gray-600">Chưa có gói Premium nào</p>
+      </div>
+    );
+  };
+
+  return <div className="mt-8 sm:mt-12">{renderContent()}</div>;
 };

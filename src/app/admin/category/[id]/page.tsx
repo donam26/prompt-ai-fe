@@ -15,7 +15,6 @@ import { FormMode } from "@/constants/common";
 import { CategoryForm } from "./modules/category-form";
 import type { IndustryFilterState } from "@/types/admin/industry";
 import type { PaginationParams } from "@/types/base";
-import { debounce } from "@/lib/utils";
 import { useDeepMemo } from "@/hooks/useDeepMemo";
 
 export default function CategoryDetailsPage() {
@@ -46,12 +45,8 @@ export default function CategoryDetailsPage() {
     });
   const [allIndustries, setAllIndustries] = useState<any[]>([]);
 
-  // Debounced search handler - update industriesSearch after 1 second
-  const debouncedSetSearch = useRef(
-    debounce((search: string) => {
-      setIndustriesSearch(search);
-    }, 1000)
-  ).current;
+  // Timeout ref for industries search debounce
+  const industriesSearchTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // Build filters for industries
   const industriesFilters = useMemo<IndustryFilterState | undefined>(() => {
@@ -80,6 +75,15 @@ export default function CategoryDetailsPage() {
     setIndustriesPagination(prev => ({ ...prev, pageIndex: 0 }));
   }, [industriesSearch]);
 
+  // Cleanup timeout on unmount
+  useEffect(() => {
+    return () => {
+      if (industriesSearchTimeoutRef.current) {
+        clearTimeout(industriesSearchTimeoutRef.current);
+      }
+    };
+  }, []);
+
   // Memoize industries data to ensure stable reference and prevent dependency array size changes
   const industriesDataRaw = industriesWithPagination?.data || [];
   const industriesData = useDeepMemo(industriesDataRaw);
@@ -89,27 +93,64 @@ export default function CategoryDetailsPage() {
   // Accumulate industries data for infinite scroll
   // When pageIndex is 0, replace all data (this handles search reset)
   // When pageIndex > 0, append new data for infinite scroll
+  // Also preserve selected industries from categoryData to ensure they're always available
   useEffect(() => {
+    // Get selected industries from categoryData (if in edit mode)
+    const selectedIndustriesFromCategory = categoryData?.industries || [];
+    const selectedIndustryIds = new Set(
+      selectedIndustriesFromCategory.map(i => i.id.toString())
+    );
+
     if (currentPageIndex === 0) {
       // Replace all data when starting fresh (new search or initial load)
-      setAllIndustries(industriesData);
+      // Merge: search results + selected industries from category
+      const searchResultsMap = new Map(
+        industriesData.map(i => [i.id.toString(), i])
+      );
+      
+      // Add selected industries that are not in search results
+      selectedIndustriesFromCategory.forEach(industry => {
+        const idStr = industry.id.toString();
+        if (!searchResultsMap.has(idStr)) {
+          searchResultsMap.set(idStr, industry);
+        }
+      });
+
+      setAllIndustries(Array.from(searchResultsMap.values()));
     } else if (industriesData.length > 0) {
       // Append new data for infinite scroll
       setAllIndustries(prev => {
-        const existingIds = new Set(prev.map(i => i.id));
-        const newItems = industriesData.filter(i => !existingIds.has(i.id));
+        const existingIds = new Set(prev.map(i => i.id.toString()));
+        const newItems = industriesData.filter(
+          i => !existingIds.has(i.id.toString())
+        );
         return [...prev, ...newItems];
       });
     }
-  }, [industriesData, currentPageIndex]);
+  }, [industriesData, currentPageIndex, categoryData]);
 
-  // Handle search change with debounce
+  // Handle industries search change with debounce
+  // Update immediately when clearing, debounce when typing
   const handleIndustriesSearch = useCallback(
     (search: string) => {
-      // Update immediately for UI feedback, but debounce the actual API call
-      debouncedSetSearch(search);
+      // Clear any pending timeout
+      if (industriesSearchTimeoutRef.current) {
+        clearTimeout(industriesSearchTimeoutRef.current);
+        industriesSearchTimeoutRef.current = null;
+      }
+
+      if (search.trim() === "") {
+        // Update immediately when clearing
+        setIndustriesSearch("");
+      } else {
+        // Debounce when typing
+        industriesSearchTimeoutRef.current = setTimeout(() => {
+          setIndustriesSearch(search);
+          industriesSearchTimeoutRef.current = null;
+        }, 1000);
+      }
     },
-    [debouncedSetSearch]
+    []
   );
 
   // Extract stable values to prevent infinite loops

@@ -28,7 +28,6 @@ import {
 } from "@/constants";
 import { DataTable } from "@/components/data-table";
 import type { CategoryFilterState } from "@/types/admin/category";
-import { debounce } from "@/lib/utils";
 import { useDeepMemo } from "@/hooks/useDeepMemo";
 
 export default function IndustryManagementPage(): React.JSX.Element {
@@ -64,12 +63,8 @@ export default function IndustryManagementPage(): React.JSX.Element {
   );
   const [allCategories, setAllCategories] = useState<any[]>([]);
 
-  // Debounced search handler - update categoriesSearch after 1 second
-  const debouncedSetCategoriesSearch = useRef(
-    debounce((search: string) => {
-      setCategoriesSearch(search);
-    }, 1000)
-  ).current;
+  // Timeout ref for categories search debounce
+  const categoriesSearchTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // Build filters for categories
   const categoriesFilters = useMemo<CategoryFilterState | undefined>(() => {
@@ -95,6 +90,15 @@ export default function IndustryManagementPage(): React.JSX.Element {
     setCategoriesPagination(prev => ({ ...prev, pageIndex: 0 }));
   }, [categoriesSearch]);
 
+  // Cleanup timeout on unmount
+  useEffect(() => {
+    return () => {
+      if (categoriesSearchTimeoutRef.current) {
+        clearTimeout(categoriesSearchTimeoutRef.current);
+      }
+    };
+  }, []);
+
   // Memoize categories data with deep comparison to prevent infinite loops
   const categoriesDataRaw = categoriesWithPagination?.data || [];
   const categoriesData = useDeepMemo(categoriesDataRaw);
@@ -119,11 +123,27 @@ export default function IndustryManagementPage(): React.JSX.Element {
   }, [categoriesData, currentCategoriesPageIndex]);
 
   // Handle categories search change with debounce
+  // Update immediately when clearing, debounce when typing
   const handleCategoriesSearch = useCallback(
     (search: string) => {
-      debouncedSetCategoriesSearch(search);
+      // Clear any pending timeout
+      if (categoriesSearchTimeoutRef.current) {
+        clearTimeout(categoriesSearchTimeoutRef.current);
+        categoriesSearchTimeoutRef.current = null;
+      }
+
+      if (search.trim() === "") {
+        // Update immediately when clearing
+        setCategoriesSearch("");
+      } else {
+        // Debounce when typing
+        categoriesSearchTimeoutRef.current = setTimeout(() => {
+          setCategoriesSearch(search);
+          categoriesSearchTimeoutRef.current = null;
+        }, 1000);
+      }
     },
-    [debouncedSetCategoriesSearch]
+    []
   );
 
   // Extract stable values to prevent infinite loops

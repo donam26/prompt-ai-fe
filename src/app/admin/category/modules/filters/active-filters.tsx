@@ -31,7 +31,7 @@ export const ActiveFilters = ({
   };
 
   // Main remove filter handler
-  const SINGLE_VALUE_FILTERS = ["searchTerm", "sectionId", "status"];
+  const SINGLE_VALUE_FILTERS = ["searchTerm", "sectionId", "isComingSoon"];
 
   const handleRemoveFilter = (key: string, valueToRemove?: string) => {
     const newFilters = { ...filters };
@@ -57,7 +57,7 @@ export const ActiveFilters = ({
     onFilterChange({
       searchTerm: "",
       sectionId: "all",
-      status: "all",
+      isComingSoon: false,
       industryIds: [],
     });
     onClearAll();
@@ -68,7 +68,7 @@ export const ActiveFilters = ({
   const activeTotal = Object.values(filters).reduce(
     (acc: number, v) =>
       acc +
-      (Array.isArray(v) ? v.length : v && v !== "all" && v !== "" ? 1 : 0),
+      (Array.isArray(v) ? v.length : v && v !== false && v !== true ? 1 : 0),
     0
   );
 
@@ -95,15 +95,14 @@ export const ActiveFilters = ({
         </Badge>
       )}
 
-      {filters.status && filters.status !== "all" && (
-        <Badge key="status" variant="secondary" className="gap-1">
+      {filters.isComingSoon !== undefined && (
+        <Badge key="isComingSoon" variant="secondary" className="gap-1">
           <span>
-            Trạng thái:{" "}
-            {filters.status === "active" ? "Hoạt động" : "Sắp ra mắt"}
+            Trạng thái: {filters.isComingSoon ? "Sắp ra mắt" : "Hoạt động"}
           </span>
           <X
             className="w-3 h-3 cursor-pointer pointer-events-auto"
-            onClick={() => handleRemoveFilter("status")}
+            onClick={() => handleRemoveFilter("isComingSoon")}
           />
         </Badge>
       )}

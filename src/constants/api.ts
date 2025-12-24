@@ -164,7 +164,6 @@ export const QUERY_PARAMS = {
   PAGE_SIZE: "pageSize",
   SEARCH: "search",
   SEARCH_TEXT: "searchText",
-  SEARCH_TXT: "searchTxt",
   CATEGORY_ID: "categoryId",
   TOPIC_ID: "topicId",
   INDUSTRY_ID: "industryId",

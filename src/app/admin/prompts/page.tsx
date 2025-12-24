@@ -30,7 +30,6 @@ import {
 import { DataTable } from "@/components/data-table";
 import type { CategoryFilterState } from "@/types/admin/category";
 import type { IndustryFilterState } from "@/types/admin/industry";
-import { debounce } from "@/lib/utils";
 import { useDeepMemo } from "@/hooks/useDeepMemo";
 
 export default function PromptManagementPage(): React.JSX.Element {
@@ -73,12 +72,8 @@ export default function PromptManagementPage(): React.JSX.Element {
     });
   const [allCategories, setAllCategories] = useState<any[]>([]);
 
-  // Debounced search handler for categories - update after 1 second
-  const debouncedSetCategoriesSearch = useRef(
-    debounce((search: string) => {
-      setCategoriesSearch(search);
-    }, 1000)
-  ).current;
+  // Timeout ref for categories search debounce
+  const categoriesSearchTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // Build filters for categories
   const categoriesFilters = useMemo<CategoryFilterState | undefined>(() => {
@@ -104,6 +99,18 @@ export default function PromptManagementPage(): React.JSX.Element {
     setCategoriesPagination(prev => ({ ...prev, pageIndex: 0 }));
   }, [categoriesSearch]);
 
+  // Cleanup timeout on unmount
+  useEffect(() => {
+    return () => {
+      if (categoriesSearchTimeoutRef.current) {
+        clearTimeout(categoriesSearchTimeoutRef.current);
+      }
+      if (industriesSearchTimeoutRef.current) {
+        clearTimeout(industriesSearchTimeoutRef.current);
+      }
+    };
+  }, []);
+
   // Memoize categories data with deep comparison to prevent infinite loops
   const categoriesDataRaw = categoriesWithPagination?.data || [];
   const categoriesData = useDeepMemo(categoriesDataRaw);
@@ -128,11 +135,27 @@ export default function PromptManagementPage(): React.JSX.Element {
   }, [categoriesData, currentCategoriesPageIndex]);
 
   // Handle categories search change with debounce
+  // Update immediately when clearing, debounce when typing
   const handleCategoriesSearch = useCallback(
     (search: string) => {
-      debouncedSetCategoriesSearch(search);
+      // Clear any pending timeout
+      if (categoriesSearchTimeoutRef.current) {
+        clearTimeout(categoriesSearchTimeoutRef.current);
+        categoriesSearchTimeoutRef.current = null;
+      }
+
+      if (search.trim() === "") {
+        // Update immediately when clearing
+        setCategoriesSearch("");
+      } else {
+        // Debounce when typing
+        categoriesSearchTimeoutRef.current = setTimeout(() => {
+          setCategoriesSearch(search);
+          categoriesSearchTimeoutRef.current = null;
+        }, 1000);
+      }
     },
-    [debouncedSetCategoriesSearch]
+    []
   );
 
   // Extract stable values to prevent infinite loops
@@ -163,12 +186,8 @@ export default function PromptManagementPage(): React.JSX.Element {
     });
   const [allIndustries, setAllIndustries] = useState<any[]>([]);
 
-  // Debounced search handler for industries - update after 1 second
-  const debouncedSetIndustriesSearch = useRef(
-    debounce((search: string) => {
-      setIndustriesSearch(search);
-    }, 1000)
-  ).current;
+  // Timeout ref for industries search debounce
+  const industriesSearchTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // Build filters for industries
   const industriesFilters = useMemo<IndustryFilterState | undefined>(() => {
@@ -219,11 +238,27 @@ export default function PromptManagementPage(): React.JSX.Element {
   }, [industriesData, currentIndustriesPageIndex]);
 
   // Handle industries search change with debounce
+  // Update immediately when clearing, debounce when typing
   const handleIndustriesSearch = useCallback(
     (search: string) => {
-      debouncedSetIndustriesSearch(search);
+      // Clear any pending timeout
+      if (industriesSearchTimeoutRef.current) {
+        clearTimeout(industriesSearchTimeoutRef.current);
+        industriesSearchTimeoutRef.current = null;
+      }
+
+      if (search.trim() === "") {
+        // Update immediately when clearing
+        setIndustriesSearch("");
+      } else {
+        // Debounce when typing
+        industriesSearchTimeoutRef.current = setTimeout(() => {
+          setIndustriesSearch(search);
+          industriesSearchTimeoutRef.current = null;
+        }, 1000);
+      }
     },
-    [debouncedSetIndustriesSearch]
+    []
   );
 
   // Extract stable values to prevent infinite loops

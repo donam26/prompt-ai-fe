@@ -20,7 +20,7 @@ import {
   hasActiveFilters,
   clearAllFilters,
   updateSearchFilter,
-  updateStateFilter,
+  updateBooleanFilter,
   updateItemFromFilter,
 } from "@/utils/filter-helpers";
 import type { CategoryFilterState } from "@/types/admin";
@@ -93,9 +93,9 @@ export const CategoryFilter = ({
   const handleStatusChange = useCallback(
     (value: string) => {
       onFilterChange(
-        updateStateFilter(
+        updateBooleanFilter(
           filters as Record<string, unknown>,
-          "status",
+          "isComingSoon",
           value
         ) as unknown as CategoryFilterState
       );
@@ -210,7 +210,16 @@ const FilterCard = ({
       <div className="gap-4 grid xl:grid-cols-2">
         <div className="space-y-2">
           <Label className="font-medium text-sm">Trạng thái</Label>
-          <StatusFilter value={filters.status} onChange={onStatusChange} />
+          <StatusFilter
+            value={
+              filters.isComingSoon === undefined
+                ? "all"
+                : filters.isComingSoon === true
+                  ? "true"
+                  : "false"
+            }
+            onChange={onStatusChange}
+          />
         </div>
 
         <div className="space-y-2">
@@ -242,8 +251,8 @@ const StatusFilter = ({
 }: StatusFilterProps): React.JSX.Element => {
   const statusOptions = [
     { id: "all", name: "Tất cả trạng thái" },
-    { id: "active", name: "Hoạt động" },
-    { id: "comingSoon", name: "Sắp ra mắt" },
+    { id: "false", name: "Hoạt động" },
+    { id: "true", name: "Sắp ra mắt" },
   ];
 
   return (
