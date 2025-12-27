@@ -14,6 +14,7 @@ import { ResultViewer } from "./modules/ResultViewer";
 import { useAuth } from "@/hooks/useAuth";
 import { useAuthRedirect } from "@/hooks/useAuthRedirect";
 import { ROUTES_URL } from "@/constants/routes-url";
+import { convertToPlainText } from "@/utils/text-utils";
 
 export default function PromptDetailPage() {
   const params = useParams();
@@ -104,8 +105,17 @@ export default function PromptDetailPage() {
   }, [prompt?.optimizationGuide, selectedMenuItem, setResponse]);
 
   const handleCopy = useCallback(() => {
-    if (userPrompt) {
-      navigator.clipboard.writeText(userPrompt);
+    if (contentEditableRef.current) {
+      // Get plain text from contentEditable (already plain text)
+      const plainText = contentEditableRef.current.innerText || "";
+      if (plainText.trim()) {
+        const cleanText = convertToPlainText(plainText);
+        navigator.clipboard.writeText(cleanText);
+        showToast.success("Đã sao chép prompt!");
+      }
+    } else if (userPrompt) {
+      const cleanText = convertToPlainText(userPrompt);
+      navigator.clipboard.writeText(cleanText);
       showToast.success("Đã sao chép prompt!");
     }
   }, [userPrompt]);
@@ -295,13 +305,15 @@ export default function PromptDetailPage() {
                     gptLoading={gptLoading}
                     onCopyResult={() => {
                       if (response) {
-                        navigator.clipboard.writeText(response);
+                        const plainText = convertToPlainText(response);
+                        navigator.clipboard.writeText(plainText);
                         showToast.success("Đã sao chép kết quả!");
                       }
                     }}
                     onUseInChat={() => {
                       if (response) {
-                        navigator.clipboard.writeText(response);
+                        const plainText = convertToPlainText(response);
+                        navigator.clipboard.writeText(plainText);
                         showToast.success(
                           "Đã sao chép kết quả để sử dụng trong chat!"
                         );
