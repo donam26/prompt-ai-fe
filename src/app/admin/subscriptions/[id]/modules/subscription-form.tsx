@@ -99,12 +99,14 @@ export const SubscriptionForm = ({
       content: "",
       included,
     };
-    setValue("contentSubscriptions", [...contentSubscriptions, newContent]);
+    setValue("contentSubscriptions", [...contentSubscriptions, newContent], {
+      shouldDirty: true,
+    });
   };
 
   const removeContentSubscription = (index: number) => {
     const updatedContent = contentSubscriptions.filter((_, i) => i !== index);
-    setValue("contentSubscriptions", updatedContent);
+    setValue("contentSubscriptions", updatedContent, { shouldDirty: true });
   };
 
   const updateContentSubscription = (
@@ -114,7 +116,7 @@ export const SubscriptionForm = ({
   ) => {
     const updatedContent = [...contentSubscriptions];
     updatedContent[index] = { ...updatedContent[index], [field]: value };
-    setValue("contentSubscriptions", updatedContent);
+    setValue("contentSubscriptions", updatedContent, { shouldDirty: true });
   };
 
   // Helper to get the actual index in the full array from filtered array
