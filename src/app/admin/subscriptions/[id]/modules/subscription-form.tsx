@@ -128,19 +128,15 @@ export const SubscriptionForm = ({
     return contentSubscriptions.findIndex(item => item === targetItem);
   };
 
-  // Content Item Component
-  const ContentItem = ({
-    content,
-    index,
-    included,
-    actualIndex,
-  }: {
-    content: any;
-    index: number;
-    included: boolean;
-    actualIndex: number;
-  }) => (
+  // Render content item inline to avoid losing focus on re-render
+  const renderContentItem = (
+    content: any,
+    index: number,
+    included: boolean,
+    actualIndex: number
+  ) => (
     <div
+      key={actualIndex}
       className={`space-y-3 p-3 border rounded-lg ${
         included
           ? "bg-green-50/30 border-green-200"
@@ -174,7 +170,7 @@ export const SubscriptionForm = ({
           updateContentSubscription(
             actualIndex,
             "content",
-            e?.target?.value || e || ""
+            e?.target?.value !== undefined ? e.target.value : e || ""
           )
         }
         placeholder={
@@ -623,15 +619,9 @@ export const SubscriptionForm = ({
                 </div>
 
                 <div className="space-y-2 max-h-96 overflow-y-auto">
-                  {getIncludedContent().map((content, index) => (
-                    <ContentItem
-                      key={getActualIndex(index, true)}
-                      content={content}
-                      index={index}
-                      included={true}
-                      actualIndex={getActualIndex(index, true)}
-                    />
-                  ))}
+                  {getIncludedContent().map((content, index) =>
+                    renderContentItem(content, index, true, getActualIndex(index, true))
+                  )}
                   {getIncludedContent().length === 0 && (
                     <div className="py-6 text-gray-500 text-sm text-center">
                       Chưa có tính năng nào
@@ -658,15 +648,9 @@ export const SubscriptionForm = ({
                 </div>
 
                 <div className="space-y-2 max-h-96 overflow-y-auto">
-                  {getNotIncludedContent().map((content, index) => (
-                    <ContentItem
-                      key={getActualIndex(index, false)}
-                      content={content}
-                      index={index}
-                      included={false}
-                      actualIndex={getActualIndex(index, false)}
-                    />
-                  ))}
+                  {getNotIncludedContent().map((content, index) =>
+                    renderContentItem(content, index, false, getActualIndex(index, false))
+                  )}
                   {getNotIncludedContent().length === 0 && (
                     <div className="py-6 text-gray-500 text-sm text-center">
                       Chưa có tính năng nào
