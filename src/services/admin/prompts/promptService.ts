@@ -144,9 +144,7 @@ export class PromptService extends BaseService {
     const query = `categoryId=${categoryId}&industryIds=${industryIds.join(
       ","
     )}&pageSize=1000`;
-    return await this.get(
-      `${ENDPOINTS.PROMPTS.TOPICS_BY_INDUSTRY}?${query}`
-    );
+    return await this.get(`${ENDPOINTS.PROMPTS.TOPICS_BY_INDUSTRY}?${query}`);
   }
 
   /**

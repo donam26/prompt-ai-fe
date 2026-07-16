@@ -23,10 +23,7 @@ export const useTopicsByIndustry = (
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string>("");
 
-  const industryIdsString = useMemo(
-    () => industryIds.join(","),
-    [industryIds]
-  );
+  const industryIdsString = useMemo(() => industryIds.join(","), [industryIds]);
 
   const loadTopics = useCallback(async () => {
     if (!categoryId || !enabled) {

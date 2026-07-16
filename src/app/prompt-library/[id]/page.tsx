@@ -45,7 +45,7 @@ export default function PromptDetailPage() {
       : MenuItem.MY_PROMPT;
   });
   const [userPrompt, setUserPrompt] = useState("");
-  const [model, setModel] = useState("gpt-4o-mini");
+  const [model, setModel] = useState("gpt-5-mini");
   const [language, setLanguage] = useState("vi");
   const [promptType, setPromptType] = useState("standard"); // New state for prompt type
   const [isCollapsed, setIsCollapsed] = useState(() => {

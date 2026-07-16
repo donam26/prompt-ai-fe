@@ -3,11 +3,12 @@ import { MenuItem } from "./Sidebar";
 
 // Constants for select options
 export const MODEL_OPTIONS = [
-  { value: "gpt-4o-mini", label: "GPT 4o Mini" },
-  { value: "gpt-4o", label: "GPT 4o" },
-  { value: "gpt-4", label: "GPT 4" },
-  { value: "gpt-5.1", label: "GPT 5.1" },
   { value: "gpt-5-mini", label: "GPT 5 Mini" },
+  { value: "gpt-5-nano", label: "GPT 5 Nano" },
+  { value: "gpt-5.1", label: "GPT 5.1" },
+  { value: "deepseek/deepseek-chat-v3.1", label: "DeepSeek V3.1" },
+  { value: "deepseek/deepseek-v3.2", label: "DeepSeek V3.2" },
+  { value: "deepseek/deepseek-r1-0528", label: "DeepSeek R1" },
 ] as const;
 
 export const LANGUAGE_OPTIONS = [
