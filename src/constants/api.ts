@@ -16,6 +16,7 @@ export const ENDPOINTS = {
     UPLOAD: "/prompts/upload",
     BY_CATEGORY: "/prompts/by-category",
     TOPICS_BY_CATEGORY: "/prompts/topics/by-category",
+    TOPICS_BY_INDUSTRY: "/prompts/topics/by-industry",
     NEWEST: "/prompts/newest",
     LATEST: "/prompts/latest",
     RELATED: "/prompts/related",

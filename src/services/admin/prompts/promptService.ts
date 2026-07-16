@@ -134,6 +134,22 @@ export class PromptService extends BaseService {
   }
 
   /**
+   * Get topics assigned to the selected industries within a category.
+   * Empty industryIds -> backend returns all topics of the category.
+   */
+  async getTopicsByIndustry(
+    categoryId: string | number,
+    industryIds: (string | number)[]
+  ) {
+    const query = `categoryId=${categoryId}&industryIds=${industryIds.join(
+      ","
+    )}&pageSize=1000`;
+    return await this.get(
+      `${ENDPOINTS.PROMPTS.TOPICS_BY_INDUSTRY}?${query}`
+    );
+  }
+
+  /**
    * Get newest prompts by category ID
    */
   async getNewestPromptsByCategoryId(categoryId: string | number) {

@@ -15,7 +15,7 @@ import { PromptCardV2 } from "./modules";
 import { MenuItem } from "../[id]/modules/Sidebar";
 import {
   usePrompts,
-  useTopicsByCategory,
+  useTopicsByIndustry,
   useIndustriesByCategories,
   useFavoritePrompts,
   useNewestPrompts,
@@ -146,9 +146,10 @@ export default function ListPromptsPage() {
     enabled: !!categoryId,
   });
 
-  // Fetch topics
-  const { topics = [] } = useTopicsByCategory({
+  // Fetch topics theo ngành nghề đang chọn (rỗng industry -> full topic của category)
+  const { topics = [] } = useTopicsByIndustry({
     categoryId: categoryId,
+    industryIds: industryIds,
     enabled: !!categoryId,
   });
 
@@ -195,6 +196,8 @@ export default function ListPromptsPage() {
 
   const handleIndustryChange = (values: string[]) => {
     setIndustryIds(values);
+    // Đổi ngành nghề -> danh sách chủ đề thay đổi, bỏ lựa chọn chủ đề cũ để tránh lọc theo topic không còn hợp lệ
+    setTopicIds([]);
     setCurrentPage(0);
   };
 
