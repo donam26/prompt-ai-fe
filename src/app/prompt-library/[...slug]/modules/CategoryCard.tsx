@@ -6,6 +6,7 @@ import Image from "next/image";
 import { ChevronRight } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/hooks/useAuth";
+import { isPremiumUser } from "@/lib/subscription/premium";
 import { ROUTES_URL } from "@/constants/routes-url";
 import { showToast } from "@/components/ui/toast";
 
@@ -27,10 +28,8 @@ export const CategoryCard = ({
   const { user } = useAuth();
   const isComingSoonStatus = category.isComingSoon;
 
-  // Check if user has Free subscription
-  const isFreeUser =
-    user?.userSub?.subscription?.nameSub === "Free" ||
-    !user?.userSub?.subscription?.nameSub;
+  // Free = not an active paid subscriber (single source of truth).
+  const isFreeUser = !isPremiumUser(user);
 
   const handleCardClick = (e: React.MouseEvent) => {
     // Check if category is premium and user is Free

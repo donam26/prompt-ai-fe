@@ -78,9 +78,11 @@ export const usePricingPlans = (): UsePricingPlansReturn => {
       setPlans([]);
       return;
     }
-    const sortedSubscriptions = subscriptions
+    // Show plans the catalog marks active (subscriptions.is_active), instead of a
+    // hardcoded type list that both showed deactivated plans and hid active ones.
+    const sortedSubscriptions = [...subscriptions]
       .sort((a, b) => a.type - b.type)
-      .filter(subscription => [1, 2, 3, 6].includes(subscription.type));
+      .filter(subscription => subscription.isActive ?? true);
     const transformedPlans = sortedSubscriptions
       .map(transformSubscriptionToPricingPlan)
       .filter((plan): plan is SubscriptionFormData => plan !== null);

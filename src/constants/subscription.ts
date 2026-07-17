@@ -18,6 +18,7 @@ export const SUBSCRIPTION_NAMES = {
   [ESubscriptionType.LEGACY]: "LEGACY",
   [ESubscriptionType.PRO]: "PRO",
   [ESubscriptionType.BUSINESS]: "Doanh Nghiệp",
+  [ESubscriptionType.TRON_GOI]: "Trọn Gói",
 } as const;
 
 export const SUBSCRIPTION_BILLING_CYCLES = {
@@ -53,12 +54,16 @@ export const BUTTON_TEXTS = {
   CONTACT_CONSULTATION: "Liên hệ tư vấn",
 } as const;
 
-// Premium subscription types (for backward compatibility)
+// Premium (paid) subscription types = everything except Free.
+// Prefer `isPremiumUser`/`isActivePaidSubscription` from "@/lib/subscription/premium"
+// which also accounts for status + expiry; this list is name/type metadata only.
 export const PREMIUM_SUBSCRIPTION_TYPES = [
   ESubscriptionType.PREMIUM,
+  ESubscriptionType.TOKEN_PRO,
+  ESubscriptionType.LEGACY,
   ESubscriptionType.PRO,
   ESubscriptionType.BUSINESS,
-  ESubscriptionType.LEGACY,
+  ESubscriptionType.TRON_GOI,
 ];
 
 // Free subscription types (for backward compatibility)
@@ -80,6 +85,7 @@ export const getSubscriptionColor = (subscriptionType: number) => {
     [ESubscriptionType.BUSINESS]: "#F59E0B", // amber
     [ESubscriptionType.LEGACY]: "#EF4444", // red
     [ESubscriptionType.TOKEN_PRO]: "#3B82F6", // blue
+    [ESubscriptionType.TRON_GOI]: "#7C3AED", // violet
   };
   return colors[subscriptionType as keyof typeof colors] || "#6B7280";
 };

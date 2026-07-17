@@ -1,10 +1,13 @@
+// NOTE: these are subscription *type* values as stored by the backend
+// (subscriptions.type), NOT plan ids. Keep them in sync with the DB catalog.
 export const ESubscriptionType = {
   FREE: 1,
   PREMIUM: 2,
   TOKEN_PRO: 3,
   LEGACY: 4,
   PRO: 5,
-  BUSINESS: 11,
+  BUSINESS: 6,
+  TRON_GOI: 7,
 } as const;
 
 export const SUBSCRIPTION_PLAN_IDS = {

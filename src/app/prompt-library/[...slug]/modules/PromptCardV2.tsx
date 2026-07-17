@@ -6,6 +6,7 @@ import Image from "next/image";
 import { Heart, Star } from "lucide-react";
 import { useState } from "react";
 import { useAuth } from "@/hooks/useAuth";
+import { isPremiumUser } from "@/lib/subscription/premium";
 import { usePromptFavorites } from "@/hooks";
 import { getPromptDetailUrl, ROUTES_URL } from "@/constants/routes-url";
 import { showToast } from "@/components/ui/toast";
@@ -34,10 +35,8 @@ export const PromptCardV2 = ({
   const [isTogglingFavorite, setIsTogglingFavorite] = useState(false);
   const router = useRouter();
 
-  // Check if user has Free subscription
-  const isFreeUser =
-    user?.userSub?.subscription?.nameSub === "Free" ||
-    !user?.userSub?.subscription?.nameSub;
+  // Free = not an active paid subscriber (single source of truth).
+  const isFreeUser = !isPremiumUser(user);
 
   const handleToggleFavorite = async (e: React.MouseEvent) => {
     e.preventDefault();

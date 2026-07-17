@@ -12,6 +12,7 @@ import { Sidebar, MenuItem } from "./modules/Sidebar";
 import { PromptEditor } from "./modules/PromptEditor";
 import { ResultViewer } from "./modules/ResultViewer";
 import { useAuth } from "@/hooks/useAuth";
+import { isPremiumUser } from "@/lib/subscription/premium";
 import { useAuthRedirect } from "@/hooks/useAuthRedirect";
 import { ROUTES_URL } from "@/constants/routes-url";
 import { convertToPlainText } from "@/utils/text-utils";
@@ -32,10 +33,8 @@ export default function PromptDetailPage() {
 
   const { user } = useAuth();
 
-  // Check if user has Free subscription
-  const isFreeUser =
-    user?.userSub?.subscription?.nameSub === "Free" ||
-    !user?.userSub?.subscription?.nameSub;
+  // Free = not an active paid subscriber (single source of truth).
+  const isFreeUser = !isPremiumUser(user);
 
   // State management
   const [selectedMenuItem, setSelectedMenuItem] = useState<MenuItem>(() => {

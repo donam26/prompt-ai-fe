@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { ArrowRight } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
-import { FREE_SUBSCRIPTION_TYPES } from "@/constants/subscription";
+import { isPremiumUser } from "@/lib/subscription/premium";
 import { Product } from "@/types";
 
 interface Props {
@@ -21,14 +21,12 @@ export const ProductCard = ({
 }: Props) => {
   const { user } = useAuth();
 
+  const isAccessible = isPremiumUser(user);
+
   const handleAccessClick = (
     e: React.MouseEvent<HTMLAnchorElement | HTMLButtonElement>
   ) => {
-    if (
-      !user ||
-      (user?.userSub?.subscription?.type &&
-        FREE_SUBSCRIPTION_TYPES.includes(user.userSub.subscription.type as any))
-    ) {
+    if (!isAccessible) {
       e.preventDefault();
       if (user) {
         onUpgradeClick?.();
@@ -37,11 +35,6 @@ export const ProductCard = ({
       }
     }
   };
-
-  const isAccessible =
-    user &&
-    user?.userSub?.subscription?.type &&
-    !FREE_SUBSCRIPTION_TYPES.includes(user.userSub.subscription.type as any);
 
   return (
     <div className="relative bg-gradient-to-br from-purple-50 to-purple-100 hover:shadow-lg p-4 sm:p-6 rounded-2xl transition-all hover:-translate-y-1 duration-300">

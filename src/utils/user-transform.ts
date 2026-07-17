@@ -135,6 +135,10 @@ export const transformUserForSession = (userData: TransformedUser) => {
     accessToken: userData.accessToken,
     refreshToken: userData.refreshToken,
     expiresIn: userData.expiresIn,
+    // Preserve subscription so premium gating survives the NextAuth session path.
+    permissions: userData.permissions,
+    countPromt: userData.countPromt,
+    userSub: userData.userSub,
   };
 };
 

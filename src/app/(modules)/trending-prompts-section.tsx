@@ -14,6 +14,7 @@ import { useLatestPrompts } from "@/hooks/lib-category-prompt";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Pagination, Autoplay } from "swiper/modules";
 import { useAuth } from "@/hooks/useAuth";
+import { isPremiumUser } from "@/lib/subscription/premium";
 import { showToast } from "@/components/ui/toast";
 
 import "swiper/css";
@@ -35,10 +36,8 @@ export const TrendingPromptsSection = ({}: TrendingPromptsSectionProps) => {
     categoryId: 8,
   });
 
-  // Check if user has Free subscription
-  const isFreeUser =
-    user?.userSub?.subscription?.nameSub === "Free" ||
-    !user?.userSub?.subscription?.nameSub;
+  // Free = not an active paid subscriber (single source of truth).
+  const isFreeUser = !isPremiumUser(user);
 
   // Handle prompt click with subscription check
   const handlePromptClick = (prompt: Prompt, e?: React.MouseEvent) => {

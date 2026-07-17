@@ -10,6 +10,7 @@ import Image from "next/image";
 import { Heart } from "lucide-react";
 import { useState } from "react";
 import { useAuth } from "@/hooks/useAuth";
+import { isPremiumUser } from "@/lib/subscription/premium";
 import { usePromptFavorites } from "@/hooks";
 import { showToast } from "@/components/ui/toast";
 import { useRouter } from "next/navigation";
@@ -52,10 +53,8 @@ export const MidjourneyPromptCard = ({
   );
   const [isTogglingFavorite, setIsTogglingFavorite] = useState(false);
 
-  // Check if user has Free subscription
-  const isFreeUser =
-    user?.userSub?.subscription?.nameSub === "Free" ||
-    !user?.userSub?.subscription?.nameSub;
+  // Free = not an active paid subscriber (single source of truth).
+  const isFreeUser = !isPremiumUser(user);
 
   const handleToggleFavorite = async (e: React.MouseEvent) => {
     e.preventDefault();

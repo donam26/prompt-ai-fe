@@ -41,6 +41,10 @@ export const useCustomNextAuthSync = () => {
         accountStatus: session.user.accountStatus || 1,
         createdAt: session.user.createdAt || new Date().toISOString(),
         updatedAt: session.user.updatedAt || new Date().toISOString(),
+        // Carry subscription through so premium gating works on the session path.
+        permissions: session.user.permissions,
+        countPromt: session.user.countPromt,
+        userSub: session.user.userSub,
       };
 
       // Only login if we don't already have this user logged in

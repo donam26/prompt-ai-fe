@@ -23,6 +23,7 @@ import {
 import { categoryService } from "@/services/admin/categories";
 import { Category } from "@/types";
 import { useAuth } from "@/hooks/useAuth";
+import { isPremiumUser } from "@/lib/subscription/premium";
 import { useAuthRedirect } from "@/hooks/useAuthRedirect";
 import { showToast } from "@/components/ui/toast";
 
@@ -64,17 +65,12 @@ export default function ListPromptsPage() {
   // Check if user has Free subscription
   // Only check after user data is loaded, default to free user if not loaded or no subscription
   const isFreeUser = useMemo(() => {
-    // If user is still loading, return false to avoid premature redirect
-    // The useEffect will wait for user to load before checking subscription
+    // If user is still loading, return false to avoid premature redirect.
+    // The useEffect waits for user to load before checking subscription.
     if (isLoadingUser) {
       return false;
     }
-    // If user is not loaded or has no subscription, treat as free user
-    if (!user?.userSub?.subscription?.nameSub) {
-      return true;
-    }
-    // Check if subscription is Free
-    return user.userSub.subscription.nameSub === "Free";
+    return !isPremiumUser(user);
   }, [user, isLoadingUser]);
 
   // Fetch category

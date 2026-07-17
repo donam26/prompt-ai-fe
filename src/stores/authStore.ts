@@ -12,6 +12,7 @@ interface AuthState {
   token: string | null;
   isLoading: boolean;
   setUser: (user: User | null) => void;
+  updateUser: (partial: Partial<User>) => void;
   setToken: (token: string | null) => void;
   setLoading: (loading: boolean) => void;
   login: (userData: User, authToken: string) => void;
@@ -26,6 +27,19 @@ export const useAuthStore = create<AuthState>()(
       isLoading: true,
 
       setUser: user => set({ user }),
+
+      // Merge fresh fields (e.g. userSub after a purchase / on app load) into the
+      // current user without dropping the accessToken or other existing fields.
+      updateUser: partial =>
+        set(state => {
+          if (!state.user) return {};
+          const merged = { ...state.user, ...partial };
+          if (typeof window !== "undefined") {
+            localStorage.setItem("user", JSON.stringify(merged));
+          }
+          return { user: merged };
+        }),
+
       setToken: token => set({ token }),
       setLoading: isLoading => set({ isLoading }),
 

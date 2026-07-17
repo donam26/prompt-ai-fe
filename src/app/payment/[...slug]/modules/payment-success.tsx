@@ -19,11 +19,13 @@ import {
   ExternalLink,
 } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
+import { useSyncSubscription } from "@/hooks/useSyncSubscription";
 import { SKOOL_COMMUNITY_URL } from "@/constants/homepage";
 
 export function PaymentSuccess() {
   const searchParams = useSearchParams();
   const { logout } = useAuth();
+  const { refresh: refreshSubscription } = useSyncSubscription();
   const [showSkoolPopup, setShowSkoolPopup] = useState(false);
 
   const orderId = searchParams.get("orderId");
@@ -66,7 +68,10 @@ export function PaymentSuccess() {
   // Show popup when component mounts (payment success)
   useEffect(() => {
     setShowSkoolPopup(true);
-  }, []);
+    // Pull the freshly-activated subscription into the auth store so premium
+    // gating unlocks immediately without requiring a logout/login.
+    void refreshSubscription();
+  }, [refreshSubscription]);
 
   return (
     <div className="relative bg-white min-h-screen">
