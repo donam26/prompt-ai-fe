@@ -22,8 +22,17 @@ export function usePatchContactReply(): IResponse {
         showToast.success("Phản hồi đã được gửi thành công");
         return true;
       } catch (error: unknown) {
+        const err = error as {
+          response?: {
+            data?: { error?: { message?: string }; message?: string };
+          };
+          message?: string;
+        };
         const errorMessage =
-          error instanceof Error ? error.message : "Có lỗi xảy ra";
+          err?.response?.data?.error?.message ||
+          err?.response?.data?.message ||
+          err?.message ||
+          "Có lỗi xảy ra";
         setError(() => errorMessage);
         showToast.error(errorMessage || "Không thể gửi phản hồi");
         return false;
