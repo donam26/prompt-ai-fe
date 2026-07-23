@@ -1,6 +1,16 @@
 import { useSession, signOut } from "next-auth/react";
 import { useEffect, useRef } from "react";
 import { useAuthStore } from "@/stores/authStore";
+import { resolveCheckoutUserId } from "@/utils/checkout-user";
+
+/**
+ * When the backend Google login call fails, the NextAuth callback falls back to
+ * a default user whose id is 0. Persisting that produces a session that looks
+ * logged in but cannot buy anything (the payment API rejects "guest-<planId>"),
+ * so refuse to overwrite the store with it.
+ */
+const hasUsableId = (candidate: { id?: number | string | null } | null) =>
+  resolveCheckoutUserId(candidate, null) !== null;
 
 export const useCustomNextAuthSync = () => {
   const { data: session, status } = useSession();
@@ -18,6 +28,12 @@ export const useCustomNextAuthSync = () => {
 
     // Check if we need to sync data to store (from Google login)
     if (session?.shouldSyncToStore && session?.syncData) {
+      if (!hasUsableId(session.syncData.user)) {
+        console.error(
+          "Bỏ qua đồng bộ phiên đăng nhập Google: thiếu user id hợp lệ (backend login thất bại)."
+        );
+        return;
+      }
       login(session.syncData.user, session.syncData.token);
       lastSessionUser.current = session.syncData.user.email;
       return;
@@ -50,6 +66,12 @@ export const useCustomNextAuthSync = () => {
       // Only login if we don't already have this user logged in
       const currentAuthUser = useAuthStore.getState().user;
       if (!currentAuthUser || currentAuthUser.email !== userData.email) {
+        if (!hasUsableId(userData)) {
+          console.error(
+            "Bỏ qua đồng bộ phiên NextAuth: thiếu user id hợp lệ (backend login thất bại)."
+          );
+          return;
+        }
         login(userData, session.accessToken);
       }
 

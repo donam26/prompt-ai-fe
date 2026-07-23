@@ -14,9 +14,12 @@ import { showToast } from "@/components/ui/toast";
 import { ArrowLeft, CreditCard, Shield, CheckCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { ROUTES_URL } from "@/constants/routes-url";
+import { useUser } from "@/hooks/useUser";
+import { resolveCheckoutUserId, buildOrderInfo } from "@/utils/checkout-user";
 
 function CheckoutContentInner() {
   const router = useRouter();
+  const { user } = useUser();
   const { checkoutData, isLoading, error } = useCheckoutData();
   const { subscriptions } = usePricingSubscriptions();
   const { applyDiscount, isApplying, error: discountError } = useDiscount();
@@ -75,9 +78,23 @@ function CheckoutContentInner() {
         return;
       }
 
-      // Prepare payment data similar to the old project
-      const userLocal = JSON.parse(localStorage.getItem("user") || "{}");
-      const info = `${userLocal.id || "guest"}-${checkoutData.planId}`;
+      // The backend parses orderInfo as "<userId>-<subscriptionId>" and rejects
+      // anything else with HTTP 400. Prefer the auth store; the standalone
+      // localStorage["user"] mirror is only written at login and can go stale.
+      const userId = resolveCheckoutUserId(
+        user,
+        typeof window !== "undefined" ? localStorage.getItem("user") : null
+      );
+
+      if (userId === null) {
+        showToast.error(
+          "Phiên đăng nhập không hợp lệ. Vui lòng đăng nhập lại để thanh toán."
+        );
+        router.push(ROUTES_URL.LOGIN);
+        return;
+      }
+
+      const info = buildOrderInfo(userId, checkoutData.planId);
 
       const paymentData = {
         amount: getFinalPrice(),
@@ -101,7 +118,18 @@ function CheckoutContentInner() {
       }
     } catch (error) {
       console.error("Payment error:", error);
-      showToast.error("Có lỗi xảy ra khi xử lý thanh toán");
+      // Surface the backend reason instead of a generic message — a silent
+      // "Có lỗi xảy ra" is why the 400 on this endpoint went unnoticed.
+      const apiMessage = (
+        error as {
+          response?: { data?: { error?: { message?: string } } };
+        }
+      )?.response?.data?.error?.message;
+      const message =
+        apiMessage ||
+        (error instanceof Error ? error.message : "") ||
+        "Có lỗi xảy ra khi xử lý thanh toán";
+      showToast.error(message);
     } finally {
       setIsProcessing(false);
     }
