@@ -1,14 +1,18 @@
 import { Prompt } from "@/types/entities/prompt";
 import { MenuItem } from "./Sidebar";
 
-// Constants for select options
+// Constants for select options.
+// `cost` phải khớp prompt-ai-be/config/aiModels.js — backend trừ đúng số credit
+// này và trả 403 "Không đủ credit" nếu thiếu. Trước đây UI không hiện giá nên
+// user chọn DeepSeek R1 (5 credit) khi còn ít credit sẽ bị đá sang trang Pricing
+// mà tưởng là "model DeepSeek không chạy được".
 export const MODEL_OPTIONS = [
-  { value: "gpt-5-mini", label: "GPT 5 Mini" },
-  { value: "gpt-5-nano", label: "GPT 5 Nano" },
-  { value: "gpt-5.1", label: "GPT 5.1" },
-  { value: "deepseek/deepseek-chat-v3.1", label: "DeepSeek V3.1" },
-  { value: "deepseek/deepseek-v3.2", label: "DeepSeek V3.2" },
-  { value: "deepseek/deepseek-r1-0528", label: "DeepSeek R1" },
+  { value: "gpt-5-mini", label: "GPT 5 Mini", cost: 4 },
+  { value: "gpt-5-nano", label: "GPT 5 Nano", cost: 2 },
+  { value: "gpt-5.1", label: "GPT 5.1", cost: 8 },
+  { value: "deepseek/deepseek-chat-v3.1", label: "DeepSeek V3.1", cost: 3 },
+  { value: "deepseek/deepseek-v3.2", label: "DeepSeek V3.2", cost: 2 },
+  { value: "deepseek/deepseek-r1-0528", label: "DeepSeek R1", cost: 5 },
 ] as const;
 
 export const LANGUAGE_OPTIONS = [

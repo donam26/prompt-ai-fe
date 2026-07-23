@@ -176,6 +176,9 @@ export const PromptEditor = ({
                   {MODEL_OPTIONS.map(option => (
                     <SelectItem key={option.value} value={option.value}>
                       {option.label}
+                      <span className="ml-2 text-gray-500 text-xs">
+                        {option.cost} credit
+                      </span>
                     </SelectItem>
                   ))}
                 </SelectContent>
