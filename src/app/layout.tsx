@@ -32,7 +32,7 @@ const baseUrl =
 export const metadata: Metadata = {
   metadataBase: new URL(baseUrl),
   title: "Prom - Thư Viện & Nâng Cấp Prompt!",
-  description: "Hơn 8,000+ prompts tạo ra từ các chuyên gia về AI",
+  description: "Hơn 98,000+ prompts tạo ra từ các chuyên gia về AI",
   keywords: "prompt, AI, ChatGPT, Midjourney, prompt library, AI tools",
   authors: [{ name: "Prom Team" }],
   icons: {
@@ -42,7 +42,7 @@ export const metadata: Metadata = {
   },
   openGraph: {
     title: "Prom - Thư Viện & Nâng Cấp Prompt!",
-    description: "Hơn 8,000+ prompts tạo ra từ các chuyên gia về AI",
+    description: "Hơn 98,000+ prompts tạo ra từ các chuyên gia về AI",
     type: "website",
     locale: "vi_VN",
     images: [
@@ -57,7 +57,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "Prom - Thư Viện & Nâng Cấp Prompt!",
-    description: "Hơn 8,000+ prompts tạo ra từ các chuyên gia về AI",
+    description: "Hơn 98,000+ prompts tạo ra từ các chuyên gia về AI",
     images: ["/images/logos/prompt-preview.png"],
   },
   robots: {

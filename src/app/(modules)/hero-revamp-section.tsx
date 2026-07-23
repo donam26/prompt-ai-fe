@@ -94,7 +94,7 @@ export const HeroRevampSection = (): React.JSX.Element => {
           </h1>
 
           <p className="max-w-2xl font-semibold text-[#1F1F20] text-xs sm:text-base md:text-lg text-center">
-            Hơn 8,000+ prompts tạo ra từ các chuyên gia về AI
+            Hơn 98,000+ prompts tạo ra từ các chuyên gia về AI
           </p>
         </div>
         <div className="relative">

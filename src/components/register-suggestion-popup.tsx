@@ -98,7 +98,7 @@ export const RegisterSuggestionPopup = (): React.JSX.Element | null => {
             <DialogDescription className="mx-auto max-w-sm text-gray-600 text-sm sm:text-base leading-relaxed">
               Đăng ký ngay để khám phá hơn{" "}
               <span className="font-semibold text-[#5700C6]">
-                8,000+ prompts
+                98,000+ prompts
               </span>{" "}
               từ các chuyên gia AI
             </DialogDescription>
