@@ -269,7 +269,7 @@ export default function PromptDetailPage() {
             description={
               selectedMenuItem === MenuItem.PROMPT_OPTIMIZER
                 ? "Nâng cấp Prompt hiện tại của bạn chỉ với 1 nút bấm! Nhận lại Prompt chuyên sâu ngay lập tức!"
-                : prompt?.content
+                : undefined
             }
             onBack={handleBack}
           />
