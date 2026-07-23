@@ -480,6 +480,5 @@ function CheckoutContent() {
 }
 
 export default function CheckoutPage() {
-  return <Card />;
   return <CheckoutContent />;
 }
