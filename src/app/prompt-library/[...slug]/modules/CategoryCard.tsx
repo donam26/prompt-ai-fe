@@ -9,6 +9,8 @@ import { useAuth } from "@/hooks/useAuth";
 import { isPremiumUser } from "@/lib/subscription/premium";
 import { ROUTES_URL } from "@/constants/routes-url";
 import { showToast } from "@/components/ui/toast";
+import { useEffect, useState } from "react";
+import { DEFAULT_CATEGORY_IMAGE, getCategoryImage } from "./category-image";
 
 // Constants
 const PREMIUM_BACKGROUND_IMAGE = "/images/backgrounds/bg-over-black.png";
@@ -27,6 +29,12 @@ export const CategoryCard = ({
   const router = useRouter();
   const { user } = useAuth();
   const isComingSoonStatus = category.isComingSoon;
+  const preferredImage = getCategoryImage(category);
+  const [imageSrc, setImageSrc] = useState(preferredImage);
+
+  useEffect(() => {
+    setImageSrc(preferredImage);
+  }, [preferredImage]);
 
   // Free = not an active paid subscriber (single source of truth).
   const isFreeUser = !isPremiumUser(user);
@@ -46,7 +54,7 @@ export const CategoryCard = ({
 
   return (
     <div
-      className={`relative overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl p-4 w-full h-28 sm:h-[250px] rounded-3xl ${
+      className={`relative overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl motion-reduce:transition-none motion-reduce:transform-none p-4 w-full h-28 sm:h-[250px] rounded-3xl ${
         isComingSoonStatus ? "opacity-60" : ""
       } ${
         isPremium
@@ -64,7 +72,7 @@ export const CategoryCard = ({
       <Link
         href={isComingSoonStatus ? "#" : link}
         onClick={handleCardClick}
-        className={`flex flex-col h-full text-decoration-none ${
+        className={`flex flex-col h-full text-decoration-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-600 focus-visible:ring-inset rounded-2xl ${
           isPremium ? "text-white" : "text-gray-900"
         }`}
       >
@@ -99,22 +107,21 @@ export const CategoryCard = ({
       </Link>
 
       {/* Category Image */}
-      <div className="right-[5%] -bottom-2 sm:-bottom-10 z-10 absolute w-16 sm:w-40 h-16 sm:h-40">
-        {category.image ? (
-          <Image
-            src={category.image}
-            alt={category.name}
-            width={160}
-            height={160}
-            className="w-full h-full object-contain"
-            loading="lazy"
-            sizes="(max-width: 640px) 64px, 160px"
-          />
-        ) : (
-          <div className="flex justify-center items-center bg-gray-100 rounded-lg w-full h-full">
-            <span className="text-gray-400 text-xs sm:text-sm">No Image</span>
-          </div>
-        )}
+      <div className="right-[5%] -bottom-2 sm:-bottom-4 z-10 absolute w-16 sm:w-40 h-16 sm:h-40">
+        <Image
+          src={imageSrc}
+          alt={`Minh họa 3D cho danh mục ${category.name}`}
+          width={160}
+          height={160}
+          className="w-full h-full object-contain"
+          loading="lazy"
+          sizes="(max-width: 640px) 64px, 160px"
+          onError={() => {
+            if (imageSrc !== DEFAULT_CATEGORY_IMAGE) {
+              setImageSrc(DEFAULT_CATEGORY_IMAGE);
+            }
+          }}
+        />
       </div>
     </div>
   );
